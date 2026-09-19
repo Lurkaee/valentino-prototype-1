@@ -15,7 +15,9 @@ test.describe("Milestone 1 Acceptance Gates", () => {
   test("Gate A: Full Creator-to-Recipient Journey with Snapshot Isolation", async ({
     browser,
   }) => {
-    const creatorContext = await browser.newContext();
+    const creatorContext = await browser.newContext({
+      permissions: ["clipboard-read", "clipboard-write"],
+    });
     const recipientContext = await browser.newContext();
     const creatorPage = await creatorContext.newPage();
     const recipientPage = await recipientContext.newPage();

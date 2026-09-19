@@ -250,18 +250,37 @@ export default function EditExperiencePage() {
 
   const handleCopyLink = () => {
     if (navigator?.clipboard?.writeText) {
-      navigator.clipboard.writeText(publicUrl).then(() => {
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2500);
-      });
+      navigator.clipboard
+        .writeText(publicUrl)
+        .then(() => {
+          setCopied(true);
+          setTimeout(() => setCopied(false), 2500);
+        })
+        .catch(() => {
+          try {
+            const textarea = document.createElement("textarea");
+            textarea.value = publicUrl;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand("copy");
+            document.body.removeChild(textarea);
+          } catch {
+            // Ignore
+          }
+          setCopied(true);
+          setTimeout(() => setCopied(false), 2500);
+        });
     } else {
-      // Fallback selection for in-app browsers
-      const textarea = document.createElement("textarea");
-      textarea.value = publicUrl;
-      document.body.appendChild(textarea);
-      textarea.select();
-      document.execCommand("copy");
-      document.body.removeChild(textarea);
+      try {
+        const textarea = document.createElement("textarea");
+        textarea.value = publicUrl;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+      } catch {
+        // Ignore
+      }
       setCopied(true);
       setTimeout(() => setCopied(false), 2500);
     }
