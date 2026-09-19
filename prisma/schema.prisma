@@ -7,24 +7,31 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum ExperienceStatus {
+  DRAFT
+  PUBLISHED
+  DISABLED
+  DELETED
+}
+
 model Experience {
-  id                     String    @id @default(cuid())
-  publicId               String    @unique
+  id                     String           @id @default(cuid())
+  publicId               String           @unique
   editCredentialHash     String
-  editCredentialVersion  Int       @default(1)
-  editCredentialIssuedAt DateTime  @default(now())
+  editCredentialVersion  Int              @default(1)
+  editCredentialIssuedAt DateTime         @default(now())
   
   templateId             String
   templateVersion        String
   
   draftConfig            String
-  draftRevision          Int       @default(1)
+  draftRevision          Int              @default(1)
   
   publishedConfig        String?
   publishedRevision      Int?
   publishedAt            DateTime?
   
-  status                 String    @default("DRAFT") // DRAFT | PUBLISHED | DISABLED | DELETED
+  status                 ExperienceStatus @default(DRAFT)
   
   createdAt              DateTime  @default(now())
   updatedAt              DateTime  @updatedAt

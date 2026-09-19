@@ -1,10 +1,12 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { NextRequest } from "next/server";
 import { db } from "@/lib/db";
+import { ExperienceStatus } from "@prisma/client";
 import { POST as createExperience } from "@/app/api/experiences/route";
 import { GET as getDraft, PUT as saveDraft } from "@/app/api/experiences/[publicId]/draft/route";
 import { POST as publishExperience } from "@/app/api/experiences/[publicId]/publish/route";
-import { GET as checkStatus } from "@/app/api/internal/status/[publicId]/route";
+import { middleware } from "@/middleware";
+import { GET as getPublicExperience } from "@/app/v/[publicId]/route";
 import { getCookieName } from "@/lib/session";
 
 describe("API Integration Tests", () => {
@@ -243,7 +245,7 @@ describe("API Integration Tests", () => {
     expect(data.error).toContain("180-day");
   });
 
-  it("checks internal status endpoint for DISABLED / DELETED experiences", async () => {
+  it("/v/[publicId] route returns real HTTP 410 for DISABLED and DELETED experiences directly without internal status API", async () => {
     // 1. Create and disable an experience
     const createRes = await createExperience(
       new NextRequest(`${APP_URL}/api/experiences`, {
@@ -255,13 +257,20 @@ describe("API Integration Tests", () => {
 
     await db.experience.update({
       where: { publicId },
-      data: { status: "DISABLED" },
+      data: { status: ExperienceStatus.DISABLED },
     });
 
-    const statusReq = new NextRequest(`${APP_URL}/api/internal/status/${publicId}`, { method: "GET" });
-    const statusRes = await checkStatus(statusReq, { params: Promise.resolve({ publicId }) });
-    expect(statusRes.status).toBe(200);
-    const data = await statusRes.json();
-    expect(data.status).toBe("DISABLED");
+    const statusReq = new NextRequest(`${APP_URL}/v/${publicId}`, { method: "GET" });
+    const statusRes = await getPublicExperience(statusReq, { params: Promise.resolve({ publicId }) });
+    expect(statusRes.status).toBe(410);
+    const html = await statusRes.text();
+    expect(html).toContain("This Experience is No Longer Available");
+    expect(statusRes.headers.get("cache-control")).toBe("no-store");
+    expect(statusRes.headers.get("x-robots-tag")).toContain("noindex");
+
+    // Also verify middleware enforces security headers
+    const mwRes = middleware(statusReq);
+    expect(mwRes.headers.get("cache-control")).toBe("no-store");
+    expect(mwRes.headers.get("x-robots-tag")).toContain("noindex");
   });
 });

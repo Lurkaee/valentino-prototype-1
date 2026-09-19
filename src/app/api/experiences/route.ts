@@ -1,5 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 import { db } from "@/lib/db";
+import { ExperienceStatus } from "@prisma/client";
 import {
   generatePublicId,
   generateEditCredential,
@@ -8,36 +10,36 @@ import {
 import { buildSetCookieHeader } from "@/lib/session";
 import { validateOrigin } from "@/lib/csrf";
 import { rateLimiter, getAnonymizedKey } from "@/lib/rate-limiter";
-import { midnightRoseV1 } from "@/templates/registry";
 import { logger } from "@/lib/logger";
+import { midnightRoseV1 } from "@/templates/registry";
 
-export async function POST(req: NextRequest) {
-  // 1. CSRF Origin validation
-  const originCheck = validateOrigin(req);
-  if (!originCheck.valid) {
-    logger.warn("Create experience rejected due to Origin check", { reason: originCheck.reason });
-    return NextResponse.json({ error: originCheck.reason }, { status: 403 });
-  }
-
-  // 2. Rate limiting (~10/hour per IP)
-  const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "127.0.0.1";
-  const rateLimitKey = getAnonymizedKey("create-exp", clientIp);
-  const limitResult = await rateLimiter.check(rateLimitKey, 10, 60 * 60 * 1000);
-
-  if (!limitResult.allowed) {
-    return NextResponse.json(
-      { error: "Too many experiences created. Please try again later." },
-      {
-        status: 429,
-        headers: {
-          "Retry-After": limitResult.resetSeconds.toString(),
-          "Cache-Control": "no-store",
-        },
-      }
-    );
-  }
-
+export async function POST(request: NextRequest) {
   try {
+    const originCheck = validateOrigin(request);
+    if (!originCheck.valid) {
+      logger.warn("Create experience rejected due to Origin check", {
+        reason: originCheck.reason,
+      });
+      return NextResponse.json({ error: originCheck.reason }, { status: 403 });
+    }
+
+    const clientIp = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "127.0.0.1";
+    const rateLimitKey = getAnonymizedKey("create-exp", clientIp);
+    const limitResult = await rateLimiter.check(rateLimitKey, 10, 60 * 60 * 1000);
+
+    if (!limitResult.allowed) {
+      return NextResponse.json(
+        { error: "Too many experiences created. Please try again later." },
+        {
+          status: 429,
+          headers: {
+            "Retry-After": limitResult.resetSeconds.toString(),
+            "Cache-Control": "no-store",
+          },
+        }
+      );
+    }
+
     const publicId = generatePublicId();
     const rawCredential = generateEditCredential();
     const credentialHash = hashEditCredential(rawCredential);
@@ -55,7 +57,7 @@ export async function POST(req: NextRequest) {
         templateVersion: midnightRoseV1.version,
         draftConfig: defaultConfigJson,
         draftRevision: 1,
-        status: "DRAFT",
+        status: ExperienceStatus.DRAFT,
       },
     });
 

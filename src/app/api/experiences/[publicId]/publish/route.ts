@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { ExperienceStatus } from "@prisma/client";
 import { verifyEditCredential } from "@/lib/security";
 import {
   getEditCredentialFromRequest,
@@ -129,7 +130,7 @@ export async function POST(req: NextRequest, { params }: RouteParams) {
       publishedConfig: JSON.stringify(normalizedConfig),
       publishedRevision: experience.draftRevision,
       publishedAt: now,
-      status: "PUBLISHED",
+      status: ExperienceStatus.PUBLISHED,
     },
   });
 

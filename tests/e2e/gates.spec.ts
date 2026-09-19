@@ -1,5 +1,6 @@
 import { test, expect } from "@playwright/test";
 import { db } from "../../src/lib/db";
+import { ExperienceStatus } from "@prisma/client";
 
 const APP_URL = process.env.APP_URL || "http://localhost:3000";
 
@@ -148,7 +149,7 @@ test.describe("Milestone 1 Acceptance Gates", () => {
     // 3. Disabled experience returns real HTTP 410
     await db.experience.update({
       where: { publicId },
-      data: { status: "DISABLED" },
+      data: { status: ExperienceStatus.DISABLED },
     });
     const disabledRes = await page.goto(`${APP_URL}/v/${publicId}`);
     expect(disabledRes?.status()).toBe(410);
@@ -158,12 +159,16 @@ test.describe("Milestone 1 Acceptance Gates", () => {
     // 4. Deleted experience returns real HTTP 410
     await db.experience.update({
       where: { publicId },
-      data: { status: "DELETED" },
+      data: { status: ExperienceStatus.DELETED },
     });
     const deletedRes = await page.goto(`${APP_URL}/v/${publicId}`);
     expect(deletedRes?.status()).toBe(410);
 
-    // 5. Unauthenticated access to /edit/[publicId] shows friendly no-edit state
+    // 5. Verify internal status API does not exist (must return 404)
+    const internalApiRes = await request.get(`${APP_URL}/api/internal/status/${publicId}`);
+    expect(internalApiRes.status()).toBe(404);
+
+    // 6. Unauthenticated access to /edit/[publicId] shows friendly no-edit state
     const cleanContext = await page.context().browser()!.newContext();
     const cleanPage = await cleanContext.newPage();
     await cleanPage.goto(`${APP_URL}/edit/${publicId}`);

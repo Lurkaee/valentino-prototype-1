@@ -101,49 +101,50 @@ export const MidnightRoseComponent: React.FC<ComponentProps> = ({ config, mode }
             </div>
           )}
 
-          {/* Signature Moment: Wax Seal or Revealed Letter */}
-          {isSealed && !prefersReducedMotion ? (
-            <div className="flex flex-col items-center justify-center py-10 px-4 text-center">
-              <button
-                type="button"
-                data-testid="wax-seal-button"
-                onClick={() => setIsSealed(false)}
-                className={`relative group flex items-center justify-center w-20 h-20 sm:w-24 sm:h-24 rounded-full border-2 shadow-xl cursor-pointer transition-transform duration-300 hover:scale-105 active:scale-95 ${styles.seal}`}
-                aria-label="Break the wax seal to read letter"
-              >
-                <span className="text-3xl sm:text-4xl select-none">💌</span>
-                <span className="absolute -bottom-7 text-xs text-white/60 tracking-wider uppercase whitespace-nowrap font-sans">
-                  Tap to open
-                </span>
-              </button>
-            </div>
-          ) : (
-            <div
-              data-testid="unsealed-letter"
-              className={`space-y-6 text-slate-300 leading-relaxed font-sans text-base sm:text-lg ${
-                prefersReducedMotion ? "" : "animate-fadeIn"
-              }`}
+          {/* Signature Moment: Wax Seal and Revealed Letter */}
+          <div
+            data-testid="seal-container"
+            className={isSealed && !prefersReducedMotion ? "flex flex-col items-center justify-center py-10 px-4 text-center" : "hidden"}
+          >
+            <button
+              type="button"
+              data-testid="wax-seal-button"
+              onClick={() => setIsSealed(false)}
+              className={`relative group flex items-center justify-center w-20 h-20 sm:w-24 sm:h-24 rounded-full border-2 shadow-xl cursor-pointer transition-transform duration-300 hover:scale-105 active:scale-95 ${styles.seal}`}
+              aria-label="Break the wax seal to read letter"
             >
-              <div
-                data-testid="letter-message"
-                className="whitespace-pre-wrap rounded-xl bg-black/20 p-5 sm:p-6 border border-white/5 font-light"
-              >
-                {config.message || "My heart is fuller every day because of you."}
-              </div>
+              <span className="text-3xl sm:text-4xl select-none">💌</span>
+              <span className="absolute -bottom-7 text-xs text-white/60 tracking-wider uppercase whitespace-nowrap font-sans">
+                Tap to open
+              </span>
+            </button>
+          </div>
 
-              <div className="text-right pt-2">
-                <p className="text-xs text-white/50 uppercase tracking-widest mb-1">
-                  {config.signOff || "With all my love"}
-                </p>
-                <p
-                  data-testid="sender-name"
-                  className={`text-xl sm:text-2xl font-serif font-medium ${styles.accentText}`}
-                >
-                  {config.senderName || "Yours Always"}
-                </p>
-              </div>
+          <div
+            data-testid="unsealed-letter"
+            className={`space-y-6 text-slate-300 leading-relaxed font-sans text-base sm:text-lg ${
+              isSealed && !prefersReducedMotion ? "hidden" : prefersReducedMotion ? "" : "animate-fadeIn"
+            }`}
+          >
+            <div
+              data-testid="letter-message"
+              className="whitespace-pre-wrap rounded-xl bg-black/20 p-5 sm:p-6 border border-white/5 font-light"
+            >
+              {config.message || "My heart is fuller every day because of you."}
             </div>
-          )}
+
+            <div className="text-right pt-2">
+              <p className="text-xs text-white/50 uppercase tracking-widest mb-1">
+                {config.signOff || "With all my love"}
+              </p>
+              <p
+                data-testid="sender-name"
+                className={`text-xl sm:text-2xl font-serif font-medium ${styles.accentText}`}
+              >
+                {config.senderName || "Yours Always"}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
