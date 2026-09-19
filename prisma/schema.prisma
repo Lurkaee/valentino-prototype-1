@@ -1,0 +1,34 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Experience {
+  id                     String    @id @default(cuid())
+  publicId               String    @unique
+  editCredentialHash     String
+  editCredentialVersion  Int       @default(1)
+  editCredentialIssuedAt DateTime  @default(now())
+  
+  templateId             String
+  templateVersion        String
+  
+  draftConfig            String
+  draftRevision          Int       @default(1)
+  
+  publishedConfig        String?
+  publishedRevision      Int?
+  publishedAt            DateTime?
+  
+  status                 String    @default("DRAFT") // DRAFT | PUBLISHED | DISABLED | DELETED
+  
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
+
+  @@index([publicId])
+  @@index([status])
+}
