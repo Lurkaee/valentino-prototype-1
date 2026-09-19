@@ -41,7 +41,7 @@
 | D3 | Hosting, database host, media storage provider | Decide after M2 | M3 |
 | D4 | Personalized link previews (name in Open Graph) | Generic previews only (privacy: crawlers and chat apps cache them) | M5 |
 | D5 | Link lifetime | Live until the creator deletes; optional expiry later | M1/M6 |
-| D6 | License | None while the repo is private | Before making the repo public |
+| D6 | License | None currently (repo is public; open source license to be selected) | Before M6 / release |
 | D7 | Audio/music support | Out of scope for the prototype | Later |
 
 Record each answer here with date and reason when decided.

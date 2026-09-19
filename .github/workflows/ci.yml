@@ -1,0 +1,73 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fail if unauthorized lockfile exists
+        run: |
+          if [ -f package-lock.json ]; then
+            echo "Error: package-lock.json must not be committed. Use pnpm only."
+            exit 1
+          fi
+          if [ -f yarn.lock ]; then
+            echo "Error: yarn.lock must not be committed. Use pnpm only."
+            exit 1
+          fi
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate Prisma client
+        run: pnpm db:generate
+
+      - name: Push DB schema
+        run: pnpm db:push
+        env:
+          DATABASE_URL: "file:./prisma/dev.db"
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Run unit and integration tests
+        run: pnpm test
+        env:
+          APP_URL: "http://localhost:3000"
+          DATABASE_URL: "file:./prisma/dev.db"
+          EDIT_SECRET_PEPPER: "test-pepper-32-chars-minimum-length-key"
+
+      - name: Build Next.js application
+        run: pnpm build
+        env:
+          APP_URL: "http://localhost:3000"
+          DATABASE_URL: "file:./prisma/dev.db"
+          EDIT_SECRET_PEPPER: "test-pepper-32-chars-minimum-length-key"
+
+      - name: Install Playwright browsers
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: Run Playwright e2e tests
+        run: pnpm test:e2e
+        env:
+          APP_URL: "http://localhost:3000"
+          DATABASE_URL: "file:./prisma/dev.db"
+          EDIT_SECRET_PEPPER: "test-pepper-32-chars-minimum-length-key"

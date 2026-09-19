@@ -18,25 +18,18 @@ A reusable Valentine's website template platform. Pick a template, customize it,
 | `.agents/agents/` | Read-only `code-reviewer` and `security-reviewer` subagents |
 
 ## Owner setup checklist
-1. Create the GitHub repo and push (see below). Keep it **private** for now.
-2. In GitHub: protect `main` (require a PR, block force-push; require CI once M0 adds it). Turn on Dependabot alerts, and secret scanning/push protection if your plan offers them.
+1. Canonical GitHub repository: [Lurkaee/valentino-prototype-1](https://github.com/Lurkaee/valentino-prototype-1) (Visibility: **public**).
+2. In GitHub: protect `main` (require a PR, block force-push; require CI). Turn on Dependabot alerts, and secret scanning/push protection.
 3. Open the folder in Antigravity as a **Project**. Start milestone conversations in **New Worktree Mode**.
 4. In Customizations -> Rules, confirm `AGENTS.md`, `00`, `10`, `20` are **Always on** and `30`, `40` are **Model decision**. Confirm the skills and subagents are listed.
 5. Leave terminal commands in the sandbox / request-review mode. Leave non-workspace file access off.
 6. Paste the prompt from [docs/KICKOFF.md](docs/KICKOFF.md).
 
-## Create the GitHub repo
-With the GitHub CLI:
+## Canonical GitHub Repository
+The canonical repository is:
 ```bash
-git init -b main
-git add .
-git commit -m "chore: bootstrap repo with agent rules, skills and docs"
-gh auth login                       # once
-gh repo create valentino-prototype-1 --private --source=. --remote=origin --push
+https://github.com/Lurkaee/valentino-prototype-1.git
 ```
-Without it: create an **empty private** repo named `valentino-prototype-1` on github.com (no README, license or .gitignore), then:
-```bash
-git init -b main && git add . && git commit -m "chore: bootstrap repo with agent rules, skills and docs"
-git remote add origin https://github.com/<your-username>/valentino-prototype-1.git
-git push -u origin main
-```
+Branches:
+- `main` (default branch)
+- `feature/m1-walking-skeleton` (M1 implementation branch)
