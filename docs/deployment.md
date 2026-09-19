@@ -38,7 +38,7 @@ The following environment variables are required across environments:
 ## Vercel Build Command
 Configured in `package.json`:
 ```json
-"vercel-build": "prisma migrate deploy && next build"
+"vercel-build": "prisma generate && prisma migrate deploy && next build"
 ```
 Vercel executes this build step upon receiving a deployment hook, ensuring pending migrations are executed before building and deploying the Next.js bundle.
 
