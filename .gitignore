@@ -1,0 +1,42 @@
+# dependencies & build
+node_modules/
+.pnpm-store/
+.next/
+out/
+dist/
+build/
+coverage/
+*.tsbuildinfo
+next-env.d.ts
+
+# env & secrets (only .env.example is committed)
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# local data
+.local-media/
+*.db
+*.sqlite
+
+# test output
+playwright-report/
+test-results/
+blob-report/
+
+# logs & OS
+*.log
+npm-debug.log*
+pnpm-debug.log*
+.DS_Store
+Thumbs.db
+
+# editors
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# deploy tooling
+.vercel/
