@@ -81,10 +81,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     logger.error("Failed to create experience", { error: String(error) });
     return NextResponse.json(
-      {
-        error: "Failed to create experience",
-        details: error instanceof Error ? error.message : String(error),
-      },
+      { error: "Failed to create experience" },
       { status: 500, headers: { "Cache-Control": "no-store" } }
     );
   }
