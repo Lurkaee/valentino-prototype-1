@@ -22,10 +22,15 @@ export function validateOrigin(req: NextRequest): { valid: boolean; reason?: str
     if (process.env.VERCEL_ENV === "preview") {
       const host = req.headers.get("x-forwarded-host") || req.headers.get("host");
       if (host) {
-        const expectedPreviewOrigin = `https://${host}`.toLowerCase();
+        const proto = req.headers.get("x-forwarded-proto") || "https";
+        const expectedPreviewOrigin = `${proto}://${host}`.toLowerCase();
         if (originUrl.origin.toLowerCase() === expectedPreviewOrigin) {
           return { valid: true };
         }
+        return {
+          valid: false,
+          reason: `Origin mismatch in preview: expected ${expectedPreviewOrigin}, received ${originUrl.origin}`,
+        };
       }
     }
 
