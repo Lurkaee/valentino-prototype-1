@@ -10,6 +10,21 @@ jobs:
   verify:
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: valentino_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - uses: actions/checkout@v4
 
@@ -37,10 +52,10 @@ jobs:
       - name: Generate Prisma client
         run: pnpm db:generate
 
-      - name: Push DB schema
-        run: pnpm db:push
+      - name: Run Prisma migrations
+        run: pnpm db:migrate
         env:
-          DATABASE_URL: "file:./prisma/dev.db"
+          DATABASE_URL: "postgresql://postgres:password@localhost:5432/valentino_ci"
 
       - name: Lint
         run: pnpm lint
@@ -52,14 +67,14 @@ jobs:
         run: pnpm test
         env:
           APP_URL: "http://localhost:3000"
-          DATABASE_URL: "file:./prisma/dev.db"
+          DATABASE_URL: "postgresql://postgres:password@localhost:5432/valentino_ci"
           EDIT_SECRET_PEPPER: "test-pepper-32-chars-minimum-length-key"
 
       - name: Build Next.js application
         run: pnpm build
         env:
           APP_URL: "http://localhost:3000"
-          DATABASE_URL: "file:./prisma/dev.db"
+          DATABASE_URL: "postgresql://postgres:password@localhost:5432/valentino_ci"
           EDIT_SECRET_PEPPER: "test-pepper-32-chars-minimum-length-key"
 
       - name: Install Playwright browsers
@@ -69,5 +84,5 @@ jobs:
         run: pnpm test:e2e
         env:
           APP_URL: "http://localhost:3000"
-          DATABASE_URL: "file:./prisma/dev.db"
+          DATABASE_URL: "postgresql://postgres:password@localhost:5432/valentino_ci"
           EDIT_SECRET_PEPPER: "test-pepper-32-chars-minimum-length-key"

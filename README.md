@@ -2,7 +2,7 @@
 
 A reusable Valentine's website template platform. Pick a template, customize it, preview it live, publish it, and send the link to someone you love.
 
-**Status:** bootstrap. Agent rules, skills and docs are in place; the application is created in milestone M0.
+**Status:** M1 complete, M7 Vercel Deployment & Live Progression active. PostgreSQL persistent database configured with automated Prisma migrations.
 
 ## Docs
 - [Product](docs/product.md) · [Architecture](docs/architecture.md) · [Decisions](docs/decisions.md) · [Security](docs/security.md)
