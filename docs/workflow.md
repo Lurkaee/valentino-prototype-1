@@ -1,15 +1,37 @@
-# Owner workflow (not agent instructions)
+# Development & Deployment Lifecycle
 
-This file is for you, not for Antigravity. Keeping it out of the agent's rules saves context.
+## Live Progression System (M7)
+Every change to `valentino-prototype-1` follows the live progression lifecycle:
 
-## Loop
+```text
+feature branch
+      ↓
+GitHub push
+      ↓
+Vercel Preview (isolated Preview DB)
+      ↓
+Browser / live verification
+      ↓
+PR opened / updated
+      ↓
+GitHub Actions CI (isolated PostgreSQL 16 container)
+      ↓
+PR Review & Approval
+      ↓
+Merge to main
+      ↓
+Vercel Production (automatic deployment + migration deploy to Production DB)
 ```
-Antigravity: Implementation Plan artifact
-   -> (optional) Claude reviews the plan
-   -> you approve or comment on the artifact
-   -> Antigravity builds on a feature branch, verifies, opens a PR
-   -> (optional) Claude reviews the PR diff
-   -> you merge
+
+## Review Loop
+```text
+Antigravity: Implementation & Local Verification
+   -> feature branch push
+   -> Vercel Preview generated & verified
+   -> PR opened
+   -> CI passes
+   -> Owner approval & merge
+   -> Production deployment active
 ```
 
 ## Use Claude when
