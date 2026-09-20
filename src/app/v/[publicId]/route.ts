@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { ExperienceStatus } from "@prisma/client";
 import { sanitizeText } from "@/lib/sanitize";
+import { DECOR_SLOTS, normalizeValentineDecor, ValentineDecor } from "@/types/decor";
 
 interface RouteParams {
   params: Promise<{ publicId: string }>;
@@ -174,6 +175,7 @@ interface PublishedConfig {
   signOff?: string;
   accentTheme?: string;
   heroMediaId?: string | null;
+  decor?: ValentineDecor;
 }
 
 const ACCENTS: Record<
@@ -221,6 +223,89 @@ const ACCENTS: Record<
   },
 };
 
+
+
+const PUBLIC_BLOOM_GLYPHS: Record<ValentineDecor["blooms"], string> = {
+  rose: "🌹",
+  wildflower: "🌼",
+  peony: "🪷",
+};
+
+const PUBLIC_CHARM_GLYPHS: Record<ValentineDecor["charms"], string> = {
+  heart: "♡",
+  star: "✦",
+  sparkle: "✧",
+};
+
+const PUBLIC_PAPER_STYLES: Record<ValentineDecor["paper"], { background: string; color: string; border: string }> = {
+  "ivory-cream": { background: "#FFFDF8", color: "#2D1720", border: "#EEDFD2" },
+  "petal-blush": { background: "#FFF1F4", color: "#321820", border: "#F3D2DA" },
+  "deckled-parchment": {
+    background: "linear-gradient(135deg,#F3E8D3 0%,#FFFBF1 48%,#E9D8BC 100%)",
+    color: "#332218",
+    border: "#D9C6A7",
+  },
+  "soft-lavender": { background: "#F8F3FF", color: "#2B2038", border: "#DDD0F0" },
+};
+
+const PUBLIC_RIBBON_STYLES: Record<ValentineDecor["ribbon"], string> = {
+  "velvet-crimson": "linear-gradient(90deg,#650D1F,#B51F3C 50%,#650D1F)",
+  "satin-rose": "linear-gradient(90deg,#9F3551,#E58A9F 50%,#9F3551)",
+  "silk-ivory": "linear-gradient(90deg,#B8A38E,#F8F1E7 50%,#B8A38E)",
+  "plum-mist": "linear-gradient(90deg,#4E274D,#8F648C 50%,#4E274D)",
+};
+
+const PUBLIC_WAX_STYLES: Record<ValentineDecor["waxSeal"], { background: string; border: string; glyph: string }> = {
+  "crimson-heart": {
+    background: "radial-gradient(circle at 30% 25%,#D44763,#8B142D 72%)",
+    border: "#F58BA0",
+    glyph: "♥",
+  },
+  "rose-quartz": {
+    background: "radial-gradient(circle at 30% 25%,#F09FB0,#B24D68 72%)",
+    border: "#FFD1DA",
+    glyph: "✿",
+  },
+  "royal-burgundy": {
+    background: "radial-gradient(circle at 30% 25%,#7F1D3A,#4A071D 72%)",
+    border: "#D76A87",
+    glyph: "♜",
+  },
+  "champagne-gold": {
+    background: "radial-gradient(circle at 30% 25%,#E8C27B,#9A6D2B 72%)",
+    border: "#F8E8BA",
+    glyph: "✦",
+  },
+};
+
+function renderPublicDecor(decor: ValentineDecor): string {
+  const blooms = Object.entries(DECOR_SLOTS)
+    .map(([slot, values]) => {
+      const [x, y, rotate, scale, zIndex] = values;
+      return `<span class="decor-bloom" data-testid="composition-bloom-${slot}" style="left:${x}%;top:${y}%;transform:translate(-50%,-50%) rotate(${rotate}deg) scale(${scale});z-index:${zIndex};">${PUBLIC_BLOOM_GLYPHS[decor.blooms]}</span>`;
+    })
+    .join("");
+
+  const charm = PUBLIC_CHARM_GLYPHS[decor.charms];
+  const paper = PUBLIC_PAPER_STYLES[decor.paper];
+  const ribbon = PUBLIC_RIBBON_STYLES[decor.ribbon];
+  const wax = PUBLIC_WAX_STYLES[decor.waxSeal];
+
+  return `
+    <div class="decor-layer" aria-hidden="true">
+      ${blooms}
+      <span class="decor-charm charm-a">${charm}</span>
+      <span class="decor-charm charm-b">${charm}</span>
+      <span class="decor-charm charm-c">${charm}</span>
+      <span class="decor-charm charm-d">${charm}</span>
+    </div>
+    <div class="decor-paper" data-testid="decor-paper" data-paper="${decor.paper}" style="background:${paper.background};color:${paper.color};border-color:${paper.border};">
+      <div class="decor-ribbon" data-testid="decor-ribbon" data-ribbon="${decor.ribbon}" style="background:${ribbon};"></div>
+      <div class="decor-paper-content"></div>
+      <div class="decor-adornment-wax" data-testid="decor-wax-seal" data-wax-seal="${decor.waxSeal}" style="background:${wax.background};border-color:${wax.border};">${wax.glyph}</div>
+    </div>`;
+}
+
 function renderPublicHtml(config: PublishedConfig): string {
   const theme = ACCENTS[config.accentTheme || "crimson-rose"] || ACCENTS["crimson-rose"];
   const greeting = sanitizeText(config.greeting || "To My Favorite Person");
@@ -228,6 +313,7 @@ function renderPublicHtml(config: PublishedConfig): string {
   const message = sanitizeText(config.message || "My heart is fuller every day because of you.");
   const signOff = sanitizeText(config.signOff || "With all my love");
   const senderName = sanitizeText(config.senderName || "Yours Always");
+  const decor = normalizeValentineDecor(config.decor);
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -456,6 +542,78 @@ function renderPublicHtml(config: PublishedConfig): string {
       font-weight: 600;
       color: ${theme.paperAccent};
     }
+
+    .decor-frame {
+      position: relative;
+      overflow: hidden;
+      border-radius: 1.6rem;
+    }
+    .decor-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      overflow: hidden;
+      border-radius: 1.6rem;
+    }
+    .decor-bloom {
+      position: absolute;
+      font-size: 2.7rem;
+      line-height: 1;
+      user-select: none;
+      filter: drop-shadow(0 8px 12px rgba(40,10,20,0.18));
+      transform-origin: center;
+    }
+    .decor-charm {
+      position: absolute;
+      z-index: 2;
+      color: rgba(120, 48, 66, 0.62);
+      font-family: Georgia, serif;
+      user-select: none;
+    }
+    .charm-a { left: 16%; top: 19%; font-size: 1.25rem; }
+    .charm-b { right: 16%; top: 25%; font-size: 1.1rem; }
+    .charm-c { left: 18%; bottom: 18%; font-size: 1.1rem; opacity: .75; }
+    .charm-d { right: 18%; bottom: 20%; font-size: 1.25rem; }
+    .decor-paper {
+      position: absolute;
+      inset: 8px;
+      z-index: 3;
+      border: 1px solid;
+      border-radius: 1.4rem;
+      opacity: .98;
+      box-shadow: 0 16px 36px rgba(24,6,12,0.20);
+      pointer-events: none;
+    }
+    .decor-ribbon {
+      position: absolute;
+      left: 20px;
+      right: 20px;
+      top: 16px;
+      height: 20px;
+      border-radius: 999px;
+      border: 1px solid rgba(0,0,0,.10);
+      box-shadow: 0 8px 18px rgba(80,20,35,.22);
+    }
+    .decor-adornment-wax {
+      position: absolute;
+      right: 18px;
+      bottom: 18px;
+      width: 56px;
+      height: 56px;
+      border-radius: 999px;
+      border: 2px solid;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-family: Georgia, serif;
+      font-size: 1.25rem;
+      box-shadow: 0 10px 30px rgba(52,8,22,.34);
+    }
+    .decor-paper-content { position: absolute; inset: 0; border-radius: inherit; }
+    .card-content { position: relative; z-index: 10; }
+
     .hidden { display: none !important; }
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
@@ -473,6 +631,7 @@ function renderPublicHtml(config: PublishedConfig): string {
     <div class="ambient-glow"></div>
     <div class="content-container">
       <div class="card">
+        <div class="card-content">
         <div class="header">
           <span class="badge">${greeting}</span>
           <h1 data-testid="recipient-name">${partnerName}</h1>
@@ -504,6 +663,7 @@ function renderPublicHtml(config: PublishedConfig): string {
               <div class="sender-title" data-testid="sender-name">${senderName}</div>
             </div>
           </div>
+        </div>
         </div>
       </div>
     </div>
