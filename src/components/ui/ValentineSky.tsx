@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useId } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import { motion, useReducedMotion, useScroll, useTransform, useSpring } from "motion/react";
 import Image from "next/image";
 
 interface ValentineSkyProps {
@@ -12,15 +12,26 @@ interface ValentineSkyProps {
  * ValentineSky:
  * A dreamy, romantic photographic & stylized sunset cloudscape for the hero viewport.
  * Features:
- * - Layered high-fidelity sunset sky texture with soft peach/coral depth
- * - Volumetric cloud puff mist floating around the center with screen blending
+ * - Layered high-fidelity sunset sky texture with scroll-linked depth
+ * - Volumetric cloud puff mist floating around the center with responsive parallax
  * - Warm golden peach sunlight bloom
  * - Soft lavender & rose atmospheric horizon washes
- * - Exactly 5 delicate, low-opacity floating hearts
+ * - Delicate, low-opacity floating hearts that elevate subtly with scroll
  */
 export function ValentineSky({ className = "" }: ValentineSkyProps) {
   const shouldReduceMotion = useReducedMotion();
   const id = useId();
+
+  // Scroll-linked atmospheric parallax
+  const { scrollY } = useScroll();
+  const rawSkyY = useTransform(scrollY, [0, 800], [0, 90]);
+  const rawMistY = useTransform(scrollY, [0, 800], [0, 150]);
+  const rawMistOpacity = useTransform(scrollY, [0, 500], [0.4, 0.15]);
+  const rawHeartsY = useTransform(scrollY, [0, 800], [0, -50]);
+
+  const skyY = useSpring(rawSkyY, { damping: 28, stiffness: 120 });
+  const mistY = useSpring(rawMistY, { damping: 28, stiffness: 120 });
+  const heartsScrollY = useSpring(rawHeartsY, { damping: 28, stiffness: 120 });
 
   // Exactly 5 delicate, subtle floating hearts
   const hearts = [
@@ -48,6 +59,9 @@ export function ValentineSky({ className = "" }: ValentineSkyProps) {
 
       {/* 2. Photographic Sunset Sky Texture Layer with Parallax Drift */}
       <motion.div
+        style={{
+          y: shouldReduceMotion ? 0 : skyY,
+        }}
         animate={
           shouldReduceMotion
             ? {}
@@ -102,20 +116,23 @@ export function ValentineSky({ className = "" }: ValentineSkyProps) {
 
       {/* 6. Volumetric Cloud Mist Texture Layer (Screen Blended for Organic Depth) */}
       <motion.div
+        style={{
+          y: shouldReduceMotion ? 0 : mistY,
+          opacity: shouldReduceMotion ? 0.4 : rawMistOpacity,
+        }}
         animate={
           shouldReduceMotion
             ? {}
             : {
-                y: [0, -8, 0],
-                opacity: [0.35, 0.48, 0.35],
+                x: [-6, 6, -6],
               }
         }
         transition={{
-          duration: 14,
+          duration: 16,
           repeat: Infinity,
           ease: "easeInOut",
         }}
-        className="absolute top-[35%] sm:top-[30%] inset-x-[-10%] h-[500px] mix-blend-screen opacity-40 will-change-transform"
+        className="absolute top-[35%] sm:top-[30%] inset-x-[-10%] h-[500px] mix-blend-screen will-change-transform"
       >
         <Image
           src="/clouds/cloud-puff.jpg"
@@ -157,43 +174,50 @@ export function ValentineSky({ className = "" }: ValentineSkyProps) {
         }}
       />
 
-      {/* 9. Delicate Floating Hearts */}
-      {hearts.map((h, i) => (
-        <motion.div
-          key={`${id}-heart-${i}`}
-          style={{
-            left: h.x,
-            top: h.y,
-            opacity: h.opacity,
-          }}
-          animate={
-            shouldReduceMotion
-              ? {}
-              : {
-                  y: [0, -14, 0],
-                  rotate: [-3, 3, -3],
-                  opacity: [h.opacity * 0.8, h.opacity, h.opacity * 0.8],
-                }
-          }
-          transition={{
-            duration: h.duration,
-            repeat: Infinity,
-            delay: h.delay,
-            ease: "easeInOut",
-          }}
-          className="absolute will-change-transform"
-        >
-          <svg
-            width={h.size}
-            height={h.size}
-            viewBox="0 0 24 24"
-            fill="currentColor"
-            className="text-rose-400/80 drop-shadow-[0_2px_6px_rgba(244,63,94,0.3)]"
+      {/* 9. Delicate Floating Hearts with Gentle Scroll Elevation */}
+      <motion.div
+        style={{
+          y: shouldReduceMotion ? 0 : heartsScrollY,
+        }}
+        className="absolute inset-0 pointer-events-none"
+      >
+        {hearts.map((h, i) => (
+          <motion.div
+            key={`${id}-heart-${i}`}
+            style={{
+              left: h.x,
+              top: h.y,
+              opacity: h.opacity,
+            }}
+            animate={
+              shouldReduceMotion
+                ? {}
+                : {
+                    y: [0, -14, 0],
+                    rotate: [-3, 3, -3],
+                    opacity: [h.opacity * 0.8, h.opacity, h.opacity * 0.8],
+                  }
+            }
+            transition={{
+              duration: h.duration,
+              repeat: Infinity,
+              delay: h.delay,
+              ease: "easeInOut",
+            }}
+            className="absolute will-change-transform"
           >
-            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-          </svg>
-        </motion.div>
-      ))}
+            <svg
+              width={h.size}
+              height={h.size}
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              className="text-rose-400/80 drop-shadow-[0_2px_6px_rgba(244,63,94,0.3)]"
+            >
+              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+            </svg>
+          </motion.div>
+        ))}
+      </motion.div>
     </div>
   );
 }

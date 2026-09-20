@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useCallback } from "react";
-import { motion, useReducedMotion } from "motion/react";
+import { motion, useReducedMotion, useScroll, useTransform, useSpring } from "motion/react";
 import { triggerCurtainNavigation } from "./PageCurtains";
 
 interface LoveLetter3DProps {
@@ -18,10 +18,18 @@ interface LoveLetter3DProps {
  * - Hand-poured crimson wax seal with embossed heart
  * - Restrained idle breathing (±6px) and subtle cursor tilt (capped at ±3.5°)
  * - Soft diffused ambient rosy cloud shadow
+ * - Subtle scroll-linked scale and depth dampening
  */
 export function LoveLetter3D({ className = "", onOpen }: LoveLetter3DProps) {
   const shouldReduceMotion = useReducedMotion();
   const cardRef = useRef<HTMLDivElement>(null);
+
+  // Scroll depth connection
+  const { scrollY } = useScroll();
+  const rawScrollScale = useTransform(scrollY, [0, 500], [1, 0.96]);
+  const rawScrollY = useTransform(scrollY, [0, 500], [0, 16]);
+  const scrollScale = useSpring(rawScrollScale, { damping: 24, stiffness: 140 });
+  const scrollYOffset = useSpring(rawScrollY, { damping: 24, stiffness: 140 });
 
   // Mouse tilt offsets (strictly capped at ±3.5° on X, ±4.5° on Y)
   const [rotateX, setRotateX] = useState(0);
@@ -114,6 +122,7 @@ export function LoveLetter3D({ className = "", onOpen }: LoveLetter3DProps) {
         }
         style={{
           transformStyle: "preserve-3d",
+          scale: shouldReduceMotion ? 1 : scrollScale,
         }}
         className="relative w-full max-w-[340px] sm:max-w-[380px] mx-auto"
       >
