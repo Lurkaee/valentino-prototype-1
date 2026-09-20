@@ -64,6 +64,42 @@ describe("API Integration Tests", () => {
     expect(record?.editCredentialIssuedAt).toBeDefined();
   });
 
+  it("POST /api/experiences: accepts optional initialDecor and persists it in draftConfig", async () => {
+    const customDecor = {
+      blooms: ["crimson-rose", "wild-daisy"],
+      charms: ["sparkle"],
+      paper: "handmade-cream",
+      ribbon: "velvet-crimson",
+      waxSeal: "champagne-gold",
+    };
+
+    const req = new NextRequest(`${APP_URL}/api/experiences`, {
+      method: "POST",
+      headers: {
+        origin: APP_URL,
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        initialDecor: customDecor,
+      }),
+    });
+
+    const res = await createExperience(req);
+    expect(res.status).toBe(201);
+    const body = await res.json();
+
+    const record = await db.experience.findUnique({ where: { publicId: body.publicId } });
+    expect(record).not.toBeNull();
+    const parsedDraft = JSON.parse(record!.draftConfig);
+    expect(parsedDraft.decor.blooms).toEqual(customDecor.blooms);
+    expect(parsedDraft.decor.charms).toEqual(customDecor.charms);
+    expect(parsedDraft.decor.paper).toBe(customDecor.paper);
+    expect(parsedDraft.decor.ribbon).toBe(customDecor.ribbon);
+    expect(parsedDraft.decor.waxSeal).toBe(customDecor.waxSeal);
+  });
+
+
+
   it("GET & PUT /api/experiences/[publicId]/draft: enforces auth and optimistic revision locking", async () => {
     // 1. Create an experience
     const createReq = new NextRequest(`${APP_URL}/api/experiences`, {

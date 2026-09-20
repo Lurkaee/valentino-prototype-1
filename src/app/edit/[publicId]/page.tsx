@@ -9,6 +9,15 @@ import {
   ACCENT_THEMES,
   AccentTheme,
 } from "@/templates/midnight-rose/v1/schema";
+import {
+  DEFAULT_VALENTINE_DECOR,
+  CURATED_FLOWERS,
+  CURATED_CHARMS,
+  CURATED_PAPERS,
+  CURATED_RIBBONS,
+  CURATED_SEALS,
+  normalizeValentineDecor,
+} from "@/types/decor";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
@@ -27,6 +36,7 @@ export default function EditExperiencePage() {
     message: "",
     signOff: "With all my love",
     accentTheme: "crimson-rose",
+    decor: DEFAULT_VALENTINE_DECOR,
   });
 
   const [revision, setRevision] = useState<number>(1);
@@ -72,7 +82,10 @@ export default function EditExperiencePage() {
         const data = await res.json();
         if (isMounted) {
           if (data.draftConfig && !isDirtyRef.current) {
-            setConfig(data.draftConfig);
+            setConfig({
+              ...data.draftConfig,
+              decor: normalizeValentineDecor(data.draftConfig.decor),
+            });
           }
           if (data.draftRevision) {
             setRevision(data.draftRevision);
@@ -369,6 +382,7 @@ export default function EditExperiencePage() {
           <div className="flex md:hidden rounded-lg bg-white/5 p-0.5 border border-white/10 text-xs">
             <button
               type="button"
+              data-testid="mobile-tab-edit"
               onClick={() => setMobileTab("form")}
               className={`px-2.5 py-1 rounded-md transition-colors ${
                 mobileTab === "form" ? "bg-rose-600 text-white" : "text-ivory-300"
@@ -378,6 +392,7 @@ export default function EditExperiencePage() {
             </button>
             <button
               type="button"
+              data-testid="mobile-tab-preview"
               onClick={() => setMobileTab("preview")}
               className={`px-2.5 py-1 rounded-md transition-colors ${
                 mobileTab === "preview" ? "bg-rose-600 text-white" : "text-ivory-300"
@@ -386,6 +401,7 @@ export default function EditExperiencePage() {
               Preview
             </button>
           </div>
+
 
           <Button
             type="button"
@@ -606,6 +622,277 @@ export default function EditExperiencePage() {
                     );
                   })}
                 </div>
+              </div>
+
+              {/* Question 7: Craft & Physical Styling */}
+              <div className="space-y-4 pt-2 border-t border-rose-500/15">
+                <div className="flex items-center justify-between">
+                  <span className="block text-xs uppercase tracking-wider text-rose-200/80 font-medium">
+                    7. Craft & Physical Styling
+                  </span>
+                  <span className="text-[10px] text-rose-300/70">Custom composition</span>
+                </div>
+
+                {/* Quick Presets */}
+                <div className="flex items-center gap-2">
+                  <span className="text-[11px] text-rose-300/70 font-sans">Presets:</span>
+                  {[
+                    { id: "classic", label: "Classic Romance" },
+                    { id: "wildflower", label: "Wildflower Dream" },
+                    { id: "royal", label: "Royal Devotion" },
+                  ].map((preset) => (
+                    <button
+                      key={preset.id}
+                      type="button"
+                      data-testid={`preset-option-${preset.id}`}
+                      onClick={() => {
+                        if (preset.id === "classic") {
+                          handleConfigChange((prev) => ({
+                            ...prev,
+                            decor: {
+                              blooms: ["crimson-rose", "french-tulip"],
+                              flowers: ["crimson-rose", "french-tulip"],
+                              charms: ["heart", "sparkle"],
+                              paper: "petal-blush",
+                              ribbon: "velvet-crimson",
+                              waxSeal: "crimson-heart",
+                              seal: "crimson-heart",
+                            },
+                          }));
+                        } else if (preset.id === "wildflower") {
+                          handleConfigChange((prev) => ({
+                            ...prev,
+                            decor: {
+                              blooms: ["wild-lavender", "wild-daisy", "blush-peony"],
+                              flowers: ["wild-lavender", "wild-daisy", "blush-peony"],
+                              charms: ["butterfly", "sparkle"],
+                              paper: "soft-lavender",
+                              ribbon: "satin-rose",
+                              waxSeal: "rose-quartz",
+                              seal: "rose-quartz",
+                            },
+                          }));
+                        } else if (preset.id === "royal") {
+                          handleConfigChange((prev) => ({
+                            ...prev,
+                            decor: {
+                              blooms: ["crimson-rose", "french-tulip", "blush-peony"],
+                              flowers: ["crimson-rose", "french-tulip", "blush-peony"],
+                              charms: ["bow", "sparkle"],
+                              paper: "deckled-parchment",
+                              ribbon: "velvet-crimson",
+                              waxSeal: "royal-burgundy",
+                              seal: "royal-burgundy",
+                            },
+                          }));
+                        }
+                      }}
+
+                      className="text-[10px] px-2.5 py-1 rounded-full border border-white/10 bg-white/[0.04] text-rose-200 hover:bg-rose-900/40 hover:border-rose-400/40 transition-colors"
+                    >
+                      {preset.label}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Paper Choice */}
+                <div className="space-y-1.5">
+                  <div className="text-[11px] text-rose-200/70 font-medium">Stationery Paper</div>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    {CURATED_PAPERS.map((paper) => {
+                      const isSelected = normalizeValentineDecor(config.decor).paper === paper.id;
+                      return (
+                        <button
+                          key={paper.id}
+                          type="button"
+                          data-testid={`decor-option-paper-${paper.id}`}
+                          onClick={() =>
+                            handleConfigChange((prev) => ({
+                              ...prev,
+                              decor: { ...normalizeValentineDecor(prev.decor), paper: paper.id },
+                            }))
+                          }
+                          className={`p-2 rounded-xl border text-xs flex items-center gap-2 transition-all ${
+                            isSelected
+                              ? "border-rose-400 bg-rose-950/80 text-white font-medium shadow-xs"
+                              : "border-white/10 bg-white/[0.03] text-rose-200/80 hover:bg-white/[0.08]"
+                          }`}
+                        >
+                          <span
+                            className="w-3.5 h-3.5 rounded-full border border-black/20 shrink-0"
+                            style={{ backgroundColor: paper.previewColor }}
+                          />
+                          <span className="truncate">{paper.name}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Ribbon Choice */}
+                <div className="space-y-1.5">
+                  <div className="text-[11px] text-rose-200/70 font-medium">Satin Ribbon</div>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    {CURATED_RIBBONS.map((ribbon) => {
+                      const isSelected = normalizeValentineDecor(config.decor).ribbon === ribbon.id;
+                      return (
+                        <button
+                          key={ribbon.id}
+                          type="button"
+                          data-testid={`decor-option-ribbon-${ribbon.id}`}
+                          onClick={() =>
+                            handleConfigChange((prev) => ({
+                              ...prev,
+                              decor: { ...normalizeValentineDecor(prev.decor), ribbon: ribbon.id },
+                            }))
+                          }
+                          className={`p-2 rounded-xl border text-xs flex items-center gap-2 transition-all ${
+                            isSelected
+                              ? "border-rose-400 bg-rose-950/80 text-white font-medium shadow-xs"
+                              : "border-white/10 bg-white/[0.03] text-rose-200/80 hover:bg-white/[0.08]"
+                          }`}
+                        >
+                          <span
+                            className="w-3.5 h-3.5 rounded-full border border-black/20 shrink-0"
+                            style={{ backgroundColor: ribbon.previewColor }}
+                          />
+                          <span className="truncate">{ribbon.name}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Wax Seal Choice */}
+                <div className="space-y-1.5">
+                  <div className="text-[11px] text-rose-200/70 font-medium">Wax Seal</div>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                    {CURATED_SEALS.map((seal) => {
+                      const isSelected = normalizeValentineDecor(config.decor).waxSeal === seal.id;
+                      return (
+                        <button
+                          key={seal.id}
+                          type="button"
+                          data-testid={`decor-option-seal-${seal.id}`}
+                          onClick={() =>
+                            handleConfigChange((prev) => ({
+                              ...prev,
+                              decor: {
+                                ...normalizeValentineDecor(prev.decor),
+                                waxSeal: seal.id,
+                                seal: seal.id,
+                              },
+                            }))
+                          }
+                          className={`p-2 rounded-xl border text-xs flex items-center gap-2 transition-all ${
+                            isSelected
+                              ? "border-rose-400 bg-rose-950/80 text-white font-medium shadow-xs"
+                              : "border-white/10 bg-white/[0.03] text-rose-200/80 hover:bg-white/[0.08]"
+                          }`}
+                        >
+                          <span className="text-base">{seal.emblem}</span>
+                          <span className="truncate">{seal.name}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Blooms Arrangement */}
+                <div className="space-y-1.5">
+                  <div className="text-[11px] text-rose-200/70 font-medium">
+                    Bouquet Blooms (click to toggle, 1–4 blooms)
+                  </div>
+                  <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+                    {CURATED_FLOWERS.map((flower) => {
+                      const isSelected = normalizeValentineDecor(config.decor).blooms.includes(flower.id);
+                      return (
+                        <button
+                          key={flower.id}
+                          type="button"
+                          data-testid={`decor-option-bloom-${flower.id}`}
+                          onClick={() =>
+                            handleConfigChange((prev) => {
+                              const existing = normalizeValentineDecor(prev.decor);
+                              let nextBlooms = [...existing.blooms];
+                              if (nextBlooms.includes(flower.id)) {
+                                if (nextBlooms.length > 1) {
+                                  nextBlooms = nextBlooms.filter((b) => b !== flower.id);
+                                }
+                              } else {
+                                if (nextBlooms.length >= 4) nextBlooms.shift();
+                                nextBlooms.push(flower.id);
+                              }
+                              return {
+                                ...prev,
+                                decor: {
+                                  ...existing,
+                                  blooms: nextBlooms,
+                                  flowers: nextBlooms,
+                                },
+                              };
+                            })
+                          }
+                          className={`p-2 rounded-xl border text-center transition-all ${
+                            isSelected
+                              ? "border-rose-400 bg-rose-950/90 text-white font-semibold shadow-xs"
+                              : "border-white/10 bg-white/[0.03] text-rose-200/70 hover:bg-white/[0.08]"
+                          }`}
+                        >
+                          <div className="text-xl mb-0.5">{flower.emoji}</div>
+                          <div className="text-[10px] truncate">{flower.name.split(" ")[1] || flower.name}</div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Orbiting Charms */}
+                <div className="space-y-1.5">
+                  <div className="text-[11px] text-rose-200/70 font-medium">
+                    Orbiting Charms (click to toggle)
+                  </div>
+                  <div className="grid grid-cols-5 gap-2">
+                    {CURATED_CHARMS.map((charm) => {
+                      const isSelected = normalizeValentineDecor(config.decor).charms.includes(charm.id);
+                      return (
+                        <button
+                          key={charm.id}
+                          type="button"
+                          data-testid={`decor-option-charm-${charm.id}`}
+                          onClick={() =>
+                            handleConfigChange((prev) => {
+                              const existing = normalizeValentineDecor(prev.decor);
+                              let nextCharms = [...existing.charms];
+                              if (nextCharms.includes(charm.id)) {
+                                nextCharms = nextCharms.filter((c) => c !== charm.id);
+                              } else {
+                                if (nextCharms.length >= 3) nextCharms.shift();
+                                nextCharms.push(charm.id);
+                              }
+                              return {
+                                ...prev,
+                                decor: {
+                                  ...existing,
+                                  charms: nextCharms,
+                                },
+                              };
+                            })
+                          }
+                          className={`p-2 rounded-xl border text-center transition-all ${
+                            isSelected
+                              ? "border-rose-400 bg-rose-950/90 text-white font-semibold shadow-xs"
+                              : "border-white/10 bg-white/[0.03] text-rose-200/70 hover:bg-white/[0.08]"
+                          }`}
+                        >
+                          <div className="text-lg mb-0.5">{charm.emoji}</div>
+                          <div className="text-[9px] truncate">{charm.name.split(" ")[1] || charm.name}</div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
               </div>
 
               {/* Validation Errors */}

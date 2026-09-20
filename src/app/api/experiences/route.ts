@@ -25,7 +25,8 @@ export async function POST(request: NextRequest) {
 
     const clientIp = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "127.0.0.1";
     const rateLimitKey = getAnonymizedKey("create-exp", clientIp);
-    const limitResult = await rateLimiter.check(rateLimitKey, 10, 60 * 60 * 1000);
+    const maxCreatesPerHour = process.env.NODE_ENV === "production" ? 15 : 10000;
+    const limitResult = await rateLimiter.check(rateLimitKey, maxCreatesPerHour, 60 * 60 * 1000);
 
     if (!limitResult.allowed) {
       return NextResponse.json(
@@ -45,7 +46,18 @@ export async function POST(request: NextRequest) {
     const credentialHash = hashEditCredential(rawCredential);
     const issuedAt = new Date();
 
-    const defaultConfigJson = JSON.stringify(midnightRoseV1.defaultConfig);
+    let initialConfig = { ...midnightRoseV1.defaultConfig };
+    try {
+      const body = await request.json().catch(() => null);
+      if (body && typeof body === "object" && body.initialDecor) {
+        const { normalizeValentineDecor } = await import("@/types/decor");
+        initialConfig.decor = normalizeValentineDecor(body.initialDecor);
+      }
+    } catch {
+      // Gracefully fall back to defaults
+    }
+
+    const defaultConfigJson = JSON.stringify(initialConfig);
 
     await db.experience.create({
       data: {
