@@ -716,7 +716,7 @@ export default function EditExperiencePage() {
                                   decor: {
                                     ...normalizeValentineDecor(prev.decor),
                                     [key]: option,
-                                  },
+                                  } as ValentineDecor,
                                 }))
                               }
                               className={`flex items-center gap-2 rounded-xl border px-3 py-2.5 text-left text-xs transition-all ${
