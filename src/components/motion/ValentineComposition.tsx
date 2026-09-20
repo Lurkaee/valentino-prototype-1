@@ -106,25 +106,25 @@ export function ValentineComposition({
     >
       <div aria-hidden="true" className="pointer-events-none absolute inset-0 rounded-[2rem] bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.18),transparent_52%)]" />
 
-      {Object.keys(DECOR_SLOTS).map((slot, index) => {
-        const style = slotStyle(slot as DecorSlotName);
-        const [x, y, rotate, scale] = DECOR_SLOTS[slot as DecorSlotName];
-        return (
-          <motion.div
-            key={slot}
-            data-testid={`composition-bloom-${slot}`}
-            data-slot={slot}
-            className="pointer-events-none absolute select-none text-4xl sm:text-5xl drop-shadow-[0_8px_12px_rgba(40,10,20,0.18)] will-change-transform"
-            style={{ left: style.left, top: style.top, zIndex: style.zIndex }}
+      {Object.keys(DECOR_SLOTS).map((slot, index) => (
+        <div
+          key={slot}
+          data-testid={`composition-bloom-${slot}`}
+          data-slot={slot}
+          className="pointer-events-none absolute select-none text-4xl sm:text-5xl drop-shadow-[0_8px_12px_rgba(40,10,20,0.18)] will-change-transform"
+          style={slotStyle(slot as DecorSlotName)}
+        >
+          <motion.span
+            className="inline-block"
             initial={
               reducedMotion
-                ? { opacity: 1, scale }
-                : { opacity: 0, x: `${x - 50}%`, y: `${y - 50}%`, rotate: rotate - 8, scale: scale * 0.72 }
+                ? { opacity: 1, x: 0, y: 0, rotate: 0, scale: 1 }
+                : { opacity: 0, x: -10, y: 8, rotate: -8, scale: 0.72 }
             }
             animate={
               reducedMotion
-                ? { opacity: 1, scale }
-                : { opacity: 1, x: "-50%", y: "-50%", rotate, scale }
+                ? { opacity: 1, x: 0, y: 0, rotate: 0, scale: 1 }
+                : { opacity: 1, x: 0, y: 0, rotate: 0, scale: 1 }
             }
             transition={
               reducedMotion
@@ -133,9 +133,9 @@ export function ValentineComposition({
             }
           >
             {BLOOM_GLYPHS[decor.blooms]}
-          </motion.div>
-        );
-      })}
+          </motion.span>
+        </div>
+      ))}
 
       <div className="pointer-events-none absolute inset-0 z-20">
         <span className="absolute left-[16%] top-[19%] text-xl opacity-65">{CHARM_GLYPHS[decor.charms]}</span>
