@@ -4,6 +4,7 @@ import { ValentineSky } from "@/components/ui/ValentineSky";
 import { FloatingNavbar } from "@/components/ui/FloatingNavbar";
 import { HeroEditorialStagger } from "@/components/motion/HeroEditorialStagger";
 import { LoveLetter3D } from "@/components/motion/LoveLetter3D";
+import { BuildYourValentine } from "@/components/motion/BuildYourValentine";
 import { LogoTicker } from "@/components/motion/LogoTicker";
 import { ScrollStorytelling } from "@/components/motion/ScrollStorytelling";
 import { TemplateShowcase } from "@/components/motion/TemplateShowcase";
@@ -28,6 +29,9 @@ export default function HomePage() {
           <LoveLetter3D />
         </div>
       </section>
+
+      {/* Interactive decoration studio — choices persist into the real experience */}
+      <BuildYourValentine />
 
       {/* Romantic Ticker Ribbon */}
       <div className="w-full border-y border-white/[0.08] bg-[#1A0512]/60 backdrop-blur-md relative z-10 my-4">
