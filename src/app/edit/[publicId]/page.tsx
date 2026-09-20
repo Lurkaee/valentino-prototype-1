@@ -319,7 +319,7 @@ export default function EditExperiencePage() {
       {/* 1. Mandatory Owner Reminder Banner */}
       <div
         data-testid="browser-storage-reminder"
-        className="bg-rose-950/70 border-b border-rose-800/30 px-4 py-2 text-center text-xs text-rose-200/90 font-sans flex items-center justify-center gap-2"
+        className="bg-[#240614] border-b border-rose-500/20 px-4 py-2 text-center text-xs text-rose-200 font-sans flex items-center justify-center gap-2"
       >
         <span>💌</span>
         <span>
@@ -328,14 +328,14 @@ export default function EditExperiencePage() {
       </div>
 
       {/* Studio Navigation Bar */}
-      <header className="px-4 sm:px-6 py-3.5 border-b border-white/[0.08] bg-obsidian-900/80 backdrop-blur-md flex items-center justify-between z-20">
+      <header className="px-4 sm:px-6 py-3.5 border-b border-rose-500/20 bg-[#16040D]/90 backdrop-blur-md flex items-center justify-between z-20">
         <div className="flex items-center gap-3">
           <Link href="/" className="flex items-center gap-2 text-white hover:text-rose-400 transition-colors">
             <span className="text-lg">💌</span>
-            <span className="font-serif font-medium tracking-wide hidden sm:inline">Valentino</span>
+            <span className="font-serif font-medium tracking-wide hidden sm:inline">Valentino Writing Desk</span>
           </Link>
           <span className="text-white/20 hidden sm:inline">/</span>
-          <span className="text-xs text-ivory-300 font-sans tracking-wide">
+          <span className="text-xs text-rose-200/80 font-sans tracking-wide">
             Midnight Rose <span className="text-white/40">(v1)</span>
           </span>
         </div>
@@ -344,7 +344,7 @@ export default function EditExperiencePage() {
         <div
           data-testid="save-status-pill"
           data-status={saveStatus}
-          className="text-xs px-3 py-1 rounded-full border border-white/10 bg-white/[0.04] flex items-center gap-1.5 font-sans"
+          className="text-xs px-3 py-1 rounded-full border border-rose-500/20 bg-rose-950/40 flex items-center gap-1.5 font-sans"
         >
           {saveStatus === "saving" && (
             <span className="text-amber-400 animate-pulse flex items-center gap-1.5">
@@ -393,9 +393,9 @@ export default function EditExperiencePage() {
             size="sm"
             disabled={saveStatus === "saving" || isPublishing}
             onClick={handlePublish}
-            className="hidden sm:inline-flex text-xs px-4"
+            className="hidden sm:inline-flex text-xs px-4 rounded-full shadow-lg shadow-rose-950/60"
           >
-            {isPublishing ? "Publishing..." : "Publish Valentine"}
+            {isPublishing ? "Publishing..." : "Publish Valentine 💌"}
           </Button>
         </div>
       </header>
@@ -404,7 +404,7 @@ export default function EditExperiencePage() {
       <div className="flex-1 flex flex-col md:flex-row overflow-hidden relative">
         {/* Left Pane: Form Editor */}
         <div
-          className={`w-full md:w-[480px] lg:w-[540px] flex flex-col border-b md:border-b-0 md:border-r border-white/[0.08] bg-obsidian-950/70 overflow-y-auto ${
+          className={`w-full md:w-[480px] lg:w-[540px] flex flex-col border-b md:border-b-0 md:border-r border-rose-500/15 bg-[#180510]/85 overflow-y-auto ${
             mobileTab === "preview" ? "hidden md:flex" : "flex"
           }`}
         >
@@ -413,8 +413,8 @@ export default function EditExperiencePage() {
               <h1 className="text-xl sm:text-2xl font-serif font-medium text-white">
                 Personalize Your Note
               </h1>
-              <p className="text-xs text-ivory-400 font-light">
-                Write freely. Changes are automatically saved as you write.
+              <p className="text-xs text-rose-200/70 font-light">
+                Write freely from the heart. Changes are saved automatically.
               </p>
             </div>
 
@@ -424,7 +424,7 @@ export default function EditExperiencePage() {
                 <div className="flex items-center justify-between">
                   <label
                     htmlFor="partnerName"
-                    className="block text-xs uppercase tracking-wider text-ivory-300 font-medium"
+                    className="block text-xs uppercase tracking-wider text-rose-200/80 font-medium"
                   >
                     1. Who is this for? <span className="text-rose-400">*</span>
                   </label>
@@ -445,7 +445,7 @@ export default function EditExperiencePage() {
                       partnerName: e.target.value,
                     }))
                   }
-                  className="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/10 text-white placeholder-white/20 focus:outline-none focus:border-rose-500/80 focus:ring-1 focus:ring-rose-500/50 text-sm transition-all"
+                  className="w-full px-4 py-3 rounded-xl bg-[#240818]/60 border border-white/[0.12] text-white placeholder-white/25 focus:outline-none focus:border-rose-400 focus:ring-1 focus:ring-rose-500/40 text-sm transition-all shadow-inner"
                 />
               </div>
 
@@ -454,7 +454,7 @@ export default function EditExperiencePage() {
                 <div className="flex items-center justify-between">
                   <label
                     htmlFor="senderName"
-                    className="block text-xs uppercase tracking-wider text-ivory-300 font-medium"
+                    className="block text-xs uppercase tracking-wider text-rose-200/80 font-medium"
                   >
                     2. And who are you? <span className="text-rose-400">*</span>
                   </label>
@@ -475,7 +475,7 @@ export default function EditExperiencePage() {
                       senderName: e.target.value,
                     }))
                   }
-                  className="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/10 text-white placeholder-white/20 focus:outline-none focus:border-rose-500/80 focus:ring-1 focus:ring-rose-500/50 text-sm transition-all"
+                  className="w-full px-4 py-3 rounded-xl bg-[#240818]/60 border border-white/[0.12] text-white placeholder-white/25 focus:outline-none focus:border-rose-400 focus:ring-1 focus:ring-rose-500/40 text-sm transition-all shadow-inner"
                 />
               </div>
 
@@ -484,7 +484,7 @@ export default function EditExperiencePage() {
                 <div className="flex items-center justify-between">
                   <label
                     htmlFor="greeting"
-                    className="block text-xs uppercase tracking-wider text-ivory-300 font-medium"
+                    className="block text-xs uppercase tracking-wider text-rose-200/80 font-medium"
                   >
                     3. The Greeting
                   </label>
@@ -505,7 +505,7 @@ export default function EditExperiencePage() {
                       greeting: e.target.value,
                     }))
                   }
-                  className="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/10 text-white placeholder-white/20 focus:outline-none focus:border-rose-500/80 focus:ring-1 focus:ring-rose-500/50 text-sm transition-all"
+                  className="w-full px-4 py-3 rounded-xl bg-[#240818]/60 border border-white/[0.12] text-white placeholder-white/25 focus:outline-none focus:border-rose-400 focus:ring-1 focus:ring-rose-500/40 text-sm transition-all shadow-inner"
                 />
               </div>
 
@@ -514,7 +514,7 @@ export default function EditExperiencePage() {
                 <div className="flex items-center justify-between">
                   <label
                     htmlFor="message"
-                    className="block text-xs uppercase tracking-wider text-ivory-300 font-medium"
+                    className="block text-xs uppercase tracking-wider text-rose-200/80 font-medium"
                   >
                     4. Say what&apos;s in your heart <span className="text-rose-400">*</span>
                   </label>
@@ -535,7 +535,7 @@ export default function EditExperiencePage() {
                       message: e.target.value,
                     }))
                   }
-                  className="w-full px-4 py-3.5 rounded-xl bg-white/[0.04] border border-white/10 text-white placeholder-white/20 focus:outline-none focus:border-rose-500/80 focus:ring-1 focus:ring-rose-500/50 text-sm leading-relaxed transition-all resize-y font-light"
+                  className="w-full px-4 py-3.5 rounded-xl bg-[#240818]/60 border border-white/[0.12] text-white placeholder-white/25 focus:outline-none focus:border-rose-400 focus:ring-1 focus:ring-rose-500/40 text-sm leading-relaxed transition-all resize-y font-light shadow-inner"
                 />
               </div>
 
@@ -544,7 +544,7 @@ export default function EditExperiencePage() {
                 <div className="flex items-center justify-between">
                   <label
                     htmlFor="signOff"
-                    className="block text-xs uppercase tracking-wider text-ivory-300 font-medium"
+                    className="block text-xs uppercase tracking-wider text-rose-200/80 font-medium"
                   >
                     5. Sign-off
                   </label>
@@ -565,13 +565,13 @@ export default function EditExperiencePage() {
                       signOff: e.target.value,
                     }))
                   }
-                  className="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/10 text-white placeholder-white/20 focus:outline-none focus:border-rose-500/80 focus:ring-1 focus:ring-rose-500/50 text-sm transition-all"
+                  className="w-full px-4 py-3 rounded-xl bg-[#240818]/60 border border-white/[0.12] text-white placeholder-white/25 focus:outline-none focus:border-rose-400 focus:ring-1 focus:ring-rose-500/40 text-sm transition-all shadow-inner"
                 />
               </div>
 
               {/* Question 6: Choose the Mood (Theme) */}
               <div className="space-y-3 pt-1">
-                <span className="block text-xs uppercase tracking-wider text-ivory-300 font-medium">
+                <span className="block text-xs uppercase tracking-wider text-rose-200/80 font-medium">
                   6. Choose the Mood
                 </span>
                 <div className="grid grid-cols-3 gap-2.5">
@@ -596,7 +596,7 @@ export default function EditExperiencePage() {
                         }
                         className={`px-3 py-2.5 rounded-xl text-xs font-medium border flex items-center justify-center gap-2 transition-all ${
                           isSelected
-                            ? "border-rose-500 bg-rose-950/60 text-white shadow-md shadow-rose-950/50"
+                            ? "border-rose-400 bg-rose-950/80 text-white shadow-md shadow-rose-950/60"
                             : "border-white/10 bg-white/[0.03] text-ivory-400 hover:bg-white/[0.08]"
                         }`}
                       >
@@ -630,7 +630,7 @@ export default function EditExperiencePage() {
                   variant="outline"
                   size="md"
                   onClick={() => performSave()}
-                  className="flex-1 text-xs"
+                  className="flex-1 text-xs border-white/20 text-[#FAF8F5] rounded-full"
                 >
                   Save Draft
                 </Button>
@@ -641,9 +641,9 @@ export default function EditExperiencePage() {
                   size="md"
                   disabled={saveStatus === "saving" || isPublishing}
                   onClick={handlePublish}
-                  className="flex-1 text-xs"
+                  className="flex-1 text-xs rounded-full shadow-lg shadow-rose-950/60"
                 >
-                  {isPublishing ? "Publishing..." : "Publish Valentine"}
+                  {isPublishing ? "Publishing..." : "Publish Valentine 💌"}
                 </Button>
               </div>
 
@@ -654,7 +654,7 @@ export default function EditExperiencePage() {
                   variant="secondary"
                   size="md"
                   onClick={() => setMobileTab("preview")}
-                  className="w-full text-xs"
+                  className="w-full text-xs rounded-full"
                 >
                   View Live Preview →
                 </Button>
@@ -663,21 +663,21 @@ export default function EditExperiencePage() {
           </div>
         </div>
 
-        {/* Right Pane: Device-Framed Live Preview */}
+        {/* Right Pane: Device-Framed Live Preview (Atmospheric Writing Desk Setting) */}
         <div
-          className={`flex-1 bg-[#050508] overflow-y-auto flex flex-col items-center justify-center p-4 sm:p-8 relative ${
+          className={`flex-1 bg-[#0E0207] overflow-y-auto flex flex-col items-center justify-center p-4 sm:p-8 relative ${
             mobileTab === "form" ? "hidden md:flex" : "flex"
           }`}
         >
-          {/* Ambient glow behind preview frame */}
-          <div className="pointer-events-none absolute inset-0 bg-radial-gradient from-rose-600/10 via-transparent to-transparent opacity-60" />
+          {/* Ambient warm candlelight glow behind preview frame */}
+          <div className="pointer-events-none absolute inset-0 bg-radial-gradient from-rose-600/15 via-pink-600/5 to-transparent opacity-70 blur-2xl" />
 
-          {/* Smartphone device frame */}
-          <div className="w-full max-w-[380px] sm:max-w-[420px] rounded-[38px] p-3 sm:p-3.5 bg-gradient-to-b from-white/15 via-white/5 to-white/10 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.9)] relative z-10 border border-white/10">
+          {/* Luxury stationery display frame */}
+          <div className="w-full max-w-[380px] sm:max-w-[420px] rounded-[42px] p-3 sm:p-4 bg-gradient-to-b from-[#33081B] via-[#200511] to-[#14030B] shadow-[0_30px_70px_-20px_rgba(0,0,0,0.95),0_0_50px_rgba(225,29,72,0.18)] relative z-10 border border-rose-500/25">
             {/* Phone Bezel */}
-            <div className="rounded-[30px] overflow-hidden bg-[#0B0B12] border border-black/80 flex flex-col min-h-[580px] max-h-[720px] shadow-inner relative">
+            <div className="rounded-[32px] overflow-hidden bg-[#0A0206] border border-black/80 flex flex-col min-h-[580px] max-h-[720px] shadow-inner relative">
               {/* Dynamic Island / Speaker Notch */}
-              <div className="h-6 w-full bg-[#0B0B12] flex items-center justify-between px-6 pt-1 select-none z-30 shrink-0">
+              <div className="h-6 w-full bg-[#0A0206] flex items-center justify-between px-6 pt-1 select-none z-30 shrink-0">
                 <span className="text-[10px] text-white/50 font-sans font-medium">9:41</span>
                 <div className="w-16 h-3.5 rounded-full bg-black border border-white/10" />
                 <div className="flex items-center gap-1 text-[10px] text-white/50">
@@ -708,30 +708,30 @@ export default function EditExperiencePage() {
         >
           <Card
             variant="glass"
-            className="max-w-md w-full p-8 sm:p-10 border-rose-500/30 text-center space-y-6 shadow-2xl relative"
+            className="max-w-md w-full p-8 sm:p-10 border-rose-500/30 bg-[#220614]/90 text-center space-y-6 shadow-2xl relative rounded-3xl"
           >
-            <div className="w-16 h-16 mx-auto rounded-full bg-rose-700/80 border border-rose-500 flex items-center justify-center shadow-xl shadow-rose-950/80 text-3xl select-none animate-float">
+            <div className="w-16 h-16 mx-auto rounded-full bg-gradient-to-br from-rose-600 via-rose-700 to-[#7A1428] border border-rose-400 flex items-center justify-center shadow-xl shadow-rose-950/80 text-3xl select-none animate-float">
               💌
             </div>
 
             <div className="space-y-2">
-              <Badge variant="rose" size="sm">
+              <Badge variant="rose" size="sm" className="bg-rose-950/80 border-rose-400/40 text-rose-200">
                 Published & Sealed
               </Badge>
               <h2 className="text-2xl font-serif font-medium text-white">
                 Your Valentine is Ready
               </h2>
-              <p className="text-xs sm:text-sm text-ivory-300/80 font-light leading-relaxed">
+              <p className="text-xs sm:text-sm text-[#FAF8F5]/80 font-light leading-relaxed">
                 Send this private link to your partner. When they open it, they will break the digital wax seal to reveal your personal letter.
               </p>
             </div>
 
-            <div className="p-3.5 rounded-xl bg-black/50 border border-white/10 flex items-center gap-2">
+            <div className="p-3.5 rounded-xl bg-black/60 border border-rose-500/20 flex items-center gap-2">
               <input
                 data-testid="public-url-input"
                 readOnly
                 value={publicUrl}
-                className="flex-1 bg-transparent text-xs text-ivory-200 outline-none select-all font-mono"
+                className="flex-1 bg-transparent text-xs text-rose-100 outline-none select-all font-mono"
               />
               <button
                 type="button"
@@ -764,7 +764,7 @@ export default function EditExperiencePage() {
               </button>
             </div>
 
-            <p className="text-[11px] text-ivory-400/70 font-sans">
+            <p className="text-[11px] text-rose-200/60 font-sans">
               🔒 Completely private. Never indexed by search engines.
             </p>
           </Card>

@@ -19,21 +19,27 @@ export const motionTheme = {
     fast: 0.08,
   },
 
-  // Navigation curtain wipe
+  // Navigation curtain wipe (soft, cinematic, luxury romantic page turn)
   curtain: {
-    duration: 0.45,
-    ease: [0.76, 0, 0.24, 1] as const, // Cinematic power ease in-out
+    duration: 0.75, // 750ms cover, 750ms reveal
+    ease: [0.45, 0, 0.25, 1] as const, // Soft ease-in-out: slow acceleration, slow deceleration, no bounce
+  },
+
+  // Romantic floating atmosphere (clouds, gentle breathing drift)
+  romanticFloat: {
+    duration: 6,
+    ease: "easeInOut" as const,
   },
 
   // Micro-interactions (hover, tap)
   subtle: {
-    duration: 0.25,
+    duration: 0.3,
     ease: [0.25, 1, 0.5, 1] as const,
   },
 
   // Fade transitions
   fade: {
-    duration: 0.4,
-    ease: "easeOut",
+    duration: 0.5,
+    ease: "easeOut" as const,
   },
 } as const;

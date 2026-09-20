@@ -25,7 +25,8 @@ function render404Html(): string {
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      background: #07070A;
+      background: #12030A;
+      background-image: radial-gradient(ellipse at 50% 20%, #2A0815 0%, #12030A 75%, #080104 100%);
       color: #FAF8F5;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       display: flex;
@@ -39,10 +40,10 @@ function render404Html(): string {
       max-width: 28rem;
       width: 100%;
       padding: 2.5rem 2rem;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(28, 5, 18, 0.85);
+      border: 1px solid rgba(244, 114, 182, 0.15);
       border-radius: 1.5rem;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
     }
@@ -100,7 +101,8 @@ function render410Html(): string {
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      background: #07070A;
+      background: #12030A;
+      background-image: radial-gradient(ellipse at 50% 20%, #2A0815 0%, #12030A 75%, #080104 100%);
       color: #FAF8F5;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       display: flex;
@@ -114,10 +116,10 @@ function render410Html(): string {
       max-width: 28rem;
       width: 100%;
       padding: 2.5rem 2rem;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(28, 5, 18, 0.85);
+      border: 1px solid rgba(244, 114, 182, 0.15);
       border-radius: 1.5rem;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
     }
@@ -184,6 +186,7 @@ const ACCENTS: Record<
     border: string;
     badge: string;
     accentText: string;
+    paperAccent: string;
   }
 > = {
   "crimson-rose": {
@@ -194,6 +197,7 @@ const ACCENTS: Record<
     border: "rgba(244, 63, 94, 0.25)",
     badge: "color: #FDA4AF; background: rgba(76, 5, 25, 0.6); border: 1px solid rgba(159, 18, 57, 0.5);",
     accentText: "#FDA4AF",
+    paperAccent: "#9F1239",
   },
   "midnight-violet": {
     glow: "radial-gradient(circle at center, rgba(147, 51, 234, 0.22) 0%, rgba(79, 70, 229, 0.1) 45%, transparent 70%)",
@@ -203,6 +207,7 @@ const ACCENTS: Record<
     border: "rgba(168, 85, 247, 0.25)",
     badge: "color: #D8B4FE; background: rgba(59, 7, 100, 0.6); border: 1px solid rgba(107, 33, 168, 0.5);",
     accentText: "#D8B4FE",
+    paperAccent: "#6B21A8",
   },
   "champagne-gold": {
     glow: "radial-gradient(circle at center, rgba(217, 119, 6, 0.22) 0%, rgba(202, 138, 4, 0.1) 45%, transparent 70%)",
@@ -212,6 +217,7 @@ const ACCENTS: Record<
     border: "rgba(245, 158, 11, 0.25)",
     badge: "color: #FDE68A; background: rgba(69, 26, 3, 0.6); border: 1px solid rgba(146, 64, 14, 0.5);",
     accentText: "#FDE68A",
+    paperAccent: "#92400E",
   },
 };
 
@@ -240,7 +246,8 @@ function renderPublicHtml(config: PublishedConfig): string {
       width: 100%;
       min-height: 100vh;
       overflow-x: hidden;
-      background: #07070A;
+      background: #12030A;
+      background-image: radial-gradient(ellipse at 50% 15%, #2A0815 0%, #12030A 70%, #080104 100%);
       color: #FAF8F5;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
@@ -274,13 +281,13 @@ function renderPublicHtml(config: PublishedConfig): string {
     }
     .card {
       width: 100%;
-      border-radius: 1.5rem;
-      background: rgba(255, 255, 255, 0.03);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
+      border-radius: 1.75rem;
+      background: rgba(28, 5, 18, 0.88);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
       border: 1px solid ${theme.border};
       padding: 2.5rem 1.75rem;
-      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.8);
+      box-shadow: 0 30px 70px -15px rgba(0, 0, 0, 0.85), inset 0 1px 0 rgba(255, 255, 255, 0.08);
       transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
       overflow-wrap: anywhere;
       word-break: break-word;
@@ -384,35 +391,60 @@ function renderPublicHtml(config: PublishedConfig): string {
     .letter-box {
       display: flex;
       flex-direction: column;
-      gap: 2rem;
-      color: #EAE5D9;
+      gap: 1.5rem;
+      color: #2C0D17;
       line-height: 1.8;
       font-size: 1.05rem;
     }
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
+      from { opacity: 0; transform: translateY(12px); }
       to { opacity: 1; transform: translateY(0); }
     }
     .animate-fadeIn {
       animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
+    .paper-card {
+      position: relative;
+      background: #FFFDF9;
+      color: #2C0D17;
+      border: 1px solid #F3E8DC;
+      border-radius: 1.25rem;
+      padding: 2rem 1.75rem;
+      box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.45);
+      overflow: hidden;
+    }
+    @media (min-width: 640px) {
+      .paper-card { padding: 2.5rem 2.25rem; }
+    }
+    .paper-gold-line {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.6), transparent);
+    }
     .message-card {
       white-space: pre-wrap;
-      border-radius: 1rem;
-      background: rgba(0, 0, 0, 0.3);
-      padding: 1.75rem;
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      font-weight: 300;
-      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+      font-family: Georgia, Cambria, 'Times New Roman', serif;
+      font-size: 1.125rem;
+      line-height: 1.85;
+      color: #2C0D17;
+      font-weight: 400;
+      position: relative;
+      z-index: 2;
     }
     .signoff-box {
       text-align: right;
-      padding-top: 1rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      padding-top: 1.5rem;
+      margin-top: 1.5rem;
+      border-top: 1px solid rgba(232, 220, 207, 0.85);
+      position: relative;
+      z-index: 2;
     }
     .signoff-label {
       font-size: 0.75rem;
-      color: #9E9789;
+      color: #8C5868;
       text-transform: uppercase;
       letter-spacing: 0.12em;
       margin-bottom: 0.35rem;
@@ -420,9 +452,9 @@ function renderPublicHtml(config: PublishedConfig): string {
     }
     .sender-title {
       font-family: Georgia, Cambria, 'Times New Roman', serif;
-      font-size: 1.5rem;
-      font-weight: 500;
-      color: ${theme.accentText};
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: ${theme.paperAccent};
     }
     .hidden { display: none !important; }
     @media (prefers-reduced-motion: reduce) {
@@ -464,10 +496,13 @@ function renderPublicHtml(config: PublishedConfig): string {
         </div>
 
         <div class="letter-box hidden" data-testid="unsealed-letter">
-          <div class="message-card" data-testid="letter-message">${message}</div>
-          <div class="signoff-box">
-            <div class="signoff-label">${signOff}</div>
-            <div class="sender-title" data-testid="sender-name">${senderName}</div>
+          <div class="paper-card">
+            <div class="paper-gold-line"></div>
+            <div class="message-card" data-testid="letter-message">${message}</div>
+            <div class="signoff-box">
+              <div class="signoff-label">${signOff}</div>
+              <div class="sender-title" data-testid="sender-name">${senderName}</div>
+            </div>
           </div>
         </div>
       </div>

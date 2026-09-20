@@ -1,12 +1,14 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import { motionTheme } from "@/lib/motion-theme";
 
 const CURTAIN_EVENT = "valentino:curtain-navigate";
+
+type CurtainStage = "idle" | "covering" | "covered" | "revealing";
 
 /**
  * Triggers a programmatic curtain transition to the specified route.
@@ -19,14 +21,19 @@ export function triggerCurtainNavigation(href: string) {
 
 /**
  * Standalone PageCurtains overlay.
- * Mounts in layout without wrapping or mutating children boundaries.
+ * Follows a true cover → navigate → commit/paint → reveal lifecycle
+ * without relying on arbitrary guessed timers.
  */
 export function PageCurtains() {
   const router = useRouter();
   const pathname = usePathname();
   const shouldReduceMotion = useReducedMotion();
-  const [isTransitioning, setIsTransitioning] = useState(false);
 
+  const [stage, setStage] = useState<CurtainStage>("idle");
+  const pendingHrefRef = useRef<string | null>(null);
+  const fromPathRef = useRef<string>(pathname);
+
+  // Handle curtain event
   const handleCurtainEvent = useCallback(
     (e: Event) => {
       const customEvent = e as CustomEvent<{ href: string }>;
@@ -37,13 +44,9 @@ export function PageCurtains() {
         return;
       }
 
-      setIsTransitioning(true);
-
-      const navigateTimer = setTimeout(() => {
-        router.push(targetHref);
-      }, 260);
-
-      return () => clearTimeout(navigateTimer);
+      pendingHrefRef.current = targetHref;
+      fromPathRef.current = pathname;
+      setStage("covering");
     },
     [pathname, router, shouldReduceMotion]
   );
@@ -55,63 +58,113 @@ export function PageCurtains() {
     };
   }, [handleCurtainEvent]);
 
-  // Once destination pathname is mounted, automatically retract curtain
-  useEffect(() => {
-    if (isTransitioning) {
-      const retractTimer = setTimeout(() => {
-        setIsTransitioning(false);
-      }, 100);
-
-      return () => clearTimeout(retractTimer);
+  // Step 2: Once cover animation reaches full screen coverage, trigger navigation
+  const handleCoverComplete = () => {
+    if (stage === "covering" && pendingHrefRef.current) {
+      setStage("covered");
+      router.push(pendingHrefRef.current);
     }
-  }, [pathname, isTransitioning]);
+  };
 
-  if (shouldReduceMotion) {
+  // Step 3: Listen for pathname update while covered.
+  // Once the destination route is committed in React and painted, begin the reveal.
+  useEffect(() => {
+    if (stage === "covered") {
+      const isDestinationReached =
+        pendingHrefRef.current &&
+        (pathname === pendingHrefRef.current || pathname !== fromPathRef.current);
+
+      if (isDestinationReached) {
+        // Wait one frame to ensure browser paint has occurred
+        const rafId = requestAnimationFrame(() => {
+          setStage("revealing");
+        });
+        return () => cancelAnimationFrame(rafId);
+      }
+
+      // Safety fallback: if navigation stalls, reveal after 3.5s so user is never stuck
+      const fallbackTimer = setTimeout(() => {
+        setStage("revealing");
+      }, 3500);
+
+      return () => clearTimeout(fallbackTimer);
+    }
+  }, [pathname, stage]);
+
+  // Step 4: When reveal completes, reset back to idle
+  const handleRevealComplete = () => {
+    if (stage === "revealing") {
+      setStage("idle");
+      pendingHrefRef.current = null;
+    }
+  };
+
+  if (shouldReduceMotion || stage === "idle") {
     return null;
   }
 
-  return (
-    <AnimatePresence>
-      {isTransitioning && (
-        <div
-          className="fixed inset-0 z-[9999] pointer-events-auto overflow-hidden"
-          aria-hidden="true"
-        >
-          {/* Layer 1: Crimson leading edge accent */}
-          <motion.div
-            initial={{ x: "-100%" }}
-            animate={{ x: "0%" }}
-            exit={{ x: "100%" }}
-            transition={{
-              duration: motionTheme.curtain.duration,
-              ease: motionTheme.curtain.ease,
-            }}
-            className="absolute inset-0 bg-gradient-to-r from-rose-950 via-rose-900 to-rose-700 shadow-2xl"
-          />
+  // Animation variants for the organic page curtain
+  const curtainVariants = {
+    covering: {
+      x: "0%",
+      transition: {
+        duration: motionTheme.curtain.duration,
+        ease: motionTheme.curtain.ease,
+      },
+    },
+    covered: {
+      x: "0%",
+    },
+    revealing: {
+      x: "100%",
+      transition: {
+        duration: motionTheme.curtain.duration,
+        ease: motionTheme.curtain.ease,
+      },
+    },
+  };
 
-          {/* Layer 2: Deep Obsidian main curtain with fine gold border */}
-          <motion.div
-            initial={{ x: "-100%" }}
-            animate={{ x: "0%" }}
-            exit={{ x: "100%" }}
-            transition={{
-              duration: motionTheme.curtain.duration,
-              ease: motionTheme.curtain.ease,
-              delay: 0.04,
-            }}
-            className="absolute inset-0 bg-[#07070A] border-r border-rose-500/20 flex flex-col items-center justify-center"
-          >
-            {/* Subtle illuminated seal emblem during cover */}
-            <div className="flex flex-col items-center gap-3 select-none">
-              <span className="text-3xl animate-pulse">💌</span>
-              <span className="font-serif text-sm tracking-[0.2em] text-[#FAF8F5]/80 uppercase">
-                Valentino
-              </span>
-            </div>
-          </motion.div>
+  return (
+    <div
+      className="fixed inset-0 z-[9999] pointer-events-auto overflow-hidden"
+      aria-hidden="true"
+    >
+      {/* Layer 1: Soft peach/rose ambient glow leading edge */}
+      <motion.div
+        initial={{ x: "-100%" }}
+        animate={stage}
+        variants={curtainVariants}
+        className="absolute inset-0 bg-gradient-to-r from-rose-950 via-rose-900/80 to-rose-700/60 shadow-2xl blur-[2px]"
+      />
+
+      {/* Layer 2: Main deep rose & warm cream fabric/paper page curtain */}
+      <motion.div
+        initial={{ x: "-100%" }}
+        animate={stage}
+        variants={curtainVariants}
+        onAnimationComplete={() => {
+          if (stage === "covering") {
+            handleCoverComplete();
+          } else if (stage === "revealing") {
+            handleRevealComplete();
+          }
+        }}
+        className="absolute inset-0 bg-gradient-to-br from-[#380716] via-[#4A061B] to-[#25030E] border-r border-[#FAF8F5]/30 shadow-[0_0_60px_rgba(225,29,72,0.3)] flex flex-col items-center justify-center"
+      >
+        {/* Subtle illuminated seal emblem during transition */}
+        <div className="flex flex-col items-center gap-3 select-none">
+          <div className="w-14 h-14 rounded-full bg-rose-800/80 border border-rose-400/60 shadow-lg shadow-rose-950/80 flex items-center justify-center">
+            <span className="text-2xl animate-pulse">💌</span>
+          </div>
+          <span className="font-serif text-sm tracking-[0.25em] text-[#FAF8F5]/90 uppercase font-medium">
+            Valentino
+          </span>
+          <span className="text-[11px] text-rose-300/70 font-sans tracking-wider">
+            Turning the page...
+          </span>
         </div>
-      )}
-    </AnimatePresence>
+      </motion.div>
+    </div>
   );
 }
 
