@@ -43,7 +43,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${playfair.variable} ${plusJakarta.variable}`}>
-      <body className="antialiased min-h-[100dvh] flex flex-col font-sans bg-[#07070A] text-[#FAF8F5]">
+      <body className="antialiased min-h-[100dvh] flex flex-col font-sans bg-[#12030A] text-[#FAF8F5]">
         {children}
         <PageCurtains />
       </body>

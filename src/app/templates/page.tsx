@@ -8,6 +8,8 @@ import { Badge } from "@/components/ui/Badge";
 import { AtmosphericGlow } from "@/components/ui/AtmosphericGlow";
 import { CurtainLink } from "@/components/motion/PageCurtains";
 
+import { ValentinoMonogram } from "@/components/motion/ValentinoMonogram";
+
 export default function TemplatesPage() {
   const [selectedMidnightTheme, setSelectedMidnightTheme] = useState<
     "crimson-rose" | "midnight-violet" | "champagne-gold"
@@ -19,42 +21,42 @@ export default function TemplatesPage() {
       sealBg: "bg-rose-700",
       sealBorder: "border-rose-500",
       border: "border-rose-500/30",
-      badge: "text-rose-300 bg-rose-950/60 border-rose-800/50",
-      accentText: "text-rose-400",
+      badge: "text-rose-200 bg-rose-950/70 border-rose-500/40",
+      accentText: "text-rose-300",
     },
     "midnight-violet": {
       name: "Midnight Violet",
       sealBg: "bg-purple-700",
       sealBorder: "border-purple-500",
       border: "border-purple-500/30",
-      badge: "text-purple-300 bg-purple-950/60 border-purple-800/50",
-      accentText: "text-purple-400",
+      badge: "text-purple-200 bg-purple-950/70 border-purple-500/40",
+      accentText: "text-purple-300",
     },
     "champagne-gold": {
       name: "Champagne Gold",
       sealBg: "bg-amber-700",
       sealBorder: "border-amber-500",
       border: "border-amber-500/30",
-      badge: "text-amber-300 bg-amber-950/60 border-amber-800/50",
-      accentText: "text-amber-400",
+      badge: "text-amber-200 bg-amber-950/70 border-amber-500/40",
+      accentText: "text-amber-300",
     },
   }[selectedMidnightTheme];
 
   return (
-    <main className="relative min-h-[100dvh] flex flex-col items-center justify-start bg-[#07070A] text-[#FAF8F5] overflow-x-hidden">
+    <main className="relative min-h-[100dvh] flex flex-col items-center justify-start bg-[#12030A] text-[#FAF8F5] overflow-x-hidden selection:bg-rose-500/30">
       <AtmosphericGlow theme={selectedMidnightTheme} intensity="medium" />
 
       {/* Header */}
       <header className="w-full max-w-6xl mx-auto px-6 py-6 flex items-center justify-between relative z-20">
         <CurtainLink href="/" className="flex items-center gap-2 group">
-          <span className="text-xl select-none transition-transform group-hover:scale-110 duration-300">💌</span>
+          <ValentinoMonogram size={32} className="transition-transform group-hover:scale-105 duration-300" />
           <span className="text-lg font-serif font-medium tracking-wider text-white">
             Valentino
           </span>
         </CurtainLink>
         <CurtainLink href="/create">
-          <Button size="sm" variant="primary" className="text-xs">
-            Start Writing
+          <Button size="sm" variant="primary" className="text-xs px-4 rounded-full shadow-lg shadow-rose-950/60">
+            Start Writing 💌
           </Button>
         </CurtainLink>
       </header>
