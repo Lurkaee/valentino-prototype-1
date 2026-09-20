@@ -8,6 +8,8 @@ import {
 import { normalizeMidnightRoseConfig } from "./midnight-rose/v1/normalize";
 import { MidnightRoseComponent } from "./midnight-rose/v1/Component";
 
+import { DEFAULT_VALENTINE_DECOR } from "@/types/decor";
+
 export const midnightRoseV1: TemplateDefinition<
   MidnightRoseDraftConfig,
   MidnightRosePublishedConfig
@@ -26,6 +28,7 @@ export const midnightRoseV1: TemplateDefinition<
     signOff: "With all my love",
     accentTheme: "crimson-rose",
     heroMediaId: null,
+    decor: DEFAULT_VALENTINE_DECOR,
   },
   normalizeConfig: normalizeMidnightRoseConfig,
   Component: MidnightRoseComponent,

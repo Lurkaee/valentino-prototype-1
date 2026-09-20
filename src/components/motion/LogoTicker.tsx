@@ -55,9 +55,9 @@ export function LogoTicker({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Edge gradient fade masks (warm romantic fade) */}
-      <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-28 bg-gradient-to-r from-[#12030A] to-transparent z-10 pointer-events-none" />
-      <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-28 bg-gradient-to-l from-[#12030A] to-transparent z-10 pointer-events-none" />
+      {/* Edge gradient fade masks (warm romantic velvet fade) */}
+      <div className="absolute left-0 top-0 bottom-0 w-16 sm:w-28 bg-gradient-to-r from-[#1A0310] to-transparent z-10 pointer-events-none" />
+      <div className="absolute right-0 top-0 bottom-0 w-16 sm:w-28 bg-gradient-to-l from-[#1A0310] to-transparent z-10 pointer-events-none" />
 
       {/* Marquee track */}
       <div className="flex overflow-hidden">

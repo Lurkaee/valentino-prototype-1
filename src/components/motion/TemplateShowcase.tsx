@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { motion, useReducedMotion } from "motion/react";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { CurtainLink } from "@/components/motion/PageCurtains";
@@ -95,18 +96,25 @@ const TEMPLATES: TemplateItem[] = [
 export function TemplateShowcase({ className = "" }: { className?: string }) {
   const [activeTemplateId, setActiveTemplateId] = useState<string>("midnight-rose");
   const [selectedSwatch, setSelectedSwatch] = useState<"crimson" | "violet" | "gold">("crimson");
+  const shouldReduceMotion = useReducedMotion();
 
   const activeTemplate = TEMPLATES.find((t) => t.id === activeTemplateId) || TEMPLATES[0];
 
   return (
-    <section id="templates" className={`w-full max-w-6xl mx-auto px-6 py-20 relative z-10 ${className}`}>
-      {/* Section Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-12">
+    <section id="templates" className={`w-full max-w-6xl mx-auto px-6 py-24 relative z-10 ${className}`}>
+      {/* Section Header with Soft Viewport Entrance */}
+      <motion.div
+        initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 16 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-60px" }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+        className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-12"
+      >
         <div>
           <Badge
             variant="rose"
             size="sm"
-            className="mb-3 tracking-widest uppercase text-[11px] bg-rose-950/60 border-rose-400/40 text-rose-200"
+            className="mb-3 tracking-widest uppercase text-[11px] bg-rose-950/70 border-rose-400/40 text-rose-200"
           >
             The Collection
           </Badge>
@@ -126,7 +134,7 @@ export function TemplateShowcase({ className = "" }: { className?: string }) {
             View All Templates →
           </Button>
         </CurtainLink>
-      </div>
+      </motion.div>
 
       {/* Main Interactive Showcase (Inspired by Skiper 6) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">

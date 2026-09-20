@@ -14,6 +14,8 @@ import {
   CURATED_PAPERS,
   CURATED_RIBBONS,
   CURATED_SEALS,
+  encodeDecorParam,
+  normalizeValentineDecor,
 } from "@/types/decor";
 
 type TabCategory = "blooms" | "charms" | "stationery" | "seal";
@@ -22,81 +24,116 @@ export function BuildYourValentine({ className = "" }: { className?: string }) {
   const [decor, setDecor] = useState<ValentineDecor>(DEFAULT_VALENTINE_DECOR);
   const [activeTab, setActiveTab] = useState<TabCategory>("blooms");
 
-  // Toggle flower selection (max 4 flowers at a time to prevent clutter)
+  // Toggle bloom selection (max 4 blooms at a time to prevent clutter)
   const toggleFlower = (flowerId: string) => {
     setDecor((prev) => {
-      const exists = prev.flowers.includes(flowerId);
+      const existing = normalizeValentineDecor(prev);
+      const exists = existing.blooms.includes(flowerId);
+      let nextBlooms = [...existing.blooms];
       if (exists) {
-        // Keep at least one flower
-        if (prev.flowers.length <= 1) return prev;
-        return { ...prev, flowers: prev.flowers.filter((id) => id !== flowerId) };
+        if (nextBlooms.length <= 1) return prev;
+        nextBlooms = nextBlooms.filter((id) => id !== flowerId);
       } else {
-        const nextFlowers = [...prev.flowers, flowerId];
-        // If more than 4, drop the oldest to keep composition balanced and uncluttered
-        if (nextFlowers.length > 4) nextFlowers.shift();
-        return { ...prev, flowers: nextFlowers };
+        if (nextBlooms.length >= 4) nextBlooms.shift();
+        nextBlooms.push(flowerId);
       }
+      return {
+        ...existing,
+        blooms: nextBlooms,
+        flowers: nextBlooms,
+      };
     });
   };
 
   // Toggle charm selection (max 3 charms at a time)
   const toggleCharm = (charmId: string) => {
     setDecor((prev) => {
-      const exists = prev.charms.includes(charmId);
+      const existing = normalizeValentineDecor(prev);
+      const exists = existing.charms.includes(charmId);
+      let nextCharms = [...existing.charms];
       if (exists) {
-        return { ...prev, charms: prev.charms.filter((id) => id !== charmId) };
+        nextCharms = nextCharms.filter((id) => id !== charmId);
       } else {
-        const nextCharms = [...prev.charms, charmId];
-        if (nextCharms.length > 3) nextCharms.shift();
-        return { ...prev, charms: nextCharms };
+        if (nextCharms.length >= 3) nextCharms.shift();
+        nextCharms.push(charmId);
       }
+      return {
+        ...existing,
+        charms: nextCharms,
+      };
     });
   };
 
-  const setPaper = (paperId: string) => setDecor((prev) => ({ ...prev, paper: paperId }));
-  const setRibbon = (ribbonId: string) => setDecor((prev) => ({ ...prev, ribbon: ribbonId }));
-  const setSeal = (sealId: string) => setDecor((prev) => ({ ...prev, seal: sealId }));
+  const setPaper = (paperId: string) =>
+    setDecor((prev) => ({ ...normalizeValentineDecor(prev), paper: paperId }));
+
+  const setRibbon = (ribbonId: string) =>
+    setDecor((prev) => ({ ...normalizeValentineDecor(prev), ribbon: ribbonId }));
+
+  const setSeal = (sealId: string) =>
+    setDecor((prev) => ({
+      ...normalizeValentineDecor(prev),
+      waxSeal: sealId,
+      seal: sealId,
+    }));
 
   // Quick Presets
   const applyPreset = (preset: "classic" | "wildflower" | "royal") => {
     if (preset === "classic") {
       setDecor({
-        flowers: ["rose", "lily"],
-        charms: ["hearts", "sparkles"],
-        paper: "cream",
-        ribbon: "crimson",
-        seal: "crimson",
+        blooms: ["crimson-rose", "french-tulip"],
+        flowers: ["crimson-rose", "french-tulip"],
+        charms: ["heart", "sparkle"],
+        paper: "petal-blush",
+        ribbon: "velvet-crimson",
+        waxSeal: "crimson-heart",
+        seal: "crimson-heart",
       });
     } else if (preset === "wildflower") {
       setDecor({
-        flowers: ["lavender", "daisy", "peony"],
-        charms: ["butterfly", "sparkles"],
-        paper: "blush",
-        ribbon: "rose",
-        seal: "rose",
+        blooms: ["wild-lavender", "wild-daisy", "blush-peony"],
+        flowers: ["wild-lavender", "wild-daisy", "blush-peony"],
+        charms: ["butterfly", "sparkle"],
+        paper: "soft-lavender",
+        ribbon: "satin-rose",
+        waxSeal: "rose-quartz",
+        seal: "rose-quartz",
       });
     } else if (preset === "royal") {
       setDecor({
-        flowers: ["rose", "tulip", "peony"],
-        charms: ["bow", "sparkles"],
-        paper: "vintage",
-        ribbon: "crimson",
-        seal: "burgundy",
+        blooms: ["crimson-rose", "french-tulip", "blush-peony"],
+        flowers: ["crimson-rose", "french-tulip", "blush-peony"],
+        charms: ["bow", "sparkle"],
+        paper: "deckled-parchment",
+        ribbon: "velvet-crimson",
+        waxSeal: "royal-burgundy",
+        seal: "royal-burgundy",
       });
     }
   };
 
   const handleCreate = () => {
-    // Map selected theme for seamless continuity in the creation flow
+    const compactParam = encodeDecorParam(decor);
+    try {
+      if (typeof window !== "undefined") {
+        sessionStorage.setItem("valentino_custom_decor", JSON.stringify(normalizeValentineDecor(decor)));
+      }
+    } catch {
+      // Ignore storage errors in restricted contexts
+    }
+
     const themeParam =
-      decor.seal === "champagne"
+      decor.waxSeal === "champagne-gold" || decor.seal === "champagne-gold"
         ? "champagne-gold"
-        : decor.ribbon === "lavender"
+        : decor.ribbon === "plum-mist"
         ? "midnight-violet"
         : "crimson-rose";
 
-    triggerCurtainNavigation(`/create?theme=${themeParam}&paper=${decor.paper}`);
+    triggerCurtainNavigation(`/create?theme=${themeParam}&decor=${encodeURIComponent(compactParam)}`);
   };
+
+
+  const normalized = normalizeValentineDecor(decor);
 
   return (
     <section
@@ -109,38 +146,41 @@ export function BuildYourValentine({ className = "" }: { className?: string }) {
           <Badge
             variant="rose"
             size="sm"
-            className="mb-4 tracking-widest uppercase text-[11px] bg-rose-100 border-rose-300 text-rose-900 shadow-sm"
+            className="mb-4 bg-rose-100/90 text-[#881337] border-rose-300 font-sans tracking-widest uppercase font-medium"
           >
-            Personalization Studio
+            ✦ Interactive Romantic Studio ✦
           </Badge>
-          <h2 className="text-3xl sm:text-5xl font-serif font-medium text-[#2E0617] tracking-tight mb-4">
-            Build your romantic dispatch.
+          <h2 className="text-3xl sm:text-5xl font-serif font-medium text-[#240412] tracking-tight mb-4">
+            Build Your Valentine
           </h2>
-          <p className="text-sm sm:text-base text-[#4E162F] font-normal leading-relaxed max-w-xl mx-auto">
-            Choose tender blooms, delicate charms, luxury paper, and a poured wax seal. Watch your personal love letter bloom in real time.
+          <p className="text-sm sm:text-base text-[#4A0E2E] font-normal leading-relaxed">
+            Craft a bespoke love letter. Select seasonal blooms, orbiting charms, luxury paper finish, and custom wax seals that will travel directly into your recipient&apos;s hands.
           </p>
 
-          {/* Quick Atmosphere Presets */}
-          <div className="flex flex-wrap items-center justify-center gap-2.5 mt-6">
-            <span className="text-xs text-[#701A3D] font-medium mr-1">Quick Moods:</span>
+          {/* Quick Inspirations / Presets */}
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
+            <span className="text-xs text-[#701A3D] font-medium mr-1">Inspirations:</span>
             <button
               type="button"
+              data-testid="builder-preset-classic"
               onClick={() => applyPreset("classic")}
-              className="text-xs px-3.5 py-1.5 rounded-full bg-white/80 hover:bg-white text-[#4A0E2E] border border-rose-200/80 shadow-xs transition-all active:scale-95 font-medium"
+              className="px-3.5 py-1.5 rounded-full text-xs font-medium bg-white/90 text-[#881337] border border-rose-200 hover:border-rose-400 hover:bg-rose-50 shadow-2xs transition-all active:scale-95"
             >
               🌹 Classic Romance
             </button>
             <button
               type="button"
+              data-testid="builder-preset-wildflower"
               onClick={() => applyPreset("wildflower")}
-              className="text-xs px-3.5 py-1.5 rounded-full bg-white/80 hover:bg-white text-[#4A0E2E] border border-rose-200/80 shadow-xs transition-all active:scale-95 font-medium"
+              className="px-3.5 py-1.5 rounded-full text-xs font-medium bg-white/90 text-[#881337] border border-rose-200 hover:border-rose-400 hover:bg-rose-50 shadow-2xs transition-all active:scale-95"
             >
               🌸 Wildflower Dream
             </button>
             <button
               type="button"
+              data-testid="builder-preset-royal"
               onClick={() => applyPreset("royal")}
-              className="text-xs px-3.5 py-1.5 rounded-full bg-white/80 hover:bg-white text-[#4A0E2E] border border-rose-200/80 shadow-xs transition-all active:scale-95 font-medium"
+              className="px-3.5 py-1.5 rounded-full text-xs font-medium bg-white/90 text-[#881337] border border-rose-200 hover:border-rose-400 hover:bg-rose-50 shadow-2xs transition-all active:scale-95"
             >
               👑 Royal Devotion
             </button>
@@ -156,7 +196,7 @@ export function BuildYourValentine({ className = "" }: { className?: string }) {
 
             {/* Live Assembling Composition */}
             <div className="w-full max-w-md relative z-10 py-12 flex items-center justify-center">
-              <ValentineComposition decor={decor} onLetterClick={handleCreate} />
+              <ValentineComposition decor={normalized} onLetterClick={handleCreate} />
             </div>
 
             {/* Hint Beneath Composition */}
@@ -182,6 +222,7 @@ export function BuildYourValentine({ className = "" }: { className?: string }) {
                   <button
                     key={tab.id}
                     type="button"
+                    data-testid={`builder-tab-${tab.id}`}
                     onClick={() => setActiveTab(tab.id)}
                     className={`flex-1 py-2 px-1 text-xs font-medium rounded-xl transition-all duration-300 flex items-center justify-center gap-1 select-none ${
                       isActive
@@ -189,6 +230,7 @@ export function BuildYourValentine({ className = "" }: { className?: string }) {
                         : "text-[#701A3D]/70 hover:text-[#881337] hover:bg-white/40"
                     }`}
                   >
+
                     <span>{tab.icon}</span>
                     <span className="hidden sm:inline">{tab.label}</span>
                   </button>
@@ -210,15 +252,16 @@ export function BuildYourValentine({ className = "" }: { className?: string }) {
                   >
                     <div className="flex items-center justify-between text-xs text-[#701A3D] font-medium mb-1">
                       <span>Pick blooms for your bouquet</span>
-                      <span className="text-[11px] opacity-75">{decor.flowers.length}/4 selected</span>
+                      <span className="text-[11px] opacity-75">{normalized.blooms.length}/4 selected</span>
                     </div>
                     <div className="grid grid-cols-2 gap-2.5">
                       {CURATED_FLOWERS.map((flower) => {
-                        const isSelected = decor.flowers.includes(flower.id);
+                        const isSelected = normalized.blooms.includes(flower.id);
                         return (
                           <button
                             key={flower.id}
                             type="button"
+                            data-testid={`builder-option-bloom-${flower.id}`}
                             onClick={() => toggleFlower(flower.id)}
                             className={`p-3 rounded-2xl border text-left transition-all duration-200 flex items-center gap-3 select-none active:scale-[0.98] ${
                               isSelected
@@ -249,15 +292,16 @@ export function BuildYourValentine({ className = "" }: { className?: string }) {
                   >
                     <div className="flex items-center justify-between text-xs text-[#701A3D] font-medium mb-1">
                       <span>Romantic touches & charms</span>
-                      <span className="text-[11px] opacity-75">{decor.charms.length}/3 selected</span>
+                      <span className="text-[11px] opacity-75">{normalized.charms.length}/3 selected</span>
                     </div>
                     <div className="grid grid-cols-2 gap-2.5">
                       {CURATED_CHARMS.map((charm) => {
-                        const isSelected = decor.charms.includes(charm.id);
+                        const isSelected = normalized.charms.includes(charm.id);
                         return (
                           <button
                             key={charm.id}
                             type="button"
+                            data-testid={`builder-option-charm-${charm.id}`}
                             onClick={() => toggleCharm(charm.id)}
                             className={`p-3 rounded-2xl border text-left transition-all duration-200 flex items-center gap-3 select-none active:scale-[0.98] ${
                               isSelected
@@ -290,11 +334,12 @@ export function BuildYourValentine({ className = "" }: { className?: string }) {
                       <div className="text-xs text-[#701A3D] font-medium mb-2">Paper Quality</div>
                       <div className="grid grid-cols-2 gap-2">
                         {CURATED_PAPERS.map((paper) => {
-                          const isSelected = decor.paper === paper.id;
+                          const isSelected = normalized.paper === paper.id;
                           return (
                             <button
                               key={paper.id}
                               type="button"
+                              data-testid={`builder-option-paper-${paper.id}`}
                               onClick={() => setPaper(paper.id)}
                               className={`p-2.5 rounded-xl border text-left transition-all flex items-center gap-2.5 ${
                                 isSelected
@@ -317,11 +362,12 @@ export function BuildYourValentine({ className = "" }: { className?: string }) {
                       <div className="text-xs text-[#701A3D] font-medium mb-2">Satin Ribbon Band</div>
                       <div className="grid grid-cols-2 gap-2">
                         {CURATED_RIBBONS.map((ribbon) => {
-                          const isSelected = decor.ribbon === ribbon.id;
+                          const isSelected = normalized.ribbon === ribbon.id;
                           return (
                             <button
                               key={ribbon.id}
                               type="button"
+                              data-testid={`builder-option-ribbon-${ribbon.id}`}
                               onClick={() => setRibbon(ribbon.id)}
                               className={`p-2.5 rounded-xl border text-left transition-all flex items-center gap-2.5 ${
                                 isSelected
@@ -354,11 +400,12 @@ export function BuildYourValentine({ className = "" }: { className?: string }) {
                     <div className="text-xs text-[#701A3D] font-medium mb-1">Wax Seal Choice</div>
                     <div className="grid grid-cols-2 gap-2.5">
                       {CURATED_SEALS.map((seal) => {
-                        const isSelected = decor.seal === seal.id;
+                        const isSelected = normalized.waxSeal === seal.id;
                         return (
                           <button
                             key={seal.id}
                             type="button"
+                            data-testid={`builder-option-seal-${seal.id}`}
                             onClick={() => setSeal(seal.id)}
                             className={`p-3 rounded-2xl border text-left transition-all duration-200 flex items-center gap-3 select-none ${
                               isSelected
@@ -383,6 +430,7 @@ export function BuildYourValentine({ className = "" }: { className?: string }) {
             {/* Direct Action Primary CTA */}
             <div className="pt-2 border-t border-rose-100">
               <Button
+                data-testid="create-valentine-btn"
                 onClick={handleCreate}
                 size="lg"
                 variant="primary"

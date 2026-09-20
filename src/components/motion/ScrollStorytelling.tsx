@@ -99,18 +99,18 @@ export function ScrollStorytelling({ className = "" }: { className?: string }) {
   return (
     <section
       id="how-it-works"
-      className={`w-full max-w-6xl mx-auto px-6 py-24 sm:py-32 relative z-10 ${className}`}
+      className={`w-full max-w-6xl mx-auto px-6 py-20 sm:py-32 relative z-10 ${className}`}
     >
-      {/* Header */}
-      <div className="text-center max-w-2xl mx-auto mb-16 sm:mb-20">
+      {/* Header with Warm Candlelit Eyebrow */}
+      <div className="text-center max-w-2xl mx-auto mb-14 sm:mb-20">
         <Badge
           variant="rose"
           size="sm"
-          className="mb-4 tracking-widest uppercase text-[11px] bg-rose-950/60 border-rose-400/40 text-rose-200"
+          className="mb-4 tracking-widest uppercase text-[11px] bg-[#3B0C1E]/80 border-rose-400/40 text-rose-200 shadow-[0_2px_12px_rgba(225,29,72,0.2)]"
         >
           Made for the moment
         </Badge>
-        <h2 className="text-3xl sm:text-5xl font-serif font-medium text-[#FAF8F5] tracking-tight mb-4">
+        <h2 className="text-3xl sm:text-5xl font-serif font-medium text-[#FAF8F5] tracking-tight mb-4 leading-[1.18]">
           A love letter that feels as intentional as paper.
         </h2>
         <p className="text-sm sm:text-base text-[#FAF8F5]/75 font-light leading-relaxed">
@@ -118,20 +118,27 @@ export function ScrollStorytelling({ className = "" }: { className?: string }) {
         </p>
       </div>
 
-      {/* Interactive Story Showcase */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-        {/* Left: Interactive Scene Steps */}
-        <div className="lg:col-span-6 space-y-3.5">
+      {/* Scrollytelling Showcase */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-start relative">
+        {/* Left: Interactive & Scroll-Sensitive Scene Steps */}
+        <div className="lg:col-span-6 space-y-4">
           {SCENES.map((scene, idx) => {
             const isActive = idx === activeSceneIndex;
             return (
-              <div
+              <motion.div
                 key={scene.id}
+                onViewportEnter={() => {
+                  // Only auto-advance on larger screens so mobile scrolling remains completely unhindered
+                  if (typeof window !== "undefined" && window.innerWidth >= 1024) {
+                    setActiveSceneIndex(idx);
+                  }
+                }}
+                viewport={{ margin: "-30% 0px -40% 0px" }}
                 onClick={() => setActiveSceneIndex(idx)}
-                className={`p-5 sm:p-6 rounded-2xl border transition-all duration-400 cursor-pointer select-none ${
+                className={`p-5 sm:p-6 rounded-2xl border transition-all duration-500 cursor-pointer select-none ${
                   isActive
-                    ? "bg-[#250714]/80 border-rose-400/40 shadow-xl shadow-rose-950/50 -translate-y-0.5"
-                    : "bg-[#14030B]/40 border-white/[0.06] hover:bg-[#1C0510]/50 hover:border-white/15"
+                    ? "bg-gradient-to-r from-[#2F081B]/95 via-[#230514]/90 to-[#1D0411]/90 border-rose-400/50 shadow-[0_12px_36px_-10px_rgba(225,29,72,0.25)] -translate-y-0.5"
+                    : "bg-[#14030B]/40 border-white/[0.06] hover:bg-[#1C0510]/60 hover:border-white/15"
                 }`}
                 role="button"
                 tabIndex={0}
@@ -144,21 +151,21 @@ export function ScrollStorytelling({ className = "" }: { className?: string }) {
               >
                 <div className="flex items-start gap-4">
                   <span
-                    className={`w-9 h-9 rounded-xl flex items-center justify-center text-base shrink-0 border transition-colors ${
+                    className={`w-10 h-10 rounded-xl flex items-center justify-center text-base shrink-0 border transition-all duration-300 ${
                       isActive
-                        ? "bg-rose-600/80 border-rose-400 text-white"
+                        ? "bg-gradient-to-br from-rose-500 to-rose-700 border-rose-300/80 text-white shadow-md shadow-rose-950/60 scale-105"
                         : "bg-white/[0.04] border-white/10 text-white/50"
                     }`}
                   >
                     {scene.icon}
                   </span>
-                  <div className="space-y-1">
+                  <div className="space-y-1.5 flex-1">
                     <div className="flex items-center gap-2.5">
-                      <span className="text-[10px] uppercase tracking-[0.2em] font-mono text-rose-300/80">
+                      <span className="text-[10px] uppercase tracking-[0.2em] font-mono text-rose-300/90 font-medium">
                         {scene.step}
                       </span>
                       {isActive && (
-                        <span className="w-1.5 h-1.5 rounded-full bg-rose-400 animate-ping" />
+                        <span className="w-1.5 h-1.5 rounded-full bg-rose-400 shadow-[0_0_8px_#FB7185]" />
                       )}
                     </div>
                     <h3 className="text-lg font-serif font-medium text-[#FAF8F5]">
@@ -169,34 +176,46 @@ export function ScrollStorytelling({ className = "" }: { className?: string }) {
                     </p>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>
 
-        {/* Right: Sticky/Dynamic Visual Card Canvas */}
-        <div className="lg:col-span-6 flex items-center justify-center">
+        {/* Right: Sticky Pinned Visual Card Canvas (Desktop) / Fluid Canvas (Mobile) */}
+        <div className="lg:col-span-6 lg:sticky lg:top-32 flex items-center justify-center">
           <div className="w-full max-w-md relative">
-            {/* Ambient backlight glow matching scene */}
-            <div className="absolute -inset-6 rounded-3xl bg-gradient-to-r from-rose-600/20 via-pink-500/15 to-transparent blur-2xl opacity-70" />
+            {/* Ambient backlight glow matching the scene palette */}
+            <div className="absolute -inset-6 rounded-3xl bg-gradient-to-r from-rose-600/20 via-pink-500/15 to-transparent blur-3xl opacity-75 pointer-events-none" />
 
             {/* Visual Frame */}
-            <div className="relative rounded-3xl bg-[#1A0510]/80 border border-rose-500/20 p-7 sm:p-9 shadow-2xl backdrop-blur-xl min-h-[380px] flex flex-col justify-between overflow-hidden">
-              {/* Scene Content Transition */}
+            <div className="relative rounded-3xl bg-[#1A0510]/85 border border-rose-500/25 p-7 sm:p-9 shadow-2xl backdrop-blur-xl min-h-[380px] flex flex-col justify-between overflow-hidden">
+              {/* Scene Content Transition: Crossfade & Subtle Depth Dissolve (No 3D flips) */}
               <AnimatePresence mode="wait">
                 <motion.div
                   key={currentScene.id}
-                  initial={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: shouldReduceMotion ? 1 : 0, y: shouldReduceMotion ? 0 : -12 }}
-                  transition={{ duration: 0.35, ease: "easeOut" }}
+                  initial={{
+                    opacity: shouldReduceMotion ? 1 : 0,
+                    scale: shouldReduceMotion ? 1 : 0.98,
+                    y: shouldReduceMotion ? 0 : 8,
+                  }}
+                  animate={{
+                    opacity: 1,
+                    scale: 1,
+                    y: 0,
+                  }}
+                  exit={{
+                    opacity: shouldReduceMotion ? 1 : 0,
+                    scale: shouldReduceMotion ? 1 : 0.98,
+                    y: shouldReduceMotion ? 0 : -8,
+                  }}
+                  transition={{ duration: 0.32, ease: "easeOut" }}
                   className="space-y-6"
                 >
                   <div className="flex items-center justify-between border-b border-white/[0.08] pb-4">
-                    <span className="text-[11px] uppercase tracking-[0.2em] px-3 py-1 rounded-full bg-rose-950/60 border border-rose-500/30 text-rose-200">
+                    <span className="text-[11px] uppercase tracking-[0.2em] px-3.5 py-1 rounded-full bg-rose-950/70 border border-rose-400/40 text-rose-200 font-medium font-sans">
                       {currentScene.preview.tag}
                     </span>
-                    <span className="text-xs font-mono text-[#FAF8F5]/50">
+                    <span className="text-xs font-mono text-[#FAF8F5]/60 font-medium">
                       {currentScene.step}
                     </span>
                   </div>
@@ -215,19 +234,19 @@ export function ScrollStorytelling({ className = "" }: { className?: string }) {
 
                   <div className="pt-4 border-t border-white/[0.06] flex items-center justify-between text-xs text-[#FAF8F5]/60">
                     <span>Crafted with devotion</span>
-                    <span className="text-rose-400 font-serif">Valentino Experience</span>
+                    <span className="text-rose-300 font-serif font-medium">Valentino Experience</span>
                   </div>
                 </motion.div>
               </AnimatePresence>
 
-              {/* Step indicator dots */}
+              {/* Step Indicator Dots */}
               <div className="flex items-center justify-center gap-2 pt-6">
                 {SCENES.map((_, i) => (
                   <button
                     key={i}
                     onClick={() => setActiveSceneIndex(i)}
-                    className={`h-1.5 rounded-full transition-all duration-300 ${
-                      i === activeSceneIndex ? "w-7 bg-rose-400" : "w-1.5 bg-white/20 hover:bg-white/40"
+                    className={`h-1.5 rounded-full transition-all duration-400 ${
+                      i === activeSceneIndex ? "w-8 bg-rose-400 shadow-[0_0_8px_#FB7185]" : "w-1.5 bg-white/20 hover:bg-white/40"
                     }`}
                     aria-label={`Go to scene ${i + 1}`}
                   />

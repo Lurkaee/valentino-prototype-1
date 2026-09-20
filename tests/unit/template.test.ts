@@ -72,6 +72,57 @@ describe("Template Schemas and Normalization", () => {
       expect(normalized.signOff).toBe("With all my love");
       expect(normalized.accentTheme).toBe("crimson-rose");
       expect(normalized.heroMediaId).toBeNull();
+      expect(normalized.decor).toBeDefined();
+      expect(normalized.decor?.paper).toBe("petal-blush");
+      expect(normalized.decor?.ribbon).toBe("satin-rose");
+      expect(normalized.decor?.waxSeal).toBe("crimson-heart");
+    });
+  });
+
+
+  describe("ValentineDecor Serialization and Slots", () => {
+    it("encodes and decodes compact URL decor params correctly", async () => {
+      const { encodeDecorParam, decodeDecorParam } = await import("@/types/decor");
+      const sample = {
+        blooms: ["crimson-rose" as const, "blush-peony" as const],
+        charms: ["sparkle" as const],
+        paper: "handmade-cream" as const,
+        ribbon: "velvet-crimson" as const,
+        waxSeal: "champagne-gold" as const,
+      };
+
+      const encoded = encodeDecorParam(sample);
+      expect(encoded).toBe("crimson-rose,blush-peony|sparkle|handmade-cream|velvet-crimson|champagne-gold");
+
+      const decoded = decodeDecorParam(encoded);
+      expect(decoded.blooms).toEqual(["crimson-rose", "blush-peony"]);
+      expect(decoded.charms).toEqual(["sparkle"]);
+      expect(decoded.paper).toBe("handmade-cream");
+      expect(decoded.ribbon).toBe("velvet-crimson");
+      expect(decoded.waxSeal).toBe("champagne-gold");
+    });
+
+
+    it("falls back safely when decoding invalid decor params", async () => {
+      const { decodeDecorParam, DEFAULT_VALENTINE_DECOR } = await import("@/types/decor");
+      expect(decodeDecorParam("")).toEqual(DEFAULT_VALENTINE_DECOR);
+      expect(decodeDecorParam("garbage|data|invalid")).toEqual(DEFAULT_VALENTINE_DECOR);
+    });
+
+    it("provides dynamic, balanced bloom slots based on count", async () => {
+      const { getBloomSlots } = await import("@/types/decor");
+      // 1 bloom -> single hero placement
+      expect(getBloomSlots(1)).toHaveLength(1);
+      expect(getBloomSlots(1)[0].slotId).toBe("hero-top");
+
+      // 2 blooms -> balanced left/right
+      expect(getBloomSlots(2)).toHaveLength(2);
+      expect(getBloomSlots(2).map((s) => s.slotId)).toEqual(["balanced-left", "balanced-right"]);
+
+      // 3 blooms -> triangle
+      expect(getBloomSlots(3)).toHaveLength(3);
+      expect(getBloomSlots(3).map((s) => s.slotId)).toEqual(["triangle-top", "triangle-bottom-left", "triangle-bottom-right"]);
     });
   });
 });
+

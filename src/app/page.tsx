@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { ValentineSky } from "@/components/ui/ValentineSky";
 import { FloatingNavbar } from "@/components/ui/FloatingNavbar";
+import { SectionDivider } from "@/components/ui/SectionDivider";
 import { HeroEditorialStagger } from "@/components/motion/HeroEditorialStagger";
 import { LoveLetter3D } from "@/components/motion/LoveLetter3D";
 import { LogoTicker } from "@/components/motion/LogoTicker";
@@ -19,7 +20,7 @@ export default function HomePage() {
       {/* ========================================================================= */}
       {/* SURFACE 01: Hero Viewport — Dreamy Sunset Sky, Clouds & 3D Love Letter     */}
       {/* ========================================================================= */}
-      <div className="relative w-full min-h-[92dvh] sm:min-h-screen flex flex-col items-center justify-center overflow-hidden">
+      <div className="relative w-full min-h-[92dvh] sm:min-h-screen flex flex-col items-center justify-center overflow-hidden bg-[#FEDEEA]">
         <ValentineSky />
 
         <section className="w-full max-w-5xl mx-auto px-6 pt-24 sm:pt-28 pb-14 flex flex-col items-center justify-center text-center relative z-10">
@@ -30,19 +31,25 @@ export default function HomePage() {
         </section>
       </div>
 
+      {/* Sky-to-Paper Organic Horizon */}
+      <SectionDivider variant="sky-to-cream" />
+
       {/* ========================================================================= */}
       {/* SURFACE 02: Warm Cream Paper — "Build Your Valentine" Interactive Studio   */}
       {/* ========================================================================= */}
-      <div className="w-full bg-[#FDF8F3] text-[#2C0617] border-y border-[#F3E5D8] relative z-10">
+      <div className="w-full bg-[#FDF8F3] text-[#2C0617] relative z-10">
         <BuildYourValentine />
       </div>
+
+      {/* Cream Paper-to-Berry Velvet Dusk Bridge (Eliminates color whiplash) */}
+      <SectionDivider variant="cream-to-berry" />
 
       {/* ========================================================================= */}
       {/* SURFACE 03: Deep Berry Velvet — Romantic Ticker & Scroll Storytelling     */}
       {/* ========================================================================= */}
-      <div className="w-full bg-gradient-to-b from-[#18030E] via-[#240516] to-[#16020D] text-[#FAF8F5] relative z-10 border-b border-rose-950/60">
-        {/* Romantic Ticker Ribbon */}
-        <div className="w-full border-y border-rose-500/20 bg-[#250616]/80 backdrop-blur-md">
+      <div className="w-full bg-gradient-to-b from-[#1A0310] via-[#240516] to-[#18020E] text-[#FAF8F5] relative z-10">
+        {/* Soft Romantic Ticker Ribbon */}
+        <div className="w-full border-y border-rose-500/15 bg-[#250616]/60 backdrop-blur-md">
           <LogoTicker />
         </div>
 
@@ -53,9 +60,12 @@ export default function HomePage() {
       {/* ========================================================================= */}
       {/* SURFACE 04: Rich Starlight Plum — Template Ecosystem Showcase             */}
       {/* ========================================================================= */}
-      <div className="w-full bg-gradient-to-b from-[#16020D] via-[#200414] to-[#12030A] text-[#FAF8F5] relative z-10 border-b border-rose-950/40">
+      <div className="w-full bg-gradient-to-b from-[#18020E] via-[#200414] to-[#14020C] text-[#FAF8F5] relative z-10">
         <TemplateShowcase />
       </div>
+
+      {/* Berry-to-Midnight Starlight Bridge */}
+      <SectionDivider variant="berry-to-midnight" />
 
       {/* ========================================================================= */}
       {/* SURFACE 05: Midnight Reassurance, Final Emotional CTA & Luxury Footer     */}

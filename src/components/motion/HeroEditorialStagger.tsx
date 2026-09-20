@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useReducedMotion } from "motion/react";
+import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { motionTheme } from "@/lib/motion-theme";
@@ -19,8 +19,7 @@ interface HeroEditorialStaggerProps {
 /**
  * HeroEditorialStagger:
  * Editorial romantic typography and tactile CTAs with soft warm tones.
- * Designed with tight, intentional vertical flow so the floating 3D love letter
- * is visible immediately in the first viewport.
+ * Designed with tight, intentional vertical flow and subtle scroll-linked softening.
  */
 export function HeroEditorialStagger({
   eyebrow = "A private digital love letter",
@@ -32,6 +31,11 @@ export function HeroEditorialStagger({
   secondaryCtaHref = "/templates",
 }: HeroEditorialStaggerProps) {
   const shouldReduceMotion = useReducedMotion();
+
+  // Subtle scroll-linked exit softening
+  const { scrollY } = useScroll();
+  const heroOpacity = useTransform(scrollY, [0, 500], [1, 0.4]);
+  const heroY = useTransform(scrollY, [0, 500], [0, 24]);
 
   // Split headline for responsive editorial line reveal
   const headlineWords = headline.split(" ");
@@ -84,6 +88,10 @@ export function HeroEditorialStagger({
       variants={containerVariants}
       initial="hidden"
       animate="visible"
+      style={{
+        opacity: shouldReduceMotion ? 1 : heroOpacity,
+        y: shouldReduceMotion ? 0 : heroY,
+      }}
       className="w-full flex flex-col items-center text-center relative z-10"
     >
       {/* 1. Intimate Eyebrow Pill */}

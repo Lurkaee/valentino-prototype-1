@@ -3,6 +3,8 @@ import { db } from "@/lib/db";
 import { ExperienceStatus } from "@prisma/client";
 import { sanitizeText } from "@/lib/sanitize";
 
+export const dynamic = "force-dynamic";
+
 interface RouteParams {
   params: Promise<{ publicId: string }>;
 }
@@ -166,6 +168,17 @@ function render410Html(): string {
 </html>`;
 }
 
+import {
+  normalizeValentineDecor,
+  getPaperOption,
+  getRibbonOption,
+  getSealOption,
+  getBloomSlots,
+  CHARM_POSITIONS,
+  CURATED_FLOWERS,
+  CURATED_CHARMS,
+} from "@/types/decor";
+
 interface PublishedConfig {
   partnerName?: string;
   senderName?: string;
@@ -174,6 +187,7 @@ interface PublishedConfig {
   signOff?: string;
   accentTheme?: string;
   heroMediaId?: string | null;
+  decor?: unknown;
 }
 
 const ACCENTS: Record<
@@ -229,6 +243,30 @@ function renderPublicHtml(config: PublishedConfig): string {
   const signOff = sanitizeText(config.signOff || "With all my love");
   const senderName = sanitizeText(config.senderName || "Yours Always");
 
+  const decor = normalizeValentineDecor(config.decor);
+  const paper = getPaperOption(decor.paper);
+  const ribbon = getRibbonOption(decor.ribbon);
+  const seal = getSealOption(decor.waxSeal);
+  const bloomSlots = getBloomSlots(decor.blooms.length);
+
+  const bloomsHtml = decor.blooms
+    .map((bloomId, index) => {
+      const flower = CURATED_FLOWERS.find((f) => f.id === bloomId);
+      if (!flower) return "";
+      const slot = bloomSlots[index % bloomSlots.length];
+      return `<div class="bouquet-bloom" data-decor-bloom="${flower.id}" style="transform: translate(${slot.x}px, ${slot.y}px) rotate(${slot.rotate}deg) scale(${slot.scale}); z-index: ${slot.zIndex};"><span class="bloom-emoji">${flower.emoji}</span></div>`;
+    })
+    .join("\n");
+
+  const charmsHtml = decor.charms
+    .map((charmId, index) => {
+      const charm = CURATED_CHARMS.find((c) => c.id === charmId);
+      if (!charm) return "";
+      const pos = CHARM_POSITIONS[index % CHARM_POSITIONS.length];
+      return `<div class="orbiting-charm" data-decor-charm="${charm.id}" style="transform: translate(${pos.x}px, ${pos.y}px);"><span class="charm-emoji">${charm.emoji}</span></div>`;
+    })
+    .join("\n");
+
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -278,6 +316,72 @@ function renderPublicHtml(config: PublishedConfig): string {
       display: flex;
       flex-direction: column;
       align-items: center;
+    }
+    .bouquet-bloom {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.35));
+      pointer-events: none;
+    }
+    .bloom-emoji {
+      font-size: 2.25rem;
+      user-select: none;
+    }
+    .orbiting-charm {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      filter: drop-shadow(0 4px 10px rgba(244, 63, 94, 0.4));
+      pointer-events: none;
+      z-index: 25;
+    }
+    .charm-emoji {
+      font-size: 1.5rem;
+      user-select: none;
+    }
+    .ribbon-band {
+      position: absolute;
+      left: -24px;
+      right: -24px;
+      height: 2.25rem;
+      background: ${ribbon.inlineGradient};
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      z-index: 1;
+    }
+    @media (min-width: 640px) {
+      .ribbon-band { left: -40px; right: -40px; }
+    }
+    .ribbon-stitch-top {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1.5px;
+      background: ${ribbon.inlineStitch};
+    }
+    .ribbon-stitch-bottom {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 1.5px;
+      background: ${ribbon.inlineStitch};
+    }
+    .ribbon-text {
+      font-size: 0.55rem;
+      text-transform: uppercase;
+      letter-spacing: 0.25em;
+      font-family: system-ui, sans-serif;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.9);
+      user-select: none;
     }
     .card {
       width: 100%;
@@ -350,8 +454,8 @@ function renderPublicHtml(config: PublishedConfig): string {
       min-width: 44px;
       min-height: 44px;
       border-radius: 9999px;
-      border: 2px solid ${theme.sealBorder};
-      background: ${theme.sealBg};
+      border: 2px solid ${seal.inlineBorder};
+      background: ${seal.inlineGradient};
       box-shadow: ${theme.sealShadow};
       cursor: pointer;
       outline: none;
@@ -405,13 +509,14 @@ function renderPublicHtml(config: PublishedConfig): string {
     }
     .paper-card {
       position: relative;
-      background: #FFFDF9;
-      color: #2C0D17;
-      border: 1px solid #F3E8DC;
+      background: ${paper.inlineBg};
+      color: ${paper.inlineText};
+      border: 1px solid ${paper.inlineBorder};
       border-radius: 1.25rem;
       padding: 2rem 1.75rem;
       box-shadow: 0 15px 35px -10px rgba(0, 0, 0, 0.45);
       overflow: hidden;
+      transition: all 0.5s ease-out;
     }
     @media (min-width: 640px) {
       .paper-card { padding: 2.5rem 2.25rem; }
@@ -429,7 +534,7 @@ function renderPublicHtml(config: PublishedConfig): string {
       font-family: Georgia, Cambria, 'Times New Roman', serif;
       font-size: 1.125rem;
       line-height: 1.85;
-      color: #2C0D17;
+      color: ${paper.inlineText};
       font-weight: 400;
       position: relative;
       z-index: 2;
@@ -438,13 +543,13 @@ function renderPublicHtml(config: PublishedConfig): string {
       text-align: right;
       padding-top: 1.5rem;
       margin-top: 1.5rem;
-      border-top: 1px solid rgba(232, 220, 207, 0.85);
+      border-top: 1px solid rgba(0, 0, 0, 0.1);
       position: relative;
       z-index: 2;
     }
     .signoff-label {
       font-size: 0.75rem;
-      color: #8C5868;
+      opacity: 0.7;
       text-transform: uppercase;
       letter-spacing: 0.12em;
       margin-bottom: 0.35rem;
@@ -471,24 +576,37 @@ function renderPublicHtml(config: PublishedConfig): string {
 <body>
   <div class="wrapper" data-testid="experience-container">
     <div class="ambient-glow"></div>
+
     <div class="content-container">
-      <div class="card">
+      <div class="blooms-container" style="position: absolute; inset: 0; pointer-events: none; z-index: 20; display: flex; align-items: center; justify-content: center;">
+        ${bloomsHtml}
+        ${charmsHtml}
+      </div>
+      <div class="card" data-decor-paper="${paper.id}" style="position: relative; z-index: 10;">
         <div class="header">
           <span class="badge">${greeting}</span>
           <h1 data-testid="recipient-name">${partnerName}</h1>
         </div>
 
-        <div class="seal-box" data-testid="seal-container">
-          <div class="seal-wrapper">
+        <div class="seal-box" data-testid="seal-container" style="position: relative;">
+          <div class="ribbon-band" data-decor-ribbon="${ribbon.id}">
+            <div class="ribbon-stitch-top"></div>
+            <div class="ribbon-stitch-bottom"></div>
+            <span class="ribbon-text">SEALED</span>
+            <span class="ribbon-text">WITH DEVOTION</span>
+          </div>
+
+          <div class="seal-wrapper" style="position: relative; z-index: 10; margin: 1rem 0;">
             <div class="pulse-halo"></div>
             <button
               type="button"
               class="wax-seal"
               data-testid="wax-seal-button"
+              data-decor-seal="${seal.id}"
               aria-label="Break the wax seal to read letter"
             >
               <div class="wax-seal-inner">
-                <span class="emoji">💌</span>
+                <span class="emoji">${seal.emblem}</span>
               </div>
               <span class="seal-label">Tap to open</span>
             </button>
@@ -498,6 +616,7 @@ function renderPublicHtml(config: PublishedConfig): string {
         <div class="letter-box hidden" data-testid="unsealed-letter">
           <div class="paper-card">
             <div class="paper-gold-line"></div>
+
             <div class="message-card" data-testid="letter-message">${message}</div>
             <div class="signoff-box">
               <div class="signoff-label">${signOff}</div>

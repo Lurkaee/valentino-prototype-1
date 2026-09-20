@@ -4,11 +4,14 @@ import React, { useState, useRef, useCallback } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import {
   ValentineDecor,
+  normalizeValentineDecor,
   CURATED_FLOWERS,
   CURATED_CHARMS,
-  CURATED_PAPERS,
-  CURATED_RIBBONS,
-  CURATED_SEALS,
+  getPaperOption,
+  getRibbonOption,
+  getSealOption,
+  getBloomSlots,
+  CHARM_POSITIONS,
 } from "@/types/decor";
 
 interface ValentineCompositionProps {
@@ -16,32 +19,25 @@ interface ValentineCompositionProps {
   className?: string;
   onLetterClick?: () => void;
   interactive?: boolean;
+  partnerName?: string;
+  greeting?: string;
+  message?: string;
+  signOff?: string;
+  senderName?: string;
+  isUnsealed?: boolean;
 }
-
-// Preset positions for up to 6 flowers forming a bouquet around the letter
-const FLOWER_POSITIONS = [
-  { x: -75, y: -90, rotate: -18, scale: 1.05 },  // Top-left
-  { x: 75, y: -90, rotate: 18, scale: 1.05 },   // Top-right
-  { x: -115, y: -25, rotate: -32, scale: 0.95 }, // Mid-left
-  { x: 115, y: -25, rotate: 32, scale: 0.95 },  // Mid-right
-  { x: -65, y: 70, rotate: -12, scale: 0.9 },   // Bottom-left
-  { x: 65, y: 70, rotate: 12, scale: 0.9 },    // Bottom-right
-];
-
-// Preset positions for up to 5 charms orbiting the arrangement
-const CHARM_POSITIONS = [
-  { x: -95, y: -130, delay: 0 },
-  { x: 95, y: -130, delay: 0.3 },
-  { x: 0, y: -150, delay: 0.6 },
-  { x: -130, y: 40, delay: 0.9 },
-  { x: 130, y: 40, delay: 1.2 },
-];
 
 export function ValentineComposition({
   decor,
   className = "",
   onLetterClick,
   interactive = true,
+  partnerName,
+  greeting,
+  message,
+  signOff,
+  senderName,
+  isUnsealed = false,
 }: ValentineCompositionProps) {
   const shouldReduceMotion = useReducedMotion();
   const cardRef = useRef<HTMLDivElement>(null);
@@ -68,9 +64,12 @@ export function ValentineComposition({
     setRotateY(0);
   }, []);
 
-  const currentPaper = CURATED_PAPERS.find((p) => p.id === decor.paper) || CURATED_PAPERS[0];
-  const currentRibbon = CURATED_RIBBONS.find((r) => r.id === decor.ribbon) || CURATED_RIBBONS[0];
-  const currentSeal = CURATED_SEALS.find((s) => s.id === decor.seal) || CURATED_SEALS[0];
+  const normalized = normalizeValentineDecor(decor);
+  const currentPaper = getPaperOption(normalized.paper);
+  const currentRibbon = getRibbonOption(normalized.ribbon);
+  const currentSeal = getSealOption(normalized.waxSeal);
+
+  const bloomSlots = getBloomSlots(normalized.blooms.length);
 
   return (
     <div
@@ -85,34 +84,38 @@ export function ValentineComposition({
       role={interactive ? "button" : undefined}
       tabIndex={interactive ? 0 : undefined}
       aria-label="Customized Romantic Valentine Composition"
+      data-testid="valentine-composition"
     >
-      {/* 1. Surrounding Digital Bouquet: Animated Flowers */}
+
+      {/* 1. Surrounding Digital Bouquet: Intelligent Slot Placement */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
         <AnimatePresence>
-          {decor.flowers.map((flowerId, index) => {
-            const flower = CURATED_FLOWERS.find((f) => f.id === flowerId);
+          {normalized.blooms.map((bloomId, index) => {
+            const flower = CURATED_FLOWERS.find((f) => f.id === bloomId);
             if (!flower) return null;
-            const pos = FLOWER_POSITIONS[index % FLOWER_POSITIONS.length];
+            const slot = bloomSlots[index % bloomSlots.length];
 
             return (
               <motion.div
-                key={`flower-${flower.id}`}
-                initial={shouldReduceMotion ? { opacity: 1 } : { scale: 0, opacity: 0 }}
+                key={`bloom-${flower.id}-${index}`}
+                data-decor-bloom={flower.id}
+                initial={shouldReduceMotion ? { opacity: 1 } : { scale: 0, opacity: 0, y: slot.y + 15 }}
                 animate={{
-                  scale: pos.scale,
+                  scale: slot.scale,
                   opacity: 1,
-                  x: pos.x,
-                  y: pos.y,
-                  rotate: pos.rotate,
+                  x: slot.x,
+                  y: slot.y,
+                  rotate: slot.rotate,
                 }}
                 exit={shouldReduceMotion ? { opacity: 0 } : { scale: 0, opacity: 0 }}
                 transition={{
                   type: "spring",
-                  stiffness: 260,
-                  damping: 20,
-                  delay: index * 0.08,
+                  stiffness: 280,
+                  damping: 18,
+                  delay: index * 0.06,
                 }}
-                className="absolute flex items-center justify-center filter drop-shadow-[0_8px_16px_rgba(0,0,0,0.18)] will-change-transform"
+                style={{ zIndex: slot.zIndex }}
+                className="absolute flex items-center justify-center filter drop-shadow-[0_8px_18px_rgba(0,0,0,0.22)] will-change-transform"
               >
                 <span className="text-3xl sm:text-4xl select-none transform hover:scale-125 transition-transform duration-300">
                   {flower.emoji}
@@ -124,7 +127,7 @@ export function ValentineComposition({
 
         {/* 2. Orbiting Romantic Charms */}
         <AnimatePresence>
-          {decor.charms.map((charmId, index) => {
+          {normalized.charms.map((charmId, index) => {
             const charm = CURATED_CHARMS.find((c) => c.id === charmId);
             if (!charm) return null;
             const pos = CHARM_POSITIONS[index % CHARM_POSITIONS.length];
@@ -132,13 +135,14 @@ export function ValentineComposition({
             return (
               <motion.div
                 key={`charm-${charm.id}`}
+                data-decor-charm={charm.id}
                 initial={shouldReduceMotion ? { opacity: 1 } : { scale: 0, y: pos.y + 10 }}
                 animate={
                   shouldReduceMotion
                     ? { opacity: 1 }
                     : {
                         scale: 1,
-                        opacity: 0.9,
+                        opacity: 0.92,
                         x: pos.x,
                         y: [pos.y, pos.y - 8, pos.y],
                       }
@@ -146,9 +150,9 @@ export function ValentineComposition({
                 exit={shouldReduceMotion ? { opacity: 0 } : { scale: 0, opacity: 0 }}
                 transition={{
                   scale: { duration: 0.3 },
-                  y: { duration: 4 + index, repeat: Infinity, ease: "easeInOut", delay: pos.delay },
+                  y: { duration: 3.8 + index, repeat: Infinity, ease: "easeInOut", delay: pos.delay },
                 }}
-                className="absolute flex items-center justify-center filter drop-shadow-[0_4px_10px_rgba(244,63,94,0.3)] will-change-transform"
+                className="absolute flex items-center justify-center filter drop-shadow-[0_4px_10px_rgba(244,63,94,0.35)] will-change-transform z-15"
               >
                 <span className="text-xl sm:text-2xl select-none">{charm.emoji}</span>
               </motion.div>
@@ -191,7 +195,7 @@ export function ValentineComposition({
         style={{ transformStyle: "preserve-3d" }}
         className="relative w-full max-w-[310px] sm:max-w-[350px] mx-auto z-20"
       >
-        {/* Shadow */}
+        {/* Soft Rosy Contact Shadow */}
         <div
           style={{ transform: "translateZ(-14px)" }}
           className={`absolute inset-x-5 -bottom-4 h-10 bg-gradient-to-r from-rose-950/20 via-rose-900/30 to-rose-950/20 rounded-full blur-xl transition-all duration-500 ${
@@ -199,75 +203,102 @@ export function ValentineComposition({
           }`}
         />
 
-        {/* Envelope Composition */}
+        {/* Envelope & Stationery Composition */}
         <div
           style={{ transform: "translateZ(0px)" }}
-          className={`relative rounded-2xl ${currentPaper.bgClass} ${currentPaper.textClass} border ${currentPaper.borderClass} shadow-[0_20px_45px_-12px_rgba(180,60,100,0.2),0_1px_3px_rgba(0,0,0,0.03)] overflow-hidden transition-all duration-500`}
+          data-decor-paper={currentPaper.id}
+          className={`relative rounded-2xl ${currentPaper.bgClass} ${currentPaper.textClass} border ${currentPaper.borderClass} shadow-[0_20px_45px_-12px_rgba(180,60,100,0.22),0_1px_3px_rgba(0,0,0,0.03)] overflow-hidden transition-all duration-500`}
         >
-          {/* Paper Texture */}
+
+          {/* Subtle Paper Texture */}
           <div
-            className="absolute inset-0 opacity-[0.02] pointer-events-none mix-blend-multiply bg-[radial-gradient(#800020_1px,transparent_1px)] [background-size:10px_10px]"
+            className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-multiply bg-[radial-gradient(#800020_1px,transparent_1px)] [background-size:10px_10px]"
             aria-hidden="true"
           />
 
-          {/* Peeking Stationery Card */}
-          <div className="relative pt-4 px-5 pb-3 bg-gradient-to-b from-white/70 to-transparent border-b border-rose-900/10 shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
-            <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-[#D4AF37]/60 to-transparent" />
-            <div className="flex items-center justify-between text-[10px] opacity-70 uppercase tracking-widest font-sans mb-1">
-              <span className="flex items-center gap-1.5">
-                <span className="text-rose-400">✦</span>
-                <span>Personalized Valentine</span>
-              </span>
-              <span>No. 0214</span>
-            </div>
-
-            <p className="font-serif italic text-base sm:text-lg font-normal leading-snug">
-              &ldquo;To the one who holds my heart...&rdquo;
-            </p>
-            <p className="font-serif text-xs opacity-75 font-normal leading-relaxed mt-1 line-clamp-1">
-              Handcrafted with devotion, just for you.
-            </p>
-          </div>
-
-          {/* Envelope Body */}
-          <div className="relative p-5 sm:p-6">
-            <div className="relative mb-3 flex items-center justify-center">
-              {/* Dynamic Ribbon Band */}
-              <div
-                className={`absolute inset-x-[-24px] h-7 bg-gradient-to-r ${currentRibbon.gradientClass} shadow-sm flex items-center justify-between px-6 transition-all duration-500`}
-              >
-                <div className={`absolute top-0 inset-x-0 h-[1px] ${currentRibbon.stitchClass}`} />
-                <div className={`absolute bottom-0 inset-x-0 h-[1px] ${currentRibbon.stitchClass}`} />
-                <span className="text-[9px] uppercase tracking-[0.22em] font-sans font-medium text-white/90">
-                  SEALED
-                </span>
-                <span className="text-[9px] uppercase tracking-[0.22em] font-sans font-medium text-white/90">
-                  WITH LOVE
-                </span>
+          {isUnsealed ? (
+            /* Unsealed State: Letter Open */
+            <div className="relative p-6 sm:p-7 space-y-4">
+              <div className="flex items-center justify-between text-[10px] opacity-70 uppercase tracking-widest font-sans border-b border-black/10 pb-2">
+                <span>{greeting || "To My Favorite Person"}</span>
+                <span className="font-semibold text-rose-500">✦ sealed with love ✦</span>
               </div>
-
-              {/* Dynamic Wax Seal */}
-              <div
-                className={`relative z-10 flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br ${currentSeal.gradientClass} border-2 ${currentSeal.borderClass} shadow-[0_4px_14px_rgba(0,0,0,0.35),inset_0_2px_4px_rgba(255,255,255,0.35)] group-hover:scale-105 transition-all duration-300`}
-              >
-                <div className="absolute inset-0.5 rounded-full border border-black/20" />
-                <span className="text-base select-none filter drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)]">
-                  {currentSeal.emblem}
-                </span>
+              <h2 className="font-serif text-xl sm:text-2xl font-medium tracking-tight">
+                {partnerName || "Dearest"}
+              </h2>
+              <div className="font-serif text-sm sm:text-base leading-relaxed opacity-90 whitespace-pre-wrap">
+                {message || "My heart is fuller every day because of you."}
+              </div>
+              <div className="text-right pt-4 border-t border-black/10">
+                <div className="text-[10px] opacity-70 uppercase tracking-wider">{signOff || "With all my love"}</div>
+                <div className="font-serif font-medium text-base sm:text-lg text-rose-700">{senderName || "Yours Always"}</div>
               </div>
             </div>
+          ) : (
+            /* Sealed State: Luxury Envelope with Ribbon & Wax Seal */
+            <div>
+              {/* Peeking Stationery Header */}
+              <div className="relative pt-4 px-5 pb-3 bg-gradient-to-b from-white/70 to-transparent border-b border-rose-900/10 shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
+                <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-[#D4AF37]/60 to-transparent" />
+                <div className="flex items-center justify-between text-[10px] opacity-70 uppercase tracking-widest font-sans mb-1">
+                  <span className="flex items-center gap-1.5">
+                    <span className="text-rose-400">✦</span>
+                    <span>{partnerName ? `For ${partnerName}` : "Personalized Valentine"}</span>
+                  </span>
+                  <span>No. 0214</span>
+                </div>
 
-            {/* Prompt */}
-            <div className="mt-4 pt-1 flex items-center justify-between text-[11px] opacity-75 font-sans">
-              <span className="flex items-center gap-1.5 font-medium">
-                <span className="w-1.5 h-1.5 rounded-full bg-rose-500 inline-block animate-pulse" />
-                {interactive ? "Tap to open letter" : "Sealed with devotion"}
-              </span>
-              <span className="font-serif italic text-xs font-medium group-hover:translate-x-0.5 transition-transform">
-                Forever yours &rarr;
-              </span>
+                <p className="font-serif italic text-base sm:text-lg font-normal leading-snug">
+                  &ldquo;To the one who holds my heart...&rdquo;
+                </p>
+                <p className="font-serif text-xs opacity-75 font-normal leading-relaxed mt-1 line-clamp-1">
+                  {message ? message.slice(0, 45) + "..." : "Handcrafted with devotion, just for you."}
+                </p>
+              </div>
+
+              {/* Envelope Body */}
+              <div className="relative p-5 sm:p-6">
+                <div className="relative mb-3 flex items-center justify-center">
+                  {/* Dynamic Ribbon Band */}
+                  <div
+                    data-decor-ribbon={currentRibbon.id}
+                    className={`absolute inset-x-[-24px] h-7 bg-gradient-to-r ${currentRibbon.gradientClass} shadow-sm flex items-center justify-between px-6 transition-all duration-500`}
+                  >
+                    <div className={`absolute top-0 inset-x-0 h-[1px] ${currentRibbon.stitchClass}`} />
+                    <div className={`absolute bottom-0 inset-x-0 h-[1px] ${currentRibbon.stitchClass}`} />
+                    <span className="text-[9px] uppercase tracking-[0.22em] font-sans font-medium text-white/90">
+                      SEALED
+                    </span>
+                    <span className="text-[9px] uppercase tracking-[0.22em] font-sans font-medium text-white/90">
+                      WITH LOVE
+                    </span>
+                  </div>
+
+                  {/* Dynamic Wax Seal */}
+                  <div
+                    data-decor-seal={currentSeal.id}
+                    className={`relative z-10 flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br ${currentSeal.gradientClass} border-2 ${currentSeal.borderClass} shadow-[0_4px_14px_rgba(0,0,0,0.35),inset_0_2px_4px_rgba(255,255,255,0.35)] group-hover:scale-105 transition-all duration-300`}
+                  >
+                    <div className="absolute inset-0.5 rounded-full border border-black/20" />
+                    <span className="text-base select-none filter drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)]">
+                      {currentSeal.emblem}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Prompt */}
+                <div className="mt-4 pt-1 flex items-center justify-between text-[11px] opacity-75 font-sans">
+                  <span className="flex items-center gap-1.5 font-medium">
+                    <span className="w-1.5 h-1.5 rounded-full bg-rose-500 inline-block animate-pulse" />
+                    {interactive ? "Tap to open letter" : "Sealed with devotion"}
+                  </span>
+                  <span className="font-serif italic text-xs font-medium group-hover:translate-x-0.5 transition-transform">
+                    {senderName ? `From ${senderName} →` : "Forever yours →"}
+                  </span>
+                </div>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </motion.div>
     </div>

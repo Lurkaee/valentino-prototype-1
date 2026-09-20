@@ -4,6 +4,7 @@ import {
   ACCENT_THEMES,
   AccentTheme,
 } from "./schema";
+import { normalizeValentineDecor } from "@/types/decor";
 
 export function normalizeMidnightRoseConfig(raw: unknown): MidnightRosePublishedConfig {
   const obj = typeof raw === "object" && raw !== null ? (raw as Record<string, unknown>) : {};
@@ -37,6 +38,8 @@ export function normalizeMidnightRoseConfig(raw: unknown): MidnightRosePublished
       ? obj.heroMediaId.trim()
       : null;
 
+  const decor = normalizeValentineDecor(obj.decor);
+
   return {
     partnerName,
     senderName,
@@ -45,5 +48,6 @@ export function normalizeMidnightRoseConfig(raw: unknown): MidnightRosePublished
     signOff,
     accentTheme,
     heroMediaId,
+    decor,
   };
 }

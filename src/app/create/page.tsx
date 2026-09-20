@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
+import { decodeDecorParam, normalizeValentineDecor } from "@/types/decor";
 
 export default function CreateExperiencePage() {
   const router = useRouter();
@@ -11,26 +12,47 @@ export default function CreateExperiencePage() {
 
   useEffect(() => {
     let isMounted = true;
+    let timer1: NodeJS.Timeout | null = null;
+    let timer2: NodeJS.Timeout | null = null;
 
     async function initExperience() {
       try {
-        const timer1 = setTimeout(() => {
+        timer1 = setTimeout(() => {
           if (isMounted) setStatusMessage("Folding the letter...");
         }, 400);
 
-        const timer2 = setTimeout(() => {
+        timer2 = setTimeout(() => {
           if (isMounted) setStatusMessage("Adding the final little touch...");
         }, 850);
+
+        // Read decor from query params or sessionStorage fallback
+        let initialDecor = null;
+        try {
+          const searchParams = new URLSearchParams(window.location.search);
+          const decorParam = searchParams.get("decor");
+          if (decorParam) {
+            initialDecor = decodeDecorParam(decorParam);
+          }
+          if (!initialDecor) {
+            const stored = sessionStorage.getItem("valentino_custom_decor");
+            if (stored) {
+              initialDecor = normalizeValentineDecor(JSON.parse(stored));
+            }
+          }
+        } catch {
+          // Gracefully fallback
+        }
 
         const res = await fetch("/api/experiences", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
+          body: JSON.stringify(initialDecor ? { initialDecor } : {}),
         });
 
-        clearTimeout(timer1);
-        clearTimeout(timer2);
+        if (timer1) clearTimeout(timer1);
+        if (timer2) clearTimeout(timer2);
 
         if (!res.ok) {
           const data = await res.json().catch(() => ({}));
@@ -52,6 +74,8 @@ export default function CreateExperiencePage() {
 
     return () => {
       isMounted = false;
+      if (timer1) clearTimeout(timer1);
+      if (timer2) clearTimeout(timer2);
     };
   }, [router]);
 
