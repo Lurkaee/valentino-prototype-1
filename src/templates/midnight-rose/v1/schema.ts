@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { countGraphemes } from "@/lib/sanitize";
+import { valentineDecorSchema } from "@/types/decor";
 
 export const ACCENT_THEMES = ["crimson-rose", "midnight-violet", "champagne-gold"] as const;
 export type AccentTheme = (typeof ACCENT_THEMES)[number];
@@ -28,6 +29,7 @@ export const midnightRoseDraftSchema = z.object({
   signOff: graphemeMax(100).optional().default(""),
   accentTheme: z.enum(ACCENT_THEMES).optional().default("crimson-rose"),
   heroMediaId: z.string().max(200).optional().nullable(),
+  decor: valentineDecorSchema.default({}),
 });
 
 export type MidnightRoseDraftConfig = z.infer<typeof midnightRoseDraftSchema>;
@@ -41,6 +43,7 @@ export const midnightRosePublishSchema = z.object({
   signOff: graphemeMax(100).optional().default("With all my love"),
   accentTheme: z.enum(ACCENT_THEMES).default("crimson-rose"),
   heroMediaId: z.string().max(200).optional().nullable(),
+  decor: valentineDecorSchema,
 });
 
 export type MidnightRosePublishedConfig = z.infer<typeof midnightRosePublishSchema>;
