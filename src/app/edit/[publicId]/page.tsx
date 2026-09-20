@@ -9,12 +9,64 @@ import {
   ACCENT_THEMES,
   AccentTheme,
 } from "@/templates/midnight-rose/v1/schema";
+import {
+  BLOOM_STYLES,
+  CHARM_STYLES,
+  PAPER_FINISHES,
+  RIBBON_BANDS,
+  WAX_SEALS,
+  DEFAULT_VALENTINE_DECOR,
+  normalizeValentineDecor,
+  ValentineDecor,
+} from "@/types/decor";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { AtmosphericGlow } from "@/components/ui/AtmosphericGlow";
 
 type SaveStatus = "idle" | "saving" | "saved" | "error" | "conflict" | "offline";
+
+const DECOR_LABELS: Record<string, string> = {
+  rose: "Roses",
+  wildflower: "Wildflowers",
+  peony: "Peonies",
+  heart: "Hearts",
+  star: "Stars",
+  sparkle: "Sparkles",
+  "ivory-cream": "Ivory Cream",
+  "petal-blush": "Petal Blush",
+  "deckled-parchment": "Deckled Parchment",
+  "soft-lavender": "Soft Lavender",
+  "velvet-crimson": "Velvet Crimson",
+  "satin-rose": "Satin Rose",
+  "silk-ivory": "Silk Ivory",
+  "plum-mist": "Plum Mist",
+  "crimson-heart": "Crimson Heart",
+  "rose-quartz": "Rose Quartz",
+  "royal-burgundy": "Royal Burgundy",
+  "champagne-gold": "Champagne Gold",
+};
+
+const DECOR_GLYPHS: Record<string, string> = {
+  rose: "🌹",
+  wildflower: "🌼",
+  peony: "🪷",
+  heart: "♡",
+  star: "✦",
+  sparkle: "✧",
+  "ivory-cream": "🤍",
+  "petal-blush": "🌸",
+  "deckled-parchment": "📜",
+  "soft-lavender": "🪻",
+  "velvet-crimson": "🎀",
+  "satin-rose": "🎀",
+  "silk-ivory": "🤍",
+  "plum-mist": "🪻",
+  "crimson-heart": "♥",
+  "rose-quartz": "✿",
+  "royal-burgundy": "♜",
+  "champagne-gold": "✦",
+};
 
 export default function EditExperiencePage() {
   const params = useParams<{ publicId: string }>();
@@ -27,6 +79,7 @@ export default function EditExperiencePage() {
     message: "",
     signOff: "With all my love",
     accentTheme: "crimson-rose",
+    decor: { ...DEFAULT_VALENTINE_DECOR },
   });
 
   const [revision, setRevision] = useState<number>(1);
@@ -72,7 +125,10 @@ export default function EditExperiencePage() {
         const data = await res.json();
         if (isMounted) {
           if (data.draftConfig && !isDirtyRef.current) {
-            setConfig(data.draftConfig);
+            setConfig({
+              ...data.draftConfig,
+              decor: normalizeValentineDecor(data.draftConfig?.decor),
+            });
           }
           if (data.draftRevision) {
             setRevision(data.draftRevision);
@@ -606,6 +662,78 @@ export default function EditExperiencePage() {
                     );
                   })}
                 </div>
+              </div>
+
+              {/* Question 7: Decoration & Styling */}
+              <div className="space-y-6 pt-2 border-t border-rose-500/10" data-testid="decoration-section">
+                <div className="pt-5 space-y-1">
+                  <span className="block text-xs uppercase tracking-wider text-rose-200/80 font-medium">
+                    7. Decoration & Styling
+                  </span>
+                  <p className="text-[11px] text-ivory-400/80">
+                    These details are part of the actual letter composition — they save with your draft and travel to the recipient page.
+                  </p>
+                </div>
+
+                {([
+                  ["Blooms", BLOOM_STYLES, "editor-bloom"] as const,
+                  ["Charms", CHARM_STYLES, "editor-charm"] as const,
+                  ["Paper finish", PAPER_FINISHES, "editor-paper"] as const,
+                  ["Ribbon", RIBBON_BANDS, "editor-ribbon"] as const,
+                  ["Wax seal", WAX_SEALS, "editor-wax-seal"] as const,
+                ]).map(([title, options, prefix]) => {
+                  const key = (
+                    prefix === "editor-bloom"
+                      ? "blooms"
+                      : prefix === "editor-charm"
+                        ? "charms"
+                        : prefix === "editor-paper"
+                          ? "paper"
+                          : prefix === "editor-ribbon"
+                            ? "ribbon"
+                            : "waxSeal"
+                  ) as keyof ValentineDecor;
+                  const selected = config.decor?.[key] ?? DEFAULT_VALENTINE_DECOR[key];
+
+                  return (
+                    <div key={prefix} className="space-y-2.5">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs uppercase tracking-wider text-rose-100/75 font-medium">{title}</span>
+                        <span className="text-[10px] text-white/35">{DECOR_LABELS[selected]}</span>
+                      </div>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
+                        {options.map((option) => {
+                          const isSelected = selected === option;
+                          return (
+                            <button
+                              key={option}
+                              type="button"
+                              data-testid={`${prefix}-${option}`}
+                              aria-pressed={isSelected}
+                              onClick={() =>
+                                handleConfigChange((prev) => ({
+                                  ...prev,
+                                  decor: {
+                                    ...normalizeValentineDecor(prev.decor),
+                                    [key]: option,
+                                  },
+                                }))
+                              }
+                              className={`flex items-center gap-2 rounded-xl border px-3 py-2.5 text-left text-xs transition-all ${
+                                isSelected
+                                  ? "border-rose-400/60 bg-rose-500/12 text-white shadow-md shadow-rose-950/30"
+                                  : "border-white/10 bg-white/[0.03] text-ivory-400 hover:bg-white/[0.08] hover:border-white/20"
+                              }`}
+                            >
+                              <span className="text-base" aria-hidden="true">{DECOR_GLYPHS[option]}</span>
+                              <span className="leading-tight">{DECOR_LABELS[option]}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
 
               {/* Validation Errors */}
