@@ -100,11 +100,11 @@ export function HeroEditorialStagger({
       </motion.div>
 
       {/* 2. Romantic Headline: Deep warm plum with sunset rose/magenta highlight */}
-      <h1 className="text-3xl sm:text-5xl lg:text-6xl font-serif font-medium text-[#2E0617] tracking-tight leading-[1.12] max-w-3xl mb-3 sm:mb-4">
+      <h1 className="text-3xl sm:text-5xl lg:text-6xl font-serif font-medium text-[#240412] tracking-tight leading-[1.12] max-w-3xl mb-3 sm:mb-4">
         <span className="block overflow-hidden py-0.5">
           <motion.span
             variants={maskLineVariants}
-            className="inline-block will-change-transform drop-shadow-[0_2px_12px_rgba(255,255,255,0.4)]"
+            className="inline-block will-change-transform"
           >
             {line1}{" "}
           </motion.span>
@@ -112,7 +112,7 @@ export function HeroEditorialStagger({
         <span className="block overflow-hidden py-0.5">
           <motion.span
             variants={maskLineVariants}
-            className="inline-block will-change-transform italic font-light bg-gradient-to-r from-[#9F1239] via-[#C026D3] to-[#E11D48] bg-clip-text text-transparent drop-shadow-[0_2px_8px_rgba(244,63,94,0.2)]"
+            className="inline-block will-change-transform italic font-normal bg-gradient-to-r from-[#9F1239] via-[#C026D3] to-[#E11D48] bg-clip-text text-transparent"
           >
             {line2}
           </motion.span>
@@ -122,7 +122,7 @@ export function HeroEditorialStagger({
       {/* 3. Intimate Subtitle Copy */}
       <motion.p
         variants={itemVariants}
-        className="text-sm sm:text-base lg:text-lg text-[#4E162F]/90 font-light leading-relaxed max-w-xl mb-6 sm:mb-7"
+        className="text-sm sm:text-base lg:text-lg text-[#3B071A] font-normal leading-relaxed max-w-xl mb-6 sm:mb-7"
       >
         {subtitle}
       </motion.p>
