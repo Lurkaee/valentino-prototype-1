@@ -1,4 +1,5 @@
 import { sanitizeText } from "@/lib/sanitize";
+import { normalizeValentineDecor } from "@/types/decor";
 import {
   MidnightRosePublishedConfig,
   ACCENT_THEMES,
@@ -45,5 +46,6 @@ export function normalizeMidnightRoseConfig(raw: unknown): MidnightRosePublished
     signOff,
     accentTheme,
     heroMediaId,
+    decor: normalizeValentineDecor(obj.decor),
   };
 }
