@@ -28,4 +28,46 @@ test.describe("M2 Template Discovery & Landing Page", () => {
     await expect(customizeBtn).toBeVisible();
     await expect(customizeBtn).toHaveAttribute("href", "/create");
   });
+
+  test("Responsive verification across 360px, 390px, 768px, and 1440px with zero overflow", async ({
+    page,
+  }) => {
+    const viewports = [
+      { name: "Mobile Small", width: 360, height: 640 },
+      { name: "Mobile Standard", width: 390, height: 844 },
+      { name: "Tablet Portrait", width: 768, height: 1024 },
+      { name: "Desktop Large", width: 1440, height: 900 },
+    ];
+
+    for (const vp of viewports) {
+      await page.setViewportSize({ width: vp.width, height: vp.height });
+      await page.goto(`${APP_URL}/`);
+
+      // Verify headline line wrapping & visibility
+      const headline = page.locator("h1");
+      await expect(headline).toBeVisible();
+      await expect(headline).toContainText("Create something");
+      await expect(headline).toContainText("they'll remember");
+
+      // Verify value ticker presence
+      const ticker = page.locator('[aria-label="Valentino Product Features"], [aria-label="Valentino Feature Highlights"]');
+      await expect(ticker).toBeVisible();
+
+      // Assert zero horizontal overflow
+      const hasOverflow = await page.evaluate(() => {
+        return document.documentElement.scrollWidth > document.documentElement.clientWidth;
+      });
+      expect(hasOverflow).toBe(false);
+    }
+
+    // Verify reduced motion behavior
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto(`${APP_URL}/`);
+
+    // Ticker renders accessible static highlight labels when reduced motion is preferred
+    const staticTicker = page.locator('[aria-label="Valentino Feature Highlights"]');
+    await expect(staticTicker).toBeVisible();
+    await expect(staticTicker).toContainText("PRIVATE BY DESIGN");
+    await expect(staticTicker).toContainText("WAX SEAL REVEAL");
+  });
 });

@@ -3,6 +3,9 @@ import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { AtmosphericGlow } from "@/components/ui/AtmosphericGlow";
+import { HeroEditorialStagger } from "@/components/motion/HeroEditorialStagger";
+import { LogoTicker } from "@/components/motion/LogoTicker";
+import { CurtainLink } from "@/components/motion/PageCurtains";
 
 export default function HomePage() {
   return (
@@ -12,74 +15,31 @@ export default function HomePage() {
 
       {/* Navigation Header */}
       <header className="w-full max-w-6xl mx-auto px-6 py-6 flex items-center justify-between relative z-20">
-        <Link href="/" className="flex items-center gap-2 group">
+        <CurtainLink href="/" className="flex items-center gap-2 group">
           <span className="text-xl select-none transition-transform group-hover:scale-110 duration-300">💌</span>
           <span className="text-lg font-serif font-medium tracking-wider text-white">
             Valentino
           </span>
-        </Link>
+        </CurtainLink>
         <div className="flex items-center gap-4">
-          <Link
+          <CurtainLink
             href="/templates"
             className="text-xs uppercase tracking-widest text-ivory-300 hover:text-white transition-colors"
           >
             Templates
-          </Link>
-          <Link href="/create">
+          </CurtainLink>
+          <CurtainLink href="/create">
             <Button size="sm" variant="secondary" className="text-xs">
               Start Writing
             </Button>
-          </Link>
+          </CurtainLink>
         </div>
       </header>
 
       {/* Hero Section */}
-      <section className="w-full max-w-5xl mx-auto px-6 pt-12 pb-20 flex flex-col items-center text-center relative z-10">
-        {/* Eyebrow Badge */}
-        <div className="mb-6 animate-fade-in">
-          <Badge variant="rose" size="md">
-            Private Digital Love Letter
-          </Badge>
-        </div>
-
-        {/* Headline */}
-        <h1 className="text-4xl sm:text-6xl lg:text-7xl font-serif font-medium text-white tracking-tight leading-[1.1] max-w-3xl mb-6">
-          Create something they&apos;ll remember.
-        </h1>
-
-        {/* Subtitle */}
-        <p className="text-base sm:text-xl text-ivory-200/80 font-light leading-relaxed max-w-2xl mb-10">
-          An intimate, personal web experience for someone you cherish. Choose an atmospheric template, speak from the heart, and seal it with digital wax.
-        </p>
-
-        {/* Dual CTAs */}
-        <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto mb-8">
-          <Link href="/create" className="w-full sm:w-auto">
-            <Button size="lg" variant="primary" className="w-full sm:w-auto px-8 shadow-2xl">
-              Create Your Valentine
-            </Button>
-          </Link>
-          <Link href="/templates" className="w-full sm:w-auto">
-            <Button size="lg" variant="secondary" className="w-full sm:w-auto px-8">
-              Explore Templates
-            </Button>
-          </Link>
-        </div>
-
-        {/* Reassurance pills */}
-        <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-ivory-400/80 font-sans tracking-wide">
-          <span className="flex items-center gap-1.5">
-            <span className="text-emerald-400">●</span> No sign-up required
-          </span>
-          <span className="hidden sm:inline text-white/20">·</span>
-          <span className="flex items-center gap-1.5">
-            <span className="text-rose-400">●</span> Private unguessable link
-          </span>
-          <span className="hidden sm:inline text-white/20">·</span>
-          <span className="flex items-center gap-1.5">
-            <span className="text-amber-400">●</span> Never indexed by search
-          </span>
-        </div>
+      <section className="w-full max-w-5xl mx-auto px-6 pt-12 pb-16 flex flex-col items-center text-center relative z-10">
+        {/* Animated Editorial Stagger Hero */}
+        <HeroEditorialStagger />
 
         {/* Interactive Visual Hero Showcase (Floating Cards) */}
         <div className="mt-16 w-full max-w-3xl relative">
@@ -133,6 +93,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Feature / Value Marquee Ticker */}
+      <LogoTicker className="border-y border-white/[0.06] bg-white/[0.01]" />
 
       {/* How It Works (3 Pillars) */}
       <section className="w-full max-w-5xl mx-auto px-6 py-20 border-t border-white/[0.06] relative z-10">
@@ -201,11 +164,11 @@ export default function HomePage() {
               An intimate, starlight-themed love letter sealed with digital wax.
             </p>
           </div>
-          <Link href="/templates">
+          <CurtainLink href="/templates">
             <Button variant="outline" size="sm">
               View All Templates →
             </Button>
-          </Link>
+          </CurtainLink>
         </div>
 
         <Card variant="glass" className="p-8 sm:p-12 border-rose-500/20 relative overflow-hidden">
@@ -241,11 +204,11 @@ export default function HomePage() {
               </div>
 
               <div className="pt-2">
-                <Link href="/create">
+                <CurtainLink href="/create">
                   <Button size="md" variant="primary">
                     Start with Midnight Rose
                   </Button>
-                </Link>
+                </CurtainLink>
               </div>
             </div>
 
@@ -277,12 +240,12 @@ export default function HomePage() {
           <span>A Private Romantic Canvas</span>
         </div>
         <div className="flex items-center gap-6">
-          <Link href="/templates" className="hover:text-white transition-colors">
+          <CurtainLink href="/templates" className="hover:text-white transition-colors">
             Templates
-          </Link>
-          <Link href="/create" className="hover:text-white transition-colors">
+          </CurtainLink>
+          <CurtainLink href="/create" className="hover:text-white transition-colors">
             Create Valentine
-          </Link>
+          </CurtainLink>
           <a
             href="https://github.com/Lurkaee/valentino-prototype-1"
             target="_blank"

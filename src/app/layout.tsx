@@ -34,6 +34,8 @@ export const viewport: Viewport = {
   maximumScale: 5,
 };
 
+import { PageCurtains } from "@/components/motion/PageCurtains";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -43,6 +45,7 @@ export default function RootLayout({
     <html lang="en" className={`${playfair.variable} ${plusJakarta.variable}`}>
       <body className="antialiased min-h-[100dvh] flex flex-col font-sans bg-[#07070A] text-[#FAF8F5]">
         {children}
+        <PageCurtains />
       </body>
     </html>
   );

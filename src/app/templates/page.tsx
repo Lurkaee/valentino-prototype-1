@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { AtmosphericGlow } from "@/components/ui/AtmosphericGlow";
+import { CurtainLink } from "@/components/motion/PageCurtains";
 
 export default function TemplatesPage() {
   const [selectedMidnightTheme, setSelectedMidnightTheme] = useState<
@@ -45,17 +46,17 @@ export default function TemplatesPage() {
 
       {/* Header */}
       <header className="w-full max-w-6xl mx-auto px-6 py-6 flex items-center justify-between relative z-20">
-        <Link href="/" className="flex items-center gap-2 group">
+        <CurtainLink href="/" className="flex items-center gap-2 group">
           <span className="text-xl select-none transition-transform group-hover:scale-110 duration-300">💌</span>
           <span className="text-lg font-serif font-medium tracking-wider text-white">
             Valentino
           </span>
-        </Link>
-        <Link href="/create">
+        </CurtainLink>
+        <CurtainLink href="/create">
           <Button size="sm" variant="primary" className="text-xs">
             Start Writing
           </Button>
-        </Link>
+        </CurtainLink>
       </header>
 
       {/* Page Title */}
@@ -161,11 +162,11 @@ export default function TemplatesPage() {
               </div>
 
               <div className="pt-3">
-                <Link href="/create">
+                <CurtainLink href="/create">
                   <Button size="lg" variant="primary" className="w-full sm:w-auto">
                     Customize Midnight Rose
                   </Button>
-                </Link>
+                </CurtainLink>
               </div>
             </div>
 
@@ -247,9 +248,9 @@ export default function TemplatesPage() {
 
       {/* Footer */}
       <footer className="w-full max-w-5xl mx-auto px-6 py-10 border-t border-white/[0.06] flex items-center justify-between text-xs text-ivory-400 relative z-10">
-        <Link href="/" className="hover:text-white transition-colors">
+        <CurtainLink href="/" className="hover:text-white transition-colors">
           ← Back to Home
-        </Link>
+        </CurtainLink>
         <span>Valentino Platform · 2026</span>
       </footer>
     </main>
