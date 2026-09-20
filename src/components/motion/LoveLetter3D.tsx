@@ -11,18 +11,19 @@ interface LoveLetter3DProps {
 
 /**
  * LoveLetter3D:
- * A handcrafted 3D love letter centerpiece floating above the clouds.
- * Features quiet, intimate physics:
- * - Idle: gentle breathing drift
- * - Cursor: restrained tilt capped at ±4–5°
- * - Hover: delicate translateZ lift and soft diffused shadow
- * - Click: single meaningful transition to create experience
+ * A handcrafted romantic 3D love letter floating gently in the dreamy clouds.
+ * Designed to look and feel like an authentic luxury love letter, not a SaaS card:
+ * - Luxury cream paper envelope with deckled letter peeking out
+ * - Satin silk ribbon with gold-stitched edges
+ * - Hand-poured crimson wax seal with embossed heart
+ * - Restrained idle breathing (±6px) and subtle cursor tilt (capped at ±3.5°)
+ * - Soft diffused ambient rosy cloud shadow
  */
 export function LoveLetter3D({ className = "", onOpen }: LoveLetter3DProps) {
   const shouldReduceMotion = useReducedMotion();
   const cardRef = useRef<HTMLDivElement>(null);
 
-  // Mouse tilt offsets (capped at ±4° on X, ±5° on Y)
+  // Mouse tilt offsets (strictly capped at ±3.5° on X, ±4.5° on Y)
   const [rotateX, setRotateX] = useState(0);
   const [rotateY, setRotateY] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
@@ -38,9 +39,9 @@ export function LoveLetter3D({ className = "", onOpen }: LoveLetter3DProps) {
       const deltaX = (e.clientX - centerX) / (rect.width / 2);
       const deltaY = (e.clientY - centerY) / (rect.height / 2);
 
-      // Restrained quiet physics: max ±4deg X, ±5deg Y
-      const clampedX = Math.max(-4, Math.min(4, -deltaY * 4));
-      const clampedY = Math.max(-5, Math.min(5, deltaX * 5));
+      // Restrained quiet physics: max ±3.5deg X, ±4deg Y
+      const clampedX = Math.max(-3.5, Math.min(3.5, -deltaY * 3.5));
+      const clampedY = Math.max(-4.0, Math.min(4.0, deltaX * 4.0));
 
       setRotateX(clampedX);
       setRotateY(clampedY);
@@ -78,12 +79,12 @@ export function LoveLetter3D({ className = "", onOpen }: LoveLetter3DProps) {
           handleClick();
         }
       }}
-      aria-label="Interactive 3D Love Letter. Click to create your Valentine."
+      aria-label="Romantic 3D Love Letter. Click to create your Valentine."
     >
-      {/* Outer ambient glow reacting to hover */}
+      {/* Outer ambient rosy bloom reacting gently to hover */}
       <div
-        className={`absolute -inset-6 rounded-[36px] bg-gradient-to-r from-rose-500/20 via-pink-400/20 to-amber-400/10 blur-2xl transition-opacity duration-700 pointer-events-none ${
-          isHovered ? "opacity-90 scale-105" : "opacity-40"
+        className={`absolute -inset-6 rounded-[36px] bg-gradient-to-r from-rose-400/20 via-pink-300/30 to-amber-300/20 blur-2xl transition-opacity duration-700 pointer-events-none ${
+          isHovered ? "opacity-95 scale-105" : "opacity-60"
         }`}
       />
 
@@ -93,10 +94,10 @@ export function LoveLetter3D({ className = "", onOpen }: LoveLetter3DProps) {
           shouldReduceMotion
             ? {}
             : {
-                y: isHovered ? -6 : [0, -4, 0],
+                y: isHovered ? -4 : [0, -6, 0],
                 rotateX,
                 rotateY,
-                translateZ: isHovered ? 12 : 0,
+                translateZ: isHovered ? 8 : 0,
               }
         }
         transition={
@@ -104,8 +105,8 @@ export function LoveLetter3D({ className = "", onOpen }: LoveLetter3DProps) {
             ? { duration: 0 }
             : {
                 y: isHovered
-                  ? { duration: 0.4, ease: "easeOut" }
-                  : { duration: 5, repeat: Infinity, ease: "easeInOut" },
+                  ? { duration: 0.35, ease: "easeOut" }
+                  : { duration: 5.4, repeat: Infinity, ease: "easeInOut" },
                 rotateX: { duration: 0.25, ease: "easeOut" },
                 rotateY: { duration: 0.25, ease: "easeOut" },
                 translateZ: { duration: 0.35, ease: "easeOut" },
@@ -114,87 +115,85 @@ export function LoveLetter3D({ className = "", onOpen }: LoveLetter3DProps) {
         style={{
           transformStyle: "preserve-3d",
         }}
-        className="relative w-full max-w-[420px] sm:max-w-[460px] mx-auto"
+        className="relative w-full max-w-[340px] sm:max-w-[380px] mx-auto"
       >
-        {/* Layer 1: Ambient Shadow (lies beneath the envelope) */}
+        {/* Layer 1: Soft Diffused Rosy Cloud Shadow */}
         <div
-          style={{ transform: "translateZ(-15px)" }}
-          className={`absolute inset-x-8 -bottom-4 h-12 bg-black/40 rounded-full blur-xl transition-all duration-500 ${
-            isHovered ? "scale-110 opacity-60" : "opacity-35"
+          style={{ transform: "translateZ(-14px)" }}
+          className={`absolute inset-x-5 -bottom-4 h-10 bg-gradient-to-r from-rose-950/20 via-rose-900/30 to-rose-950/20 rounded-full blur-xl transition-all duration-500 ${
+            isHovered ? "scale-110 opacity-60" : "opacity-40"
           }`}
         />
 
-        {/* Layer 2: Main Cream Envelope Body */}
+        {/* Layer 2: Handcrafted Cream Envelope & Letter Composition */}
         <div
           style={{ transform: "translateZ(0px)" }}
-          className="relative rounded-2xl p-6 sm:p-7 bg-[#FFFDF9] text-[#240B13] border border-[#F3E8DC] shadow-[0_20px_50px_-15px_rgba(40,10,20,0.35),0_0_0_1px_rgba(255,255,255,0.8)] overflow-hidden"
+          className="relative rounded-2xl bg-[#FFFDF9] text-[#2C0D17] border border-[#F6E8DE] shadow-[0_20px_45px_-12px_rgba(180,60,100,0.2),0_1px_3px_rgba(0,0,0,0.03)] overflow-hidden transition-shadow duration-500 group-hover:shadow-[0_26px_55px_-10px_rgba(180,60,100,0.28)]"
         >
-          {/* Subtle paper grain texture overlay */}
+          {/* Subtle warm paper grain */}
           <div
-            className="absolute inset-0 opacity-[0.03] pointer-events-none mix-blend-multiply bg-[radial-gradient(#800020_1px,transparent_1px)] [background-size:12px_12px]"
+            className="absolute inset-0 opacity-[0.02] pointer-events-none mix-blend-multiply bg-[radial-gradient(#800020_1px,transparent_1px)] [background-size:10px_10px]"
             aria-hidden="true"
           />
 
-          {/* Top Delicate Gold Foil Border Line */}
-          <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-[#D4AF37]/60 to-transparent" />
-
-          {/* Envelope Flap Crease Visual Angle */}
-          <div className="absolute top-0 inset-x-0 h-16 bg-gradient-to-b from-[#F7F0E6]/80 to-transparent pointer-events-none" />
-
-          {/* Letter Peeking Content */}
-          <div className="relative z-10 space-y-4">
-            {/* Header: Stamp & Destination */}
-            <div className="flex items-center justify-between border-b border-[#E8DCCF]/70 pb-3.5">
-              <div className="flex items-center gap-2">
-                <span className="inline-block w-2 h-2 rounded-full bg-rose-500 animate-pulse" />
-                <span className="text-[11px] uppercase tracking-[0.2em] text-[#8C5D6B] font-medium font-sans">
-                  Private Delivery
-                </span>
-              </div>
-              <div className="px-2.5 py-0.5 rounded border border-[#E0D0BF] bg-[#F9F4EC] text-[10px] uppercase tracking-wider text-[#A06E7D] font-mono">
-                Air Mail · Special
-              </div>
+          {/* Peeking Luxury Letter Card (protruding from inside envelope) */}
+          <div className="relative pt-4 px-5 pb-3 bg-gradient-to-b from-[#FFFDF8] to-[#FFF8F0] border-b border-[#EFE2D4] shadow-[0_2px_8px_rgba(0,0,0,0.03)]">
+            {/* Top gold foil accent */}
+            <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-[#D4AF37]/60 to-transparent" />
+            
+            <div className="flex items-center justify-between text-[10px] text-[#9E6476] uppercase tracking-widest font-sans mb-1">
+              <span className="flex items-center gap-1.5">
+                <span className="text-rose-400">✦</span>
+                <span>Private Dispatch</span>
+              </span>
+              <span>No. 0214</span>
             </div>
 
-            {/* Handwritten-Style Message Preview */}
-            <div className="py-2 space-y-1.5">
-              <p className="text-xs uppercase tracking-widest text-[#A06E7D] font-sans">
-                Dearest Maya,
-              </p>
-              <p className="font-serif text-lg sm:text-xl text-[#2C0D17] font-medium italic leading-snug">
-                &ldquo;Every quiet moment with you feels like starlight...&rdquo;
-              </p>
-            </div>
-
-            {/* Bottom: Silk Ribbon Accent & Digital Wax Seal */}
-            <div className="pt-3 border-t border-[#E8DCCF]/70 flex items-center justify-between">
-              {/* Sign-off note */}
-              <div>
-                <span className="block text-[10px] uppercase tracking-wider text-[#A06E7D]">
-                  With all my heart
-                </span>
-                <span className="font-serif text-sm font-medium text-[#7A1F3D]">
-                  Yours Always
-                </span>
-              </div>
-
-              {/* Crimson Wax Seal Button Moment */}
-              <div className="relative flex items-center gap-2.5">
-                <span className="text-[10px] text-[#A06E7D] tracking-wide font-sans group-hover:text-[#7A1F3D] transition-colors hidden sm:inline">
-                  Tap to write yours
-                </span>
-                <div
-                  style={{ transform: "translateZ(8px)" }}
-                  className="w-10 h-10 rounded-full bg-gradient-to-br from-rose-600 via-rose-700 to-[#7A1428] border border-rose-400/80 shadow-[0_4px_12px_rgba(159,18,57,0.45)] flex items-center justify-center transition-transform duration-300 group-hover:scale-110"
-                >
-                  <span className="text-base select-none filter drop-shadow-sm">💌</span>
-                </div>
-              </div>
-            </div>
+            <p className="font-serif italic text-base sm:text-lg text-[#2A0615] font-normal leading-snug">
+              &ldquo;To the one who holds my heart...&rdquo;
+            </p>
+            <p className="font-serif text-xs text-[#521731]/80 font-normal leading-relaxed mt-1 line-clamp-1">
+              Every sunrise is brighter because you are in my world.
+            </p>
           </div>
 
-          {/* Bottom subtle edge shadow */}
-          <div className="absolute bottom-0 inset-x-0 h-1 bg-gradient-to-t from-black/[0.04] to-transparent pointer-events-none" />
+          {/* Envelope Pocket Body */}
+          <div className="relative p-5 sm:p-6 bg-[#FFFDF9]">
+            {/* Triangular Envelope Flap Crease & Shadows */}
+            <div className="relative mb-3 flex items-center justify-center">
+              {/* Satin Crimson Ribbon band running across */}
+              <div className="absolute inset-x-[-24px] h-7 bg-gradient-to-r from-[#9F1239] via-[#E11D48] to-[#9F1239] shadow-sm flex items-center justify-between px-6">
+                <div className="absolute top-0 inset-x-0 h-[1px] bg-[#FDE68A]/70" />
+                <div className="absolute bottom-0 inset-x-0 h-[1px] bg-[#FDE68A]/70" />
+                <span className="text-[9px] uppercase tracking-[0.22em] font-sans font-medium text-rose-100/80">
+                  SEALED
+                </span>
+                <span className="text-[9px] uppercase tracking-[0.22em] font-sans font-medium text-rose-100/80">
+                  WITH LOVE
+                </span>
+              </div>
+
+              {/* Hand-Poured Crimson Wax Seal with Embossed Heart */}
+              <div className="relative z-10 flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-[#E11D48] via-[#BE123C] to-[#6B0C23] border-2 border-[#FCA5A5]/80 shadow-[0_4px_14px_rgba(159,18,57,0.4),inset_0_2px_4px_rgba(255,255,255,0.35)] group-hover:scale-105 transition-transform duration-300">
+                {/* Organic wax lip ripple */}
+                <div className="absolute inset-0.5 rounded-full border border-rose-900/40" />
+                <span className="text-base select-none filter drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)]">
+                  💖
+                </span>
+              </div>
+            </div>
+
+            {/* Envelope Footnote Prompt */}
+            <div className="mt-4 pt-1 flex items-center justify-between text-[11px] text-[#7A334B] font-sans">
+              <span className="flex items-center gap-1.5 font-medium">
+                <span className="w-1.5 h-1.5 rounded-full bg-rose-500 inline-block animate-pulse" />
+                Tap to open letter
+              </span>
+              <span className="font-serif italic text-xs text-[#3E091E] font-medium group-hover:translate-x-0.5 transition-transform">
+                Forever yours &rarr;
+              </span>
+            </div>
+          </div>
         </div>
       </motion.div>
     </div>
