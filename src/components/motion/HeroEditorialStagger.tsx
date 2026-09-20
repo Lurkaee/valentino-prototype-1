@@ -16,10 +16,16 @@ interface HeroEditorialStaggerProps {
   secondaryCtaHref?: string;
 }
 
+/**
+ * HeroEditorialStagger:
+ * Editorial romantic typography and tactile CTAs with soft warm tones.
+ * Designed with tight, intentional vertical flow so the floating 3D love letter
+ * is visible immediately in the first viewport.
+ */
 export function HeroEditorialStagger({
-  eyebrow = "A PRIVATE DIGITAL LOVE LETTER",
+  eyebrow = "A private digital love letter",
   headline = "Create something they'll remember.",
-  subtitle = "An intimate, beautifully crafted web experience for someone you cherish. Choose a template, write what's in your heart, and seal it with digital wax.",
+  subtitle = "An intimate, beautifully crafted web experience for someone you cherish. Choose a template, write what's in your heart, and seal it with love.",
   primaryCtaText = "Create Your Valentine",
   primaryCtaHref = "/create",
   secondaryCtaText = "Explore Templates",
@@ -27,19 +33,18 @@ export function HeroEditorialStagger({
 }: HeroEditorialStaggerProps) {
   const shouldReduceMotion = useReducedMotion();
 
-  // Split headline for responsive editorial line-masked reveal
-  // "Create something" / "they'll remember."
+  // Split headline for responsive editorial line reveal
   const headlineWords = headline.split(" ");
-  const line1 = headlineWords.slice(0, 2).join(" ");
-  const line2 = headlineWords.slice(2).join(" ");
+  const line1 = headlineWords.slice(0, 2).join(" "); // "Create something"
+  const line2 = headlineWords.slice(2).join(" "); // "they'll remember."
 
   const containerVariants = {
     hidden: { opacity: shouldReduceMotion ? 1 : 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: shouldReduceMotion ? 0 : motionTheme.stagger.medium,
-        delayChildren: shouldReduceMotion ? 0 : 0.15,
+        staggerChildren: shouldReduceMotion ? 0 : 0.12,
+        delayChildren: shouldReduceMotion ? 0 : 0.1,
       },
     },
   };
@@ -47,7 +52,7 @@ export function HeroEditorialStagger({
   const itemVariants = {
     hidden: {
       opacity: shouldReduceMotion ? 1 : 0,
-      y: shouldReduceMotion ? 0 : 20,
+      y: shouldReduceMotion ? 0 : 16,
     },
     visible: {
       opacity: 1,
@@ -61,7 +66,7 @@ export function HeroEditorialStagger({
 
   const maskLineVariants = {
     hidden: {
-      y: shouldReduceMotion ? "0%" : "110%",
+      y: shouldReduceMotion ? "0%" : "105%",
       opacity: shouldReduceMotion ? 1 : 0,
     },
     visible: {
@@ -81,87 +86,73 @@ export function HeroEditorialStagger({
       animate="visible"
       className="w-full flex flex-col items-center text-center relative z-10"
     >
-      {/* 1. Eyebrow badge enters first */}
-      <motion.div variants={itemVariants} className="mb-5 sm:mb-6">
+      {/* 1. Intimate Eyebrow Pill */}
+      <motion.div variants={itemVariants} className="mb-3.5 sm:mb-4">
         <Badge
           variant="rose"
           size="md"
-          className="tracking-[0.2em] uppercase text-[11px] font-medium px-4 py-1.5 bg-rose-950/60 border-rose-400/40 text-rose-200 shadow-md shadow-rose-950/40 backdrop-blur-md"
+          className="tracking-[0.16em] uppercase text-[11px] font-medium px-4 py-1.5 bg-white/75 border border-rose-300/80 text-[#831843] shadow-[0_4px_16px_rgba(230,120,160,0.18)] backdrop-blur-md"
         >
-          {eyebrow}
+          <span>✦</span>
+          <span>{eyebrow}</span>
+          <span>✦</span>
         </Badge>
       </motion.div>
 
-      {/* 2. Headline reveals line-by-line using clipped upward motion */}
-      <h1 className="text-4xl sm:text-6xl lg:text-7xl font-serif font-medium text-[#FAF8F5] tracking-tight leading-[1.15] max-w-4xl mb-5 sm:mb-6">
-        <span className="block overflow-hidden py-1">
+      {/* 2. Romantic Headline: Deep warm plum with sunset rose/magenta highlight */}
+      <h1 className="text-3xl sm:text-5xl lg:text-6xl font-serif font-medium text-[#2E0617] tracking-tight leading-[1.12] max-w-3xl mb-3 sm:mb-4">
+        <span className="block overflow-hidden py-0.5">
           <motion.span
             variants={maskLineVariants}
-            className="inline-block will-change-transform"
+            className="inline-block will-change-transform drop-shadow-[0_2px_12px_rgba(255,255,255,0.4)]"
           >
             {line1}{" "}
           </motion.span>
         </span>
-        <span className="block overflow-hidden py-1">
+        <span className="block overflow-hidden py-0.5">
           <motion.span
             variants={maskLineVariants}
-            className="inline-block will-change-transform bg-gradient-to-r from-[#FAF8F5] via-[#FED7AA] to-[#FDA4AF] bg-clip-text text-transparent italic font-light"
+            className="inline-block will-change-transform italic font-light bg-gradient-to-r from-[#9F1239] via-[#C026D3] to-[#E11D48] bg-clip-text text-transparent drop-shadow-[0_2px_8px_rgba(244,63,94,0.2)]"
           >
             {line2}
           </motion.span>
         </span>
       </h1>
 
-      {/* 3. Subtitle enters smoothly after headline */}
+      {/* 3. Intimate Subtitle Copy */}
       <motion.p
         variants={itemVariants}
-        className="text-base sm:text-xl text-[#FAF8F5]/80 font-light leading-relaxed max-w-2xl mb-8 sm:mb-10"
+        className="text-sm sm:text-base lg:text-lg text-[#4E162F]/90 font-light leading-relaxed max-w-xl mb-6 sm:mb-7"
       >
         {subtitle}
       </motion.p>
 
-      {/* 4. Primary and secondary CTAs stagger in */}
+      {/* 4. Tactile Romantic Primary and Secondary CTAs */}
       <motion.div
         variants={itemVariants}
-        className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto mb-8"
+        className="flex flex-col sm:flex-row items-center gap-3.5 w-full sm:w-auto mb-2"
       >
         <CurtainLink href={primaryCtaHref} className="w-full sm:w-auto">
           <Button
             size="lg"
             variant="primary"
-            className="w-full sm:w-auto px-8 py-3.5 rounded-full shadow-2xl shadow-rose-950/60 hover:shadow-rose-900/80 transition-all duration-300 hover:-translate-y-0.5"
+            className="w-full sm:w-auto px-8 py-3.5 rounded-full font-medium text-white bg-gradient-to-r from-[#E11D48] via-[#F43F5E] to-[#FB7185] shadow-[0_10px_25px_rgba(225,29,72,0.35)] hover:shadow-[0_14px_32px_rgba(225,29,72,0.45)] hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-300 border border-white/30"
           >
             <span>{primaryCtaText}</span>
             <span className="text-sm">💌</span>
           </Button>
         </CurtainLink>
+
         <CurtainLink href={secondaryCtaHref} className="w-full sm:w-auto">
           <Button
             size="lg"
-            variant="secondary"
-            className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-white/[0.06] hover:bg-white/[0.12] border-white/15 text-[#FAF8F5] transition-all duration-300 hover:-translate-y-0.5 backdrop-blur-md"
+            variant="ghost"
+            className="w-full sm:w-auto px-6 py-3.5 rounded-full font-semibold !text-[#4A0E2E] hover:!text-[#881337] bg-white/70 hover:bg-white/95 active:scale-[0.98] transition-all duration-200 border border-rose-300/60 shadow-[0_4px_12px_rgba(200,100,130,0.12)]"
           >
-            {secondaryCtaText}
+            <span>{secondaryCtaText}</span>
+            <span className="text-xs">&rarr;</span>
           </Button>
         </CurtainLink>
-      </motion.div>
-
-      {/* 5. Trust indicators appear last */}
-      <motion.div
-        variants={itemVariants}
-        className="flex flex-wrap items-center justify-center gap-4 text-xs text-[#FAF8F5]/60 font-sans tracking-wide"
-      >
-        <span className="flex items-center gap-1.5">
-          <span className="text-emerald-400">●</span> No sign-up required
-        </span>
-        <span className="hidden sm:inline text-white/20">·</span>
-        <span className="flex items-center gap-1.5">
-          <span className="text-rose-400">●</span> Private unguessable link
-        </span>
-        <span className="hidden sm:inline text-white/20">·</span>
-        <span className="flex items-center gap-1.5">
-          <span className="text-amber-400">●</span> Never indexed by search
-        </span>
       </motion.div>
     </motion.div>
   );

@@ -12,25 +12,25 @@ import { CurtainLink } from "@/components/motion/PageCurtains";
 export default function HomePage() {
   return (
     <main className="relative min-h-[100dvh] flex flex-col items-center justify-start bg-[#12030A] text-[#FAF8F5] overflow-x-hidden selection:bg-rose-500/30 selection:text-white">
-      {/* Floating Pill Navigation */}
+      {/* Floating Pill Navigation (Translucent Warm Cream & Rose Tint) */}
       <FloatingNavbar />
 
-      {/* Atmospheric Valentine's Sky Background */}
+      {/* Atmospheric Valentine's Sky Background (Luminous Blush Pink, Sunset Peach & Layered Clouds) */}
       <ValentineSky />
 
-      {/* Hero Section */}
-      <section className="w-full max-w-6xl mx-auto px-6 pt-28 sm:pt-36 pb-16 flex flex-col items-center text-center relative z-10">
+      {/* Hero Section — Perfectly Composed for Immediate First-Viewport Visibility */}
+      <section className="w-full max-w-5xl mx-auto px-6 pt-24 sm:pt-28 pb-14 min-h-[92dvh] sm:min-h-screen flex flex-col items-center justify-center text-center relative z-10">
         {/* Animated Editorial Stagger Hero Typography & CTAs */}
         <HeroEditorialStagger />
 
-        {/* 3D Love Letter Centerpiece (Quiet, Intimate Floating Physics) */}
-        <div className="mt-12 sm:mt-16 w-full max-w-lg relative z-20">
+        {/* 3D Love Letter Centerpiece — Floating gently nestled in the cloud bank */}
+        <div className="mt-4 sm:mt-5 w-full max-w-xs sm:max-w-sm relative z-20">
           <LoveLetter3D />
         </div>
       </section>
 
       {/* Romantic Ticker Ribbon */}
-      <div className="w-full border-y border-white/[0.08] bg-[#1A0512]/60 backdrop-blur-md relative z-10 my-4">
+      <div className="w-full border-y border-rose-400/20 bg-[#250616]/80 backdrop-blur-md relative z-10 my-4">
         <LogoTicker />
       </div>
 
