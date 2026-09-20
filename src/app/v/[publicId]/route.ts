@@ -20,16 +20,62 @@ function render404Html(): string {
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Valentine Not Found</title>
+  <title>Valentine Not Found — Valentino</title>
   <meta name="robots" content="noindex, nofollow" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: #0B0B12; color: #F8FAFC; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; text-align: center; padding: 1.5rem; }
-    .card { max-width: 28rem; width: 100%; padding: 2rem; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 1rem; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
+    body {
+      background: #07070A;
+      color: #FAF8F5;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      text-align: center;
+      padding: 1.5rem;
+    }
+    .card {
+      max-width: 28rem;
+      width: 100%;
+      padding: 2.5rem 2rem;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 1.5rem;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
     .icon { font-size: 2.5rem; margin-bottom: 1rem; }
-    h1 { font-size: 1.25rem; margin-bottom: 0.5rem; font-weight: 500; }
-    p { font-size: 0.875rem; color: #94A3B8; margin-bottom: 1.5rem; line-height: 1.5; }
-    a { display: inline-block; padding: 0.625rem 1.25rem; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; border-radius: 0.75rem; background: #E11D48; color: #FFFFFF; text-decoration: none; }
+    h1 {
+      font-family: Georgia, Cambria, 'Times New Roman', serif;
+      font-size: 1.5rem;
+      margin-bottom: 0.75rem;
+      font-weight: 500;
+      color: #FFFFFF;
+    }
+    p {
+      font-size: 0.875rem;
+      color: #D5CEBF;
+      margin-bottom: 1.75rem;
+      line-height: 1.6;
+      font-weight: 300;
+    }
+    a {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border-radius: 0.75rem;
+      background: linear-gradient(to right, #E11D48, #BE123C);
+      color: #FFFFFF;
+      text-decoration: none;
+      box-shadow: 0 10px 20px -5px rgba(225, 29, 72, 0.4);
+      transition: opacity 0.2s;
+    }
+    a:hover { opacity: 0.9; }
   </style>
 </head>
 <body>
@@ -49,16 +95,62 @@ function render410Html(): string {
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Valentine Unavailable</title>
+  <title>Valentine Unavailable — Valentino</title>
   <meta name="robots" content="noindex, nofollow" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: #0B0B12; color: #F8FAFC; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; display: flex; align-items: center; justify-content: center; min-height: 100vh; text-align: center; padding: 1.5rem; }
-    .card { max-width: 28rem; width: 100%; padding: 2rem; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 1rem; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
+    body {
+      background: #07070A;
+      color: #FAF8F5;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      text-align: center;
+      padding: 1.5rem;
+    }
+    .card {
+      max-width: 28rem;
+      width: 100%;
+      padding: 2.5rem 2rem;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 1.5rem;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
     .icon { font-size: 2.5rem; margin-bottom: 1rem; }
-    h1 { font-size: 1.25rem; margin-bottom: 0.5rem; font-weight: 500; }
-    p { font-size: 0.875rem; color: #94A3B8; margin-bottom: 1.5rem; line-height: 1.5; }
-    a { display: inline-block; padding: 0.625rem 1.25rem; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; border-radius: 0.75rem; background: #E11D48; color: #FFFFFF; text-decoration: none; }
+    h1 {
+      font-family: Georgia, Cambria, 'Times New Roman', serif;
+      font-size: 1.5rem;
+      margin-bottom: 0.75rem;
+      font-weight: 500;
+      color: #FFFFFF;
+    }
+    p {
+      font-size: 0.875rem;
+      color: #D5CEBF;
+      margin-bottom: 1.75rem;
+      line-height: 1.6;
+      font-weight: 300;
+    }
+    a {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border-radius: 0.75rem;
+      background: linear-gradient(to right, #E11D48, #BE123C);
+      color: #FFFFFF;
+      text-decoration: none;
+      box-shadow: 0 10px 20px -5px rgba(225, 29, 72, 0.4);
+      transition: opacity 0.2s;
+    }
+    a:hover { opacity: 0.9; }
   </style>
 </head>
 <body>
@@ -82,33 +174,44 @@ interface PublishedConfig {
   heroMediaId?: string | null;
 }
 
-const ACCENTS: Record<string, { glow: string; sealBg: string; sealBorder: string; sealShadow: string; border: string; badge: string; accentText: string }> = {
+const ACCENTS: Record<
+  string,
+  {
+    glow: string;
+    sealBg: string;
+    sealBorder: string;
+    sealShadow: string;
+    border: string;
+    badge: string;
+    accentText: string;
+  }
+> = {
   "crimson-rose": {
-    glow: "radial-gradient(circle at center, rgba(225, 29, 72, 0.2) 0%, rgba(219, 39, 119, 0.1) 40%, transparent 70%)",
-    sealBg: "#BE123C",
-    sealBorder: "#F43F5E",
-    sealShadow: "rgba(136, 19, 55, 0.6)",
-    border: "rgba(244, 63, 94, 0.3)",
+    glow: "radial-gradient(circle at center, rgba(225, 29, 72, 0.22) 0%, rgba(219, 39, 119, 0.1) 45%, transparent 70%)",
+    sealBg: "linear-gradient(135deg, #E11D48 0%, #BE123C 60%, #881337 100%)",
+    sealBorder: "#FB7185",
+    sealShadow: "0 0 35px rgba(225, 29, 72, 0.4), 0 12px 24px rgba(0, 0, 0, 0.6)",
+    border: "rgba(244, 63, 94, 0.25)",
     badge: "color: #FDA4AF; background: rgba(76, 5, 25, 0.6); border: 1px solid rgba(159, 18, 57, 0.5);",
-    accentText: "#FB7185",
+    accentText: "#FDA4AF",
   },
   "midnight-violet": {
-    glow: "radial-gradient(circle at center, rgba(147, 51, 234, 0.2) 0%, rgba(79, 70, 229, 0.1) 40%, transparent 70%)",
-    sealBg: "#7E22CE",
-    sealBorder: "#A855F7",
-    sealShadow: "rgba(88, 28, 135, 0.6)",
-    border: "rgba(168, 85, 247, 0.3)",
+    glow: "radial-gradient(circle at center, rgba(147, 51, 234, 0.22) 0%, rgba(79, 70, 229, 0.1) 45%, transparent 70%)",
+    sealBg: "linear-gradient(135deg, #9333EA 0%, #7E22CE 60%, #581C87 100%)",
+    sealBorder: "#C084FC",
+    sealShadow: "0 0 35px rgba(147, 51, 234, 0.4), 0 12px 24px rgba(0, 0, 0, 0.6)",
+    border: "rgba(168, 85, 247, 0.25)",
     badge: "color: #D8B4FE; background: rgba(59, 7, 100, 0.6); border: 1px solid rgba(107, 33, 168, 0.5);",
-    accentText: "#C084FC",
+    accentText: "#D8B4FE",
   },
   "champagne-gold": {
-    glow: "radial-gradient(circle at center, rgba(217, 119, 6, 0.2) 0%, rgba(202, 138, 4, 0.1) 40%, transparent 70%)",
-    sealBg: "#B45309",
-    sealBorder: "#F59E0B",
-    sealShadow: "rgba(120, 53, 15, 0.6)",
-    border: "rgba(245, 158, 11, 0.3)",
-    badge: "color: #FCD34D; background: rgba(69, 26, 3, 0.6); border: 1px solid rgba(146, 64, 14, 0.5);",
-    accentText: "#FBBF24",
+    glow: "radial-gradient(circle at center, rgba(217, 119, 6, 0.22) 0%, rgba(202, 138, 4, 0.1) 45%, transparent 70%)",
+    sealBg: "linear-gradient(135deg, #F59E0B 0%, #D97706 60%, #78350F 100%)",
+    sealBorder: "#FBBF24",
+    sealShadow: "0 0 35px rgba(217, 119, 6, 0.35), 0 12px 24px rgba(0, 0, 0, 0.6)",
+    border: "rgba(245, 158, 11, 0.25)",
+    badge: "color: #FDE68A; background: rgba(69, 26, 3, 0.6); border: 1px solid rgba(146, 64, 14, 0.5);",
+    accentText: "#FDE68A",
   },
 };
 
@@ -125,7 +228,7 @@ function renderPublicHtml(config: PublishedConfig): string {
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>A Valentine Experience</title>
+  <title>A Valentine for ${partnerName} — Valentino</title>
   <meta name="robots" content="noindex, nofollow" />
   <meta property="og:title" content="A Valentine Experience" />
   <meta property="og:description" content="A personal, romantic Valentine experience." />
@@ -137,8 +240,8 @@ function renderPublicHtml(config: PublishedConfig): string {
       width: 100%;
       min-height: 100vh;
       overflow-x: hidden;
-      background: #0B0B12;
-      color: #F8FAFC;
+      background: #07070A;
+      color: #FAF8F5;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
     .wrapper {
@@ -157,7 +260,7 @@ function renderPublicHtml(config: PublishedConfig): string {
       inset: 0;
       background: ${theme.glow};
       pointer-events: none;
-      opacity: 0.7;
+      opacity: 0.65;
     }
     .content-container {
       position: relative;
@@ -171,114 +274,153 @@ function renderPublicHtml(config: PublishedConfig): string {
     }
     .card {
       width: 100%;
-      border-radius: 1rem;
-      background: rgba(255, 255, 255, 0.04);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      border-radius: 1.5rem;
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       border: 1px solid ${theme.border};
-      padding: 2rem 1.5rem;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      padding: 2.5rem 1.75rem;
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.8);
       transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
       overflow-wrap: anywhere;
       word-break: break-word;
     }
     @media (min-width: 640px) {
-      .card { padding: 2.5rem 2rem; }
+      .card { padding: 3rem 2.5rem; }
     }
-    .header { text-align: center; margin-bottom: 1.5rem; }
+    .header { text-align: center; margin-bottom: 2rem; }
     .badge {
       display: inline-block;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       text-transform: uppercase;
-      letter-spacing: 0.1em;
-      padding: 0.25rem 0.75rem;
+      letter-spacing: 0.12em;
+      padding: 0.3rem 0.85rem;
       border-radius: 9999px;
-      margin-bottom: 0.75rem;
+      margin-bottom: 1rem;
       ${theme.badge}
     }
     h1 {
-      font-family: Georgia, Cambria, 'Times New Roman', Times, serif;
-      font-size: 1.75rem;
+      font-family: Georgia, Cambria, 'Times New Roman', serif;
+      font-size: 2rem;
       font-weight: 500;
       color: #FFFFFF;
       letter-spacing: 0.02em;
-      line-height: 1.3;
+      line-height: 1.25;
     }
     @media (min-width: 640px) {
-      h1 { font-size: 2rem; }
+      h1 { font-size: 2.5rem; }
     }
     .seal-box {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 2.5rem 1rem;
+      padding: 3rem 1rem;
       text-align: center;
+    }
+    .seal-wrapper {
+      position: relative;
+    }
+    .pulse-halo {
+      position: absolute;
+      inset: -0.75rem;
+      border-radius: 9999px;
+      background: rgba(225, 29, 72, 0.2);
+      filter: blur(8px);
+      animation: pulseHalo 3s infinite ease-in-out;
+    }
+    @keyframes pulseHalo {
+      0%, 100% { opacity: 0.4; transform: scale(0.98); }
+      50% { opacity: 0.8; transform: scale(1.05); }
     }
     .wax-seal {
       position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 5.5rem;
-      height: 5.5rem;
+      width: 6.5rem;
+      height: 6.5rem;
       min-width: 44px;
       min-height: 44px;
       border-radius: 9999px;
       border: 2px solid ${theme.sealBorder};
       background: ${theme.sealBg};
-      box-shadow: 0 10px 25px -5px ${theme.sealShadow};
+      box-shadow: ${theme.sealShadow};
       cursor: pointer;
       outline: none;
       transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
     .wax-seal:hover { transform: scale(1.06); }
-    .wax-seal:active { transform: scale(0.96); }
-    .wax-seal .emoji { font-size: 2.25rem; user-select: none; }
+    .wax-seal:active { transform: scale(0.95); }
+    .wax-seal-inner {
+      width: 4.5rem;
+      height: 4.5rem;
+      border-radius: 9999px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.15);
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+    }
+    .wax-seal .emoji {
+      font-size: 2.25rem;
+      user-select: none;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
+    }
     .seal-label {
       position: absolute;
-      bottom: -1.75rem;
+      bottom: -2rem;
+      left: 50%;
+      transform: translateX(-50%);
       font-size: 0.75rem;
-      color: rgba(255, 255, 255, 0.6);
+      color: #D5CEBF;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.1em;
       white-space: nowrap;
       font-family: system-ui, sans-serif;
+      font-weight: 500;
     }
     .letter-box {
       display: flex;
       flex-direction: column;
-      gap: 1.5rem;
-      color: #CBD5E1;
-      line-height: 1.7;
+      gap: 2rem;
+      color: #EAE5D9;
+      line-height: 1.8;
       font-size: 1.05rem;
     }
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
+      from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
     .animate-fadeIn {
-      animation: fadeIn 0.5s ease-out forwards;
+      animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
     .message-card {
       white-space: pre-wrap;
-      border-radius: 0.75rem;
-      background: rgba(0, 0, 0, 0.25);
-      padding: 1.5rem;
-      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 1rem;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 1.75rem;
+      border: 1px solid rgba(255, 255, 255, 0.06);
       font-weight: 300;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
     }
-    .signoff-box { text-align: right; padding-top: 0.5rem; }
+    .signoff-box {
+      text-align: right;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
     .signoff-label {
       font-size: 0.75rem;
-      color: rgba(255, 255, 255, 0.5);
+      color: #9E9789;
       text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-bottom: 0.25rem;
+      letter-spacing: 0.12em;
+      margin-bottom: 0.35rem;
+      font-family: system-ui, sans-serif;
     }
     .sender-title {
-      font-family: Georgia, Cambria, 'Times New Roman', Times, serif;
-      font-size: 1.35rem;
+      font-family: Georgia, Cambria, 'Times New Roman', serif;
+      font-size: 1.5rem;
       font-weight: 500;
       color: ${theme.accentText};
     }
@@ -290,6 +432,7 @@ function renderPublicHtml(config: PublishedConfig): string {
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
       }
+      .pulse-halo { display: none; }
     }
   </style>
 </head>
@@ -304,15 +447,20 @@ function renderPublicHtml(config: PublishedConfig): string {
         </div>
 
         <div class="seal-box" data-testid="seal-container">
-          <button
-            type="button"
-            class="wax-seal"
-            data-testid="wax-seal-button"
-            aria-label="Break the wax seal to read letter"
-          >
-            <span class="emoji">💌</span>
-            <span class="seal-label">Tap to open</span>
-          </button>
+          <div class="seal-wrapper">
+            <div class="pulse-halo"></div>
+            <button
+              type="button"
+              class="wax-seal"
+              data-testid="wax-seal-button"
+              aria-label="Break the wax seal to read letter"
+            >
+              <div class="wax-seal-inner">
+                <span class="emoji">💌</span>
+              </div>
+              <span class="seal-label">Tap to open</span>
+            </button>
+          </div>
         </div>
 
         <div class="letter-box hidden" data-testid="unsealed-letter">

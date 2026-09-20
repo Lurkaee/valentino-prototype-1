@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import Link from "next/link";
 import { useParams } from "next/navigation";
 import { ExperienceRenderer } from "@/templates/ExperienceRenderer";
 import {
@@ -8,6 +9,10 @@ import {
   ACCENT_THEMES,
   AccentTheme,
 } from "@/templates/midnight-rose/v1/schema";
+import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
+import { Badge } from "@/components/ui/Badge";
+import { AtmosphericGlow } from "@/components/ui/AtmosphericGlow";
 
 type SaveStatus = "idle" | "saving" | "saved" | "error" | "conflict" | "offline";
 
@@ -34,6 +39,7 @@ export default function EditExperiencePage() {
   const [isPublishing, setIsPublishing] = useState(false);
   const [publicUrl, setPublicUrl] = useState<string>("");
   const [copied, setCopied] = useState(false);
+  const [mobileTab, setMobileTab] = useState<"form" | "preview">("form");
 
   const configRef = useRef(config);
   configRef.current = config;
@@ -198,7 +204,6 @@ export default function EditExperiencePage() {
   const handlePublish = async () => {
     if (saveStatus === "saving") return;
 
-    // Flush any pending save first
     if (isDirtyRef.current) {
       const saved = await performSave();
       if (!saved) return;
@@ -286,284 +291,455 @@ export default function EditExperiencePage() {
     }
   };
 
-  // Auth Error State (renders friendly no-edit page without content leakage)
+  // Auth Error State
   if (authError) {
     return (
-      <main className="flex min-h-[100dvh] flex-col items-center justify-center p-6 text-center bg-[#0B0B12] text-slate-100">
-        <div className="max-w-md w-full p-8 rounded-2xl bg-white/[0.03] border border-white/10 shadow-2xl">
-          <div className="text-3xl mb-3">🔒</div>
-          <h1 className="text-xl font-serif font-medium text-white mb-2">Edit Access Unavailable</h1>
-          <p className="text-sm text-slate-300 mb-6">{authError}</p>
-          <a
-            href="/create"
-            className="inline-block px-5 py-2.5 text-xs font-medium uppercase tracking-wider rounded-xl bg-rose-600 hover:bg-rose-500 text-white transition-colors"
-          >
-            Create a New Valentine
-          </a>
-        </div>
+      <main className="flex min-h-[100dvh] flex-col items-center justify-center p-6 text-center bg-[#07070A] text-[#FAF8F5]">
+        <AtmosphericGlow theme="crimson-rose" intensity="subtle" />
+        <Card variant="glass" className="max-w-md w-full p-8 border-rose-500/20 text-center space-y-4 relative z-10">
+          <div className="w-14 h-14 mx-auto rounded-full bg-rose-950/60 border border-rose-800/40 flex items-center justify-center text-2xl">
+            🔒
+          </div>
+          <h1 className="text-xl font-serif font-medium text-white">Edit Access Unavailable</h1>
+          <p className="text-sm text-ivory-300/80 font-light leading-relaxed">{authError}</p>
+          <div className="pt-2">
+            <Link href="/create">
+              <Button size="md" variant="primary">
+                Create a New Valentine
+              </Button>
+            </Link>
+          </div>
+        </Card>
       </main>
     );
   }
 
   return (
-    <div className="min-h-[100dvh] flex flex-col bg-[#0B0B12] text-slate-100">
+    <div className="min-h-[100dvh] flex flex-col bg-[#07070A] text-[#FAF8F5]">
       {/* 1. Mandatory Owner Reminder Banner */}
       <div
         data-testid="browser-storage-reminder"
-        className="bg-rose-950/80 border-b border-rose-800/40 px-4 py-2 text-center text-xs text-rose-200"
+        className="bg-rose-950/70 border-b border-rose-800/30 px-4 py-2 text-center text-xs text-rose-200/90 font-sans flex items-center justify-center gap-2"
       >
+        <span>💌</span>
         <span>
-          💌 <strong>Edit access is stored in this browser.</strong> Keep this browser/device available if you want to edit this Valentine later.
+          <strong>Edit access is stored in this browser.</strong> Keep this browser/device available if you want to edit this Valentine later.
         </span>
       </div>
 
-      {/* Editor Main Content: Stacked on mobile, 2-column on desktop */}
-      <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
-        {/* Left Pane: Customization Form */}
-        <div className="w-full md:w-[480px] lg:w-[540px] flex flex-col border-b md:border-b-0 md:border-r border-white/10 bg-black/40 overflow-y-auto">
-          {/* Form Header */}
-          <div className="p-4 sm:p-6 border-b border-white/10 flex items-center justify-between">
-            <div>
-              <h1 className="text-lg font-serif font-medium text-white">Customize Your Valentine</h1>
-              <p className="text-xs text-white/50">Midnight Rose Template (v1)</p>
-            </div>
-
-            {/* Status Pill */}
-            <div
-              data-testid="save-status-pill"
-              data-status={saveStatus}
-              className="text-xs px-2.5 py-1 rounded-full border border-white/10 bg-white/5 flex items-center gap-1.5"
-            >
-              {saveStatus === "saving" && <span className="text-amber-400 animate-pulse">● Saving...</span>}
-              {saveStatus === "saved" && (
-                <span className="text-emerald-400">✓ Saved {lastSavedTime ? `at ${lastSavedTime}` : ""}</span>
-              )}
-              {saveStatus === "error" && <span className="text-rose-400">⚠️ Save failed</span>}
-              {saveStatus === "conflict" && <span className="text-rose-400">⚠️ Draft conflict</span>}
-              {saveStatus === "offline" && <span className="text-amber-400">⚡ Offline</span>}
-              {saveStatus === "idle" && <span className="text-white/40">● Unsaved edits</span>}
-            </div>
-          </div>
-
-          {/* Form Inputs */}
-          <form className="p-4 sm:p-6 space-y-5" onSubmit={(e) => e.preventDefault()}>
-            <div>
-              <label htmlFor="partnerName" className="block text-xs font-medium uppercase tracking-wider text-white/70 mb-1.5">
-                Partner&apos;s Name *
-              </label>
-              <input
-                id="partnerName"
-                data-testid="input-partner-name"
-                type="text"
-                maxLength={60}
-                placeholder="e.g. Maya, Ananya, Alex"
-                value={config.partnerName || ""}
-                onChange={(e) =>
-                  handleConfigChange((prev) => ({
-                    ...prev,
-                    partnerName: e.target.value,
-                  }))
-                }
-                className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/20 focus:outline-none focus:border-rose-500 text-sm transition-colors"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="senderName" className="block text-xs font-medium uppercase tracking-wider text-white/70 mb-1.5">
-                Your Name *
-              </label>
-              <input
-                id="senderName"
-                data-testid="input-sender-name"
-                type="text"
-                maxLength={60}
-                placeholder="e.g. Rohan, Chris"
-                value={config.senderName || ""}
-                onChange={(e) =>
-                  handleConfigChange((prev) => ({
-                    ...prev,
-                    senderName: e.target.value,
-                  }))
-                }
-                className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/20 focus:outline-none focus:border-rose-500 text-sm transition-colors"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="greeting" className="block text-xs font-medium uppercase tracking-wider text-white/70 mb-1.5">
-                Greeting
-              </label>
-              <input
-                id="greeting"
-                data-testid="input-greeting"
-                type="text"
-                maxLength={100}
-                placeholder="To my favorite person"
-                value={config.greeting || ""}
-                onChange={(e) =>
-                  handleConfigChange((prev) => ({
-                    ...prev,
-                    greeting: e.target.value,
-                  }))
-                }
-                className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/20 focus:outline-none focus:border-rose-500 text-sm transition-colors"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="message" className="block text-xs font-medium uppercase tracking-wider text-white/70 mb-1.5">
-                Letter / Message *
-              </label>
-              <textarea
-                id="message"
-                data-testid="input-message"
-                rows={5}
-                maxLength={2000}
-                placeholder="Write your heartfelt message here..."
-                value={config.message || ""}
-                onChange={(e) =>
-                  handleConfigChange((prev) => ({
-                    ...prev,
-                    message: e.target.value,
-                  }))
-                }
-                className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/20 focus:outline-none focus:border-rose-500 text-sm leading-relaxed transition-colors resize-y"
-              />
-            </div>
-
-            <div>
-              <label htmlFor="signOff" className="block text-xs font-medium uppercase tracking-wider text-white/70 mb-1.5">
-                Closing Sign-off
-              </label>
-              <input
-                id="signOff"
-                data-testid="input-sign-off"
-                type="text"
-                maxLength={100}
-                placeholder="With all my love"
-                value={config.signOff || ""}
-                onChange={(e) =>
-                  handleConfigChange((prev) => ({
-                    ...prev,
-                    signOff: e.target.value,
-                  }))
-                }
-                className="w-full px-3.5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/20 focus:outline-none focus:border-rose-500 text-sm transition-colors"
-              />
-            </div>
-
-            <div>
-              <span className="block text-xs font-medium uppercase tracking-wider text-white/70 mb-2">
-                Accent Theme
-              </span>
-              <div className="grid grid-cols-3 gap-2">
-                {ACCENT_THEMES.map((theme) => {
-                  const isSelected = (config.accentTheme || "crimson-rose") === theme;
-                  const label =
-                    theme === "crimson-rose"
-                      ? "Crimson"
-                      : theme === "midnight-violet"
-                      ? "Violet"
-                      : "Champagne";
-
-                  return (
-                    <button
-                      key={theme}
-                      type="button"
-                      data-testid={`theme-option-${theme}`}
-                      onClick={() =>
-                        handleConfigChange((prev) => ({
-                          ...prev,
-                          accentTheme: theme as AccentTheme,
-                        }))
-                      }
-                      className={`px-3 py-2 rounded-xl text-xs font-medium border transition-all text-center ${
-                        isSelected
-                          ? "border-rose-500 bg-rose-500/20 text-white"
-                          : "border-white/10 bg-white/5 text-white/60 hover:bg-white/10"
-                      }`}
-                    >
-                      {label}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Validation Errors from Publish Attempt */}
-            {publishErrors.length > 0 && (
-              <div className="p-3.5 rounded-xl bg-rose-950/60 border border-rose-800/50 text-xs text-rose-300 space-y-1">
-                {publishErrors.map((err, i) => (
-                  <p key={i}>• {err}</p>
-                ))}
-              </div>
-            )}
-
-            {/* Action Buttons */}
-            <div className="pt-4 flex gap-3">
-              <button
-                type="button"
-                data-testid="save-draft-button"
-                onClick={() => performSave()}
-                className="flex-1 py-3 px-4 rounded-xl border border-white/15 bg-white/5 hover:bg-white/10 text-white text-xs font-medium uppercase tracking-wider transition-colors active:scale-[0.98]"
-              >
-                Save Draft
-              </button>
-              <button
-                type="button"
-                data-testid="publish-button"
-                disabled={saveStatus === "saving" || isPublishing}
-                onClick={handlePublish}
-                className="flex-1 py-3 px-4 rounded-xl bg-rose-600 hover:bg-rose-500 text-white text-xs font-medium uppercase tracking-wider transition-all disabled:opacity-50 shadow-lg shadow-rose-950/50 active:scale-[0.98]"
-              >
-                {isPublishing ? "Publishing..." : "Publish"}
-              </button>
-            </div>
-          </form>
+      {/* Studio Navigation Bar */}
+      <header className="px-4 sm:px-6 py-3.5 border-b border-white/[0.08] bg-obsidian-900/80 backdrop-blur-md flex items-center justify-between z-20">
+        <div className="flex items-center gap-3">
+          <Link href="/" className="flex items-center gap-2 text-white hover:text-rose-400 transition-colors">
+            <span className="text-lg">💌</span>
+            <span className="font-serif font-medium tracking-wide hidden sm:inline">Valentino</span>
+          </Link>
+          <span className="text-white/20 hidden sm:inline">/</span>
+          <span className="text-xs text-ivory-300 font-sans tracking-wide">
+            Midnight Rose <span className="text-white/40">(v1)</span>
+          </span>
         </div>
 
-        {/* Right Pane: Live Interactive Preview */}
-        <div className="flex-1 bg-[#07070C] overflow-y-auto flex items-center justify-center p-4">
-          <div className="w-full max-w-lg min-h-[600px] border border-white/10 rounded-2xl overflow-hidden shadow-2xl bg-[#0B0B12]">
-            <ExperienceRenderer
-              templateId="midnight-rose"
-              templateVersion="v1"
-              mode="preview"
-              rawConfig={config}
-            />
+        {/* Center: Save Status Pill */}
+        <div
+          data-testid="save-status-pill"
+          data-status={saveStatus}
+          className="text-xs px-3 py-1 rounded-full border border-white/10 bg-white/[0.04] flex items-center gap-1.5 font-sans"
+        >
+          {saveStatus === "saving" && (
+            <span className="text-amber-400 animate-pulse flex items-center gap-1.5">
+              <span className="inline-block w-2 h-2 rounded-full bg-amber-400 animate-ping" />
+              Saving...
+            </span>
+          )}
+          {saveStatus === "saved" && (
+            <span className="text-emerald-400 flex items-center gap-1.5">
+              <span>✓</span> Saved {lastSavedTime ? `at ${lastSavedTime}` : ""}
+            </span>
+          )}
+          {saveStatus === "error" && <span className="text-rose-400">⚠️ Save failed</span>}
+          {saveStatus === "conflict" && <span className="text-rose-400">⚠️ Draft conflict</span>}
+          {saveStatus === "offline" && <span className="text-amber-400">⚡ Offline</span>}
+          {saveStatus === "idle" && <span className="text-white/40">● Unsaved edits</span>}
+        </div>
+
+        {/* Right: Actions */}
+        <div className="flex items-center gap-2">
+          {/* Mobile view toggle */}
+          <div className="flex md:hidden rounded-lg bg-white/5 p-0.5 border border-white/10 text-xs">
+            <button
+              type="button"
+              onClick={() => setMobileTab("form")}
+              className={`px-2.5 py-1 rounded-md transition-colors ${
+                mobileTab === "form" ? "bg-rose-600 text-white" : "text-ivory-300"
+              }`}
+            >
+              Edit
+            </button>
+            <button
+              type="button"
+              onClick={() => setMobileTab("preview")}
+              className={`px-2.5 py-1 rounded-md transition-colors ${
+                mobileTab === "preview" ? "bg-rose-600 text-white" : "text-ivory-300"
+              }`}
+            >
+              Preview
+            </button>
+          </div>
+
+          <Button
+            type="button"
+            variant="primary"
+            size="sm"
+            disabled={saveStatus === "saving" || isPublishing}
+            onClick={handlePublish}
+            className="hidden sm:inline-flex text-xs px-4"
+          >
+            {isPublishing ? "Publishing..." : "Publish Valentine"}
+          </Button>
+        </div>
+      </header>
+
+      {/* Editor Body */}
+      <div className="flex-1 flex flex-col md:flex-row overflow-hidden relative">
+        {/* Left Pane: Form Editor */}
+        <div
+          className={`w-full md:w-[480px] lg:w-[540px] flex flex-col border-b md:border-b-0 md:border-r border-white/[0.08] bg-obsidian-950/70 overflow-y-auto ${
+            mobileTab === "preview" ? "hidden md:flex" : "flex"
+          }`}
+        >
+          <div className="p-6 sm:p-8 space-y-8">
+            <div className="space-y-1">
+              <h1 className="text-xl sm:text-2xl font-serif font-medium text-white">
+                Personalize Your Note
+              </h1>
+              <p className="text-xs text-ivory-400 font-light">
+                Write freely. Changes are automatically saved as you write.
+              </p>
+            </div>
+
+            <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
+              {/* Question 1: Who is this for? */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <label
+                    htmlFor="partnerName"
+                    className="block text-xs uppercase tracking-wider text-ivory-300 font-medium"
+                  >
+                    1. Who is this for? <span className="text-rose-400">*</span>
+                  </label>
+                  <span className="text-[10px] text-ivory-400">
+                    {(config.partnerName || "").length} / 60
+                  </span>
+                </div>
+                <input
+                  id="partnerName"
+                  data-testid="input-partner-name"
+                  type="text"
+                  maxLength={60}
+                  placeholder="e.g. Maya, Ananya, Alex"
+                  value={config.partnerName || ""}
+                  onChange={(e) =>
+                    handleConfigChange((prev) => ({
+                      ...prev,
+                      partnerName: e.target.value,
+                    }))
+                  }
+                  className="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/10 text-white placeholder-white/20 focus:outline-none focus:border-rose-500/80 focus:ring-1 focus:ring-rose-500/50 text-sm transition-all"
+                />
+              </div>
+
+              {/* Question 2: Who are you? */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <label
+                    htmlFor="senderName"
+                    className="block text-xs uppercase tracking-wider text-ivory-300 font-medium"
+                  >
+                    2. And who are you? <span className="text-rose-400">*</span>
+                  </label>
+                  <span className="text-[10px] text-ivory-400">
+                    {(config.senderName || "").length} / 60
+                  </span>
+                </div>
+                <input
+                  id="senderName"
+                  data-testid="input-sender-name"
+                  type="text"
+                  maxLength={60}
+                  placeholder="e.g. Rohan, Chris, or your nickname"
+                  value={config.senderName || ""}
+                  onChange={(e) =>
+                    handleConfigChange((prev) => ({
+                      ...prev,
+                      senderName: e.target.value,
+                    }))
+                  }
+                  className="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/10 text-white placeholder-white/20 focus:outline-none focus:border-rose-500/80 focus:ring-1 focus:ring-rose-500/50 text-sm transition-all"
+                />
+              </div>
+
+              {/* Question 3: The Greeting */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <label
+                    htmlFor="greeting"
+                    className="block text-xs uppercase tracking-wider text-ivory-300 font-medium"
+                  >
+                    3. The Greeting
+                  </label>
+                  <span className="text-[10px] text-ivory-400">
+                    {(config.greeting || "").length} / 100
+                  </span>
+                </div>
+                <input
+                  id="greeting"
+                  data-testid="input-greeting"
+                  type="text"
+                  maxLength={100}
+                  placeholder="To my favorite person"
+                  value={config.greeting || ""}
+                  onChange={(e) =>
+                    handleConfigChange((prev) => ({
+                      ...prev,
+                      greeting: e.target.value,
+                    }))
+                  }
+                  className="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/10 text-white placeholder-white/20 focus:outline-none focus:border-rose-500/80 focus:ring-1 focus:ring-rose-500/50 text-sm transition-all"
+                />
+              </div>
+
+              {/* Question 4: Say what's in your heart */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <label
+                    htmlFor="message"
+                    className="block text-xs uppercase tracking-wider text-ivory-300 font-medium"
+                  >
+                    4. Say what&apos;s in your heart <span className="text-rose-400">*</span>
+                  </label>
+                  <span className="text-[10px] text-ivory-400">
+                    {(config.message || "").length} / 2000
+                  </span>
+                </div>
+                <textarea
+                  id="message"
+                  data-testid="input-message"
+                  rows={6}
+                  maxLength={2000}
+                  placeholder="Write your heartfelt message here. Mention your favorite memories, the little things they do, or why they mean the world to you..."
+                  value={config.message || ""}
+                  onChange={(e) =>
+                    handleConfigChange((prev) => ({
+                      ...prev,
+                      message: e.target.value,
+                    }))
+                  }
+                  className="w-full px-4 py-3.5 rounded-xl bg-white/[0.04] border border-white/10 text-white placeholder-white/20 focus:outline-none focus:border-rose-500/80 focus:ring-1 focus:ring-rose-500/50 text-sm leading-relaxed transition-all resize-y font-light"
+                />
+              </div>
+
+              {/* Question 5: Sign-off */}
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <label
+                    htmlFor="signOff"
+                    className="block text-xs uppercase tracking-wider text-ivory-300 font-medium"
+                  >
+                    5. Sign-off
+                  </label>
+                  <span className="text-[10px] text-ivory-400">
+                    {(config.signOff || "").length} / 100
+                  </span>
+                </div>
+                <input
+                  id="signOff"
+                  data-testid="input-sign-off"
+                  type="text"
+                  maxLength={100}
+                  placeholder="With all my love"
+                  value={config.signOff || ""}
+                  onChange={(e) =>
+                    handleConfigChange((prev) => ({
+                      ...prev,
+                      signOff: e.target.value,
+                    }))
+                  }
+                  className="w-full px-4 py-3 rounded-xl bg-white/[0.04] border border-white/10 text-white placeholder-white/20 focus:outline-none focus:border-rose-500/80 focus:ring-1 focus:ring-rose-500/50 text-sm transition-all"
+                />
+              </div>
+
+              {/* Question 6: Choose the Mood (Theme) */}
+              <div className="space-y-3 pt-1">
+                <span className="block text-xs uppercase tracking-wider text-ivory-300 font-medium">
+                  6. Choose the Mood
+                </span>
+                <div className="grid grid-cols-3 gap-2.5">
+                  {ACCENT_THEMES.map((theme) => {
+                    const isSelected = (config.accentTheme || "crimson-rose") === theme;
+                    const meta = {
+                      "crimson-rose": { label: "Crimson", color: "bg-rose-500" },
+                      "midnight-violet": { label: "Violet", color: "bg-purple-500" },
+                      "champagne-gold": { label: "Gold", color: "bg-amber-500" },
+                    }[theme];
+
+                    return (
+                      <button
+                        key={theme}
+                        type="button"
+                        data-testid={`theme-option-${theme}`}
+                        onClick={() =>
+                          handleConfigChange((prev) => ({
+                            ...prev,
+                            accentTheme: theme as AccentTheme,
+                          }))
+                        }
+                        className={`px-3 py-2.5 rounded-xl text-xs font-medium border flex items-center justify-center gap-2 transition-all ${
+                          isSelected
+                            ? "border-rose-500 bg-rose-950/60 text-white shadow-md shadow-rose-950/50"
+                            : "border-white/10 bg-white/[0.03] text-ivory-400 hover:bg-white/[0.08]"
+                        }`}
+                      >
+                        <span className={`w-2 h-2 rounded-full ${meta.color}`} />
+                        <span>{meta.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Validation Errors */}
+              {publishErrors.length > 0 && (
+                <div className="p-4 rounded-xl bg-rose-950/70 border border-rose-800/60 text-xs text-rose-200 space-y-1.5 animate-fadeIn">
+                  <span className="font-semibold block text-rose-300">
+                    Please complete the following to publish:
+                  </span>
+                  {publishErrors.map((err, i) => (
+                    <p key={i} className="flex items-center gap-1.5">
+                      <span>•</span> {err}
+                    </p>
+                  ))}
+                </div>
+              )}
+
+              {/* Form Action Buttons */}
+              <div className="pt-4 flex flex-col sm:flex-row gap-3">
+                <Button
+                  type="button"
+                  data-testid="save-draft-button"
+                  variant="outline"
+                  size="md"
+                  onClick={() => performSave()}
+                  className="flex-1 text-xs"
+                >
+                  Save Draft
+                </Button>
+                <Button
+                  type="button"
+                  data-testid="publish-button"
+                  variant="primary"
+                  size="md"
+                  disabled={saveStatus === "saving" || isPublishing}
+                  onClick={handlePublish}
+                  className="flex-1 text-xs"
+                >
+                  {isPublishing ? "Publishing..." : "Publish Valentine"}
+                </Button>
+              </div>
+
+              {/* Mobile-only Preview CTA */}
+              <div className="pt-2 md:hidden">
+                <Button
+                  type="button"
+                  variant="secondary"
+                  size="md"
+                  onClick={() => setMobileTab("preview")}
+                  className="w-full text-xs"
+                >
+                  View Live Preview →
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        {/* Right Pane: Device-Framed Live Preview */}
+        <div
+          className={`flex-1 bg-[#050508] overflow-y-auto flex flex-col items-center justify-center p-4 sm:p-8 relative ${
+            mobileTab === "form" ? "hidden md:flex" : "flex"
+          }`}
+        >
+          {/* Ambient glow behind preview frame */}
+          <div className="pointer-events-none absolute inset-0 bg-radial-gradient from-rose-600/10 via-transparent to-transparent opacity-60" />
+
+          {/* Smartphone device frame */}
+          <div className="w-full max-w-[380px] sm:max-w-[420px] rounded-[38px] p-3 sm:p-3.5 bg-gradient-to-b from-white/15 via-white/5 to-white/10 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.9)] relative z-10 border border-white/10">
+            {/* Phone Bezel */}
+            <div className="rounded-[30px] overflow-hidden bg-[#0B0B12] border border-black/80 flex flex-col min-h-[580px] max-h-[720px] shadow-inner relative">
+              {/* Dynamic Island / Speaker Notch */}
+              <div className="h-6 w-full bg-[#0B0B12] flex items-center justify-between px-6 pt-1 select-none z-30 shrink-0">
+                <span className="text-[10px] text-white/50 font-sans font-medium">9:41</span>
+                <div className="w-16 h-3.5 rounded-full bg-black border border-white/10" />
+                <div className="flex items-center gap-1 text-[10px] text-white/50">
+                  <span>5G</span>
+                  <span>100%</span>
+                </div>
+              </div>
+
+              {/* Screen Content: Single-Engine Unified Contract */}
+              <div className="flex-1 overflow-y-auto">
+                <ExperienceRenderer
+                  templateId="midnight-rose"
+                  templateVersion="v1"
+                  mode="preview"
+                  rawConfig={config}
+                />
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Published Success Modal */}
+      {/* Published Completion Modal */}
       {publishModalOpen && (
         <div
           data-testid="publish-success-modal"
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fadeIn"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fadeIn"
         >
-          <div className="max-w-md w-full p-6 sm:p-8 rounded-2xl bg-[#12121D] border border-white/15 shadow-2xl text-center space-y-6">
-            <div className="text-4xl">🎉</div>
+          <Card
+            variant="glass"
+            className="max-w-md w-full p-8 sm:p-10 border-rose-500/30 text-center space-y-6 shadow-2xl relative"
+          >
+            <div className="w-16 h-16 mx-auto rounded-full bg-rose-700/80 border border-rose-500 flex items-center justify-center shadow-xl shadow-rose-950/80 text-3xl select-none animate-float">
+              💌
+            </div>
+
             <div className="space-y-2">
-              <h2 className="text-xl font-serif font-medium text-white">Your Valentine is Live!</h2>
-              <p className="text-xs sm:text-sm text-slate-300">
-                Share this private link with your partner. They will only see the finished experience.
+              <Badge variant="rose" size="sm">
+                Published & Sealed
+              </Badge>
+              <h2 className="text-2xl font-serif font-medium text-white">
+                Your Valentine is Ready
+              </h2>
+              <p className="text-xs sm:text-sm text-ivory-300/80 font-light leading-relaxed">
+                Send this private link to your partner. When they open it, they will break the digital wax seal to reveal your personal letter.
               </p>
             </div>
 
-            <div className="p-3 rounded-xl bg-black/40 border border-white/10 flex items-center gap-2">
+            <div className="p-3.5 rounded-xl bg-black/50 border border-white/10 flex items-center gap-2">
               <input
                 data-testid="public-url-input"
                 readOnly
                 value={publicUrl}
-                className="flex-1 bg-transparent text-xs text-slate-200 outline-none select-all"
+                className="flex-1 bg-transparent text-xs text-ivory-200 outline-none select-all font-mono"
               />
               <button
                 type="button"
                 data-testid="copy-link-button"
                 onClick={handleCopyLink}
-                className="px-3 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-medium transition-colors"
+                className="px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-medium tracking-wide transition-colors shrink-0 shadow-lg shadow-rose-950/60"
               >
-                {copied ? "Copied!" : "Copy"}
+                {copied ? "Copied! 💌" : "Copy Link"}
               </button>
             </div>
 
@@ -573,20 +749,25 @@ export default function EditExperiencePage() {
                 target="_blank"
                 rel="noreferrer"
                 data-testid="open-public-page-link"
-                className="flex-1 py-2.5 rounded-xl border border-white/15 text-white text-xs font-medium hover:bg-white/5 transition-colors"
+                className="flex-1 py-3 rounded-xl border border-white/15 text-white text-xs font-medium hover:bg-white/10 transition-colors flex items-center justify-center gap-1.5"
               >
-                Open Page
+                <span>Open Valentine</span>
+                <span>↗</span>
               </a>
               <button
                 type="button"
                 data-testid="close-publish-modal-button"
                 onClick={() => setPublishModalOpen(false)}
-                className="flex-1 py-2.5 rounded-xl bg-white/10 text-white text-xs font-medium hover:bg-white/15 transition-colors"
+                className="flex-1 py-3 rounded-xl bg-white/[0.06] text-ivory-200 text-xs font-medium hover:bg-white/[0.12] transition-colors"
               >
-                Back to Editor
+                Back to Editing
               </button>
             </div>
-          </div>
+
+            <p className="text-[11px] text-ivory-400/70 font-sans">
+              🔒 Completely private. Never indexed by search engines.
+            </p>
+          </Card>
         </div>
       )}
     </div>
