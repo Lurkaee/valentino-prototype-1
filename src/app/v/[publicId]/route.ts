@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { ExperienceStatus } from "@prisma/client";
 import { sanitizeText } from "@/lib/sanitize";
+import { getTemplateDefinition, midnightRoseV1 } from "@/templates/registry";
 
 export const dynamic = "force-dynamic";
 
@@ -696,14 +697,21 @@ export async function GET(request: Request, { params }: RouteParams) {
 
   // 4. Published experience renders with real HTTP 200 OK
   if (experience.status === ExperienceStatus.PUBLISHED) {
-    let config: PublishedConfig;
+    let rawConfig: unknown;
     try {
-      config = JSON.parse(experience.publishedConfig);
+      rawConfig = JSON.parse(experience.publishedConfig);
     } catch {
       return new NextResponse(render404Html(), { status: 404, headers: COMMON_HEADERS });
     }
 
-    return new NextResponse(renderPublicHtml(config), { status: 200, headers: COMMON_HEADERS });
+    const template = getTemplateDefinition(experience.templateId, experience.templateVersion) || midnightRoseV1;
+    const config = template.normalizeConfig(rawConfig);
+
+    if (template.renderSsrHtml) {
+      return new NextResponse(template.renderSsrHtml(config), { status: 200, headers: COMMON_HEADERS });
+    }
+
+    return new NextResponse(renderPublicHtml(config as PublishedConfig), { status: 200, headers: COMMON_HEADERS });
   }
 
   return new NextResponse(render404Html(), { status: 404, headers: COMMON_HEADERS });

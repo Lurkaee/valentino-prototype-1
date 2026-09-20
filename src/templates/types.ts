@@ -20,4 +20,5 @@ export interface TemplateDefinition<TDraft = any, TPublished = any> {
   defaultConfig: TDraft;
   normalizeConfig: (raw: unknown) => TPublished;
   Component: React.ComponentType<TemplateRenderProps<TPublished>>;
+  renderSsrHtml?: (config: TPublished) => string;
 }

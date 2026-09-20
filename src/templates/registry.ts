@@ -48,3 +48,7 @@ export function getTemplateDefinition(
 ): TemplateDefinition<any, any> | null {
   return templates.get(getKey(id, version)) || null;
 }
+
+export function getAllTemplates(): TemplateDefinition<any, any>[] {
+  return Array.from(templates.values());
+}
