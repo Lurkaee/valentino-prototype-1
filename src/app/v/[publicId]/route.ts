@@ -302,7 +302,6 @@ function renderPublicDecor(decor: ValentineDecor): string {
     <div class="decor-paper" data-testid="decor-paper" data-paper="${decor.paper}" style="background:${paper.background};color:${paper.color};border-color:${paper.border};">
       <div class="decor-ribbon" data-testid="decor-ribbon" data-ribbon="${decor.ribbon}" style="background:${ribbon};"></div>
       <div class="decor-paper-content"></div>
-      <div class="decor-adornment-wax" data-testid="decor-wax-seal" data-wax-seal="${decor.waxSeal}" style="background:${wax.background};border-color:${wax.border};">${wax.glyph}</div>
     </div>`;
 }
 
