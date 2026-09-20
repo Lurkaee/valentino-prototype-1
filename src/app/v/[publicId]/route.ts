@@ -289,8 +289,6 @@ function renderPublicDecor(decor: ValentineDecor): string {
   const charm = PUBLIC_CHARM_GLYPHS[decor.charms];
   const paper = PUBLIC_PAPER_STYLES[decor.paper];
   const ribbon = PUBLIC_RIBBON_STYLES[decor.ribbon];
-  const wax = PUBLIC_WAX_STYLES[decor.waxSeal];
-
   return `
     <div class="decor-layer" aria-hidden="true">
       ${blooms}
@@ -321,7 +319,7 @@ function renderPublicHtml(config: PublishedConfig): string {
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>A Valentine for ${partnerName} — Valentino</title>
+  <title>A Valentine Experience</title>
   <meta name="robots" content="noindex, nofollow" />
   <meta property="og:title" content="A Valentine Experience" />
   <meta property="og:description" content="A personal, romantic Valentine experience." />
