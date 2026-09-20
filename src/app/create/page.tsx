@@ -1,12 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { normalizeValentineDecor } from "@/types/decor";
 
 export default function CreateExperiencePage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -16,7 +15,7 @@ export default function CreateExperiencePage() {
       try {
         let initialDecor: ReturnType<typeof normalizeValentineDecor> | undefined;
 
-        const queryDecor = searchParams.get("decor");
+        const queryDecor = new URLSearchParams(window.location.search).get("decor");
         if (queryDecor) {
           try {
             initialDecor = normalizeValentineDecor(JSON.parse(queryDecor));
@@ -72,7 +71,7 @@ export default function CreateExperiencePage() {
     return () => {
       isMounted = false;
     };
-  }, [router, searchParams]);
+  }, [router]);
 
   return (
     <main className="flex min-h-[100dvh] flex-col items-center justify-center p-6 text-center bg-[#0B0B12] text-slate-100">
