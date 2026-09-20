@@ -19,25 +19,17 @@ export function SectionDivider({ variant, className = "" }: SectionDividerProps)
   if (variant === "sky-to-cream") {
     return (
       <div
-        className={`w-full relative overflow-hidden pointer-events-none select-none ${className}`}
+        className={`w-full relative overflow-hidden pointer-events-none select-none bg-[#FDF8F3] -mt-px ${className}`}
         aria-hidden="true"
       >
-        {/* Soft Feathered Cloud-to-Paper Horizon */}
+        {/* Soft Feathered Cloud-to-Paper Horizon (Blush Pink to Warm Cream) */}
         <div
-          className="w-full h-24 sm:h-32"
+          className="w-full h-20 sm:h-28"
           style={{
             background:
-              "linear-gradient(180deg, transparent 0%, rgba(255, 235, 242, 0.45) 30%, rgba(254, 225, 235, 0.75) 65%, rgba(253, 248, 243, 0.95) 90%, #FDF8F3 100%)",
+              "linear-gradient(180deg, #FEDEEA 0%, #FEEBF2 35%, #FDF4EE 70%, #FDF8F3 100%)",
           }}
         />
-        {/* Subtle deckled stationery wave contour */}
-        <svg
-          className="w-full h-6 sm:h-8 text-[#FDF8F3] fill-current -mb-px block"
-          viewBox="0 0 1440 32"
-          preserveAspectRatio="none"
-        >
-          <path d="M0,16 C360,32 720,0 1080,24 C1260,36 1380,8 1440,16 L1440,32 L0,32 Z" />
-        </svg>
       </div>
     );
   }

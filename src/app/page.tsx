@@ -20,7 +20,7 @@ export default function HomePage() {
       {/* ========================================================================= */}
       {/* SURFACE 01: Hero Viewport — Dreamy Sunset Sky, Clouds & 3D Love Letter     */}
       {/* ========================================================================= */}
-      <div className="relative w-full min-h-[92dvh] sm:min-h-screen flex flex-col items-center justify-center overflow-hidden">
+      <div className="relative w-full min-h-[92dvh] sm:min-h-screen flex flex-col items-center justify-center overflow-hidden bg-[#FEDEEA]">
         <ValentineSky />
 
         <section className="w-full max-w-5xl mx-auto px-6 pt-24 sm:pt-28 pb-14 flex flex-col items-center justify-center text-center relative z-10">
