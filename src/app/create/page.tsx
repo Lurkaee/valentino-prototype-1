@@ -9,7 +9,6 @@ export default function CreateExperiencePage() {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [statusMessage, setStatusMessage] = useState("Preparing something special...");
-  const [statusMessage, setStatusMessage] = useState("Preparing something special...");
 
   useEffect(() => {
     let isMounted = true;
