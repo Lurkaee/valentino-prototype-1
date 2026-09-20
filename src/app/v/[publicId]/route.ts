@@ -550,7 +550,7 @@ function renderPublicHtml(config: PublishedConfig): string {
     .decor-layer {
       position: absolute;
       inset: 0;
-      z-index: 1;
+      z-index: 5;
       pointer-events: none;
       overflow: hidden;
       border-radius: 1.6rem;
@@ -577,7 +577,7 @@ function renderPublicHtml(config: PublishedConfig): string {
     .decor-paper {
       position: absolute;
       inset: 8px;
-      z-index: 3;
+      z-index: 1;
       border: 1px solid;
       border-radius: 1.4rem;
       opacity: .98;
@@ -586,6 +586,7 @@ function renderPublicHtml(config: PublishedConfig): string {
     }
     .decor-ribbon {
       position: absolute;
+      z-index: 2;
       left: 20px;
       right: 20px;
       top: 16px;
@@ -593,22 +594,6 @@ function renderPublicHtml(config: PublishedConfig): string {
       border-radius: 999px;
       border: 1px solid rgba(0,0,0,.10);
       box-shadow: 0 8px 18px rgba(80,20,35,.22);
-    }
-    .decor-adornment-wax {
-      position: absolute;
-      right: 18px;
-      bottom: 18px;
-      width: 56px;
-      height: 56px;
-      border-radius: 999px;
-      border: 2px solid;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: white;
-      font-family: Georgia, serif;
-      font-size: 1.25rem;
-      box-shadow: 0 10px 30px rgba(52,8,22,.34);
     }
     .decor-paper-content { position: absolute; inset: 0; border-radius: inherit; }
     .card-content { position: relative; z-index: 10; }
