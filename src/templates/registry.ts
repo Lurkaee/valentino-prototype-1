@@ -26,6 +26,13 @@ export const midnightRoseV1: TemplateDefinition<
     signOff: "With all my love",
     accentTheme: "crimson-rose",
     heroMediaId: null,
+    decor: {
+      blooms: "rose",
+      charms: "heart",
+      paper: "ivory-cream",
+      ribbon: "velvet-crimson",
+      waxSeal: "crimson-heart",
+    },
   },
   normalizeConfig: normalizeMidnightRoseConfig,
   Component: MidnightRoseComponent,
