@@ -314,6 +314,8 @@ function renderPublicHtml(config: PublishedConfig): string {
   const signOff = sanitizeText(config.signOff || "With all my love");
   const senderName = sanitizeText(config.senderName || "Yours Always");
   const decor = normalizeValentineDecor(config.decor);
+  const paper = PUBLIC_PAPER_STYLES[decor.paper];
+  const wax = PUBLIC_WAX_STYLES[decor.waxSeal];
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -627,10 +629,11 @@ function renderPublicHtml(config: PublishedConfig): string {
   </style>
 </head>
 <body>
-  <div class="wrapper" data-testid="experience-container">
+  <div class="wrapper" data-testid="experience-container" data-decor-blooms="${decor.blooms}" data-decor-charms="${decor.charms}" data-decor-paper="${decor.paper}" data-decor-ribbon="${decor.ribbon}" data-decor-wax-seal="${decor.waxSeal}">
     <div class="ambient-glow"></div>
     <div class="content-container">
-      <div class="card">
+      <div class="card decor-frame">
+        ${renderPublicDecor(decor)}
         <div class="card-content">
         <div class="header">
           <span class="badge">${greeting}</span>
@@ -647,7 +650,7 @@ function renderPublicHtml(config: PublishedConfig): string {
               aria-label="Break the wax seal to read letter"
             >
               <div class="wax-seal-inner">
-                <span class="emoji">💌</span>
+                <span class="emoji">${wax.glyph}</span>
               </div>
               <span class="seal-label">Tap to open</span>
             </button>
@@ -655,7 +658,7 @@ function renderPublicHtml(config: PublishedConfig): string {
         </div>
 
         <div class="letter-box hidden" data-testid="unsealed-letter">
-          <div class="paper-card">
+          <div class="paper-card" style="background:${paper.background};color:${paper.color};border-color:${paper.border};">
             <div class="paper-gold-line"></div>
             <div class="message-card" data-testid="letter-message">${message}</div>
             <div class="signoff-box">
