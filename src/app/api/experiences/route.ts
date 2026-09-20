@@ -12,6 +12,7 @@ import { validateOrigin } from "@/lib/csrf";
 import { rateLimiter, getAnonymizedKey } from "@/lib/rate-limiter";
 import { logger } from "@/lib/logger";
 import { midnightRoseV1 } from "@/templates/registry";
+import { normalizeValentineDecor } from "@/types/decor";
 
 export async function POST(request: NextRequest) {
   try {
@@ -40,12 +41,29 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    let initialDecor = midnightRoseV1.defaultConfig.decor;
+    if ((request.headers.get("content-type") || "").includes("application/json")) {
+      try {
+        const body = await request.json();
+        if (body && typeof body === "object" && "initialDecor" in body) {
+          initialDecor = normalizeValentineDecor((body as { initialDecor?: unknown }).initialDecor);
+        }
+      } catch {
+        // Preserve default configuration for an empty or malformed optional payload.
+      }
+    }
+
     const publicId = generatePublicId();
     const rawCredential = generateEditCredential();
     const credentialHash = hashEditCredential(rawCredential);
     const issuedAt = new Date();
 
-    const defaultConfigJson = JSON.stringify(midnightRoseV1.defaultConfig);
+    const initialConfig = {
+      ...midnightRoseV1.defaultConfig,
+      decor: initialDecor,
+    };
+
+    const defaultConfigJson = JSON.stringify(initialConfig);
 
     await db.experience.create({
       data: {
