@@ -48,13 +48,25 @@ export const DECOR_SLOTS = {
 export type DecorSlotName = keyof typeof DECOR_SLOTS;
 export type DecorSlot = (typeof DECOR_SLOTS)[DecorSlotName];
 
-export const valentineDecorSchema = z.object({
+const valentineDecorObjectSchema = z.object({
   blooms: z.enum(BLOOM_STYLES).default(DEFAULT_VALENTINE_DECOR.blooms),
   charms: z.enum(CHARM_STYLES).default(DEFAULT_VALENTINE_DECOR.charms),
   paper: z.enum(PAPER_FINISHES).default(DEFAULT_VALENTINE_DECOR.paper),
   ribbon: z.enum(RIBBON_BANDS).default(DEFAULT_VALENTINE_DECOR.ribbon),
   waxSeal: z.enum(WAX_SEALS).default(DEFAULT_VALENTINE_DECOR.waxSeal),
 });
+
+export const valentineDecorSchema = z
+  .preprocess((raw) => {
+    if (typeof raw !== "object" || raw === null) return raw;
+    const source = raw as Record<string, unknown>;
+    return {
+      ...source,
+      blooms: source.blooms ?? source.flowers,
+      waxSeal: source.waxSeal ?? source.seal,
+    };
+  }, valentineDecorObjectSchema)
+  .default(DEFAULT_VALENTINE_DECOR);
 
 const isStringIn = <T extends readonly string[]>(value: unknown, values: T): value is T[number] =>
   typeof value === "string" && values.includes(value);
