@@ -58,6 +58,7 @@ const WAX_CLASSES: Record<ValentineDecor["waxSeal"], { bg: string; border: strin
 
 export interface ValentineCompositionProps {
   decor: unknown;
+  showWaxSealAdornment?: boolean;
   recipient?: string;
   sender?: string;
   message?: string;
@@ -86,6 +87,7 @@ export function ValentineComposition({
   signOff,
   children,
   className = "",
+  showWaxSealAdornment = true,
 }: ValentineCompositionProps) {
   const decor = normalizeValentineDecor(rawDecor);
   const wax = WAX_CLASSES[decor.waxSeal];
@@ -139,6 +141,7 @@ export function ValentineComposition({
           </div>
         )}
 
+        {showWaxSealAdornment && (
         <div className="pointer-events-none absolute right-5 bottom-5 z-40">
           <div
             data-testid="decor-wax-seal"
@@ -149,6 +152,7 @@ export function ValentineComposition({
             <span className="font-serif">{wax.glyph}</span>
           </div>
         </div>
+        )}
       </div>
     </div>
   );
