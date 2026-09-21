@@ -150,7 +150,7 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
-  const { draftConfig, baseRevision } = body;
+  const { draftConfig, baseRevision, templateId, templateVersion } = body;
   if (typeof baseRevision !== "number") {
     return NextResponse.json(
       { error: "baseRevision number is required for optimistic concurrency" },
@@ -175,7 +175,10 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
   }
 
   // 8. Validate draftConfig against template's lenient draftSchema
-  const template = getTemplateDefinition(experience.templateId, experience.templateVersion);
+  const targetTemplateId = typeof templateId === "string" ? templateId : experience.templateId;
+  const targetTemplateVersion = typeof templateVersion === "string" ? templateVersion : experience.templateVersion;
+
+  const template = getTemplateDefinition(targetTemplateId, targetTemplateVersion);
   if (!template) {
     return NextResponse.json({ error: "Template definition not found" }, { status: 400 });
   }
@@ -195,6 +198,8 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
   const updatedExperience = await db.experience.update({
     where: { publicId, draftRevision: baseRevision },
     data: {
+      templateId: targetTemplateId,
+      templateVersion: targetTemplateVersion,
       draftConfig: JSON.stringify(parseResult.data),
       draftRevision: { increment: 1 },
     },
@@ -210,6 +215,8 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
   const response = NextResponse.json(
     {
       success: true,
+      templateId: updatedExperience.templateId,
+      templateVersion: updatedExperience.templateVersion,
       draftRevision: updatedExperience.draftRevision,
       savedAt: new Date().toISOString(),
     },
