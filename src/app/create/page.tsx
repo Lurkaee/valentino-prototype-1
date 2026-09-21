@@ -138,7 +138,7 @@ function CreateExperienceContent() {
                 {statusMessage}
               </h2>
               <p className="text-xs text-ivory-400 font-ui">
-                Setting up your private, encrypted interactive experience studio
+                Setting up your private interactive experience studio
               </p>
             </div>
 

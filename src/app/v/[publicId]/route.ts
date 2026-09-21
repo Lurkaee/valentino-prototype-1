@@ -28,8 +28,8 @@ function render404Html(): string {
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      background: #12030A;
-      background-image: radial-gradient(ellipse at 50% 20%, #2A0815 0%, #12030A 75%, #080104 100%);
+      background: #0A090C;
+      background-image: radial-gradient(ellipse at 50% 20%, #17151D 0%, #0A090C 80%, #050507 100%);
       color: #FAF8F5;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       display: flex;
@@ -42,9 +42,9 @@ function render404Html(): string {
     .card {
       max-width: 28rem;
       width: 100%;
-      padding: 2.5rem 2rem;
-      background: rgba(28, 5, 18, 0.85);
-      border: 1px solid rgba(244, 114, 182, 0.15);
+      padding: 2.75rem 2rem;
+      background: rgba(22, 20, 28, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 1.5rem;
       box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
       backdrop-filter: blur(16px);
@@ -56,11 +56,12 @@ function render404Html(): string {
       font-size: 1.5rem;
       margin-bottom: 0.75rem;
       font-weight: 500;
-      color: #FFFFFF;
+      color: #FAF8F5;
+      letter-spacing: -0.02em;
     }
     p {
       font-size: 0.875rem;
-      color: #D5CEBF;
+      color: #9A94A7;
       margin-bottom: 1.75rem;
       line-height: 1.6;
       font-weight: 300;
@@ -73,13 +74,16 @@ function render404Html(): string {
       text-transform: uppercase;
       letter-spacing: 0.08em;
       border-radius: 0.75rem;
-      background: linear-gradient(to right, #E11D48, #BE123C);
-      color: #FFFFFF;
+      background: linear-gradient(135deg, #FAF8F5 0%, #E5DFC9 100%);
+      color: #0A090C;
       text-decoration: none;
-      box-shadow: 0 10px 20px -5px rgba(225, 29, 72, 0.4);
-      transition: opacity 0.2s;
+      box-shadow: 0 10px 20px -5px rgba(255, 255, 255, 0.12);
+      transition: all 0.2s ease;
     }
-    a:hover { opacity: 0.9; }
+    a:hover {
+      opacity: 0.92;
+      transform: translateY(-1px);
+    }
   </style>
 </head>
 <body>
@@ -104,8 +108,8 @@ function render410Html(): string {
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      background: #12030A;
-      background-image: radial-gradient(ellipse at 50% 20%, #2A0815 0%, #12030A 75%, #080104 100%);
+      background: #0A090C;
+      background-image: radial-gradient(ellipse at 50% 20%, #17151D 0%, #0A090C 80%, #050507 100%);
       color: #FAF8F5;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       display: flex;
@@ -118,9 +122,9 @@ function render410Html(): string {
     .card {
       max-width: 28rem;
       width: 100%;
-      padding: 2.5rem 2rem;
-      background: rgba(28, 5, 18, 0.85);
-      border: 1px solid rgba(244, 114, 182, 0.15);
+      padding: 2.75rem 2rem;
+      background: rgba(22, 20, 28, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 1.5rem;
       box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
       backdrop-filter: blur(16px);
@@ -132,11 +136,12 @@ function render410Html(): string {
       font-size: 1.5rem;
       margin-bottom: 0.75rem;
       font-weight: 500;
-      color: #FFFFFF;
+      color: #FAF8F5;
+      letter-spacing: -0.02em;
     }
     p {
       font-size: 0.875rem;
-      color: #D5CEBF;
+      color: #9A94A7;
       margin-bottom: 1.75rem;
       line-height: 1.6;
       font-weight: 300;
@@ -149,13 +154,16 @@ function render410Html(): string {
       text-transform: uppercase;
       letter-spacing: 0.08em;
       border-radius: 0.75rem;
-      background: linear-gradient(to right, #E11D48, #BE123C);
-      color: #FFFFFF;
+      background: linear-gradient(135deg, #FAF8F5 0%, #E5DFC9 100%);
+      color: #0A090C;
       text-decoration: none;
-      box-shadow: 0 10px 20px -5px rgba(225, 29, 72, 0.4);
-      transition: opacity 0.2s;
+      box-shadow: 0 10px 20px -5px rgba(255, 255, 255, 0.12);
+      transition: all 0.2s ease;
     }
-    a:hover { opacity: 0.9; }
+    a:hover {
+      opacity: 0.92;
+      transform: translateY(-1px);
+    }
   </style>
 </head>
 <body>
