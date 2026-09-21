@@ -25,8 +25,11 @@ import { Badge } from "@/components/ui/Badge";
 import { AtmosphericGlow } from "@/components/ui/AtmosphericGlow";
 import { StudioHeader, SaveStatus } from "@/components/studio/StudioHeader";
 import { WorldSelectorModal } from "@/components/studio/WorldSelectorModal";
+import { FeatureDiscoveryDrawer } from "@/components/studio/FeatureDiscoveryDrawer";
+import { ContextualSuggestion } from "@/components/studio/ContextualSuggestion";
 import { ContentReadinessBar } from "@/components/studio/ContentReadinessBar";
 import { ModuleManager } from "@/modules/editor/ModuleManager";
+import { FeatureDefinition } from "@/features/types";
 
 export default function EditExperiencePage() {
   const params = useParams<{ publicId: string }>();
@@ -57,6 +60,8 @@ export default function EditExperiencePage() {
 
   // Modals & Navigation
   const [worldModalOpen, setWorldModalOpen] = useState(false);
+  const [featureDrawerOpen, setFeatureDrawerOpen] = useState(false);
+  const [activeMomentKey, setActiveMomentKey] = useState<"timeline" | "quiz" | "secret" | "openWhen" | null>(null);
   const [publishModalOpen, setPublishModalOpen] = useState(false);
   const [publishErrors, setPublishErrors] = useState<string[]>([]);
   const [isPublishing, setIsPublishing] = useState(false);
@@ -188,30 +193,69 @@ export default function EditExperiencePage() {
   );
 
   // 3. Debounced Autosave on Config Change
-  const handleConfigChange = (updater: (prev: MidnightRoseDraftConfig) => MidnightRoseDraftConfig) => {
-    setConfig((prev) => {
-      const next = updater(prev);
-      isDirtyRef.current = true;
-      setSaveStatus("idle");
+  const handleConfigChange = useCallback(
+    (updater: (prev: MidnightRoseDraftConfig) => MidnightRoseDraftConfig) => {
+      setConfig((prev) => {
+        const next = updater(prev);
+        isDirtyRef.current = true;
+        setSaveStatus("idle");
 
-      if (debounceTimerRef.current) {
-        clearTimeout(debounceTimerRef.current);
+        if (debounceTimerRef.current) {
+          clearTimeout(debounceTimerRef.current);
+        }
+
+        debounceTimerRef.current = setTimeout(() => {
+          performSave();
+        }, 1000);
+
+        return next;
+      });
+    },
+    [performSave]
+  );
+
+  const handleModulesChange = useCallback(
+    (updater: (prevModules: any) => any) => {
+      handleConfigChange((prev: any) => ({
+        ...prev,
+        modules: updater(prev.modules || {}),
+      }));
+    },
+    [handleConfigChange]
+  );
+
+  // Scroll to a specific stage section
+  const scrollToSection = useCallback((sectionId: string) => {
+    setActiveSection(sectionId as any);
+    const el = document.getElementById(`section-${sectionId}`);
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, []);
+
+  // Handle activating or inspecting a feature from discovery surfaces
+  const handleSelectFeature = useCallback(
+    (feature: FeatureDefinition) => {
+      if (feature.targetModuleKey) {
+        const modKey = feature.targetModuleKey;
+        handleModulesChange((prev) => {
+          const current = prev?.[modKey] || {};
+          return {
+            ...prev,
+            [modKey]: {
+              ...current,
+              enabled: true,
+            },
+          };
+        });
+        setActiveMomentKey(modKey);
+        scrollToSection("moments");
+      } else if (feature.actionType === "open-world-modal") {
+        setWorldModalOpen(true);
+      } else if (feature.targetSection) {
+        scrollToSection(feature.targetSection);
       }
-
-      debounceTimerRef.current = setTimeout(() => {
-        performSave();
-      }, 1000);
-
-      return next;
-    });
-  };
-
-  const handleModulesChange = (updater: (prevModules: any) => any) => {
-    handleConfigChange((prev: any) => ({
-      ...prev,
-      modules: updater(prev.modules || {}),
-    }));
-  };
+    },
+    [scrollToSection, handleModulesChange]
+  );
 
   // 4. Non-Destructive World Selection
   const handleSelectWorld = (newTemplateId: string, newTemplateVersion: string) => {
@@ -462,6 +506,36 @@ export default function EditExperiencePage() {
               activeMomentsCount={activeMomentsCount}
             />
 
+            {/* Contextual Discovery Guidance */}
+            <ContextualSuggestion
+              messageLength={(config.message || "").length}
+              activeMomentCount={activeMomentsCount}
+              hasTimeline={Boolean(config.modules?.timeline?.enabled)}
+              hasQuiz={Boolean(config.modules?.quiz?.enabled)}
+              hasSecret={Boolean(config.modules?.secret?.enabled)}
+              hasOpenWhen={Boolean(config.modules?.openWhen?.enabled)}
+              hasCustomDecor={
+                config.decor?.paper !== "handmade-cream" ||
+                config.decor?.waxSeal !== "crimson-rose"
+              }
+              onAction={(action) => {
+                if (action.type === "scroll") {
+                  scrollToSection(action.target);
+                } else if (action.type === "module") {
+                  const modKey = action.target as any;
+                  handleModulesChange((prev) => ({
+                    ...prev,
+                    [modKey]: {
+                      ...(prev?.[modKey] || {}),
+                      enabled: true,
+                    },
+                  }));
+                  setActiveMomentKey(modKey);
+                  scrollToSection("moments");
+                }
+              }}
+            />
+
             {/* STAGE 1: Visual World Card */}
             <section id="section-world" className="space-y-3.5 scroll-mt-16">
               <div className="flex items-center justify-between">
@@ -698,6 +772,9 @@ export default function EditExperiencePage() {
                 modules={config.modules}
                 hasHeroMedia={Boolean(config.heroMediaId)}
                 onChange={handleModulesChange}
+                onOpenFeatureDrawer={() => setFeatureDrawerOpen(true)}
+                onSelectFeature={handleSelectFeature}
+                externalActiveMoment={activeMomentKey}
               />
             </section>
 
@@ -1124,6 +1201,17 @@ export default function EditExperiencePage() {
         currentTemplateId={templateMeta.id}
         onClose={() => setWorldModalOpen(false)}
         onSelectWorld={handleSelectWorld}
+      />
+
+      {/* Feature Discovery Drawer */}
+      <FeatureDiscoveryDrawer
+        isOpen={featureDrawerOpen}
+        onClose={() => setFeatureDrawerOpen(false)}
+        onSelectFeature={handleSelectFeature}
+        activeModuleKeys={Object.keys(config.modules || {}).filter(
+          (k) => Boolean((config.modules as any)?.[k]?.enabled)
+        )}
+        activeTemplateId={templateMeta.id}
       />
 
       {/* Published Completion Modal */}

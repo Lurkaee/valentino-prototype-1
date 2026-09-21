@@ -1,11 +1,16 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { SurpriseSpark } from "@/components/studio/SurpriseSpark";
+import { FeatureDefinition } from "@/features/types";
 
 interface ModuleManagerProps {
   modules?: any;
   hasHeroMedia?: boolean;
   onChange: (updater: (prevModules: any) => any) => void;
+  onOpenFeatureDrawer?: () => void;
+  onSelectFeature?: (feature: FeatureDefinition) => void;
+  externalActiveMoment?: "timeline" | "quiz" | "secret" | "openWhen" | null;
 }
 
 type ActiveMoment = "timeline" | "quiz" | "secret" | "openWhen" | null;
@@ -14,8 +19,17 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
   modules = {},
   hasHeroMedia = false,
   onChange,
+  onOpenFeatureDrawer,
+  onSelectFeature,
+  externalActiveMoment,
 }) => {
   const [activeMoment, setActiveMoment] = useState<ActiveMoment>(null);
+
+  useEffect(() => {
+    if (externalActiveMoment) {
+      setActiveMoment(externalActiveMoment);
+    }
+  }, [externalActiveMoment]);
 
   const timelineEnabled = Boolean(modules?.timeline?.enabled);
   const quizEnabled = Boolean(modules?.quiz?.enabled);
@@ -317,6 +331,100 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
               <span className="text-[10px] text-white/50 font-ui truncate block">Future envelopes</span>
             </div>
           </button>
+        </div>
+
+        {/* Feature Discovery Action Row: Explore More & Surprise Me */}
+        <div className="pt-2 flex flex-wrap items-center justify-between gap-3 border-t border-white/[0.06]">
+          <button
+            type="button"
+            data-testid="explore-features-trigger"
+            onClick={onOpenFeatureDrawer}
+            className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 hover:border-white/20 text-white/80 hover:text-white text-xs font-ui font-medium transition-all shadow-xs"
+          >
+            <span className="text-sm select-none">✨</span>
+            <span>Explore More Moments & Capabilities</span>
+            <span className="text-[10px] text-white/40 font-mono tracking-wider">➔</span>
+          </button>
+
+          <SurpriseSpark
+            activeModuleKeys={[
+              ...(timelineEnabled ? ["timeline"] : []),
+              ...(quizEnabled ? ["quiz"] : []),
+              ...(secretEnabled ? ["secret"] : []),
+              ...(openWhenEnabled ? ["openWhen"] : []),
+            ]}
+            onSelectFeature={(feature) => {
+              if (feature.targetModuleKey) {
+                if (feature.targetModuleKey === "timeline" && !timelineEnabled) {
+                  toggleModule("timeline", {
+                    title: "Our Journey Together",
+                    subtitle: "The moments that brought us here",
+                    items: [
+                      {
+                        id: "m1",
+                        title: "The Day We Met",
+                        date: "Where it all started",
+                        description:
+                          "I remember looking at you and knowing something in my life had shifted forever.",
+                      },
+                      {
+                        id: "m2",
+                        title: "Our First Trip",
+                        date: "A sweet memory",
+                        description: "Getting lost together was the best part of the whole journey.",
+                      },
+                    ],
+                  });
+                } else if (feature.targetModuleKey === "quiz" && !quizEnabled) {
+                  toggleModule("quiz", {
+                    title: "How Well Do You Know Us?",
+                    subtitle: "A sweet little test of our story",
+                    completionMessage: "No matter what, my favorite place is with you. ❤️",
+                    questions: [
+                      {
+                        id: "q1",
+                        question: "Where did we have our very first date?",
+                        options: [
+                          "Quiet coffee shop",
+                          "Late-night ramen",
+                          "Starlit walk in the park",
+                          "Cozy bookstore",
+                        ],
+                        correctIndex: 0,
+                        explanation:
+                          "You were five minutes early, and I was nervous the entire walk there.",
+                      },
+                    ],
+                  });
+                } else if (feature.targetModuleKey === "secret" && !secretEnabled) {
+                  toggleModule("secret", {
+                    title: "A Little Secret",
+                    prompt: "Tap to reveal what's hidden inside",
+                    hint: "Only for your eyes",
+                    secretContent:
+                      "I knew I loved you long before I ever said it out loud.",
+                  });
+                } else if (feature.targetModuleKey === "openWhen" && !openWhenEnabled) {
+                  toggleModule("openWhen", {
+                    title: "Open When...",
+                    subtitle: "Letters for the days ahead",
+                    envelopes: [
+                      {
+                        id: "env1",
+                        title: "Open when you miss me",
+                        context: "When we are apart",
+                        message:
+                          "Close your eyes and take a deep breath. Every second brings me closer to seeing you again.",
+                      },
+                    ],
+                  });
+                } else {
+                  setActiveMoment(feature.targetModuleKey);
+                }
+              }
+              onSelectFeature?.(feature);
+            }}
+          />
         </div>
       </div>
 
