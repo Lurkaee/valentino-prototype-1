@@ -85,7 +85,7 @@ export default function HomePage() {
               Private by design. Meant for two.
             </h2>
             <p className="text-sm sm:text-base text-[#FAF8F5]/75 font-light max-w-xl mx-auto leading-relaxed">
-              Your Valentine is protected with encrypted access tokens stored only on your browser. Never indexed by search engines, no social feeds, and no ads.
+              Your Valentine is protected with private edit tokens stored securely in your browser. Never indexed by search engines, no social feeds, and no ads.
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 text-left max-w-3xl mx-auto">
