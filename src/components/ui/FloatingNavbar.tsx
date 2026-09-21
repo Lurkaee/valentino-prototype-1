@@ -11,15 +11,16 @@ interface FloatingNavbarProps {
 
 /**
  * FloatingNavbar:
- * A dreamy, romantic floating pill header integrated into the light sunset sky.
- * Translucent warm cream, soft rose tint, subtle blur, and delicate border.
+ * Valentino Core Shell Navigation.
+ * Premium neutral obsidian glass, warm ivory typography, and clean product links.
+ * Distraction-free, responsive across all breakpoints.
  */
 export function FloatingNavbar({ className = "" }: FloatingNavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 32);
+      setIsScrolled(window.scrollY > 24);
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -28,48 +29,53 @@ export function FloatingNavbar({ className = "" }: FloatingNavbarProps) {
   }, []);
 
   return (
-    <div className={`fixed top-3.5 sm:top-5 inset-x-0 z-40 flex justify-center px-4 pointer-events-none ${className}`}>
+    <div className={`fixed top-3 sm:top-5 inset-x-0 z-40 flex justify-center px-3 sm:px-4 pointer-events-none ${className}`}>
       <header
-        className={`pointer-events-auto transition-all duration-500 ease-out flex items-center justify-between gap-4 sm:gap-8 rounded-full border backdrop-blur-xl ${
+        className={`pointer-events-auto transition-all duration-300 ease-out flex items-center justify-between gap-3 sm:gap-6 rounded-full border backdrop-blur-xl ${
           isScrolled
-            ? "py-2 sm:py-2.5 px-4 sm:px-6 bg-[#FFF9F6]/92 border-rose-300/80 shadow-[0_12px_36px_rgba(210,100,140,0.22)]"
-            : "py-2 sm:py-2.5 px-5 sm:px-7 bg-[#FFF8F6]/80 border-[#FAD2E1] shadow-[0_8px_28px_rgba(230,130,165,0.16)]"
+            ? "py-2 px-3.5 sm:px-6 bg-[#0E0D14]/90 border-white/[0.12] shadow-[0_16px_40px_-10px_rgba(0,0,0,0.8)]"
+            : "py-2 px-4 sm:px-6 bg-[#13111A]/80 border-white/[0.08] shadow-[0_10px_30px_-10px_rgba(0,0,0,0.5)]"
         }`}
       >
-        {/* Left: Monogram & Brand */}
-        <CurtainLink href="/" className="flex items-center gap-2.5 group">
-          <ValentinoMonogram size={28} className="transition-transform group-hover:scale-105 duration-300 drop-shadow-sm" />
-          <span className="text-sm sm:text-base font-serif font-semibold tracking-[0.14em] text-[#3B071A] uppercase">
+        {/* Left: Brand Monogram & Title */}
+        <CurtainLink href="/" className="flex items-center gap-2 group flex-shrink-0">
+          <ValentinoMonogram size={26} className="transition-transform group-hover:scale-105 duration-300 drop-shadow-sm text-ivory-100" />
+          <span className="text-sm sm:text-base font-serif font-medium tracking-[0.16em] text-ivory-50 uppercase">
             Valentino
           </span>
         </CurtainLink>
 
-        {/* Center: Navigation Links */}
-        <nav className="hidden sm:flex items-center gap-6 text-xs uppercase tracking-widest text-[#6B1D3D]/80 font-sans font-medium">
+        {/* Center: Clean Product Navigation */}
+        <nav className="hidden sm:flex items-center gap-5 text-[11px] uppercase tracking-[0.18em] text-ivory-300 font-ui font-medium">
+          <CurtainLink
+            href="/create"
+            className="hover:text-white transition-colors py-1 border-b border-transparent hover:border-white/40"
+          >
+            Create
+          </CurtainLink>
           <CurtainLink
             href="/templates"
-            className="hover:text-[#BE123C] transition-colors py-1 hover:border-b-2 hover:border-rose-400"
+            className="hover:text-white transition-colors py-1 border-b border-transparent hover:border-white/40"
           >
             Templates
           </CurtainLink>
           <a
             href="#how-it-works"
-            className="hover:text-[#BE123C] transition-colors py-1 hover:border-b-2 hover:border-rose-400"
+            className="hover:text-white transition-colors py-1 border-b border-transparent hover:border-white/40"
           >
             How it works
           </a>
         </nav>
 
-        {/* Right: Primary Action */}
-        <div className="flex items-center gap-3">
+        {/* Right: Studio CTA */}
+        <div className="flex items-center gap-2 flex-shrink-0">
           <CurtainLink href="/create">
             <Button
               size="sm"
               variant="primary"
-              className="text-xs px-4 py-1.5 rounded-full shadow-md shadow-rose-900/20 bg-gradient-to-r from-rose-600 via-rose-500 to-pink-500 hover:from-rose-700 hover:to-pink-600 text-white font-medium active:scale-95 transition-transform"
+              className="text-xs px-3.5 sm:px-4 py-1.5 rounded-full font-medium tracking-wide bg-[#1E1C27] hover:bg-[#2A2736] text-ivory-50 border border-white/15 shadow-sm active:scale-95 transition-all"
             >
-              <span>Create yours</span>
-              <span className="text-[11px]">💌</span>
+              <span>Create</span>
             </Button>
           </CurtainLink>
         </div>

@@ -124,5 +124,124 @@ describe("Template Schemas and Normalization", () => {
       expect(getBloomSlots(3).map((s) => s.slotId)).toEqual(["triangle-top", "triangle-bottom-left", "triangle-bottom-right"]);
     });
   });
-});
 
+  describe("Midnight Rose Flagship Compatibility Resolution", () => {
+    it("resolves canonical decor into Midnight Rose presentation treatments", async () => {
+      const { resolveTemplateDecor } = await import("@/templates/shared/compatibility");
+      const presentation = resolveTemplateDecor({
+        paper: "handmade-cream",
+        ribbon: "velvet-crimson",
+        waxSeal: "champagne-gold",
+        blooms: ["crimson-rose", "wild-daisy"],
+        charms: ["sparkle"],
+      }, "midnight-rose");
+
+      expect(presentation.paper.id).toBe("handmade-cream");
+      expect(presentation.paper.ambientTextureClass).toContain("mix-blend-multiply");
+      expect(presentation.ribbon.id).toBe("velvet-crimson");
+      expect(presentation.waxSeal.id).toBe("champagne-gold");
+      expect(presentation.waxSeal.haloClass).toBe("bg-rose-500/25");
+      expect(presentation.atmosphereGlowClass).toContain("rose-600");
+      expect(presentation.blooms).toHaveLength(2);
+      expect(presentation.blooms[0].option.id).toBe("crimson-rose");
+      expect(presentation.blooms[1].option.id).toBe("wild-daisy");
+      expect(presentation.charms).toHaveLength(1);
+      expect(presentation.charms[0].option.id).toBe("sparkle");
+    });
+
+    it("deterministically preserves bloom slots across 1 to 6 blooms", async () => {
+      const { resolveTemplateDecor } = await import("@/templates/shared/compatibility");
+      const single = resolveTemplateDecor({ blooms: ["crimson-rose"] }, "midnight-rose");
+      expect(single.blooms).toHaveLength(1);
+      expect(single.blooms[0].slot.x).toBe(0);
+      expect(single.blooms[0].slot.y).toBe(-95);
+
+      const fullBouquet = resolveTemplateDecor({
+        blooms: ["crimson-rose", "blush-peony", "wild-daisy", "french-tulip", "white-lily"],
+      }, "midnight-rose");
+      expect(fullBouquet.blooms).toHaveLength(5);
+      // Deterministic coordinates verification
+      expect(fullBouquet.blooms[0].slot.zIndex).toBeDefined();
+      expect(fullBouquet.blooms[4].slot.zIndex).toBeDefined();
+    });
+  });
+  describe("Cloud Nine Template Specifications", () => {
+    it("accepts lenient draft config and defaults to blush-sky theme", async () => {
+      const { cloudNineDraftSchema } = await import("@/templates/cloud-nine/v1/schema");
+      const { cloudNineV1 } = await import("@/templates/registry");
+      const result = cloudNineDraftSchema.safeParse({});
+      expect(result.success).toBe(true);
+      if (result.success) {
+        expect(result.data.accentTheme).toBe("blush-sky");
+        expect(result.data.greeting).toBe("");
+        expect(cloudNineV1.defaultConfig.greeting).toBe("To my sweetest soul");
+      }
+    });
+
+    it("validates strict publish requirements for partnerName, senderName, and message", async () => {
+      const { cloudNinePublishSchema } = await import("@/templates/cloud-nine/v1/schema");
+      const invalid = cloudNinePublishSchema.safeParse({
+        partnerName: "",
+        senderName: "",
+        message: "",
+      });
+      expect(invalid.success).toBe(false);
+
+      const valid = cloudNinePublishSchema.safeParse({
+        partnerName: "Seraphina",
+        senderName: "Julian",
+        message: "You lift me to cloud nine every single day.",
+        accentTheme: "peach-sorbet",
+      });
+      expect(valid.success).toBe(true);
+    });
+
+    it("normalizes incomplete raw draft into sanitized Cloud Nine published config", async () => {
+      const { normalizeCloudNineConfig } = await import("@/templates/cloud-nine/v1/normalize");
+      const normalized = normalizeCloudNineConfig({
+        partnerName: "  Clara  ",
+        senderName: "Liam \u202Ereversed",
+        message: "Floating in pure happiness.",
+        accentTheme: "lavender-mist",
+        heroMediaId: "https://example.com/cloud-photo.jpg",
+      });
+
+      expect(normalized.partnerName).toBe("Clara");
+      expect(normalized.senderName).toBe("Liam reversed");
+      expect(normalized.accentTheme).toBe("lavender-mist");
+      expect(normalized.heroMediaId).toBe("https://example.com/cloud-photo.jpg");
+      expect(normalized.decor?.paper).toBe("petal-blush");
+    });
+
+    it("is registered in the central template registry", async () => {
+      const { getTemplateDefinition, getAllTemplates } = await import("@/templates/registry");
+      const def = getTemplateDefinition("cloud-nine", "v1");
+      expect(def).not.toBeNull();
+      expect(def?.name).toBe("Cloud Nine");
+      expect(def?.id).toBe("cloud-nine");
+      expect(def?.version).toBe("v1");
+      expect(typeof def?.renderSsrHtml).toBe("function");
+
+      const all = getAllTemplates();
+      expect(all.some((t) => t.id === "cloud-nine")).toBe(true);
+    });
+
+    it("resolves canonical decor for Cloud Nine with airy pastel presentation treatments", async () => {
+      const { resolveTemplateDecor } = await import("@/templates/shared/compatibility");
+      const presentation = resolveTemplateDecor({
+        paper: "petal-blush",
+        ribbon: "silk-ivory",
+        waxSeal: "crimson-heart",
+        blooms: ["french-tulip"],
+        charms: ["sparkle"],
+      }, "cloud-nine");
+
+      expect(presentation.paper.id).toBe("petal-blush");
+      expect(presentation.ribbon.id).toBe("silk-ivory");
+      expect(presentation.waxSeal.id).toBe("crimson-heart");
+      expect(presentation.atmosphereGlowClass).toContain("pink-400");
+      expect(presentation.blooms).toHaveLength(1);
+      expect(presentation.charms).toHaveLength(1);
+    });
+  });
+});

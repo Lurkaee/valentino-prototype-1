@@ -33,6 +33,8 @@ export const valentineDecorSchema = z
 
 export type ValentineDecorConfig = z.infer<typeof valentineDecorSchema>;
 
+import { modulesDraftSchema, modulesPublishSchema, ModulesConfig } from "@/modules/registry";
+
 // Lenient schema for draft saves (everything optional, length caps enforced)
 export const midnightRoseDraftSchema = z.object({
   partnerName: graphemeMax(60).optional().default(""),
@@ -43,6 +45,8 @@ export const midnightRoseDraftSchema = z.object({
   accentTheme: z.enum(ACCENT_THEMES).optional().default("crimson-rose"),
   heroMediaId: z.string().max(200).optional().nullable(),
   decor: valentineDecorSchema,
+  modules: modulesDraftSchema,
+  moduleOrder: z.array(z.string()).optional(),
 });
 
 export type MidnightRoseDraftConfig = z.infer<typeof midnightRoseDraftSchema>;
@@ -57,6 +61,11 @@ export const midnightRosePublishSchema = z.object({
   accentTheme: z.enum(ACCENT_THEMES).default("crimson-rose"),
   heroMediaId: z.string().max(200).optional().nullable(),
   decor: valentineDecorSchema,
+  modules: modulesPublishSchema,
+  moduleOrder: z.array(z.string()).optional(),
 });
 
-export type MidnightRosePublishedConfig = z.infer<typeof midnightRosePublishSchema>;
+export type MidnightRosePublishedConfig = z.infer<typeof midnightRosePublishSchema> & {
+  modules?: ModulesConfig;
+};
+

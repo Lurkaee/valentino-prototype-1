@@ -22,6 +22,7 @@ import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { AtmosphericGlow } from "@/components/ui/AtmosphericGlow";
+import { ModuleManager } from "@/modules/editor/ModuleManager";
 
 type SaveStatus = "idle" | "saving" | "saved" | "error" | "conflict" | "offline";
 
@@ -37,6 +38,13 @@ export default function EditExperiencePage() {
     signOff: "With all my love",
     accentTheme: "crimson-rose",
     decor: DEFAULT_VALENTINE_DECOR,
+    modules: {},
+  });
+
+  const [templateMeta, setTemplateMeta] = useState<{ id: string; version: string; name: string }>({
+    id: "midnight-rose",
+    version: "v1",
+    name: "Midnight Rose",
   });
 
   const [revision, setRevision] = useState<number>(1);
@@ -81,10 +89,24 @@ export default function EditExperiencePage() {
 
         const data = await res.json();
         if (isMounted) {
+          if (data.templateId) {
+            const templateName =
+              data.templateId === "cloud-nine"
+                ? "Cloud Nine"
+                : data.templateId === "kage"
+                ? "Kage"
+                : "Midnight Rose";
+            setTemplateMeta({
+              id: data.templateId,
+              version: data.templateVersion || "v1",
+              name: templateName,
+            });
+          }
           if (data.draftConfig && !isDirtyRef.current) {
             setConfig({
               ...data.draftConfig,
               decor: normalizeValentineDecor(data.draftConfig.decor),
+              modules: data.draftConfig.modules || {},
             });
           }
           if (data.draftRevision) {
@@ -176,6 +198,13 @@ export default function EditExperiencePage() {
 
       return next;
     });
+  };
+
+  const handleModulesChange = (updater: (prevModules: any) => any) => {
+    handleConfigChange((prev: any) => ({
+      ...prev,
+      modules: updater(prev.modules || {}),
+    }));
   };
 
   // 4. Lifecycle Flushes (visibilitychange, pagehide, beforeunload)
@@ -349,7 +378,7 @@ export default function EditExperiencePage() {
           </Link>
           <span className="text-white/20 hidden sm:inline">/</span>
           <span className="text-xs text-rose-200/80 font-sans tracking-wide">
-            Midnight Rose <span className="text-white/40">(v1)</span>
+            {templateMeta.name} <span className="text-white/40">({templateMeta.version})</span>
           </span>
         </div>
 
@@ -893,6 +922,13 @@ export default function EditExperiencePage() {
                   </div>
                 </div>
 
+                {/* Reusable Experience Module Manager */}
+                <ModuleManager
+                  modules={config.modules}
+                  hasHeroMedia={Boolean(config.heroMediaId)}
+                  onChange={handleModulesChange}
+                />
+
               </div>
 
               {/* Validation Errors */}
@@ -976,10 +1012,11 @@ export default function EditExperiencePage() {
               {/* Screen Content: Single-Engine Unified Contract */}
               <div className="flex-1 overflow-y-auto">
                 <ExperienceRenderer
-                  templateId="midnight-rose"
-                  templateVersion="v1"
+                  templateId={templateMeta.id}
+                  templateVersion={templateMeta.version}
                   mode="preview"
                   rawConfig={config}
+                  publicId={publicId}
                 />
               </div>
             </div>

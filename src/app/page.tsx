@@ -13,8 +13,8 @@ import { CurtainLink } from "@/components/motion/PageCurtains";
 
 export default function HomePage() {
   return (
-    <main className="relative min-h-[100dvh] flex flex-col items-center justify-start bg-[#12030A] text-[#FAF8F5] overflow-x-hidden selection:bg-rose-500/30 selection:text-white">
-      {/* Floating Pill Navigation (Translucent Warm Cream & Rose Tint) */}
+    <main className="relative min-h-[100dvh] flex flex-col items-center justify-start bg-[#0A090C] text-[#FAF8F5] overflow-x-hidden selection:bg-rose-500/25 selection:text-white">
+      {/* Floating Pill Navigation (Neutral Luxury Obsidian Glass) */}
       <FloatingNavbar />
 
       {/* ========================================================================= */}
