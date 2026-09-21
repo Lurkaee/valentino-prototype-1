@@ -10,6 +10,7 @@ function CreateExperienceContent() {
   const searchParams = useSearchParams();
   const [error, setError] = useState<string | null>(null);
   const [statusMessage, setStatusMessage] = useState("Preparing your creative world...");
+  const [templateId, setTemplateId] = useState("midnight-rose");
 
   useEffect(() => {
     let isMounted = true;
@@ -33,6 +34,7 @@ function CreateExperienceContent() {
           const tParam = searchParams.get("template") || searchParams.get("templateId");
           if (tParam && (tParam === "cloud-nine" || tParam === "midnight-rose" || tParam === "kage")) {
             selectedTemplateId = tParam;
+            if (isMounted) setTemplateId(tParam);
           }
 
           const decorParam = searchParams.get("decor");
@@ -137,6 +139,27 @@ function CreateExperienceContent() {
               </h2>
               <p className="text-xs text-ivory-400 font-ui">
                 Setting up your private, encrypted interactive experience studio
+              </p>
+            </div>
+
+            {/* Concise World Capability Preview */}
+            <div
+              data-testid="world-capability-preview"
+              className="pt-3 pb-2 px-4 rounded-2xl bg-white/[0.04] border border-white/[0.08] text-center space-y-1"
+            >
+              <span className="text-[10px] font-mono uppercase tracking-widest text-rose-300">
+                {templateId === "cloud-nine"
+                  ? "Cloud Nine Sanctuary"
+                  : templateId === "kage"
+                  ? "Kage Kyoto World"
+                  : "Midnight Rose"}
+              </span>
+              <p className="text-xs text-white/70 font-ui font-light">
+                {templateId === "cloud-nine"
+                  ? "A dreamy pastel world with Devotion Letter · Celestial Blessing · Story Chapters"
+                  : templateId === "kage"
+                  ? "A Kyoto mountain temple with Japanese Mist · Intimate Letter · Secret Note"
+                  : "A cinematic letter world with Love Letter · Memories · Interactive Moments"}
               </p>
             </div>
           </div>
