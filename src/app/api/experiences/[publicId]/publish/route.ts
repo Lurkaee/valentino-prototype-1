@@ -11,6 +11,8 @@ import { rateLimiter, getAnonymizedKey } from "@/lib/rate-limiter";
 import { getTemplateDefinition } from "@/templates/registry";
 import { logger } from "@/lib/logger";
 
+export const dynamic = "force-dynamic";
+
 interface RouteParams {
   params: Promise<{ publicId: string }>;
 }

@@ -189,6 +189,8 @@ interface PublishedConfig {
   accentTheme?: string;
   heroMediaId?: string | null;
   decor?: unknown;
+  modules?: any;
+  moduleOrder?: string[];
 }
 
 const ACCENTS: Record<
@@ -236,13 +238,107 @@ const ACCENTS: Record<
   },
 };
 
-function renderPublicHtml(config: PublishedConfig): string {
+function renderPublicHtml(config: PublishedConfig, publicId: string = ""): string {
   const theme = ACCENTS[config.accentTheme || "crimson-rose"] || ACCENTS["crimson-rose"];
   const greeting = sanitizeText(config.greeting || "To My Favorite Person");
   const partnerName = sanitizeText(config.partnerName || "Dearest");
   const message = sanitizeText(config.message || "My heart is fuller every day because of you.");
   const signOff = sanitizeText(config.signOff || "With all my love");
   const senderName = sanitizeText(config.senderName || "Yours Always");
+
+  let modulesHtml = "";
+  if (config.modules && typeof config.modules === "object") {
+    const modules = config.modules as Record<string, any>;
+    const order = Array.isArray(config.moduleOrder) && config.moduleOrder.length > 0
+      ? config.moduleOrder
+      : ["timeline", "quiz", "secret", "openWhen"];
+
+    const rendered: string[] = [];
+
+    for (const modId of order) {
+      const m = modules[modId];
+      if (!m || !m.enabled) continue;
+
+      if (modId === "timeline" && m.items && m.items.length > 0) {
+        rendered.push(`
+          <div class="module-timeline-card" data-testid="module-timeline" style="margin-top: 1.5rem; padding: 1.25rem; border-radius: 1rem; background: rgba(32, 6, 21, 0.85); border: 1px solid rgba(244, 63, 94, 0.25);">
+            <div style="font-size: 0.65rem; color: #FDA4AF; text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.35rem; font-weight: 600;">⏳ Timeline of Us</div>
+            <h3 style="font-family: Georgia, serif; font-size: 1.15rem; color: #FAF8F5; margin-bottom: 0.85rem;">${sanitizeText(m.title || "Our Journey")}</h3>
+            <div style="display: flex; flex-direction: column; gap: 0.75rem; border-left: 2px solid rgba(244, 63, 94, 0.3); padding-left: 0.85rem; margin-left: 0.35rem;">
+              ${(m.items || []).map((item: any) => `
+                <div class="timeline-item">
+                  <div style="font-size: 0.7rem; color: #FDA4AF; font-weight: 500;">${sanitizeText(item.date || "")}</div>
+                  <div style="font-size: 0.9rem; font-weight: 600; color: #FAF8F5;">${sanitizeText(item.title || "")}</div>
+                  <div style="font-size: 0.8rem; color: #D5CEBF; font-weight: 300;">${sanitizeText(item.description || "")}</div>
+                </div>
+              `).join("")}
+            </div>
+          </div>
+        `);
+      }
+
+      if (modId === "quiz" && m.questions && m.questions.length > 0) {
+        rendered.push(`
+          <div class="module-quiz-card" data-testid="module-quiz" style="margin-top: 1.5rem; padding: 1.25rem; border-radius: 1rem; background: rgba(32, 6, 21, 0.85); border: 1px solid rgba(244, 63, 94, 0.25);">
+            <div style="font-size: 0.65rem; color: #FDA4AF; text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.35rem; font-weight: 600;">💘 Love Quiz</div>
+            <h3 style="font-family: Georgia, serif; font-size: 1.15rem; color: #FAF8F5; margin-bottom: 0.85rem;">${sanitizeText(m.title || "How Well Do You Know Us?")}</h3>
+            <div id="quiz-container">
+              <div id="quiz-question" style="font-size: 0.9rem; color: #FAF8F5; margin-bottom: 0.65rem;">
+                ${sanitizeText(m.questions[0]?.question || "")}
+              </div>
+              <div class="quiz-options" style="display: flex; flex-direction: column; gap: 0.4rem;">
+                ${(m.questions[0]?.options || []).map((opt: string, optIdx: number) => `
+                  <button type="button" data-testid="quiz-option-${optIdx}" class="quiz-opt-btn" style="padding: 0.55rem 0.85rem; border-radius: 0.5rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); color: #FAF8F5; text-align: left; cursor: pointer; font-size: 0.8rem; transition: background 0.2s;">
+                    ${sanitizeText(opt)}
+                  </button>
+                `).join("")}
+              </div>
+              <div id="quiz-feedback" data-testid="quiz-feedback-pill" class="hidden" style="margin-top: 0.65rem; padding: 0.45rem 0.65rem; border-radius: 0.5rem; font-size: 0.75rem; background: rgba(16, 185, 129, 0.2); border: 1px solid rgba(16, 185, 129, 0.4); color: #6EE7B7;">
+                ✓ ${sanitizeText(m.questions[0]?.explanation || "Everything about you makes my heart smile.")}
+              </div>
+              <button type="button" id="quiz-next" data-testid="quiz-next-button" class="hidden" style="margin-top: 0.65rem; padding: 0.35rem 0.75rem; border-radius: 9999px; background: #E11D48; color: white; border: none; font-size: 0.7rem; font-weight: 500; cursor: pointer;">
+                Complete Quiz
+              </button>
+            </div>
+          </div>
+        `);
+      }
+
+      if (modId === "secret") {
+        rendered.push(`
+          <div class="module-secret-card" data-testid="module-secret" style="margin-top: 1.5rem; padding: 1.25rem; border-radius: 1rem; background: rgba(32, 6, 21, 0.85); border: 1px solid rgba(244, 63, 94, 0.25);">
+            <div style="font-size: 0.65rem; color: #FDA4AF; text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.35rem; font-weight: 600;">🔐 Secret Note</div>
+            <p style="font-size: 0.9rem; color: #FAF8F5; margin-bottom: 0.85rem;">${sanitizeText(m.prompt || "A secret note just for you")}</p>
+            <button type="button" id="reveal-secret-btn" data-testid="reveal-secret-button" style="padding: 0.5rem 1.15rem; border-radius: 9999px; background: linear-gradient(135deg, #E11D48, #9F1239); color: white; border: 1px solid #FB7185; font-size: 0.75rem; font-weight: 500; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem;">
+              <span>✨</span> <span>Tap to Reveal Secret</span>
+            </button>
+            <div id="revealed-secret" data-testid="revealed-secret-content" class="hidden" style="margin-top: 0.75rem; padding: 0.85rem; border-radius: 0.75rem; background: rgba(0,0,0,0.4); border: 1px solid rgba(244, 63, 94, 0.3); font-family: Georgia, serif; font-style: italic; color: #FDA4AF; font-size: 0.9rem; line-height: 1.5;"></div>
+          </div>
+        `);
+      }
+
+      if (modId === "openWhen" && m.letters && m.letters.length > 0) {
+        rendered.push(`
+          <div class="module-openwhen-card" data-testid="module-open-when" style="margin-top: 1.5rem; padding: 1.25rem; border-radius: 1rem; background: rgba(32, 6, 21, 0.85); border: 1px solid rgba(244, 63, 94, 0.25);">
+            <div style="font-size: 0.65rem; color: #FDA4AF; text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.35rem; font-weight: 600;">💌 Open When...</div>
+            <h3 style="font-family: Georgia, serif; font-size: 1.15rem; color: #FAF8F5; margin-bottom: 0.85rem;">${sanitizeText(m.title || "Open When You Need Me")}</h3>
+            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+              ${(m.letters || []).map((letter: any) => `
+                <div class="openwhen-item" style="padding: 0.65rem; border-radius: 0.5rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1);">
+                  <div style="font-size: 0.85rem; font-weight: 600; color: #FDA4AF;">${sanitizeText(letter.situation || "")}</div>
+                  <div style="font-size: 0.8rem; color: #D5CEBF; font-style: italic; margin-top: 0.25rem;">${sanitizeText(letter.message || "")}</div>
+                </div>
+              `).join("")}
+            </div>
+          </div>
+        `);
+      }
+    }
+
+    if (rendered.length > 0) {
+      modulesHtml = rendered.join("\n");
+    }
+  }
 
   const decor = normalizeValentineDecor(config.decor);
   const paper = getPaperOption(decor.paper);
@@ -578,8 +674,24 @@ function renderPublicHtml(config: PublishedConfig): string {
   <div class="wrapper" data-testid="experience-container">
     <div class="ambient-glow"></div>
 
+    <!-- Top Navigation / Controls Bar -->
+    <div style="position: relative; z-index: 30; width: 100%; max-width: 32rem; margin: 0 auto 1rem auto; display: flex; align-items: center; justify-content: space-between; padding: 0 0.5rem;">
+      <div style="font-size: 0.65rem; letter-spacing: 0.25em; text-transform: uppercase; color: rgba(254,205,211,0.5); font-family: system-ui, sans-serif;">
+        Private Correspondence
+      </div>
+      <button
+        type="button"
+        id="soundtrack-toggle"
+        aria-label="Play romantic soundtrack"
+        style="display: flex; align-items: center; gap: 0.4rem; padding: 0.3rem 0.85rem; border-radius: 9999px; font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; font-family: system-ui, sans-serif; border: 1px solid rgba(244,63,94,0.4); background: rgba(76,5,25,0.6); color: #FDA4AF; backdrop-filter: blur(8px); cursor: pointer; transition: all 0.3s;"
+      >
+        <span style="font-size: 0.8rem;">♡</span>
+        <span>Our Song</span>
+      </button>
+    </div>
+
     <div class="content-container">
-      <div class="blooms-container" style="position: absolute; inset: 0; pointer-events: none; z-index: 20; display: flex; align-items: center; justify-content: center;">
+      <div class="blooms-container" style="position: absolute; top: 120px; left: 0; right: 0; height: 0; pointer-events: none; z-index: 20; display: flex; align-items: center; justify-content: center;">
         ${bloomsHtml}
         ${charmsHtml}
       </div>
@@ -624,6 +736,43 @@ function renderPublicHtml(config: PublishedConfig): string {
               <div class="sender-title" data-testid="sender-name">${senderName}</div>
             </div>
           </div>
+
+          ${
+            config.heroMediaId
+              ? `
+          <div class="memory-card" style="margin-top: 1.25rem;">
+            <div style="background: #FAF8F5; padding: 0.85rem; border-radius: 0.85rem; box-shadow: 0 16px 36px rgba(0,0,0,0.55); border: 1px solid rgba(255,255,255,0.8); transform: rotate(-1deg); max-width: 22rem; margin: 0 auto;">
+              <div style="width: 100%; aspect-ratio: 4/3; overflow: hidden; border-radius: 0.5rem; background: #eee;">
+                <img src="${sanitizeText(config.heroMediaId)}" alt="A Cherished Moment" style="width: 100%; height: 100%; object-fit: cover;" />
+              </div>
+              <div style="text-align: center; padding-top: 0.65rem; font-family: Georgia, serif; font-style: italic; font-size: 0.8rem; color: #57534E;">
+                A memory kept forever close
+              </div>
+            </div>
+          </div>
+          `
+              : ""
+          }
+
+          ${modulesHtml}
+
+          <div class="closing-scene" style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; align-items: center; text-align: center; gap: 0.85rem;">
+            <div style="width: 100%; height: 1px; background: linear-gradient(90deg, transparent, rgba(244,63,94,0.3), transparent);"></div>
+            <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.75rem; color: rgba(254,205,211,0.6); letter-spacing: 0.15em; text-transform: uppercase;">
+              <span>✦</span>
+              <span>Midnight Rose Keepsake</span>
+              <span>✦</span>
+            </div>
+            <button
+              type="button"
+              id="reseal-btn"
+              data-testid="reseal-button"
+              aria-label="Seal & Read Again"
+              style="padding: 0.35rem 1rem; border-radius: 9999px; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(254,205,211,0.8); background: rgba(76,5,25,0.5); border: 1px solid rgba(244,63,94,0.3); cursor: pointer; transition: all 0.3s;"
+            >
+              Seal & Read Again
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -635,12 +784,20 @@ function renderPublicHtml(config: PublishedConfig): string {
         var sealBox = document.querySelector('[data-testid="seal-container"]');
         var letterBox = document.querySelector('[data-testid="unsealed-letter"]');
         var sealBtn = document.querySelector('[data-testid="wax-seal-button"]');
+        var resealBtn = document.getElementById('reseal-btn');
+        var musicBtn = document.getElementById('soundtrack-toggle');
         if (!sealBox || !letterBox) return;
 
         function unseal() {
           sealBox.classList.add('hidden');
           letterBox.classList.remove('hidden');
           letterBox.classList.add('animate-fadeIn');
+        }
+
+        function reseal() {
+          letterBox.classList.add('hidden');
+          letterBox.classList.remove('animate-fadeIn');
+          sealBox.classList.remove('hidden');
         }
 
         var mql = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -651,8 +808,99 @@ function renderPublicHtml(config: PublishedConfig): string {
           if (e.matches) unseal();
         });
 
-        if (sealBtn) {
-          sealBtn.addEventListener('click', unseal);
+        if (sealBtn) sealBtn.addEventListener('click', unseal);
+        if (resealBtn) resealBtn.addEventListener('click', reseal);
+
+        // Ambient soundscape Web Audio toggle
+        var audioCtx = null;
+        var isPlaying = false;
+        var oscs = [];
+        var gainNode = null;
+
+        if (musicBtn) {
+          musicBtn.addEventListener('click', function() {
+            if (isPlaying) {
+              if (gainNode && audioCtx) {
+                gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.3);
+                setTimeout(function() {
+                  oscs.forEach(function(o) { try { o.stop(); o.disconnect(); } catch(e){} });
+                  oscs = [];
+                  isPlaying = false;
+                  musicBtn.setAttribute('aria-label', 'Play romantic soundtrack');
+                }, 300);
+              } else {
+                isPlaying = false;
+                musicBtn.setAttribute('aria-label', 'Play romantic soundtrack');
+              }
+              return;
+            }
+
+            try {
+              var AudioCtx = window.AudioContext || window.webkitAudioContext;
+              if (!AudioCtx) return;
+              audioCtx = audioCtx || new AudioCtx();
+              if (audioCtx.state === 'suspended') audioCtx.resume();
+
+              var master = audioCtx.createGain();
+              master.gain.setValueAtTime(0.001, audioCtx.currentTime);
+              master.gain.linearRampToValueAtTime(0.08, audioCtx.currentTime + 1.0);
+              master.connect(audioCtx.destination);
+              gainNode = master;
+
+              [220, 277.18, 329.63].forEach(function(f) {
+                var o = audioCtx.createOscillator();
+                o.type = 'sine';
+                o.frequency.setValueAtTime(f, audioCtx.currentTime);
+                o.connect(master);
+                o.start();
+                oscs.push(o);
+              });
+
+              isPlaying = true;
+              musicBtn.setAttribute('aria-label', 'Mute romantic soundtrack');
+            } catch(e) {
+              isPlaying = false;
+            }
+          });
+        }
+
+        // Modules interactivity: Quiz
+        var quizOptBtns = document.querySelectorAll('.quiz-opt-btn');
+        var feedbackPill = document.getElementById('quiz-feedback');
+        var nextBtn = document.getElementById('quiz-next');
+        if (quizOptBtns.length > 0) {
+          quizOptBtns.forEach(function(btn) {
+            btn.addEventListener('click', function() {
+              if (feedbackPill) feedbackPill.classList.remove('hidden');
+              if (nextBtn) nextBtn.classList.remove('hidden');
+            });
+          });
+        }
+
+        // Modules interactivity: Secret reveal via privacy-isolated API
+        var revealSecretBtn = document.getElementById('reveal-secret-btn');
+        var revealedSecretEl = document.getElementById('revealed-secret');
+        if (revealSecretBtn && revealedSecretEl) {
+          revealSecretBtn.addEventListener('click', function() {
+            revealSecretBtn.disabled = true;
+            revealSecretBtn.textContent = 'Unfolding secret...';
+            fetch('/api/experiences/${publicId}/secret')
+              .then(function(res) { return res.json(); })
+              .then(function(data) {
+                if (data.secretContent) {
+                  revealedSecretEl.textContent = data.secretContent;
+                  revealedSecretEl.classList.remove('hidden');
+                  revealSecretBtn.classList.add('hidden');
+                } else {
+                  revealSecretBtn.disabled = false;
+                  revealSecretBtn.textContent = 'Tap to Reveal Secret';
+                }
+              })
+              .catch(function() {
+                revealSecretBtn.disabled = false;
+                revealSecretBtn.textContent = 'Retry reveal';
+              });
+          });
         }
       }
 
@@ -705,13 +953,14 @@ export async function GET(request: Request, { params }: RouteParams) {
     }
 
     const template = getTemplateDefinition(experience.templateId, experience.templateVersion) || midnightRoseV1;
-    const config = template.normalizeConfig(rawConfig);
+    const config = template.normalizeConfig(rawConfig, true);
+
 
     if (template.renderSsrHtml) {
       return new NextResponse(template.renderSsrHtml(config), { status: 200, headers: COMMON_HEADERS });
     }
 
-    return new NextResponse(renderPublicHtml(config as PublishedConfig), { status: 200, headers: COMMON_HEADERS });
+    return new NextResponse(renderPublicHtml(config as PublishedConfig, publicId), { status: 200, headers: COMMON_HEADERS });
   }
 
   return new NextResponse(render404Html(), { status: 404, headers: COMMON_HEADERS });

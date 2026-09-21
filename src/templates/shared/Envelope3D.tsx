@@ -11,10 +11,13 @@ export interface Envelope3DProps {
   sealBorderClass?: string;
   sealHaloClass?: string;
   sealBezelClass?: string;
+  sealId?: string;
   ribbonGradientClass?: string;
   ribbonStitchClass?: string;
   ribbonTextLeft?: string;
   ribbonTextRight?: string;
+  ribbonId?: string;
+  paperId?: string;
   envelopeBgClass?: string;
   envelopeBorderClass?: string;
   children: React.ReactNode;
@@ -42,10 +45,13 @@ export function Envelope3D({
   sealBorderClass = "border-rose-400/80",
   sealHaloClass = "bg-rose-500/25",
   sealBezelClass = "border-white/30 bg-black/15",
+  sealId,
   ribbonGradientClass = "from-rose-700 via-rose-800 to-rose-950",
   ribbonStitchClass = "bg-rose-400/50",
   ribbonTextLeft = "SEALED",
   ribbonTextRight = "WITH DEVOTION",
+  ribbonId,
+  paperId,
   envelopeBgClass = "bg-[#1C0512]/90",
   envelopeBorderClass = "border-rose-500/30",
   children,
@@ -63,6 +69,12 @@ export function Envelope3D({
     }
   }, [shouldReduceMotion, isSealed, onUnseal]);
 
+  useEffect(() => {
+    if (isSealed && !shouldReduceMotion) {
+      setHasBroken(false);
+    }
+  }, [isSealed, shouldReduceMotion]);
+
   const handleBreakSeal = () => {
     if (!hasBroken) {
       setHasBroken(true);
@@ -78,6 +90,7 @@ export function Envelope3D({
       style={{ perspective: "1200px" }}
     >
       <div
+        data-decor-paper={paperId}
         className={`w-full rounded-3xl ${envelopeBgClass} backdrop-blur-2xl border ${envelopeBorderClass} p-6 sm:p-10 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)] transition-all duration-700 ease-out relative z-10`}
       >
         <AnimatePresence mode="wait">
@@ -95,6 +108,7 @@ export function Envelope3D({
             >
               {/* Ribbon Band across the envelope */}
               <div
+                data-decor-ribbon={ribbonId}
                 className={`absolute inset-x-[-24px] sm:inset-x-[-40px] h-9 bg-gradient-to-r ${ribbonGradientClass} shadow-md flex items-center justify-between px-8 z-0`}
               >
                 <div className={`absolute top-0 inset-x-0 h-[1.5px] ${ribbonStitchClass}`} />
@@ -126,6 +140,7 @@ export function Envelope3D({
                 <motion.button
                   type="button"
                   data-testid="wax-seal-button"
+                  data-decor-seal={sealId}
                   onClick={handleBreakSeal}
                   onKeyDown={(e) => {
                     if (e.key === "Enter" || e.key === " ") {

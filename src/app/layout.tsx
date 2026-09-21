@@ -15,15 +15,15 @@ const plusJakarta = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Valentino — An Intimate Valentine Experience",
-  description: "Create a private, beautifully sealed digital Valentine experience for someone you love.",
+  title: "Valentino — Interactive Romantic Experience Studio",
+  description: "Create private, unforgettable interactive romantic worlds — letters, memories, timelines, quizzes, and secret moments.",
   robots: {
     index: false,
     follow: false,
   },
   openGraph: {
-    title: "Valentino — An Intimate Valentine Experience",
-    description: "A private, romantic Valentine experience created with love.",
+    title: "Valentino — Interactive Romantic Experience Studio",
+    description: "Create private, unforgettable interactive romantic worlds — letters, memories, timelines, quizzes, and secret moments.",
     type: "website",
   },
 };
@@ -43,7 +43,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${playfair.variable} ${plusJakarta.variable}`}>
-      <body className="antialiased min-h-[100dvh] flex flex-col font-sans bg-[#12030A] text-[#FAF8F5]">
+      <body className="antialiased min-h-[100dvh] flex flex-col font-sans bg-[#0A090C] text-[#FAF8F5]">
         {children}
         <PageCurtains />
       </body>

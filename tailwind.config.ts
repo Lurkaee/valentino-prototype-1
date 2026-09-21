@@ -16,6 +16,17 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        valentino: {
+          bg: "#0A090C",
+          surface: "#131118",
+          elevated: "#1C1922",
+          border: "rgba(255, 255, 255, 0.08)",
+          cream: "#FAF8F5",
+          muted: "#9E9893",
+          accent: "#E09F9C",
+          lavender: "#C4B5FD",
+          champagne: "#FDE68A",
+        },
         obsidian: {
           950: "#07070A",
           900: "#0B0B12",

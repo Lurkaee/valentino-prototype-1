@@ -8,6 +8,16 @@ import {
 import { normalizeMidnightRoseConfig } from "./midnight-rose/v1/normalize";
 import { MidnightRoseComponent } from "./midnight-rose/v1/Component";
 
+import {
+  cloudNineDraftSchema,
+  cloudNinePublishSchema,
+  CloudNineDraftConfig,
+  CloudNinePublishedConfig,
+} from "./cloud-nine/v1/schema";
+import { normalizeCloudNineConfig } from "./cloud-nine/v1/normalize";
+import { CloudNineComponent } from "./cloud-nine/v1/Component";
+import { renderCloudNineSsrHtml } from "./cloud-nine/v1/ssr";
+
 import { DEFAULT_VALENTINE_DECOR } from "@/types/decor";
 
 export const midnightRoseV1: TemplateDefinition<
@@ -18,6 +28,12 @@ export const midnightRoseV1: TemplateDefinition<
   version: "v1",
   name: "Midnight Rose",
   description: "An intimate, starlight-themed love letter sealed with digital wax.",
+  tagline: "For the love that feels like midnight",
+  atmosphere: "Intimate, starlight-themed love letter sealed with digital wax.",
+  signature: "Physical envelope + interactive wax seal reveal",
+  availability: "available",
+  category: "Cinematic",
+  supportedModules: ["letter", "memories", "timeline", "quiz", "secret", "openWhen"],
   draftSchema: midnightRoseDraftSchema,
   publishSchema: midnightRosePublishSchema,
   defaultConfig: {
@@ -34,6 +50,118 @@ export const midnightRoseV1: TemplateDefinition<
   Component: MidnightRoseComponent,
 };
 
+export const cloudNineV1: TemplateDefinition<
+  CloudNineDraftConfig,
+  CloudNinePublishedConfig
+> = {
+  id: "cloud-nine",
+  version: "v1",
+  name: "Cloud Nine",
+  description: "A luminous, dreamy pastel sanctuary of soft clouds and celestial devotion.",
+  tagline: "For the person who makes everything lighter",
+  atmosphere: "Luminous pastel dreamscape of soft clouds and celestial devotion.",
+  signature: "Celestial star blessing + pearl wax seal",
+  availability: "available",
+  category: "Dreamy",
+  supportedModules: ["letter", "memories", "timeline", "quiz", "openWhen"],
+  draftSchema: cloudNineDraftSchema,
+  publishSchema: cloudNinePublishSchema,
+  defaultConfig: {
+    partnerName: "",
+    senderName: "",
+    greeting: "To my sweetest soul",
+    message: "",
+    signOff: "Forever in the clouds",
+    accentTheme: "blush-sky",
+    heroMediaId: null,
+    decor: DEFAULT_VALENTINE_DECOR,
+  },
+  normalizeConfig: normalizeCloudNineConfig,
+  Component: CloudNineComponent,
+  renderSsrHtml: renderCloudNineSsrHtml,
+};
+
+import {
+  kageDraftSchema,
+  kagePublishSchema,
+  KageDraftConfig,
+  KagePublishedConfig,
+} from "./kage/v1/schema";
+import { normalizeKageConfig } from "./kage/v1/normalize";
+import { KageComponent } from "./kage/v1/Component";
+import { renderKageSsrHtml } from "./kage/v1/ssr";
+
+export const kageV1: TemplateDefinition<
+  KageDraftConfig,
+  KagePublishedConfig
+> = {
+  id: "kage",
+  version: "v1",
+  name: "Kage",
+  description: "A tranquil, atmospheric Kyoto mountain temple after dark, where shadows embrace starlight.",
+  tagline: "A Kyoto sanctuary where shadows embrace starlight",
+  atmosphere: "Tranquil Kyoto mountain temple after dark, mist & sacred stone lanterns.",
+  signature: "Exact-source ThreeUI shaders + spatial temple path",
+  availability: "experimental",
+  category: "Immersive",
+  supportedModules: ["letter", "memories", "secret"],
+  draftSchema: kageDraftSchema,
+  publishSchema: kagePublishSchema,
+  defaultConfig: {
+    partnerName: "",
+    senderName: "",
+    greeting: "Where stillness reveals the unseen",
+    message: "",
+    signOff: "With all my heart",
+    accentTheme: "kyoto-crimson",
+    heroMediaId: null,
+    decor: DEFAULT_VALENTINE_DECOR,
+  },
+  normalizeConfig: normalizeKageConfig,
+  Component: KageComponent,
+  renderSsrHtml: renderKageSsrHtml,
+};
+
+export interface RoadmapWorld {
+  id: string;
+  name: string;
+  tagline: string;
+  atmosphere: string;
+  signature: string;
+  availability: "coming-soon";
+  category: string;
+}
+
+export const ROADMAP_WORLDS: RoadmapWorld[] = [
+  {
+    id: "golden-hour",
+    name: "Golden Hour",
+    tagline: "For the memories worth keeping",
+    atmosphere: "Warm peach, coral & champagne sunbeams over film memories.",
+    signature: "Film reel + sunset transition",
+    availability: "coming-soon",
+    category: "Vintage",
+  },
+  {
+    id: "love-letter",
+    name: "Love Letter",
+    tagline: "For something timeless",
+    atmosphere: "Parchment, burgundy ink, pressed botanical florals & postmark stamps.",
+    signature: "Pressed florals + postmark stamp",
+    availability: "coming-soon",
+    category: "Vintage",
+  },
+  {
+    id: "stardust",
+    name: "Stardust",
+    tagline: "For a love written in the stars",
+    atmosphere: "Violet indigo cosmos & shimmering celestial dust.",
+    signature: "Constellation reveal + cosmic finale",
+    availability: "coming-soon",
+    category: "Celestial",
+  },
+];
+
 const templates = new Map<string, TemplateDefinition<any, any>>();
 
 function getKey(id: string, version: string): string {
@@ -41,6 +169,8 @@ function getKey(id: string, version: string): string {
 }
 
 templates.set(getKey(midnightRoseV1.id, midnightRoseV1.version), midnightRoseV1);
+templates.set(getKey(cloudNineV1.id, cloudNineV1.version), cloudNineV1);
+templates.set(getKey(kageV1.id, kageV1.version), kageV1);
 
 export function getTemplateDefinition(
   id: string,
@@ -52,3 +182,4 @@ export function getTemplateDefinition(
 export function getAllTemplates(): TemplateDefinition<any, any>[] {
   return Array.from(templates.values());
 }
+

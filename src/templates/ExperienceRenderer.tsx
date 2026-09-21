@@ -9,6 +9,7 @@ interface ExperienceRendererProps {
   templateVersion: string;
   mode: RenderMode;
   rawConfig: unknown;
+  publicId?: string;
 }
 
 export const ExperienceRenderer: React.FC<ExperienceRendererProps> = ({
@@ -16,6 +17,7 @@ export const ExperienceRenderer: React.FC<ExperienceRendererProps> = ({
   templateVersion,
   mode,
   rawConfig,
+  publicId,
 }) => {
   const template = getTemplateDefinition(templateId, templateVersion);
 
@@ -28,8 +30,9 @@ export const ExperienceRenderer: React.FC<ExperienceRendererProps> = ({
   }
 
   // Unified contract: always normalize config before passing to component
-  const normalizedConfig = template.normalizeConfig(rawConfig);
+  const normalizedConfig = template.normalizeConfig(rawConfig, mode === "public");
   const Component = template.Component;
 
-  return <Component config={normalizedConfig} mode={mode} />;
+  return <Component config={normalizedConfig} mode={mode} publicId={publicId} />;
 };
+

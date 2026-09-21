@@ -1,13 +1,13 @@
 import React from "react";
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
-  variant?: "rose" | "gold" | "violet" | "neutral";
+  variant?: "neutral" | "rose" | "gold" | "violet";
   size?: "sm" | "md";
 }
 
 export const Badge: React.FC<BadgeProps> = ({
   className = "",
-  variant = "rose",
+  variant = "neutral",
   size = "md",
   children,
   ...props
@@ -18,10 +18,10 @@ export const Badge: React.FC<BadgeProps> = ({
   }[size];
 
   const variantStyles = {
-    rose: "bg-rose-950/60 text-rose-300 border-rose-800/40",
-    gold: "bg-amber-950/60 text-amber-300 border-amber-800/40",
-    violet: "bg-purple-950/60 text-purple-300 border-purple-800/40",
-    neutral: "bg-white/[0.06] text-ivory-200 border-white/10",
+    neutral: "bg-white/[0.05] text-[#D5CEBF] border-white/10",
+    rose: "bg-rose-950/50 text-rose-300 border-rose-800/40",
+    gold: "bg-amber-950/50 text-amber-300 border-amber-800/40",
+    violet: "bg-purple-950/50 text-purple-300 border-purple-800/40",
   }[variant];
 
   return (

@@ -1,7 +1,7 @@
 import React, { forwardRef } from "react";
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "primary" | "secondary" | "outline" | "ghost" | "champagne";
+  variant?: "primary" | "romantic" | "secondary" | "outline" | "ghost" | "champagne";
   size?: "sm" | "md" | "lg";
   isLoading?: boolean;
   leftIcon?: React.ReactNode;
@@ -24,7 +24,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const baseStyles =
-      "relative inline-flex items-center justify-center font-medium tracking-wide transition-all duration-300 rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-rose-500/50 disabled:opacity-50 disabled:pointer-events-none active:scale-[0.98] select-none";
+      "relative inline-flex items-center justify-center font-medium tracking-wide transition-all duration-300 rounded-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white/30 disabled:opacity-50 disabled:pointer-events-none active:scale-[0.98] select-none font-ui";
 
     const sizeStyles = {
       sm: "text-xs px-3.5 py-2 gap-1.5 min-h-[36px]",
@@ -34,7 +34,9 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
     const variantStyles = {
       primary:
-        "bg-gradient-to-r from-rose-600 to-crimson-600 text-white shadow-lg shadow-rose-950/50 hover:from-rose-500 hover:to-crimson-500 hover:shadow-rose-900/60 border border-rose-500/30",
+        "bg-[#1A1824] text-ivory-50 shadow-md shadow-black/40 hover:bg-[#252232] hover:text-white border border-white/15 hover:border-white/30",
+      romantic:
+        "bg-gradient-to-r from-rose-600 via-rose-500 to-crimson-600 text-white shadow-lg shadow-rose-950/40 hover:from-rose-500 hover:to-crimson-500 hover:shadow-rose-900/50 border border-rose-500/30",
       secondary:
         "bg-white/[0.06] text-ivory-100 hover:bg-white/[0.12] hover:text-white border border-white/10 backdrop-blur-md",
       outline:

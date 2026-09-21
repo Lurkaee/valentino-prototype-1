@@ -5,8 +5,12 @@ import {
   AccentTheme,
 } from "./schema";
 import { normalizeValentineDecor } from "@/types/decor";
+import { normalizeAllModules } from "@/modules/registry";
 
-export function normalizeMidnightRoseConfig(raw: unknown): MidnightRosePublishedConfig {
+export function normalizeMidnightRoseConfig(
+  raw: unknown,
+  isPublic: boolean = false
+): MidnightRosePublishedConfig {
   const obj = typeof raw === "object" && raw !== null ? (raw as Record<string, unknown>) : {};
 
   const partnerName = sanitizeText(typeof obj.partnerName === "string" ? obj.partnerName : "");
@@ -39,6 +43,10 @@ export function normalizeMidnightRoseConfig(raw: unknown): MidnightRosePublished
       : null;
 
   const decor = normalizeValentineDecor(obj.decor);
+  const modules = normalizeAllModules(obj.modules, isPublic);
+  const moduleOrder = Array.isArray(obj.moduleOrder)
+    ? (obj.moduleOrder as string[])
+    : ["timeline", "quiz", "secret", "openWhen"];
 
   return {
     partnerName,
@@ -49,5 +57,8 @@ export function normalizeMidnightRoseConfig(raw: unknown): MidnightRosePublished
     accentTheme,
     heroMediaId,
     decor,
+    modules,
+    moduleOrder,
   };
 }
+
