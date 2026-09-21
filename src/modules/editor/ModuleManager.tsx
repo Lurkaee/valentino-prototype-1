@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import { ModulesConfig } from "../registry";
 
 interface ModuleManagerProps {
   modules?: any;
@@ -23,6 +22,13 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
   const secretEnabled = Boolean(modules?.secret?.enabled);
   const openWhenEnabled = Boolean(modules?.openWhen?.enabled);
 
+  const anyEnabled = timelineEnabled || quizEnabled || secretEnabled || openWhenEnabled;
+  const activeCount =
+    (timelineEnabled ? 1 : 0) +
+    (quizEnabled ? 1 : 0) +
+    (secretEnabled ? 1 : 0) +
+    (openWhenEnabled ? 1 : 0);
+
   const toggleModule = (key: "timeline" | "quiz" | "secret" | "openWhen", defaultData: any) => {
     onChange((prev: any) => {
       const current = prev?.[key] || {};
@@ -38,49 +44,73 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
     });
     if (!modules?.[key]?.enabled) {
       setActiveMoment(key);
+    } else if (activeMoment === key) {
+      setActiveMoment(null);
     }
   };
 
   return (
-    <div className="space-y-4 pt-2 border-t border-rose-500/20" data-testid="experience-module-manager">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-sm font-serif font-medium text-white flex items-center gap-2">
-            <span>✨</span>
-            <span>Your Experience Flow</span>
-          </h2>
-          <p className="text-[11px] text-rose-200/65 font-light">
-            Craft a multi-layered journey for your partner.
+    <div className="space-y-5" data-testid="experience-module-manager">
+      {/* Header & Emotional Purpose */}
+      <div className="flex items-start justify-between">
+        <div className="space-y-1">
+          <div className="flex items-center gap-2">
+            <span className="text-base select-none">✨</span>
+            <h2 className="text-base font-display font-medium text-white">
+              Moments & Interactive Experiences
+            </h2>
+          </div>
+          <p className="text-xs text-white/60 font-ui font-light">
+            Compose surprising, multi-layered chapters for your partner to explore.
           </p>
         </div>
+
+        {/* Experience Flow Badges */}
+        <div className="flex items-center gap-2 text-xs font-ui shrink-0">
+          <div className="flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-300 border border-emerald-500/30 text-[11px]">
+            <span>✓</span>
+            <span>Love Letter</span>
+          </div>
+          <div
+            className={`flex items-center gap-1 px-2.5 py-0.5 rounded-full border text-[11px] ${
+              hasHeroMedia
+                ? "bg-emerald-500/10 text-emerald-300 border-emerald-500/30"
+                : "bg-white/[0.04] text-white/40 border-white/[0.08]"
+            }`}
+          >
+            <span>{hasHeroMedia ? "✓" : "○"}</span>
+            <span>Memory Photo</span>
+          </div>
+        </div>
       </div>
 
-      {/* Core Flow Status Badges */}
-      <div className="flex flex-wrap gap-2 text-xs">
-        <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-950/60 text-emerald-300 border border-emerald-500/40">
-          <span>✓</span>
-          <span>Love Letter</span>
+      {/* Editorial Empty State (Inviting, warm, non-broken) */}
+      {!anyEnabled && (
+        <div className="p-6 rounded-2xl bg-white/[0.02] border border-dashed border-white/[0.12] text-center space-y-3">
+          <div className="w-10 h-10 mx-auto rounded-full bg-white/[0.05] border border-white/[0.1] flex items-center justify-center text-lg select-none">
+            📖
+          </div>
+          <div className="space-y-1">
+            <h3 className="text-sm font-display font-medium text-white">
+              Your story is still blank.
+            </h3>
+            <p className="text-xs text-white/60 font-ui font-light max-w-sm mx-auto">
+              Add the first little moment to make this an unforgettable interactive experience.
+            </p>
+          </div>
         </div>
-        <div
-          className={`flex items-center gap-1.5 px-3 py-1 rounded-full border ${
-            hasHeroMedia
-              ? "bg-emerald-950/60 text-emerald-300 border-emerald-500/40"
-              : "bg-white/5 text-rose-200/60 border-white/10"
-          }`}
-        >
-          <span>{hasHeroMedia ? "✓" : "○"}</span>
-          <span>Memory Photo</span>
-        </div>
-      </div>
+      )}
 
-      {/* Add a Moment: Module Selector Chips */}
-      <div className="space-y-2">
-        <div className="text-[11px] text-rose-200/70 font-medium uppercase tracking-wider">
-          + Add a Moment to Your Experience
+      {/* Add a Moment: Tactile Creator Buttons */}
+      <div className="space-y-2.5">
+        <div className="flex items-center justify-between">
+          <span className="text-[11px] font-ui font-medium uppercase tracking-wider text-rose-300/80">
+            {anyEnabled ? `Add Another Moment (${activeCount}/4 active)` : "+ Add a Moment to Your Story"}
+          </span>
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-          {/* Timeline Button */}
+
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+          {/* 1. Timeline */}
           <button
             type="button"
             data-testid="toggle-module-timeline"
@@ -90,30 +120,50 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
                   title: "Our Journey Together",
                   subtitle: "The moments that brought us here",
                   items: [
-                    { id: "m1", title: "The Day We Met", date: "Where it all started", description: "I remember looking at you and knowing something in my life had shifted forever." },
-                    { id: "m2", title: "Our First Trip", date: "A sweet memory", description: "Getting lost together was the best part of the whole journey." },
+                    {
+                      id: "m1",
+                      title: "The Day We Met",
+                      date: "Where it all started",
+                      description:
+                        "I remember looking at you and knowing something in my life had shifted forever.",
+                    },
+                    {
+                      id: "m2",
+                      title: "Our First Trip",
+                      date: "A sweet memory",
+                      description: "Getting lost together was the best part of the whole journey.",
+                    },
                   ],
                 });
               } else {
                 setActiveMoment(activeMoment === "timeline" ? null : "timeline");
               }
             }}
-            className={`p-2.5 rounded-xl border text-left flex flex-col justify-between transition-all cursor-pointer ${
+            className={`p-3 rounded-xl border text-left flex flex-col justify-between transition-all cursor-pointer group ${
               timelineEnabled
-                ? "border-rose-400 bg-rose-950/80 text-white shadow-xs"
-                : "border-white/10 bg-white/[0.03] text-rose-200/70 hover:bg-white/[0.08]"
+                ? "border-rose-400/40 bg-rose-950/40 text-white shadow-xs"
+                : "border-white/[0.08] bg-white/[0.03] text-white/70 hover:bg-white/[0.06] hover:border-white/[0.15]"
             }`}
           >
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-base">⏳</span>
-              <span className="text-[10px] font-sans font-medium">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-lg select-none">⏳</span>
+              <span
+                className={`text-[10px] font-ui px-1.5 py-0.5 rounded-md ${
+                  timelineEnabled
+                    ? "bg-rose-500/20 text-rose-300 font-medium"
+                    : "bg-white/[0.06] text-white/50"
+                }`}
+              >
                 {timelineEnabled ? "✓ Active" : "+ Add"}
               </span>
             </div>
-            <span className="text-xs font-serif font-medium">Timeline</span>
+            <div>
+              <span className="text-xs font-display font-medium block text-white">Our Story</span>
+              <span className="text-[10px] text-white/50 font-ui truncate block">Chronological journey</span>
+            </div>
           </button>
 
-          {/* Love Quiz Button */}
+          {/* 2. Love Quiz */}
           <button
             type="button"
             data-testid="toggle-module-quiz"
@@ -122,12 +172,18 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
                 toggleModule("quiz", {
                   title: "How Well Do You Know Us?",
                   subtitle: "A sweet little test of our story",
-                  completionMessage: "No matter what, my favorite place in the world is right next to you. ❤️",
+                  completionMessage:
+                    "No matter what, my favorite place in the world is right next to you. ❤️",
                   questions: [
                     {
                       id: "q1",
                       question: "Where was our very first date?",
-                      options: ["Cozy coffee shop", "Quiet park bench", "Dinner under fairy lights", "Spontaneous walk"],
+                      options: [
+                        "Cozy coffee shop",
+                        "Quiet park bench",
+                        "Dinner under fairy lights",
+                        "Spontaneous walk",
+                      ],
                       correctIndex: 0,
                       explanation: "You ordered your favorite coffee and I couldn't stop smiling.",
                     },
@@ -144,22 +200,31 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
                 setActiveMoment(activeMoment === "quiz" ? null : "quiz");
               }
             }}
-            className={`p-2.5 rounded-xl border text-left flex flex-col justify-between transition-all cursor-pointer ${
+            className={`p-3 rounded-xl border text-left flex flex-col justify-between transition-all cursor-pointer group ${
               quizEnabled
-                ? "border-rose-400 bg-rose-950/80 text-white shadow-xs"
-                : "border-white/10 bg-white/[0.03] text-rose-200/70 hover:bg-white/[0.08]"
+                ? "border-rose-400/40 bg-rose-950/40 text-white shadow-xs"
+                : "border-white/[0.08] bg-white/[0.03] text-white/70 hover:bg-white/[0.06] hover:border-white/[0.15]"
             }`}
           >
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-base">💘</span>
-              <span className="text-[10px] font-sans font-medium">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-lg select-none">💘</span>
+              <span
+                className={`text-[10px] font-ui px-1.5 py-0.5 rounded-md ${
+                  quizEnabled
+                    ? "bg-rose-500/20 text-rose-300 font-medium"
+                    : "bg-white/[0.06] text-white/50"
+                }`}
+              >
                 {quizEnabled ? "✓ Active" : "+ Add"}
               </span>
             </div>
-            <span className="text-xs font-serif font-medium">Love Quiz</span>
+            <div>
+              <span className="text-xs font-display font-medium block text-white">Love Quiz</span>
+              <span className="text-[10px] text-white/50 font-ui truncate block">Playful trivia</span>
+            </div>
           </button>
 
-          {/* Secret Note Button */}
+          {/* 3. Secret Note */}
           <button
             type="button"
             data-testid="toggle-module-secret"
@@ -175,22 +240,31 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
                 setActiveMoment(activeMoment === "secret" ? null : "secret");
               }
             }}
-            className={`p-2.5 rounded-xl border text-left flex flex-col justify-between transition-all cursor-pointer ${
+            className={`p-3 rounded-xl border text-left flex flex-col justify-between transition-all cursor-pointer group ${
               secretEnabled
-                ? "border-rose-400 bg-rose-950/80 text-white shadow-xs"
-                : "border-white/10 bg-white/[0.03] text-rose-200/70 hover:bg-white/[0.08]"
+                ? "border-rose-400/40 bg-rose-950/40 text-white shadow-xs"
+                : "border-white/[0.08] bg-white/[0.03] text-white/70 hover:bg-white/[0.06] hover:border-white/[0.15]"
             }`}
           >
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-base">🔐</span>
-              <span className="text-[10px] font-sans font-medium">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-lg select-none">🔐</span>
+              <span
+                className={`text-[10px] font-ui px-1.5 py-0.5 rounded-md ${
+                  secretEnabled
+                    ? "bg-rose-500/20 text-rose-300 font-medium"
+                    : "bg-white/[0.06] text-white/50"
+                }`}
+              >
                 {secretEnabled ? "✓ Active" : "+ Add"}
               </span>
             </div>
-            <span className="text-xs font-serif font-medium">Secret Note</span>
+            <div>
+              <span className="text-xs font-display font-medium block text-white">Secret Note</span>
+              <span className="text-[10px] text-white/50 font-ui truncate block">Private confession</span>
+            </div>
           </button>
 
-          {/* Open When Button */}
+          {/* 4. Open When Letters */}
           <button
             type="button"
             data-testid="toggle-module-openWhen"
@@ -204,13 +278,15 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
                       id: "env1",
                       title: "Open when you miss me",
                       context: "When we are apart",
-                      message: "Close your eyes and take a deep breath. Every second brings me closer to seeing you again.",
+                      message:
+                        "Close your eyes and take a deep breath. Every second brings me closer to seeing you again.",
                     },
                     {
                       id: "env2",
                       title: "Open when you need a smile",
                       context: "For hard days",
-                      message: "Remember that you are so deeply loved, cherished, and admired. You light up my world.",
+                      message:
+                        "Remember that you are so deeply loved, cherished, and admired. You light up my world.",
                     },
                   ],
                 });
@@ -218,44 +294,66 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
                 setActiveMoment(activeMoment === "openWhen" ? null : "openWhen");
               }
             }}
-            className={`p-2.5 rounded-xl border text-left flex flex-col justify-between transition-all cursor-pointer ${
+            className={`p-3 rounded-xl border text-left flex flex-col justify-between transition-all cursor-pointer group ${
               openWhenEnabled
-                ? "border-rose-400 bg-rose-950/80 text-white shadow-xs"
-                : "border-white/10 bg-white/[0.03] text-rose-200/70 hover:bg-white/[0.08]"
+                ? "border-rose-400/40 bg-rose-950/40 text-white shadow-xs"
+                : "border-white/[0.08] bg-white/[0.03] text-white/70 hover:bg-white/[0.06] hover:border-white/[0.15]"
             }`}
           >
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-base">💌</span>
-              <span className="text-[10px] font-sans font-medium">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-lg select-none">💌</span>
+              <span
+                className={`text-[10px] font-ui px-1.5 py-0.5 rounded-md ${
+                  openWhenEnabled
+                    ? "bg-rose-500/20 text-rose-300 font-medium"
+                    : "bg-white/[0.06] text-white/50"
+                }`}
+              >
                 {openWhenEnabled ? "✓ Active" : "+ Add"}
               </span>
             </div>
-            <span className="text-xs font-serif font-medium">Open When</span>
+            <div>
+              <span className="text-xs font-display font-medium block text-white">Open When</span>
+              <span className="text-[10px] text-white/50 font-ui truncate block">Future envelopes</span>
+            </div>
           </button>
         </div>
       </div>
 
-      {/* Progressive Disclosure Editor Details */}
+      {/* Progressive Disclosure Moment Editors */}
 
       {/* 1. Timeline Form */}
       {timelineEnabled && activeMoment === "timeline" && (
-        <div data-testid="timeline-module-editor" className="p-4 rounded-xl bg-rose-950/40 border border-rose-500/30 space-y-4 animate-fadeIn">
-          <div className="flex items-center justify-between border-b border-rose-500/20 pb-2">
-            <span className="text-xs font-serif font-medium text-rose-200 flex items-center gap-1.5">
-              <span>⏳</span> Configure Timeline of Us
-            </span>
+        <div
+          data-testid="timeline-module-editor"
+          className="p-5 rounded-2xl bg-white/[0.03] border border-rose-500/30 space-y-4 animate-fadeIn"
+        >
+          <div className="flex items-center justify-between border-b border-white/[0.08] pb-3">
+            <div className="flex items-center gap-2">
+              <span className="text-base">⏳</span>
+              <div>
+                <span className="text-sm font-display font-medium text-white block">
+                  Our Journey Timeline
+                </span>
+                <span className="text-[11px] text-white/50 font-ui">
+                  Chronological chapters of your shared milestones
+                </span>
+              </div>
+            </div>
             <button
               type="button"
               onClick={() => toggleModule("timeline", {})}
-              className="text-[10px] text-rose-400 hover:text-rose-300 underline cursor-pointer"
+              className="text-[11px] text-rose-400 hover:text-rose-300 underline font-ui cursor-pointer"
             >
-              Disable Module
+              Disable Moment
             </button>
           </div>
 
           <div className="space-y-3">
             <div>
-              <label className="text-[11px] text-rose-200/70 font-medium block mb-1">Timeline Title</label>
+              <label className="text-[11px] text-white/70 font-ui font-medium block mb-1">
+                Timeline Title
+              </label>
               <input
                 type="text"
                 data-testid="input-timeline-title"
@@ -266,14 +364,16 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
                     timeline: { ...prev.timeline, title: e.target.value },
                   }))
                 }
-                className="w-full text-xs px-3 py-2 rounded-lg bg-black/30 border border-rose-500/30 text-white focus:outline-none focus:border-rose-400"
+                className="w-full text-xs px-3.5 py-2.5 rounded-xl bg-black/40 border border-white/[0.12] text-white focus:outline-none focus:border-rose-400 font-ui"
               />
             </div>
 
             {/* Milestones List */}
-            <div className="space-y-2">
+            <div className="space-y-2.5 pt-1">
               <div className="flex items-center justify-between">
-                <span className="text-[11px] text-rose-200/70 font-medium">Milestones</span>
+                <span className="text-[11px] text-white/70 font-ui font-medium">
+                  Milestones ({modules.timeline.items?.length || 0})
+                </span>
                 <button
                   type="button"
                   data-testid="timeline-add-item"
@@ -288,22 +388,27 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
                             id: `m-${Date.now()}`,
                             title: "New Cherished Moment",
                             date: "A special date",
-                            description: "Write what made this moment unforgettable...",
+                            description: "Write what made this moment unforgettable…",
                           },
                         ],
                       },
                     }))
                   }
-                  className="text-[10px] px-2 py-0.5 rounded bg-rose-900/60 hover:bg-rose-800 text-rose-200 border border-rose-500/30 cursor-pointer"
+                  className="text-[11px] px-2.5 py-1 rounded-lg bg-white/[0.08] hover:bg-white/[0.15] text-white border border-white/[0.1] font-ui transition-colors cursor-pointer"
                 >
                   + Add Milestone
                 </button>
               </div>
 
               {(modules.timeline.items || []).map((item: any, idx: number) => (
-                <div key={item.id || idx} className="p-3 rounded-lg bg-black/20 border border-white/5 space-y-2">
+                <div
+                  key={item.id || idx}
+                  className="p-3.5 rounded-xl bg-black/30 border border-white/[0.06] space-y-2"
+                >
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] text-rose-300 font-mono">Milestone #{idx + 1}</span>
+                    <span className="text-[10px] text-rose-300 font-mono">
+                      Milestone #{idx + 1}
+                    </span>
                     <button
                       type="button"
                       onClick={() =>
@@ -315,7 +420,7 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
                           },
                         }))
                       }
-                      className="text-[10px] text-rose-400 hover:text-rose-200"
+                      className="text-[10px] text-rose-400/80 hover:text-rose-300 font-ui"
                     >
                       Remove ✕
                     </button>
@@ -332,7 +437,7 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
                           return { ...prev, timeline: { ...prev.timeline, items } };
                         })
                       }
-                      className="text-xs px-2 py-1.5 rounded bg-black/30 border border-white/10 text-white"
+                      className="text-xs px-2.5 py-2 rounded-lg bg-black/40 border border-white/[0.1] text-white font-ui"
                     />
                     <input
                       type="text"
@@ -345,12 +450,12 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
                           return { ...prev, timeline: { ...prev.timeline, items } };
                         })
                       }
-                      className="text-xs px-2 py-1.5 rounded bg-black/30 border border-white/10 text-white"
+                      className="text-xs px-2.5 py-2 rounded-lg bg-black/40 border border-white/[0.1] text-white font-ui"
                     />
                   </div>
                   <textarea
                     rows={2}
-                    placeholder="Describe this memory..."
+                    placeholder="Describe this memory…"
                     value={item.description}
                     onChange={(e) =>
                       onChange((prev) => {
@@ -359,7 +464,7 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
                         return { ...prev, timeline: { ...prev.timeline, items } };
                       })
                     }
-                    className="w-full text-xs px-2 py-1.5 rounded bg-black/30 border border-white/10 text-white resize-none"
+                    className="w-full text-xs px-2.5 py-2 rounded-lg bg-black/40 border border-white/[0.1] text-white resize-none font-ui"
                   />
                 </div>
               ))}
@@ -370,23 +475,36 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
 
       {/* 2. Love Quiz Form */}
       {quizEnabled && activeMoment === "quiz" && (
-        <div data-testid="quiz-module-editor" className="p-4 rounded-xl bg-rose-950/40 border border-rose-500/30 space-y-4 animate-fadeIn">
-          <div className="flex items-center justify-between border-b border-rose-500/20 pb-2">
-            <span className="text-xs font-serif font-medium text-rose-200 flex items-center gap-1.5">
-              <span>💘</span> Configure Love Quiz
-            </span>
+        <div
+          data-testid="quiz-module-editor"
+          className="p-5 rounded-2xl bg-white/[0.03] border border-rose-500/30 space-y-4 animate-fadeIn"
+        >
+          <div className="flex items-center justify-between border-b border-white/[0.08] pb-3">
+            <div className="flex items-center gap-2">
+              <span className="text-base">💘</span>
+              <div>
+                <span className="text-sm font-display font-medium text-white block">
+                  Love Quiz Experience
+                </span>
+                <span className="text-[11px] text-white/50 font-ui">
+                  Playful questions celebrating your favorite inside jokes and memories
+                </span>
+              </div>
+            </div>
             <button
               type="button"
               onClick={() => toggleModule("quiz", {})}
-              className="text-[10px] text-rose-400 hover:text-rose-300 underline cursor-pointer"
+              className="text-[11px] text-rose-400 hover:text-rose-300 underline font-ui cursor-pointer"
             >
-              Disable Module
+              Disable Moment
             </button>
           </div>
 
           <div className="space-y-3">
             <div>
-              <label className="text-[11px] text-rose-200/70 font-medium block mb-1">Quiz Title</label>
+              <label className="text-[11px] text-white/70 font-ui font-medium block mb-1">
+                Quiz Title
+              </label>
               <input
                 type="text"
                 data-testid="input-quiz-title"
@@ -397,12 +515,14 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
                     quiz: { ...prev.quiz, title: e.target.value },
                   }))
                 }
-                className="w-full text-xs px-3 py-2 rounded-lg bg-black/30 border border-rose-500/30 text-white focus:outline-none focus:border-rose-400"
+                className="w-full text-xs px-3.5 py-2.5 rounded-xl bg-black/40 border border-white/[0.12] text-white focus:outline-none focus:border-rose-400 font-ui"
               />
             </div>
 
             <div>
-              <label className="text-[11px] text-rose-200/70 font-medium block mb-1">Completion Message</label>
+              <label className="text-[11px] text-white/70 font-ui font-medium block mb-1">
+                Completion Message
+              </label>
               <textarea
                 rows={2}
                 value={modules.quiz.completionMessage || ""}
@@ -412,14 +532,16 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
                     quiz: { ...prev.quiz, completionMessage: e.target.value },
                   }))
                 }
-                className="w-full text-xs px-3 py-2 rounded-lg bg-black/30 border border-rose-500/30 text-white resize-none"
+                className="w-full text-xs px-3.5 py-2.5 rounded-xl bg-black/40 border border-white/[0.12] text-white resize-none font-ui"
               />
             </div>
 
             {/* Questions List */}
-            <div className="space-y-3">
+            <div className="space-y-3 pt-1">
               <div className="flex items-center justify-between">
-                <span className="text-[11px] text-rose-200/70 font-medium">Questions ({modules.quiz.questions?.length || 0})</span>
+                <span className="text-[11px] text-white/70 font-ui font-medium">
+                  Questions ({modules.quiz.questions?.length || 0})
+                </span>
                 <button
                   type="button"
                   data-testid="quiz-add-question"
@@ -433,7 +555,12 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
                           {
                             id: `q-${Date.now()}`,
                             question: "What is my absolute favorite thing about you?",
-                            options: ["Your smile", "Your laugh", "Your kindness", "All of the above"],
+                            options: [
+                              "Your smile",
+                              "Your laugh",
+                              "Your kindness",
+                              "All of the above",
+                            ],
                             correctIndex: 3,
                             explanation: "Everything about you makes my heart skip a beat.",
                           },
@@ -441,16 +568,21 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
                       },
                     }))
                   }
-                  className="text-[10px] px-2 py-0.5 rounded bg-rose-900/60 hover:bg-rose-800 text-rose-200 border border-rose-500/30 cursor-pointer"
+                  className="text-[11px] px-2.5 py-1 rounded-lg bg-white/[0.08] hover:bg-white/[0.15] text-white border border-white/[0.1] font-ui transition-colors cursor-pointer"
                 >
                   + Add Question
                 </button>
               </div>
 
               {(modules.quiz.questions || []).map((q: any, qIdx: number) => (
-                <div key={q.id || qIdx} className="p-3 rounded-lg bg-black/20 border border-white/5 space-y-2">
+                <div
+                  key={q.id || qIdx}
+                  className="p-3.5 rounded-xl bg-black/30 border border-white/[0.06] space-y-2"
+                >
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] text-rose-300 font-mono">Question #{qIdx + 1}</span>
+                    <span className="text-[10px] text-rose-300 font-mono">
+                      Question #{qIdx + 1}
+                    </span>
                     <button
                       type="button"
                       onClick={() =>
@@ -462,7 +594,7 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
                           },
                         }))
                       }
-                      className="text-[10px] text-rose-400 hover:text-rose-200"
+                      className="text-[10px] text-rose-400/80 hover:text-rose-300 font-ui"
                     >
                       Remove ✕
                     </button>
@@ -479,12 +611,14 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
                         return { ...prev, quiz: { ...prev.quiz, questions } };
                       })
                     }
-                    className="w-full text-xs px-2 py-1.5 rounded bg-black/30 border border-white/10 text-white"
+                    className="w-full text-xs px-2.5 py-2 rounded-lg bg-black/40 border border-white/[0.1] text-white font-ui"
                   />
 
                   {/* Options */}
                   <div className="space-y-1.5 pt-1">
-                    <span className="text-[10px] text-white/50 block">Options (check the correct one):</span>
+                    <span className="text-[10px] text-white/50 block font-ui">
+                      Options (select the correct answer):
+                    </span>
                     {(q.options || []).map((opt: string, optIdx: number) => (
                       <div key={optIdx} className="flex items-center gap-2">
                         <input
@@ -510,7 +644,7 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
                               return { ...prev, quiz: { ...prev.quiz, questions } };
                             })
                           }
-                          className="flex-1 text-xs px-2 py-1 rounded bg-black/30 border border-white/10 text-white"
+                          className="flex-1 text-xs px-2 py-1.5 rounded-lg bg-black/40 border border-white/[0.1] text-white font-ui"
                         />
                       </div>
                     ))}
@@ -527,7 +661,7 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
                         return { ...prev, quiz: { ...prev.quiz, questions } };
                       })
                     }
-                    className="w-full text-xs px-2 py-1 rounded bg-black/30 border border-white/10 text-white/80 italic"
+                    className="w-full text-xs px-2.5 py-1.5 rounded-lg bg-black/40 border border-white/[0.1] text-white/80 italic font-ui"
                   />
                 </div>
               ))}
@@ -538,23 +672,36 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
 
       {/* 3. Secret Note Form */}
       {secretEnabled && activeMoment === "secret" && (
-        <div data-testid="secret-module-editor" className="p-4 rounded-xl bg-rose-950/40 border border-rose-500/30 space-y-4 animate-fadeIn">
-          <div className="flex items-center justify-between border-b border-rose-500/20 pb-2">
-            <span className="text-xs font-serif font-medium text-rose-200 flex items-center gap-1.5">
-              <span>🔐</span> Configure Secret Note
-            </span>
+        <div
+          data-testid="secret-module-editor"
+          className="p-5 rounded-2xl bg-white/[0.03] border border-rose-500/30 space-y-4 animate-fadeIn"
+        >
+          <div className="flex items-center justify-between border-b border-white/[0.08] pb-3">
+            <div className="flex items-center gap-2">
+              <span className="text-base">🔐</span>
+              <div>
+                <span className="text-sm font-display font-medium text-white block">
+                  Secret Note / Private Confession
+                </span>
+                <span className="text-[11px] text-white/50 font-ui">
+                  Protected by privacy boundary — invisible until tapped by your partner
+                </span>
+              </div>
+            </div>
             <button
               type="button"
               onClick={() => toggleModule("secret", {})}
-              className="text-[10px] text-rose-400 hover:text-rose-300 underline cursor-pointer"
+              className="text-[11px] text-rose-400 hover:text-rose-300 underline font-ui cursor-pointer"
             >
-              Disable Module
+              Disable Moment
             </button>
           </div>
 
           <div className="space-y-3">
             <div>
-              <label className="text-[11px] text-rose-200/70 font-medium block mb-1">Trigger Prompt</label>
+              <label className="text-[11px] text-white/70 font-ui font-medium block mb-1">
+                Trigger Prompt
+              </label>
               <input
                 type="text"
                 data-testid="input-secret-prompt"
@@ -565,18 +712,18 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
                     secret: { ...prev.secret, prompt: e.target.value },
                   }))
                 }
-                className="w-full text-xs px-3 py-2 rounded-lg bg-black/30 border border-rose-500/30 text-white focus:outline-none focus:border-rose-400"
+                className="w-full text-xs px-3.5 py-2.5 rounded-xl bg-black/40 border border-white/[0.12] text-white focus:outline-none focus:border-rose-400 font-ui"
               />
             </div>
 
             <div>
-              <label className="text-[11px] text-rose-200/70 font-medium block mb-1">
+              <label className="text-[11px] text-white/70 font-ui font-medium block mb-1">
                 Secret Message (Protected by Privacy Boundary)
               </label>
               <textarea
                 rows={3}
                 data-testid="input-secret-content"
-                placeholder="Write your secret message here. It will never appear in public HTML until revealed."
+                placeholder="Write your secret confession here. It will never appear in public HTML until revealed."
                 value={modules.secret.secretContent || ""}
                 onChange={(e) =>
                   onChange((prev) => ({
@@ -584,10 +731,11 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
                     secret: { ...prev.secret, secretContent: e.target.value },
                   }))
                 }
-                className="w-full text-xs px-3 py-2 rounded-lg bg-black/30 border border-rose-500/30 text-white resize-none focus:outline-none focus:border-rose-400"
+                className="w-full text-xs px-3.5 py-2.5 rounded-xl bg-black/40 border border-white/[0.12] text-white resize-none focus:outline-none focus:border-rose-400 font-ui"
               />
-              <p className="text-[10px] text-rose-300/60 font-light mt-1">
-                🔒 Privacy verified: This content is stripped from public HTML and only fetched upon recipient tap.
+              <p className="text-[10px] text-rose-300/60 font-ui font-light mt-1">
+                🔒 Privacy verified: This content is stripped from public HTML props and only loaded
+                upon recipient tap.
               </p>
             </div>
           </div>
@@ -596,23 +744,36 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
 
       {/* 4. Open When Form */}
       {openWhenEnabled && activeMoment === "openWhen" && (
-        <div data-testid="open-when-module-editor" className="p-4 rounded-xl bg-rose-950/40 border border-rose-500/30 space-y-4 animate-fadeIn">
-          <div className="flex items-center justify-between border-b border-rose-500/20 pb-2">
-            <span className="text-xs font-serif font-medium text-rose-200 flex items-center gap-1.5">
-              <span>💌</span> Configure Open When Letters
-            </span>
+        <div
+          data-testid="open-when-module-editor"
+          className="p-5 rounded-2xl bg-white/[0.03] border border-rose-500/30 space-y-4 animate-fadeIn"
+        >
+          <div className="flex items-center justify-between border-b border-white/[0.08] pb-3">
+            <div className="flex items-center gap-2">
+              <span className="text-base">💌</span>
+              <div>
+                <span className="text-sm font-display font-medium text-white block">
+                  Open When Letters
+                </span>
+                <span className="text-[11px] text-white/50 font-ui">
+                  Digital sealed envelopes your partner can open on special future days
+                </span>
+              </div>
+            </div>
             <button
               type="button"
               onClick={() => toggleModule("openWhen", {})}
-              className="text-[10px] text-rose-400 hover:text-rose-300 underline cursor-pointer"
+              className="text-[11px] text-rose-400 hover:text-rose-300 underline font-ui cursor-pointer"
             >
-              Disable Module
+              Disable Moment
             </button>
           </div>
 
           <div className="space-y-3">
             <div>
-              <label className="text-[11px] text-rose-200/70 font-medium block mb-1">Section Title</label>
+              <label className="text-[11px] text-white/70 font-ui font-medium block mb-1">
+                Section Title
+              </label>
               <input
                 type="text"
                 value={modules.openWhen.title || ""}
@@ -622,14 +783,16 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
                     openWhen: { ...prev.openWhen, title: e.target.value },
                   }))
                 }
-                className="w-full text-xs px-3 py-2 rounded-lg bg-black/30 border border-rose-500/30 text-white focus:outline-none focus:border-rose-400"
+                className="w-full text-xs px-3.5 py-2.5 rounded-xl bg-black/40 border border-white/[0.12] text-white focus:outline-none focus:border-rose-400 font-ui"
               />
             </div>
 
             {/* Envelopes */}
-            <div className="space-y-2">
+            <div className="space-y-2.5 pt-1">
               <div className="flex items-center justify-between">
-                <span className="text-[11px] text-rose-200/70 font-medium">Envelopes ({modules.openWhen.envelopes?.length || 0})</span>
+                <span className="text-[11px] text-white/70 font-ui font-medium">
+                  Envelopes ({modules.openWhen.envelopes?.length || 0})
+                </span>
                 <button
                   type="button"
                   data-testid="open-when-add-envelope"
@@ -650,16 +813,21 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
                       },
                     }))
                   }
-                  className="text-[10px] px-2 py-0.5 rounded bg-rose-900/60 hover:bg-rose-800 text-rose-200 border border-rose-500/30 cursor-pointer"
+                  className="text-[11px] px-2.5 py-1 rounded-lg bg-white/[0.08] hover:bg-white/[0.15] text-white border border-white/[0.1] font-ui transition-colors cursor-pointer"
                 >
                   + Add Envelope
                 </button>
               </div>
 
               {(modules.openWhen.envelopes || []).map((env: any, idx: number) => (
-                <div key={env.id || idx} className="p-3 rounded-lg bg-black/20 border border-white/5 space-y-2">
+                <div
+                  key={env.id || idx}
+                  className="p-3.5 rounded-xl bg-black/30 border border-white/[0.06] space-y-2"
+                >
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] text-rose-300 font-mono">Letter #{idx + 1}</span>
+                    <span className="text-[10px] text-rose-300 font-mono">
+                      Envelope #{idx + 1}
+                    </span>
                     <button
                       type="button"
                       onClick={() =>
@@ -671,7 +839,7 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
                           },
                         }))
                       }
-                      className="text-[10px] text-rose-400 hover:text-rose-200"
+                      className="text-[10px] text-rose-400/80 hover:text-rose-300 font-ui"
                     >
                       Remove ✕
                     </button>
@@ -679,7 +847,7 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
                   <div className="grid grid-cols-2 gap-2">
                     <input
                       type="text"
-                      placeholder="Title (e.g. Open when...)"
+                      placeholder="Title (e.g. Open when…)"
                       value={env.title}
                       onChange={(e) =>
                         onChange((prev) => {
@@ -688,7 +856,7 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
                           return { ...prev, openWhen: { ...prev.openWhen, envelopes } };
                         })
                       }
-                      className="text-xs px-2 py-1.5 rounded bg-black/30 border border-white/10 text-white"
+                      className="text-xs px-2.5 py-2 rounded-lg bg-black/40 border border-white/[0.1] text-white font-ui"
                     />
                     <input
                       type="text"
@@ -701,12 +869,12 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
                           return { ...prev, openWhen: { ...prev.openWhen, envelopes } };
                         })
                       }
-                      className="text-xs px-2 py-1.5 rounded bg-black/30 border border-white/10 text-white"
+                      className="text-xs px-2.5 py-2 rounded-lg bg-black/40 border border-white/[0.1] text-white font-ui"
                     />
                   </div>
                   <textarea
                     rows={2}
-                    placeholder="Letter message inside this envelope..."
+                    placeholder="Letter message inside this envelope…"
                     value={env.message}
                     onChange={(e) =>
                       onChange((prev) => {
@@ -715,7 +883,7 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
                         return { ...prev, openWhen: { ...prev.openWhen, envelopes } };
                       })
                     }
-                    className="w-full text-xs px-2 py-1.5 rounded bg-black/30 border border-white/10 text-white resize-none"
+                    className="w-full text-xs px-2.5 py-2 rounded-lg bg-black/40 border border-white/[0.1] text-white resize-none font-ui"
                   />
                 </div>
               ))}

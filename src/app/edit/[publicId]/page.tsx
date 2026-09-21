@@ -18,13 +18,15 @@ import {
   CURATED_SEALS,
   normalizeValentineDecor,
 } from "@/types/decor";
+import { getTemplateDefinition } from "@/templates/registry";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { AtmosphericGlow } from "@/components/ui/AtmosphericGlow";
+import { StudioHeader, SaveStatus } from "@/components/studio/StudioHeader";
+import { WorldSelectorModal } from "@/components/studio/WorldSelectorModal";
+import { ContentReadinessBar } from "@/components/studio/ContentReadinessBar";
 import { ModuleManager } from "@/modules/editor/ModuleManager";
-
-type SaveStatus = "idle" | "saving" | "saved" | "error" | "conflict" | "offline";
 
 export default function EditExperiencePage() {
   const params = useParams<{ publicId: string }>();
@@ -52,15 +54,22 @@ export default function EditExperiencePage() {
   const [lastSavedTime, setLastSavedTime] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [authError, setAuthError] = useState<string | null>(null);
+
+  // Modals & Navigation
+  const [worldModalOpen, setWorldModalOpen] = useState(false);
   const [publishModalOpen, setPublishModalOpen] = useState(false);
   const [publishErrors, setPublishErrors] = useState<string[]>([]);
   const [isPublishing, setIsPublishing] = useState(false);
   const [publicUrl, setPublicUrl] = useState<string>("");
   const [copied, setCopied] = useState(false);
   const [mobileTab, setMobileTab] = useState<"form" | "preview">("form");
+  const [activeSection, setActiveSection] = useState<"world" | "story" | "moments" | "mood" | "preview">("story");
+  const [showAdvancedStory, setShowAdvancedStory] = useState(false);
 
   const configRef = useRef(config);
   configRef.current = config;
+  const templateMetaRef = useRef(templateMeta);
+  templateMetaRef.current = templateMeta;
   const revisionRef = useRef(revision);
   revisionRef.current = revision;
   const isDirtyRef = useRef(false);
@@ -90,16 +99,11 @@ export default function EditExperiencePage() {
         const data = await res.json();
         if (isMounted) {
           if (data.templateId) {
-            const templateName =
-              data.templateId === "cloud-nine"
-                ? "Cloud Nine"
-                : data.templateId === "kage"
-                ? "Kage"
-                : "Midnight Rose";
+            const def = getTemplateDefinition(data.templateId, data.templateVersion || "v1");
             setTemplateMeta({
               id: data.templateId,
               version: data.templateVersion || "v1",
-              name: templateName,
+              name: def?.name || data.templateId,
             });
           }
           if (data.draftConfig && !isDirtyRef.current) {
@@ -149,6 +153,8 @@ export default function EditExperiencePage() {
           body: JSON.stringify({
             draftConfig: configRef.current,
             baseRevision: revisionRef.current,
+            templateId: templateMetaRef.current.id,
+            templateVersion: templateMetaRef.current.version,
           }),
           keepalive,
         });
@@ -207,7 +213,28 @@ export default function EditExperiencePage() {
     }));
   };
 
-  // 4. Lifecycle Flushes (visibilitychange, pagehide, beforeunload)
+  // 4. Non-Destructive World Selection
+  const handleSelectWorld = (newTemplateId: string, newTemplateVersion: string) => {
+    const def = getTemplateDefinition(newTemplateId, newTemplateVersion);
+    const newMeta = {
+      id: newTemplateId,
+      version: newTemplateVersion,
+      name: def?.name || newTemplateId,
+    };
+    setTemplateMeta(newMeta);
+    templateMetaRef.current = newMeta;
+    isDirtyRef.current = true;
+    setSaveStatus("idle");
+
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+    debounceTimerRef.current = setTimeout(() => {
+      performSave();
+    }, 500);
+  };
+
+  // 5. Lifecycle Flushes (visibilitychange, pagehide, beforeunload)
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.visibilityState === "hidden" && isDirtyRef.current) {
@@ -242,7 +269,7 @@ export default function EditExperiencePage() {
     };
   }, [performSave]);
 
-  // 5. Handle Publish Action
+  // 6. Handle Publish Action
   const handlePublish = async () => {
     if (saveStatus === "saving") return;
 
@@ -333,17 +360,23 @@ export default function EditExperiencePage() {
     }
   };
 
+  const activeMomentsCount = Object.values(config.modules || {}).filter(
+    (m: any) => m && m.enabled
+  ).length;
+
+  const currentTemplateDef = getTemplateDefinition(templateMeta.id, templateMeta.version);
+
   // Auth Error State
   if (authError) {
     return (
-      <main className="flex min-h-[100dvh] flex-col items-center justify-center p-6 text-center bg-[#07070A] text-[#FAF8F5]">
+      <main className="flex min-h-[100dvh] flex-col items-center justify-center p-6 text-center bg-[#0A090C] text-[#FAF8F5]">
         <AtmosphericGlow theme="crimson-rose" intensity="subtle" />
-        <Card variant="glass" className="max-w-md w-full p-8 border-rose-500/20 text-center space-y-4 relative z-10">
-          <div className="w-14 h-14 mx-auto rounded-full bg-rose-950/60 border border-rose-800/40 flex items-center justify-center text-2xl">
+        <Card variant="glass" className="max-w-md w-full p-8 border-white/[0.12] text-center space-y-4 relative z-10 bg-[#121017]">
+          <div className="w-14 h-14 mx-auto rounded-full bg-white/[0.06] border border-white/[0.12] flex items-center justify-center text-2xl">
             🔒
           </div>
-          <h1 className="text-xl font-serif font-medium text-white">Edit Access Unavailable</h1>
-          <p className="text-sm text-ivory-300/80 font-light leading-relaxed">{authError}</p>
+          <h1 className="text-xl font-display font-medium text-white">Edit Access Unavailable</h1>
+          <p className="text-sm text-white/70 font-ui font-light leading-relaxed">{authError}</p>
           <div className="pt-2">
             <Link href="/create">
               <Button size="md" variant="primary">
@@ -357,314 +390,340 @@ export default function EditExperiencePage() {
   }
 
   return (
-    <div className="min-h-[100dvh] flex flex-col bg-[#07070A] text-[#FAF8F5]">
+    <div className="min-h-[100dvh] flex flex-col bg-[#0A090C] text-[#FAF8F5] font-ui antialiased">
       {/* 1. Mandatory Owner Reminder Banner */}
       <div
         data-testid="browser-storage-reminder"
-        className="bg-[#240614] border-b border-rose-500/20 px-4 py-2 text-center text-xs text-rose-200 font-sans flex items-center justify-center gap-2"
+        className="bg-[#121017] border-b border-white/[0.08] px-4 py-2 text-center text-xs text-white/75 font-ui flex items-center justify-center gap-2"
       >
         <span>💌</span>
         <span>
-          <strong>Edit access is stored in this browser.</strong> Keep this browser/device available if you want to edit this Valentine later.
+          <strong className="text-white">Edit access is stored in this browser.</strong> Keep this device available if you want to edit this Valentine later.
         </span>
       </div>
 
-      {/* Studio Navigation Bar */}
-      <header className="px-4 sm:px-6 py-3.5 border-b border-rose-500/20 bg-[#16040D]/90 backdrop-blur-md flex items-center justify-between z-20">
-        <div className="flex items-center gap-3">
-          <Link href="/" className="flex items-center gap-2 text-white hover:text-rose-400 transition-colors">
-            <span className="text-lg">💌</span>
-            <span className="font-serif font-medium tracking-wide hidden sm:inline">Valentino Writing Desk</span>
-          </Link>
-          <span className="text-white/20 hidden sm:inline">/</span>
-          <span className="text-xs text-rose-200/80 font-sans tracking-wide">
-            {templateMeta.name} <span className="text-white/40">({templateMeta.version})</span>
-          </span>
-        </div>
+      {/* 2. Neutral Studio Header */}
+      <StudioHeader
+        partnerName={config.partnerName}
+        templateName={templateMeta.name}
+        templateVersion={templateMeta.version}
+        saveStatus={saveStatus}
+        lastSavedTime={lastSavedTime}
+        isPublishing={isPublishing}
+        mobileTab={mobileTab}
+        onChangeWorldClick={() => setWorldModalOpen(true)}
+        onPublishClick={handlePublish}
+        onMobileTabChange={setMobileTab}
+      />
 
-        {/* Center: Save Status Pill */}
-        <div
-          data-testid="save-status-pill"
-          data-status={saveStatus}
-          className="text-xs px-3 py-1 rounded-full border border-rose-500/20 bg-rose-950/40 flex items-center gap-1.5 font-sans"
-        >
-          {saveStatus === "saving" && (
-            <span className="text-amber-400 animate-pulse flex items-center gap-1.5">
-              <span className="inline-block w-2 h-2 rounded-full bg-amber-400 animate-ping" />
-              Saving...
-            </span>
-          )}
-          {saveStatus === "saved" && (
-            <span className="text-emerald-400 flex items-center gap-1.5">
-              <span>✓</span> Saved {lastSavedTime ? `at ${lastSavedTime}` : ""}
-            </span>
-          )}
-          {saveStatus === "error" && <span className="text-rose-400">⚠️ Save failed</span>}
-          {saveStatus === "conflict" && <span className="text-rose-400">⚠️ Draft conflict</span>}
-          {saveStatus === "offline" && <span className="text-amber-400">⚡ Offline</span>}
-          {saveStatus === "idle" && <span className="text-white/40">● Unsaved edits</span>}
-        </div>
-
-        {/* Right: Actions */}
-        <div className="flex items-center gap-2">
-          {/* Mobile view toggle */}
-          <div className="flex md:hidden rounded-lg bg-white/5 p-0.5 border border-white/10 text-xs">
-            <button
-              type="button"
-              data-testid="mobile-tab-edit"
-              onClick={() => setMobileTab("form")}
-              className={`px-2.5 py-1 rounded-md transition-colors ${
-                mobileTab === "form" ? "bg-rose-600 text-white" : "text-ivory-300"
-              }`}
-            >
-              Edit
-            </button>
-            <button
-              type="button"
-              data-testid="mobile-tab-preview"
-              onClick={() => setMobileTab("preview")}
-              className={`px-2.5 py-1 rounded-md transition-colors ${
-                mobileTab === "preview" ? "bg-rose-600 text-white" : "text-ivory-300"
-              }`}
-            >
-              Preview
-            </button>
-          </div>
-
-
-          <Button
-            type="button"
-            variant="primary"
-            size="sm"
-            disabled={saveStatus === "saving" || isPublishing}
-            onClick={handlePublish}
-            className="hidden sm:inline-flex text-xs px-4 rounded-full shadow-lg shadow-rose-950/60"
-          >
-            {isPublishing ? "Publishing..." : "Publish Valentine 💌"}
-          </Button>
-        </div>
-      </header>
-
-      {/* Editor Body */}
+      {/* 3. Studio Workspace: Split Studio Editor & Live Canvas */}
       <div className="flex-1 flex flex-col md:flex-row overflow-hidden relative">
-        {/* Left Pane: Form Editor */}
+        {/* Left Pane: Studio Creative Workbench */}
         <div
-          className={`w-full md:w-[480px] lg:w-[540px] flex flex-col border-b md:border-b-0 md:border-r border-rose-500/15 bg-[#180510]/85 overflow-y-auto ${
+          className={`w-full md:w-[500px] lg:w-[560px] flex flex-col border-b md:border-b-0 md:border-r border-white/[0.08] bg-[#0E0C12] overflow-y-auto ${
             mobileTab === "preview" ? "hidden md:flex" : "flex"
           }`}
         >
-          <div className="p-6 sm:p-8 space-y-8">
-            <div className="space-y-1">
-              <h1 className="text-xl sm:text-2xl font-serif font-medium text-white">
-                Personalize Your Note
-              </h1>
-              <p className="text-xs text-rose-200/70 font-light">
-                Write freely from the heart. Changes are saved automatically.
-              </p>
-            </div>
+          {/* Non-linear Navigation: Creative Stage Tabs */}
+          <div className="sticky top-0 z-10 bg-[#0E0C12]/95 backdrop-blur-md px-6 py-2.5 border-b border-white/[0.08] flex items-center gap-1.5 overflow-x-auto scrollbar-none">
+            {[
+              { id: "world", label: "1. World", icon: "🌐" },
+              { id: "story", label: "2. Story", icon: "✍️" },
+              { id: "moments", label: "3. Moments", icon: "✨" },
+              { id: "mood", label: "4. Mood & Decor", icon: "🎨" },
+            ].map((stage) => (
+              <button
+                key={stage.id}
+                type="button"
+                onClick={() => {
+                  setActiveSection(stage.id as any);
+                  const el = document.getElementById(`section-${stage.id}`);
+                  if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+                }}
+                className={`px-3 py-1.5 rounded-lg text-xs font-ui whitespace-nowrap transition-all flex items-center gap-1.5 cursor-pointer ${
+                  activeSection === stage.id
+                    ? "bg-white/[0.1] text-white font-medium shadow-xs"
+                    : "text-white/50 hover:text-white/80 hover:bg-white/[0.04]"
+                }`}
+              >
+                <span>{stage.icon}</span>
+                <span>{stage.label}</span>
+              </button>
+            ))}
+          </div>
 
-            <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
-              {/* Question 1: Who is this for? */}
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <label
-                    htmlFor="partnerName"
-                    className="block text-xs uppercase tracking-wider text-rose-200/80 font-medium"
-                  >
-                    1. Who is this for? <span className="text-rose-400">*</span>
-                  </label>
-                  <span className="text-[10px] text-ivory-400">
-                    {(config.partnerName || "").length} / 60
-                  </span>
-                </div>
-                <input
-                  id="partnerName"
-                  data-testid="input-partner-name"
-                  type="text"
-                  maxLength={60}
-                  placeholder="e.g. Maya, Ananya, Alex"
-                  value={config.partnerName || ""}
-                  onChange={(e) =>
-                    handleConfigChange((prev) => ({
-                      ...prev,
-                      partnerName: e.target.value,
-                    }))
-                  }
-                  className="w-full px-4 py-3 rounded-xl bg-[#240818]/60 border border-white/[0.12] text-white placeholder-white/25 focus:outline-none focus:border-rose-400 focus:ring-1 focus:ring-rose-500/40 text-sm transition-all shadow-inner"
-                />
-              </div>
+          {/* Workbench Body */}
+          <div className="p-6 sm:p-8 space-y-10">
+            {/* Advisory Content Readiness Bar */}
+            <ContentReadinessBar
+              partnerName={config.partnerName}
+              senderName={config.senderName}
+              message={config.message}
+              activeMomentsCount={activeMomentsCount}
+            />
 
-              {/* Question 2: Who are you? */}
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <label
-                    htmlFor="senderName"
-                    className="block text-xs uppercase tracking-wider text-rose-200/80 font-medium"
-                  >
-                    2. And who are you? <span className="text-rose-400">*</span>
-                  </label>
-                  <span className="text-[10px] text-ivory-400">
-                    {(config.senderName || "").length} / 60
-                  </span>
-                </div>
-                <input
-                  id="senderName"
-                  data-testid="input-sender-name"
-                  type="text"
-                  maxLength={60}
-                  placeholder="e.g. Rohan, Chris, or your nickname"
-                  value={config.senderName || ""}
-                  onChange={(e) =>
-                    handleConfigChange((prev) => ({
-                      ...prev,
-                      senderName: e.target.value,
-                    }))
-                  }
-                  className="w-full px-4 py-3 rounded-xl bg-[#240818]/60 border border-white/[0.12] text-white placeholder-white/25 focus:outline-none focus:border-rose-400 focus:ring-1 focus:ring-rose-500/40 text-sm transition-all shadow-inner"
-                />
-              </div>
-
-              {/* Question 3: The Greeting */}
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <label
-                    htmlFor="greeting"
-                    className="block text-xs uppercase tracking-wider text-rose-200/80 font-medium"
-                  >
-                    3. The Greeting
-                  </label>
-                  <span className="text-[10px] text-ivory-400">
-                    {(config.greeting || "").length} / 100
-                  </span>
-                </div>
-                <input
-                  id="greeting"
-                  data-testid="input-greeting"
-                  type="text"
-                  maxLength={100}
-                  placeholder="To my favorite person"
-                  value={config.greeting || ""}
-                  onChange={(e) =>
-                    handleConfigChange((prev) => ({
-                      ...prev,
-                      greeting: e.target.value,
-                    }))
-                  }
-                  className="w-full px-4 py-3 rounded-xl bg-[#240818]/60 border border-white/[0.12] text-white placeholder-white/25 focus:outline-none focus:border-rose-400 focus:ring-1 focus:ring-rose-500/40 text-sm transition-all shadow-inner"
-                />
-              </div>
-
-              {/* Question 4: Say what's in your heart */}
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <label
-                    htmlFor="message"
-                    className="block text-xs uppercase tracking-wider text-rose-200/80 font-medium"
-                  >
-                    4. Say what&apos;s in your heart <span className="text-rose-400">*</span>
-                  </label>
-                  <span className="text-[10px] text-ivory-400">
-                    {(config.message || "").length} / 2000
-                  </span>
-                </div>
-                <textarea
-                  id="message"
-                  data-testid="input-message"
-                  rows={6}
-                  maxLength={2000}
-                  placeholder="Write your heartfelt message here. Mention your favorite memories, the little things they do, or why they mean the world to you..."
-                  value={config.message || ""}
-                  onChange={(e) =>
-                    handleConfigChange((prev) => ({
-                      ...prev,
-                      message: e.target.value,
-                    }))
-                  }
-                  className="w-full px-4 py-3.5 rounded-xl bg-[#240818]/60 border border-white/[0.12] text-white placeholder-white/25 focus:outline-none focus:border-rose-400 focus:ring-1 focus:ring-rose-500/40 text-sm leading-relaxed transition-all resize-y font-light shadow-inner"
-                />
-              </div>
-
-              {/* Question 5: Sign-off */}
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <label
-                    htmlFor="signOff"
-                    className="block text-xs uppercase tracking-wider text-rose-200/80 font-medium"
-                  >
-                    5. Sign-off
-                  </label>
-                  <span className="text-[10px] text-ivory-400">
-                    {(config.signOff || "").length} / 100
-                  </span>
-                </div>
-                <input
-                  id="signOff"
-                  data-testid="input-sign-off"
-                  type="text"
-                  maxLength={100}
-                  placeholder="With all my love"
-                  value={config.signOff || ""}
-                  onChange={(e) =>
-                    handleConfigChange((prev) => ({
-                      ...prev,
-                      signOff: e.target.value,
-                    }))
-                  }
-                  className="w-full px-4 py-3 rounded-xl bg-[#240818]/60 border border-white/[0.12] text-white placeholder-white/25 focus:outline-none focus:border-rose-400 focus:ring-1 focus:ring-rose-500/40 text-sm transition-all shadow-inner"
-                />
-              </div>
-
-              {/* Question 6: Choose the Mood (Theme) */}
-              <div className="space-y-3 pt-1">
-                <span className="block text-xs uppercase tracking-wider text-rose-200/80 font-medium">
-                  6. Choose the Mood
-                </span>
-                <div className="grid grid-cols-3 gap-2.5">
-                  {ACCENT_THEMES.map((theme) => {
-                    const isSelected = (config.accentTheme || "crimson-rose") === theme;
-                    const meta = {
-                      "crimson-rose": { label: "Crimson", color: "bg-rose-500" },
-                      "midnight-violet": { label: "Violet", color: "bg-purple-500" },
-                      "champagne-gold": { label: "Gold", color: "bg-amber-500" },
-                    }[theme];
-
-                    return (
-                      <button
-                        key={theme}
-                        type="button"
-                        data-testid={`theme-option-${theme}`}
-                        onClick={() =>
-                          handleConfigChange((prev) => ({
-                            ...prev,
-                            accentTheme: theme as AccentTheme,
-                          }))
-                        }
-                        className={`px-3 py-2.5 rounded-xl text-xs font-medium border flex items-center justify-center gap-2 transition-all ${
-                          isSelected
-                            ? "border-rose-400 bg-rose-950/80 text-white shadow-md shadow-rose-950/60"
-                            : "border-white/10 bg-white/[0.03] text-ivory-400 hover:bg-white/[0.08]"
-                        }`}
-                      >
-                        <span className={`w-2 h-2 rounded-full ${meta.color}`} />
-                        <span>{meta.label}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Question 7: Craft & Physical Styling */}
-              <div className="space-y-4 pt-2 border-t border-rose-500/15">
-                <div className="flex items-center justify-between">
-                  <span className="block text-xs uppercase tracking-wider text-rose-200/80 font-medium">
-                    7. Craft & Physical Styling
-                  </span>
-                  <span className="text-[10px] text-rose-300/70">Custom composition</span>
-                </div>
-
-                {/* Quick Presets */}
+            {/* STAGE 1: Visual World Card */}
+            <section id="section-world" className="space-y-3.5 scroll-mt-16">
+              <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="text-[11px] text-rose-300/70 font-sans">Presets:</span>
+                  <span className="text-base select-none">🌐</span>
+                  <h2 className="text-base font-display font-medium text-white">Visual World</h2>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setWorldModalOpen(true)}
+                  className="text-xs font-ui text-rose-300 hover:text-rose-200 underline cursor-pointer"
+                >
+                  Switch World ⇄
+                </button>
+              </div>
+
+              {/* Active World Card */}
+              <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/[0.08] flex items-center justify-between gap-4">
+                <div className="space-y-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <span className="font-display font-medium text-sm text-white">
+                      {templateMeta.name}
+                    </span>
+                    <Badge variant="rose" size="sm" className="text-[10px] px-2 py-0.5">
+                      Active Atmosphere
+                    </Badge>
+                  </div>
+                  <p className="text-xs text-white/70 font-romantic leading-snug">
+                    {currentTemplateDef?.tagline || "For the love that feels like starlight"}
+                  </p>
+                  <p className="text-[11px] text-white/45 font-ui">
+                    {currentTemplateDef?.atmosphere}
+                  </p>
+                </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setWorldModalOpen(true)}
+                  className="text-xs rounded-full border-white/15 shrink-0"
+                >
+                  Change World
+                </Button>
+              </div>
+            </section>
+
+            {/* STAGE 2: Story (The Core Romantic Letter) */}
+            <section id="section-story" className="space-y-5 scroll-mt-16 border-t border-white/[0.08] pt-8">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <span className="text-base select-none">✍️</span>
+                  <h2 className="text-base font-display font-medium text-white">The Love Letter</h2>
+                </div>
+                <p className="text-xs text-white/60 font-ui font-light">
+                  Write freely from the heart. All words persist automatically across all visual worlds.
+                </p>
+              </div>
+
+              <div className="space-y-5">
+                {/* Partner Name */}
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <label
+                      htmlFor="partnerName"
+                      className="block text-xs uppercase tracking-wider text-white/70 font-ui font-medium"
+                    >
+                      Who is this for? <span className="text-rose-400">*</span>
+                    </label>
+                    <span className="text-[10px] text-white/40 font-mono">
+                      {(config.partnerName || "").length} / 60
+                    </span>
+                  </div>
+                  <input
+                    id="partnerName"
+                    data-testid="input-partner-name"
+                    type="text"
+                    maxLength={60}
+                    placeholder="e.g. Maya, Ananya, Alex"
+                    value={config.partnerName || ""}
+                    onChange={(e) =>
+                      handleConfigChange((prev) => ({
+                        ...prev,
+                        partnerName: e.target.value,
+                      }))
+                    }
+                    className="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/[0.12] text-white placeholder-white/25 focus:outline-none focus:border-rose-400 focus:ring-1 focus:ring-rose-500/40 text-sm font-ui transition-all"
+                  />
+                </div>
+
+                {/* Sender Name */}
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <label
+                      htmlFor="senderName"
+                      className="block text-xs uppercase tracking-wider text-white/70 font-ui font-medium"
+                    >
+                      And who are you? <span className="text-rose-400">*</span>
+                    </label>
+                    <span className="text-[10px] text-white/40 font-mono">
+                      {(config.senderName || "").length} / 60
+                    </span>
+                  </div>
+                  <input
+                    id="senderName"
+                    data-testid="input-sender-name"
+                    type="text"
+                    maxLength={60}
+                    placeholder="e.g. Rohan, Chris, or your pet name"
+                    value={config.senderName || ""}
+                    onChange={(e) =>
+                      handleConfigChange((prev) => ({
+                        ...prev,
+                        senderName: e.target.value,
+                      }))
+                    }
+                    className="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/[0.12] text-white placeholder-white/25 focus:outline-none focus:border-rose-400 focus:ring-1 focus:ring-rose-500/40 text-sm font-ui transition-all"
+                  />
+                </div>
+
+                {/* The Heartfelt Message */}
+                <div className="space-y-1.5">
+                  <div className="flex items-center justify-between">
+                    <label
+                      htmlFor="message"
+                      className="block text-xs uppercase tracking-wider text-white/70 font-ui font-medium"
+                    >
+                      Say what&apos;s in your heart <span className="text-rose-400">*</span>
+                    </label>
+                    <span className="text-[10px] text-white/40 font-mono">
+                      {(config.message || "").length} / 2000
+                    </span>
+                  </div>
+                  <textarea
+                    id="message"
+                    data-testid="input-message"
+                    rows={6}
+                    maxLength={2000}
+                    placeholder="Write your personal letter here. Mention favorite memories, the quiet moments you cherish, or why they make the world beautiful…"
+                    value={config.message || ""}
+                    onChange={(e) =>
+                      handleConfigChange((prev) => ({
+                        ...prev,
+                        message: e.target.value,
+                      }))
+                    }
+                    className="w-full px-4 py-3.5 rounded-xl bg-black/40 border border-white/[0.12] text-white placeholder-white/25 focus:outline-none focus:border-rose-400 focus:ring-1 focus:ring-rose-500/40 text-sm leading-relaxed transition-all resize-y font-romantic text-base shadow-inner"
+                  />
+                  {/* AI Co-Pilot Extension Seam (No fake AI runtime, clean future affordance) */}
+                  <div className="flex items-center justify-between pt-1 text-[11px] text-white/40 font-ui">
+                    <span>Write freely in your own voice.</span>
+                    <button
+                      type="button"
+                      onClick={() => {}}
+                      className="text-white/40 hover:text-white/70 transition-colors flex items-center gap-1 cursor-default select-none opacity-80"
+                      title="AI Co-Pilot extension seam"
+                    >
+                      <span>💡</span>
+                      <span>Need inspiration? (Co-pilot ready)</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Progressive Disclosure: Formal Greeting & Sign-Off */}
+                <div className="pt-1">
+                  <button
+                    type="button"
+                    onClick={() => setShowAdvancedStory(!showAdvancedStory)}
+                    className="text-xs font-ui text-white/60 hover:text-white flex items-center gap-1.5 transition-colors cursor-pointer"
+                  >
+                    <span>{showAdvancedStory ? "▾" : "▸"}</span>
+                    <span>Customize Salutation & Sign-Off</span>
+                  </button>
+
+                  {showAdvancedStory && (
+                    <div className="space-y-4 pt-3.5 pl-3 border-l-2 border-white/[0.1] mt-2 animate-fadeIn">
+                      {/* Greeting */}
+                      <div className="space-y-1">
+                        <label
+                          htmlFor="greeting"
+                          className="block text-xs uppercase tracking-wider text-white/60 font-ui font-medium"
+                        >
+                          Salutation / Greeting
+                        </label>
+                        <input
+                          id="greeting"
+                          data-testid="input-greeting"
+                          type="text"
+                          maxLength={100}
+                          placeholder="To my favorite person"
+                          value={config.greeting || ""}
+                          onChange={(e) =>
+                            handleConfigChange((prev) => ({
+                              ...prev,
+                              greeting: e.target.value,
+                            }))
+                          }
+                          className="w-full px-3.5 py-2.5 rounded-xl bg-black/40 border border-white/[0.1] text-white placeholder-white/25 focus:outline-none focus:border-rose-400 text-xs font-ui"
+                        />
+                      </div>
+
+                      {/* Sign-off */}
+                      <div className="space-y-1">
+                        <label
+                          htmlFor="signOff"
+                          className="block text-xs uppercase tracking-wider text-white/60 font-ui font-medium"
+                        >
+                          Sign-off Closing
+                        </label>
+                        <input
+                          id="signOff"
+                          data-testid="input-sign-off"
+                          type="text"
+                          maxLength={100}
+                          placeholder="With all my love"
+                          value={config.signOff || ""}
+                          onChange={(e) =>
+                            handleConfigChange((prev) => ({
+                              ...prev,
+                              signOff: e.target.value,
+                            }))
+                          }
+                          className="w-full px-3.5 py-2.5 rounded-xl bg-black/40 border border-white/[0.1] text-white placeholder-white/25 focus:outline-none focus:border-rose-400 text-xs font-ui"
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </section>
+
+            {/* STAGE 3: Moments (Experience Module Engine) */}
+            <section id="section-moments" className="scroll-mt-16 border-t border-white/[0.08] pt-8">
+              <ModuleManager
+                modules={config.modules}
+                hasHeroMedia={Boolean(config.heroMediaId)}
+                onChange={handleModulesChange}
+              />
+            </section>
+
+            {/* STAGE 4: Mood & Decor (Physical Craft & Tactile Details) */}
+            <section id="section-mood" className="space-y-6 scroll-mt-16 border-t border-white/[0.08] pt-8">
+              <div className="space-y-1">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="text-base select-none">🎨</span>
+                    <h2 className="text-base font-display font-medium text-white">
+                      Mood & Physical Styling
+                    </h2>
+                  </div>
+                  <span className="text-[11px] text-white/50 font-ui">Tactile craft</span>
+                </div>
+                <p className="text-xs text-white/60 font-ui font-light">
+                  Tailor the envelope paper, ribbon, digital wax seal, bouquet, and charms.
+                </p>
+              </div>
+
+              {/* 1-Click Curated Presets */}
+              <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.08] space-y-2">
+                <span className="text-[11px] text-white/70 font-ui font-medium block">
+                  Quick Styling Presets:
+                </span>
+                <div className="flex flex-wrap gap-2">
                   {[
                     { id: "classic", label: "Classic Romance" },
                     { id: "wildflower", label: "Wildflower Dream" },
@@ -716,300 +775,335 @@ export default function EditExperiencePage() {
                           }));
                         }
                       }}
-
-                      className="text-[10px] px-2.5 py-1 rounded-full border border-white/10 bg-white/[0.04] text-rose-200 hover:bg-rose-900/40 hover:border-rose-400/40 transition-colors"
+                      className="text-xs px-3 py-1.5 rounded-full border border-white/[0.1] bg-white/[0.04] text-white hover:bg-white/[0.1] transition-colors cursor-pointer font-ui"
                     >
                       {preset.label}
                     </button>
                   ))}
                 </div>
+              </div>
 
-                {/* Paper Choice */}
-                <div className="space-y-1.5">
-                  <div className="text-[11px] text-rose-200/70 font-medium">Stationery Paper</div>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                    {CURATED_PAPERS.map((paper) => {
-                      const isSelected = normalizeValentineDecor(config.decor).paper === paper.id;
-                      return (
-                        <button
-                          key={paper.id}
-                          type="button"
-                          data-testid={`decor-option-paper-${paper.id}`}
-                          onClick={() =>
-                            handleConfigChange((prev) => ({
-                              ...prev,
-                              decor: { ...normalizeValentineDecor(prev.decor), paper: paper.id },
-                            }))
-                          }
-                          className={`p-2 rounded-xl border text-xs flex items-center gap-2 transition-all ${
-                            isSelected
-                              ? "border-rose-400 bg-rose-950/80 text-white font-medium shadow-xs"
-                              : "border-white/10 bg-white/[0.03] text-rose-200/80 hover:bg-white/[0.08]"
-                          }`}
-                        >
-                          <span
-                            className="w-3.5 h-3.5 rounded-full border border-black/20 shrink-0"
-                            style={{ backgroundColor: paper.previewColor }}
-                          />
-                          <span className="truncate">{paper.name}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
+              {/* Stationery Paper (Untruncated Labels) */}
+              <div className="space-y-2">
+                <span className="text-xs text-white/80 font-ui font-medium block">
+                  Stationery Paper
+                </span>
+                <div className="grid grid-cols-2 gap-2.5">
+                  {CURATED_PAPERS.map((paper) => {
+                    const isSelected = normalizeValentineDecor(config.decor).paper === paper.id;
+                    return (
+                      <button
+                        key={paper.id}
+                        type="button"
+                        data-testid={`decor-option-paper-${paper.id}`}
+                        onClick={() =>
+                          handleConfigChange((prev) => ({
+                            ...prev,
+                            decor: { ...normalizeValentineDecor(prev.decor), paper: paper.id },
+                          }))
+                        }
+                        className={`p-2.5 rounded-xl border text-xs flex items-center gap-2.5 transition-all cursor-pointer ${
+                          isSelected
+                            ? "border-white bg-white text-black font-medium shadow-sm"
+                            : "border-white/[0.08] bg-white/[0.03] text-white/80 hover:bg-white/[0.06]"
+                        }`}
+                      >
+                        <span
+                          className="w-4 h-4 rounded-full border border-black/20 shrink-0 shadow-inner"
+                          style={{ backgroundColor: paper.previewColor }}
+                        />
+                        <span className="font-ui text-xs">{paper.name}</span>
+                      </button>
+                    );
+                  })}
                 </div>
+              </div>
 
-                {/* Ribbon Choice */}
-                <div className="space-y-1.5">
-                  <div className="text-[11px] text-rose-200/70 font-medium">Satin Ribbon</div>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                    {CURATED_RIBBONS.map((ribbon) => {
-                      const isSelected = normalizeValentineDecor(config.decor).ribbon === ribbon.id;
-                      return (
-                        <button
-                          key={ribbon.id}
-                          type="button"
-                          data-testid={`decor-option-ribbon-${ribbon.id}`}
-                          onClick={() =>
-                            handleConfigChange((prev) => ({
-                              ...prev,
-                              decor: { ...normalizeValentineDecor(prev.decor), ribbon: ribbon.id },
-                            }))
-                          }
-                          className={`p-2 rounded-xl border text-xs flex items-center gap-2 transition-all ${
-                            isSelected
-                              ? "border-rose-400 bg-rose-950/80 text-white font-medium shadow-xs"
-                              : "border-white/10 bg-white/[0.03] text-rose-200/80 hover:bg-white/[0.08]"
-                          }`}
-                        >
-                          <span
-                            className="w-3.5 h-3.5 rounded-full border border-black/20 shrink-0"
-                            style={{ backgroundColor: ribbon.previewColor }}
-                          />
-                          <span className="truncate">{ribbon.name}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
+              {/* Satin Ribbon (Untruncated Labels) */}
+              <div className="space-y-2">
+                <span className="text-xs text-white/80 font-ui font-medium block">
+                  Silk & Velvet Ribbon
+                </span>
+                <div className="grid grid-cols-2 gap-2.5">
+                  {CURATED_RIBBONS.map((ribbon) => {
+                    const isSelected = normalizeValentineDecor(config.decor).ribbon === ribbon.id;
+                    return (
+                      <button
+                        key={ribbon.id}
+                        type="button"
+                        data-testid={`decor-option-ribbon-${ribbon.id}`}
+                        onClick={() =>
+                          handleConfigChange((prev) => ({
+                            ...prev,
+                            decor: { ...normalizeValentineDecor(prev.decor), ribbon: ribbon.id },
+                          }))
+                        }
+                        className={`p-2.5 rounded-xl border text-xs flex items-center gap-2.5 transition-all cursor-pointer ${
+                          isSelected
+                            ? "border-white bg-white text-black font-medium shadow-sm"
+                            : "border-white/[0.08] bg-white/[0.03] text-white/80 hover:bg-white/[0.06]"
+                        }`}
+                      >
+                        <span
+                          className="w-4 h-4 rounded-full border border-black/20 shrink-0 shadow-inner"
+                          style={{ backgroundColor: ribbon.previewColor }}
+                        />
+                        <span className="font-ui text-xs">{ribbon.name}</span>
+                      </button>
+                    );
+                  })}
                 </div>
+              </div>
 
-                {/* Wax Seal Choice */}
-                <div className="space-y-1.5">
-                  <div className="text-[11px] text-rose-200/70 font-medium">Wax Seal</div>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                    {CURATED_SEALS.map((seal) => {
-                      const isSelected = normalizeValentineDecor(config.decor).waxSeal === seal.id;
-                      return (
-                        <button
-                          key={seal.id}
-                          type="button"
-                          data-testid={`decor-option-seal-${seal.id}`}
-                          onClick={() =>
-                            handleConfigChange((prev) => ({
+              {/* Wax Seal Choice */}
+              <div className="space-y-2">
+                <span className="text-xs text-white/80 font-ui font-medium block">
+                  Digital Wax Seal
+                </span>
+                <div className="grid grid-cols-2 gap-2.5">
+                  {CURATED_SEALS.map((seal) => {
+                    const isSelected = normalizeValentineDecor(config.decor).waxSeal === seal.id;
+                    return (
+                      <button
+                        key={seal.id}
+                        type="button"
+                        data-testid={`decor-option-seal-${seal.id}`}
+                        onClick={() =>
+                          handleConfigChange((prev) => ({
+                            ...prev,
+                            decor: {
+                              ...normalizeValentineDecor(prev.decor),
+                              waxSeal: seal.id,
+                              seal: seal.id,
+                            },
+                          }))
+                        }
+                        className={`p-2.5 rounded-xl border text-xs flex items-center gap-2.5 transition-all cursor-pointer ${
+                          isSelected
+                            ? "border-white bg-white text-black font-medium shadow-sm"
+                            : "border-white/[0.08] bg-white/[0.03] text-white/80 hover:bg-white/[0.06]"
+                        }`}
+                      >
+                        <span className="text-base select-none">{seal.emblem}</span>
+                        <span className="font-ui text-xs">{seal.name}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Bouquet Blooms (1–4 blooms) */}
+              <div className="space-y-2">
+                <span className="text-xs text-white/80 font-ui font-medium block">
+                  Bouquet Blooms (1–4 flowers)
+                </span>
+                <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+                  {CURATED_FLOWERS.map((flower) => {
+                    const isSelected = normalizeValentineDecor(config.decor).blooms.includes(flower.id);
+                    return (
+                      <button
+                        key={flower.id}
+                        type="button"
+                        data-testid={`decor-option-bloom-${flower.id}`}
+                        onClick={() =>
+                          handleConfigChange((prev) => {
+                            const existing = normalizeValentineDecor(prev.decor);
+                            let nextBlooms = [...existing.blooms];
+                            if (nextBlooms.includes(flower.id)) {
+                              if (nextBlooms.length > 1) {
+                                nextBlooms = nextBlooms.filter((b) => b !== flower.id);
+                              }
+                            } else {
+                              if (nextBlooms.length >= 4) nextBlooms.shift();
+                              nextBlooms.push(flower.id);
+                            }
+                            return {
                               ...prev,
                               decor: {
-                                ...normalizeValentineDecor(prev.decor),
-                                waxSeal: seal.id,
-                                seal: seal.id,
+                                ...existing,
+                                blooms: nextBlooms,
+                                flowers: nextBlooms,
                               },
-                            }))
-                          }
-                          className={`p-2 rounded-xl border text-xs flex items-center gap-2 transition-all ${
-                            isSelected
-                              ? "border-rose-400 bg-rose-950/80 text-white font-medium shadow-xs"
-                              : "border-white/10 bg-white/[0.03] text-rose-200/80 hover:bg-white/[0.08]"
-                          }`}
-                        >
-                          <span className="text-base">{seal.emblem}</span>
-                          <span className="truncate">{seal.name}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
+                            };
+                          })
+                        }
+                        className={`p-2.5 rounded-xl border text-center transition-all cursor-pointer ${
+                          isSelected
+                            ? "border-rose-400 bg-rose-950/70 text-white font-medium shadow-xs"
+                            : "border-white/[0.08] bg-white/[0.03] text-white/70 hover:bg-white/[0.06]"
+                        }`}
+                      >
+                        <div className="text-xl mb-1 select-none">{flower.emoji}</div>
+                        <div className="text-[10px] truncate font-ui">{flower.name}</div>
+                      </button>
+                    );
+                  })}
                 </div>
-
-                {/* Blooms Arrangement */}
-                <div className="space-y-1.5">
-                  <div className="text-[11px] text-rose-200/70 font-medium">
-                    Bouquet Blooms (click to toggle, 1–4 blooms)
-                  </div>
-                  <div className="grid grid-cols-3 sm:grid-cols-6 gap-2">
-                    {CURATED_FLOWERS.map((flower) => {
-                      const isSelected = normalizeValentineDecor(config.decor).blooms.includes(flower.id);
-                      return (
-                        <button
-                          key={flower.id}
-                          type="button"
-                          data-testid={`decor-option-bloom-${flower.id}`}
-                          onClick={() =>
-                            handleConfigChange((prev) => {
-                              const existing = normalizeValentineDecor(prev.decor);
-                              let nextBlooms = [...existing.blooms];
-                              if (nextBlooms.includes(flower.id)) {
-                                if (nextBlooms.length > 1) {
-                                  nextBlooms = nextBlooms.filter((b) => b !== flower.id);
-                                }
-                              } else {
-                                if (nextBlooms.length >= 4) nextBlooms.shift();
-                                nextBlooms.push(flower.id);
-                              }
-                              return {
-                                ...prev,
-                                decor: {
-                                  ...existing,
-                                  blooms: nextBlooms,
-                                  flowers: nextBlooms,
-                                },
-                              };
-                            })
-                          }
-                          className={`p-2 rounded-xl border text-center transition-all ${
-                            isSelected
-                              ? "border-rose-400 bg-rose-950/90 text-white font-semibold shadow-xs"
-                              : "border-white/10 bg-white/[0.03] text-rose-200/70 hover:bg-white/[0.08]"
-                          }`}
-                        >
-                          <div className="text-xl mb-0.5">{flower.emoji}</div>
-                          <div className="text-[10px] truncate">{flower.name.split(" ")[1] || flower.name}</div>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Orbiting Charms */}
-                <div className="space-y-1.5">
-                  <div className="text-[11px] text-rose-200/70 font-medium">
-                    Orbiting Charms (click to toggle)
-                  </div>
-                  <div className="grid grid-cols-5 gap-2">
-                    {CURATED_CHARMS.map((charm) => {
-                      const isSelected = normalizeValentineDecor(config.decor).charms.includes(charm.id);
-                      return (
-                        <button
-                          key={charm.id}
-                          type="button"
-                          data-testid={`decor-option-charm-${charm.id}`}
-                          onClick={() =>
-                            handleConfigChange((prev) => {
-                              const existing = normalizeValentineDecor(prev.decor);
-                              let nextCharms = [...existing.charms];
-                              if (nextCharms.includes(charm.id)) {
-                                nextCharms = nextCharms.filter((c) => c !== charm.id);
-                              } else {
-                                if (nextCharms.length >= 3) nextCharms.shift();
-                                nextCharms.push(charm.id);
-                              }
-                              return {
-                                ...prev,
-                                decor: {
-                                  ...existing,
-                                  charms: nextCharms,
-                                },
-                              };
-                            })
-                          }
-                          className={`p-2 rounded-xl border text-center transition-all ${
-                            isSelected
-                              ? "border-rose-400 bg-rose-950/90 text-white font-semibold shadow-xs"
-                              : "border-white/10 bg-white/[0.03] text-rose-200/70 hover:bg-white/[0.08]"
-                          }`}
-                        >
-                          <div className="text-lg mb-0.5">{charm.emoji}</div>
-                          <div className="text-[9px] truncate">{charm.name.split(" ")[1] || charm.name}</div>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Reusable Experience Module Manager */}
-                <ModuleManager
-                  modules={config.modules}
-                  hasHeroMedia={Boolean(config.heroMediaId)}
-                  onChange={handleModulesChange}
-                />
-
               </div>
 
-              {/* Validation Errors */}
-              {publishErrors.length > 0 && (
-                <div className="p-4 rounded-xl bg-rose-950/70 border border-rose-800/60 text-xs text-rose-200 space-y-1.5 animate-fadeIn">
-                  <span className="font-semibold block text-rose-300">
-                    Please complete the following to publish:
-                  </span>
-                  {publishErrors.map((err, i) => (
-                    <p key={i} className="flex items-center gap-1.5">
-                      <span>•</span> {err}
-                    </p>
-                  ))}
+              {/* Orbiting Charms */}
+              <div className="space-y-2">
+                <span className="text-xs text-white/80 font-ui font-medium block">
+                  Orbiting Charms
+                </span>
+                <div className="grid grid-cols-5 gap-2">
+                  {CURATED_CHARMS.map((charm) => {
+                    const isSelected = normalizeValentineDecor(config.decor).charms.includes(charm.id);
+                    return (
+                      <button
+                        key={charm.id}
+                        type="button"
+                        data-testid={`decor-option-charm-${charm.id}`}
+                        onClick={() =>
+                          handleConfigChange((prev) => {
+                            const existing = normalizeValentineDecor(prev.decor);
+                            let nextCharms = [...existing.charms];
+                            if (nextCharms.includes(charm.id)) {
+                              nextCharms = nextCharms.filter((c) => c !== charm.id);
+                            } else {
+                              if (nextCharms.length >= 3) nextCharms.shift();
+                              nextCharms.push(charm.id);
+                            }
+                            return {
+                              ...prev,
+                              decor: {
+                                ...existing,
+                                charms: nextCharms,
+                              },
+                            };
+                          })
+                        }
+                        className={`p-2.5 rounded-xl border text-center transition-all cursor-pointer ${
+                          isSelected
+                            ? "border-rose-400 bg-rose-950/70 text-white font-medium shadow-xs"
+                            : "border-white/[0.08] bg-white/[0.03] text-white/70 hover:bg-white/[0.06]"
+                        }`}
+                      >
+                        <div className="text-xl mb-1 select-none">{charm.emoji}</div>
+                        <div className="text-[10px] truncate font-ui">{charm.name}</div>
+                      </button>
+                    );
+                  })}
                 </div>
-              )}
-
-              {/* Form Action Buttons */}
-              <div className="pt-4 flex flex-col sm:flex-row gap-3">
-                <Button
-                  type="button"
-                  data-testid="save-draft-button"
-                  variant="outline"
-                  size="md"
-                  onClick={() => performSave()}
-                  className="flex-1 text-xs border-white/20 text-[#FAF8F5] rounded-full"
-                >
-                  Save Draft
-                </Button>
-                <Button
-                  type="button"
-                  data-testid="publish-button"
-                  variant="primary"
-                  size="md"
-                  disabled={saveStatus === "saving" || isPublishing}
-                  onClick={handlePublish}
-                  className="flex-1 text-xs rounded-full shadow-lg shadow-rose-950/60"
-                >
-                  {isPublishing ? "Publishing..." : "Publish Valentine 💌"}
-                </Button>
               </div>
 
-              {/* Mobile-only Preview CTA */}
-              <div className="pt-2 md:hidden">
-                <Button
-                  type="button"
-                  variant="secondary"
-                  size="md"
-                  onClick={() => setMobileTab("preview")}
-                  className="w-full text-xs rounded-full"
-                >
-                  View Live Preview →
-                </Button>
+              {/* Accent Mood (Theme) */}
+              <div className="space-y-2 pt-1">
+                <span className="text-xs text-white/80 font-ui font-medium block">
+                  Atmospheric Mood Accent
+                </span>
+                <div className="grid grid-cols-3 gap-2.5">
+                  {ACCENT_THEMES.map((theme) => {
+                    const isSelected = (config.accentTheme || "crimson-rose") === theme;
+                    const meta = {
+                      "crimson-rose": { label: "Crimson", color: "bg-rose-500" },
+                      "midnight-violet": { label: "Violet", color: "bg-purple-500" },
+                      "champagne-gold": { label: "Gold", color: "bg-amber-500" },
+                    }[theme];
+
+                    return (
+                      <button
+                        key={theme}
+                        type="button"
+                        data-testid={`theme-option-${theme}`}
+                        onClick={() =>
+                          handleConfigChange((prev) => ({
+                            ...prev,
+                            accentTheme: theme as AccentTheme,
+                          }))
+                        }
+                        className={`px-3 py-2.5 rounded-xl text-xs font-ui font-medium border flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                          isSelected
+                            ? "border-white bg-white text-black shadow-xs"
+                            : "border-white/[0.08] bg-white/[0.03] text-white/70 hover:bg-white/[0.06]"
+                        }`}
+                      >
+                        <span className={`w-2 h-2 rounded-full ${meta.color}`} />
+                        <span>{meta.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
               </div>
-            </form>
+            </section>
+
+            {/* Validation Errors */}
+            {publishErrors.length > 0 && (
+              <div className="p-4 rounded-xl bg-rose-950/70 border border-rose-800/60 text-xs text-rose-200 space-y-1.5 animate-fadeIn">
+                <span className="font-semibold block text-rose-300 font-ui">
+                  Please complete the following to publish:
+                </span>
+                {publishErrors.map((err, i) => (
+                  <p key={i} className="flex items-center gap-1.5 font-ui">
+                    <span>•</span> {err}
+                  </p>
+                ))}
+              </div>
+            )}
+
+            {/* Form Action Controls */}
+            <div className="pt-4 flex flex-col sm:flex-row gap-3 border-t border-white/[0.08]">
+              <Button
+                type="button"
+                data-testid="save-draft-button"
+                variant="outline"
+                size="md"
+                onClick={() => performSave()}
+                className="flex-1 text-xs border-white/15 text-[#FAF8F5] rounded-full font-ui"
+              >
+                Save Draft
+              </Button>
+              <Button
+                type="button"
+                data-testid="publish-button"
+                variant="romantic"
+                size="md"
+                disabled={saveStatus === "saving" || isPublishing}
+                onClick={handlePublish}
+                className="flex-1 text-xs rounded-full font-ui shadow-lg shadow-rose-950/50"
+              >
+                {isPublishing ? "Publishing…" : "Publish Valentine 💌"}
+              </Button>
+            </div>
+
+            {/* Mobile View Live Preview CTA */}
+            <div className="pt-1 md:hidden">
+              <Button
+                type="button"
+                variant="secondary"
+                size="md"
+                onClick={() => setMobileTab("preview")}
+                className="w-full text-xs rounded-full font-ui"
+              >
+                View Live Preview Canvas →
+              </Button>
+            </div>
           </div>
         </div>
 
-        {/* Right Pane: Device-Framed Live Preview (Atmospheric Writing Desk Setting) */}
+        {/* Right Pane: Expansive Live Canvas Preview */}
         <div
-          className={`flex-1 bg-[#0E0207] overflow-y-auto flex flex-col items-center justify-center p-4 sm:p-8 relative ${
+          className={`flex-1 bg-[#070609] overflow-y-auto flex flex-col items-center justify-center p-4 sm:p-8 relative ${
             mobileTab === "form" ? "hidden md:flex" : "flex"
           }`}
         >
-          {/* Ambient warm candlelight glow behind preview frame */}
-          <div className="pointer-events-none absolute inset-0 bg-radial-gradient from-rose-600/15 via-pink-600/5 to-transparent opacity-70 blur-2xl" />
+          {/* Subtle ambient starlight glow */}
+          <div className="pointer-events-none absolute inset-0 bg-radial-gradient from-white/[0.04] via-transparent to-transparent opacity-80 blur-3xl" />
 
-          {/* Luxury stationery display frame */}
-          <div className="w-full max-w-[380px] sm:max-w-[420px] rounded-[42px] p-3 sm:p-4 bg-gradient-to-b from-[#33081B] via-[#200511] to-[#14030B] shadow-[0_30px_70px_-20px_rgba(0,0,0,0.95),0_0_50px_rgba(225,29,72,0.18)] relative z-10 border border-rose-500/25">
-            {/* Phone Bezel */}
-            <div className="rounded-[32px] overflow-hidden bg-[#0A0206] border border-black/80 flex flex-col min-h-[580px] max-h-[720px] shadow-inner relative">
-              {/* Dynamic Island / Speaker Notch */}
-              <div className="h-6 w-full bg-[#0A0206] flex items-center justify-between px-6 pt-1 select-none z-30 shrink-0">
-                <span className="text-[10px] text-white/50 font-sans font-medium">9:41</span>
-                <div className="w-16 h-3.5 rounded-full bg-black border border-white/10" />
-                <div className="flex items-center gap-1 text-[10px] text-white/50">
+          {/* Device / Canvas Frame: Clean, neutral, unboxed */}
+          <div className="w-full max-w-[420px] sm:max-w-[460px] rounded-[38px] p-2.5 sm:p-3.5 bg-gradient-to-b from-white/[0.12] via-white/[0.05] to-black/80 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.95)] relative z-10 border border-white/[0.1]">
+            <div className="rounded-[30px] overflow-hidden bg-[#0A090C] border border-black/80 flex flex-col min-h-[580px] max-h-[760px] shadow-inner relative">
+              {/* Minimal Device Top Bar */}
+              <div className="h-6 w-full bg-black/60 flex items-center justify-between px-6 pt-1 select-none z-30 shrink-0">
+                <span className="text-[10px] text-white/50 font-ui font-medium">9:41</span>
+                <div className="w-14 h-3 rounded-full bg-black border border-white/10" />
+                <div className="flex items-center gap-1 text-[10px] text-white/50 font-ui">
                   <span>5G</span>
                   <span>100%</span>
                 </div>
               </div>
 
-              {/* Screen Content: Single-Engine Unified Contract */}
+              {/* Screen Content: Real ExperienceRenderer with selected world */}
               <div className="flex-1 overflow-y-auto">
                 <ExperienceRenderer
                   templateId={templateMeta.id}
@@ -1024,33 +1118,40 @@ export default function EditExperiencePage() {
         </div>
       </div>
 
+      {/* World Selector Modal */}
+      <WorldSelectorModal
+        isOpen={worldModalOpen}
+        currentTemplateId={templateMeta.id}
+        onClose={() => setWorldModalOpen(false)}
+        onSelectWorld={handleSelectWorld}
+      />
+
       {/* Published Completion Modal */}
       {publishModalOpen && (
         <div
           data-testid="publish-success-modal"
           className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-fadeIn"
         >
-          <Card
-            variant="glass"
-            className="max-w-md w-full p-8 sm:p-10 border-rose-500/30 bg-[#220614]/90 text-center space-y-6 shadow-2xl relative rounded-3xl"
+          <div
+            className="max-w-md w-full p-8 sm:p-10 border border-white/[0.15] bg-[#131118] text-center space-y-6 shadow-2xl shadow-black/95 relative rounded-3xl z-10"
           >
-            <div className="w-16 h-16 mx-auto rounded-full bg-gradient-to-br from-rose-600 via-rose-700 to-[#7A1428] border border-rose-400 flex items-center justify-center shadow-xl shadow-rose-950/80 text-3xl select-none animate-float">
+            <div className="w-16 h-16 mx-auto rounded-full bg-gradient-to-br from-rose-600 via-rose-700 to-[#7A1428] border border-rose-400/60 flex items-center justify-center shadow-xl text-3xl select-none animate-float">
               💌
             </div>
 
             <div className="space-y-2">
-              <Badge variant="rose" size="sm" className="bg-rose-950/80 border-rose-400/40 text-rose-200">
+              <Badge variant="rose" size="sm" className="bg-rose-950/80 border-rose-400/40 text-rose-200 font-ui">
                 Published & Sealed
               </Badge>
-              <h2 className="text-2xl font-serif font-medium text-white">
+              <h2 className="text-2xl font-display font-medium text-white">
                 Your Valentine is Ready
               </h2>
-              <p className="text-xs sm:text-sm text-[#FAF8F5]/80 font-light leading-relaxed">
-                Send this private link to your partner. When they open it, they will break the digital wax seal to reveal your personal letter.
+              <p className="text-xs sm:text-sm text-white/70 font-ui font-light leading-relaxed">
+                Send this private link to your partner. When they open it, they will enter your custom {templateMeta.name} world.
               </p>
             </div>
 
-            <div className="p-3.5 rounded-xl bg-black/60 border border-rose-500/20 flex items-center gap-2">
+            <div className="p-3.5 rounded-xl bg-black/60 border border-white/[0.1] flex items-center gap-2">
               <input
                 data-testid="public-url-input"
                 readOnly
@@ -1061,7 +1162,7 @@ export default function EditExperiencePage() {
                 type="button"
                 data-testid="copy-link-button"
                 onClick={handleCopyLink}
-                className="px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-medium tracking-wide transition-colors shrink-0 shadow-lg shadow-rose-950/60"
+                className="px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-medium tracking-wide transition-colors shrink-0 shadow-md font-ui"
               >
                 {copied ? "Copied! 💌" : "Copy Link"}
               </button>
@@ -1073,7 +1174,7 @@ export default function EditExperiencePage() {
                 target="_blank"
                 rel="noreferrer"
                 data-testid="open-public-page-link"
-                className="flex-1 py-3 rounded-xl border border-white/15 text-white text-xs font-medium hover:bg-white/10 transition-colors flex items-center justify-center gap-1.5"
+                className="flex-1 py-3 rounded-xl border border-white/15 text-white text-xs font-medium hover:bg-white/10 transition-colors flex items-center justify-center gap-1.5 font-ui"
               >
                 <span>Open Valentine</span>
                 <span>↗</span>
@@ -1082,16 +1183,16 @@ export default function EditExperiencePage() {
                 type="button"
                 data-testid="close-publish-modal-button"
                 onClick={() => setPublishModalOpen(false)}
-                className="flex-1 py-3 rounded-xl bg-white/[0.06] text-ivory-200 text-xs font-medium hover:bg-white/[0.12] transition-colors"
+                className="flex-1 py-3 rounded-xl bg-white/[0.06] text-white/70 text-xs font-medium hover:bg-white/[0.12] hover:text-white transition-colors font-ui cursor-pointer"
               >
-                Back to Editing
+                Back to Studio
               </button>
             </div>
 
-            <p className="text-[11px] text-rose-200/60 font-sans">
+            <p className="text-[11px] text-white/40 font-ui">
               🔒 Completely private. Never indexed by search engines.
             </p>
-          </Card>
+          </div>
         </div>
       )}
     </div>
