@@ -33,7 +33,7 @@ export const midnightRoseV1: TemplateDefinition<
   signature: "Physical envelope + interactive wax seal reveal",
   availability: "available",
   category: "Cinematic",
-  supportedModules: ["letter", "memories", "timeline", "quiz", "secret", "openWhen"],
+  supportedModules: ["letter", "timeline", "quiz", "secret", "openWhen"],
   draftSchema: midnightRoseDraftSchema,
   publishSchema: midnightRosePublishSchema,
   defaultConfig: {
@@ -63,7 +63,7 @@ export const cloudNineV1: TemplateDefinition<
   signature: "Celestial star blessing + pearl wax seal",
   availability: "available",
   category: "Dreamy",
-  supportedModules: ["letter", "memories", "timeline", "quiz", "openWhen"],
+  supportedModules: ["letter", "timeline", "quiz", "openWhen"],
   draftSchema: cloudNineDraftSchema,
   publishSchema: cloudNinePublishSchema,
   defaultConfig: {
@@ -102,9 +102,9 @@ export const kageV1: TemplateDefinition<
   tagline: "A Kyoto sanctuary where shadows embrace starlight",
   atmosphere: "Tranquil Kyoto mountain temple after dark, mist & sacred stone lanterns.",
   signature: "Exact-source ThreeUI shaders + spatial temple path",
-  availability: "experimental",
+  availability: "available",
   category: "Immersive",
-  supportedModules: ["letter", "memories", "secret"],
+  supportedModules: ["letter", "secret"],
   draftSchema: kageDraftSchema,
   publishSchema: kagePublishSchema,
   defaultConfig: {

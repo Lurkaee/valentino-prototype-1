@@ -3123,21 +3123,25 @@ function wireHeroExit() {
 function wireNav() {
   let last = 0;
   const rail = $('#rail');
-  const names = ['The Hidden Gate', 'The Sanmon', 'Still Gardens', 'Sacred Craft', 'Afterlight', 'Colophon'];
-  SECS.forEach((s, i) => {
-    const b = document.createElement('button');
-    b.innerHTML = '<i></i>'; b.title = names[i] || '';
-    b.setAttribute('aria-label', names[i] || 'section');
-    b.addEventListener('click', () => scrollTo({ top: anchors[i], behavior: REDUCE ? 'auto' : 'smooth' }));
-    rail.appendChild(b);
-  });
+  if (rail) {
+    const names = ['The Hidden Gate', 'The Sanmon', 'Still Gardens', 'Sacred Craft', 'Afterlight', 'Colophon'];
+    SECS.forEach((s, i) => {
+      const b = document.createElement('button');
+      b.innerHTML = '<i></i>'; b.title = names[i] || '';
+      b.setAttribute('aria-label', names[i] || 'section');
+      b.addEventListener('click', () => scrollTo({ top: anchors[i], behavior: REDUCE ? 'auto' : 'smooth' }));
+      rail.appendChild(b);
+    });
+  }
   const dots = $$('#rail button');
   const links = $$('.nav-link');
   const burger = $('.nav-burger');
   const closeMenu = () => {
-    nav.classList.remove('menu-open');
-    burger.classList.remove('active');
-    burger.setAttribute('aria-expanded', 'false');
+    if (nav) nav.classList.remove('menu-open');
+    if (burger) {
+      burger.classList.remove('active');
+      burger.setAttribute('aria-expanded', 'false');
+    }
     document.documentElement.classList.remove('nav-open');
   };
   const setMenu = open => {
@@ -3201,7 +3205,7 @@ function wireFocus() {
 
 function wireCursor() {
   const dot = $('#cursor');
-  if (COARSE) { dot.style.display = 'none'; return; }
+  if (!dot || COARSE) { if (dot) dot.style.display = 'none'; return; }
   let x = vpW() / 2, y = vpH() / 2, tx2 = x, ty = y;
   addEventListener('pointermove', e => {
     tx2 = e.clientX; ty = e.clientY;
@@ -3227,7 +3231,8 @@ function makeGrain() {
     d[i * 4] = d[i * 4 + 1] = d[i * 4 + 2] = v; d[i * 4 + 3] = 255;
   }
   x.putImageData(im, 0, 0);
-  $('#grain').style.backgroundImage = 'url(' + c.toDataURL('image/png') + ')';
+  const grainEl = $('#grain');
+  if (grainEl) grainEl.style.backgroundImage = 'url(' + c.toDataURL('image/png') + ')';
 }
 
 /* ============================================ 12 · the card viewports */
@@ -3551,8 +3556,8 @@ function boot() {
     const done = () => {
       i++;
       const p = i / JOBS.length;
-      preFill.style.right = ((1 - p) * 100).toFixed(1) + '%';
-      prePct.textContent = Math.round(p * 100);
+      if (preFill) preFill.style.right = ((1 - p) * 100).toFixed(1) + '%';
+      if (prePct) prePct.textContent = Math.round(p * 100);
       if (i < JOBS.length) setTimeout(step, 16); else setTimeout(start, 220);
     };
     let r;
@@ -3570,7 +3575,7 @@ function fallback(err) {
   document.documentElement.classList.add('no-webgl');
   document.body.classList.add('no-webgl');
   document.body.classList.remove('is-locked');
-  preEl.classList.add('done');
+  if (preEl) preEl.classList.add('done');
   $$('[data-rv], .mask-line').forEach(e => e.classList.add('rv-in'));
   window.__kage = window.__secret = { fallback: true, error: String(err && err.message || err) };
 }
@@ -3592,13 +3597,16 @@ function start() {
     RIG.smooth = RIG.prog = progressFor(anchors[n]);
     $$('[data-rv], .mask-line').forEach(e => e.classList.add('rv-in'));
     document.body.classList.remove('is-locked');
-    preEl.classList.add('done');
+    if (preEl) preEl.classList.add('done');
   } else {
-    preEl.classList.add('done');
+    if (preEl) preEl.classList.add('done');
     setTimeout(() => {
       document.body.classList.remove('is-locked');
-      $('#hero').querySelectorAll('[data-rv], .mask-line').forEach((e, i) =>
-        setTimeout(() => e.classList.add('rv-in'), REDUCE ? 0 : 120 + i * 95));
+      const heroEl = $('#hero');
+      if (heroEl) {
+        heroEl.querySelectorAll('[data-rv], .mask-line').forEach((e, i) =>
+          setTimeout(() => e.classList.add('rv-in'), REDUCE ? 0 : 120 + i * 95));
+      }
     }, REDUCE ? 0 : 340);
   }
   running = true; tPrev = performance.now();

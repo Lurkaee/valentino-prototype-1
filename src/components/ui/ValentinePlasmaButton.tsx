@@ -7,6 +7,7 @@ export type ValentinePlasmaTheme =
   | "valentine"
   | "midnightRose"
   | "cloudNine"
+  | "kage"
   | "goldenHour"
   | "stardust";
 
@@ -53,6 +54,16 @@ export const VALENTINE_PLASMA_THEMES: Record<
     glowColor: "rgba(216, 194, 255, 0.38)",
     borderColor: "rgba(220, 200, 255, 0.35)",
     textColor: "#FAF5FF",
+  },
+  // Kyoto Twilight: Emerald + Teal + Stone + Soft Green
+  kage: {
+    hue: -60,
+    saturation: 1.2,
+    brightness: 1.05,
+    mode: "dark",
+    glowColor: "rgba(16, 185, 129, 0.4)",
+    borderColor: "rgba(52, 211, 153, 0.35)",
+    textColor: "#ECFDF5",
   },
   // Peach + Coral + Champagne
   goldenHour: {

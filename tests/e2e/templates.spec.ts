@@ -23,10 +23,10 @@ test.describe("M2 Template Discovery & Landing Page", () => {
     await expect(goldSwatch).toBeVisible();
     await goldSwatch.click();
 
-    // Verify Customize Midnight Rose button points to /create
+    // Verify Customize Midnight Rose button points to /create?template=midnight-rose
     const customizeBtn = page.locator('a:has-text("Customize Midnight Rose")');
     await expect(customizeBtn).toBeVisible();
-    await expect(customizeBtn).toHaveAttribute("href", "/create");
+    await expect(customizeBtn).toHaveAttribute("href", "/create?template=midnight-rose");
   });
 
   test("Responsive verification across 360px, 390px, 768px, and 1440px with zero overflow", async ({

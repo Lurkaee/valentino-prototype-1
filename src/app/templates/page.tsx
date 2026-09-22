@@ -7,7 +7,8 @@ import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { CurtainLink } from "@/components/motion/PageCurtains";
 import { ValentinoMonogram } from "@/components/motion/ValentinoMonogram";
-import { ValentinePlasmaButton } from "@/components/ui/ValentinePlasmaButton";
+import { ValentinePlasmaButton, type ValentinePlasmaTheme } from "@/components/ui/ValentinePlasmaButton";
+import { CapabilityChip } from "@/components/ui/CapabilityChip";
 import { getAllTemplates, ROADMAP_WORLDS, RoadmapWorld } from "@/templates/registry";
 import { TemplateDefinition } from "@/templates/types";
 
@@ -72,6 +73,15 @@ export default function TemplatesPage() {
     },
   }[selectedMidnightTheme];
 
+  const currentPlasmaTheme: ValentinePlasmaTheme =
+    featuredWorldId === "midnight-rose"
+      ? "midnightRose"
+      : featuredWorldId === "cloud-nine"
+      ? "cloudNine"
+      : featuredWorldId === "kage"
+      ? "kage"
+      : "valentine";
+
   const handleSurpriseMe = () => {
     const activeIds = ["midnight-rose", "cloud-nine", "kage"];
     const random = activeIds[Math.floor(Math.random() * activeIds.length)];
@@ -121,7 +131,7 @@ export default function TemplatesPage() {
         {/* Curator Plasma Feature */}
         <div className="pt-7 flex flex-col items-center justify-center">
           <ValentinePlasmaButton
-            theme="valentine"
+            theme={currentPlasmaTheme}
             label="SURPRISE ME"
             sublabel="Spark a Match"
             size="md"
@@ -212,11 +222,10 @@ export default function TemplatesPage() {
                     <span className="text-ivory-400 uppercase tracking-wider font-medium">Signature:</span>
                     <span className="text-rose-300">{midnightTemplate?.signature || "Physical envelope + interactive wax seal reveal"}</span>
                   </div>
-                  <div className="flex flex-wrap gap-1.5 pt-1">
+                  <div className="flex flex-wrap gap-2 pt-1">
+                    <CapabilityChip capability="letter" templateId="midnight-rose" />
                     {midnightTemplate?.supportedModules?.map((mod) => (
-                      <span key={mod} className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded bg-white/[0.05] border border-white/10 text-ivory-300">
-                        {mod}
-                      </span>
+                      <CapabilityChip key={mod} capability={mod as any} templateId="midnight-rose" />
                     ))}
                   </div>
                 </div>
@@ -265,9 +274,9 @@ export default function TemplatesPage() {
 
                 {/* Primary Actions */}
                 <div className="pt-3 flex flex-wrap items-center gap-3">
-                  <CurtainLink href="/create">
+                  <CurtainLink href="/create?template=midnight-rose">
                     <Button size="lg" variant="romantic" className="w-full sm:w-auto px-6 font-medium">
-                      Customize Midnight Rose
+                      Customize Midnight Rose 🌹
                     </Button>
                   </CurtainLink>
                   <Button
@@ -359,11 +368,10 @@ export default function TemplatesPage() {
                     <span className="text-pink-300/70 uppercase tracking-wider font-medium">Signature:</span>
                     <span className="text-pink-200">{cloudNineTemplate?.signature}</span>
                   </div>
-                  <div className="flex flex-wrap gap-1.5 pt-1">
+                  <div className="flex flex-wrap gap-2 pt-1">
+                    <CapabilityChip capability="letter" templateId="cloud-nine" />
                     {cloudNineTemplate?.supportedModules?.map((mod) => (
-                      <span key={mod} className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded bg-pink-500/10 border border-pink-400/20 text-pink-200">
-                        {mod}
-                      </span>
+                      <CapabilityChip key={mod} capability={mod as any} templateId="cloud-nine" />
                     ))}
                   </div>
                 </div>
@@ -464,11 +472,10 @@ export default function TemplatesPage() {
                     <span className="text-emerald-300/70 uppercase tracking-wider font-medium">Signature:</span>
                     <span className="text-emerald-200">{kageTemplate?.signature}</span>
                   </div>
-                  <div className="flex flex-wrap gap-1.5 pt-1">
+                  <div className="flex flex-wrap gap-2 pt-1">
+                    <CapabilityChip capability="letter" templateId="kage" />
                     {kageTemplate?.supportedModules?.map((mod) => (
-                      <span key={mod} className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded bg-emerald-950/60 border border-emerald-500/30 text-emerald-200">
-                        {mod}
-                      </span>
+                      <CapabilityChip key={mod} capability={mod as any} templateId="kage" />
                     ))}
                   </div>
                 </div>
@@ -588,6 +595,12 @@ export default function TemplatesPage() {
               <p className="text-xs text-pink-100/75 leading-relaxed font-light">
                 {cloudNineTemplate?.description}
               </p>
+              <div className="flex flex-wrap gap-1.5 pt-2">
+                <CapabilityChip capability="letter" templateId="cloud-nine" />
+                {cloudNineTemplate?.supportedModules?.map((mod) => (
+                  <CapabilityChip key={mod} capability={mod as any} templateId="cloud-nine" />
+                ))}
+              </div>
             </div>
 
             <div className="pt-4 border-t border-white/[0.08] flex items-center justify-between gap-3">
@@ -597,7 +610,7 @@ export default function TemplatesPage() {
                   setFeaturedWorldId("cloud-nine");
                   document.getElementById("template-cloud-nine")?.scrollIntoView({ behavior: "smooth" });
                 }}
-                className="text-xs text-pink-300 hover:text-white transition-colors underline underline-offset-4"
+                className="text-xs text-pink-300 hover:text-white transition-colors underline underline-offset-4 cursor-pointer"
               >
                 Preview in Stage
               </button>
@@ -617,7 +630,7 @@ export default function TemplatesPage() {
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <Badge variant="neutral" size="sm" className="bg-emerald-950/70 text-emerald-300 border-emerald-500/40">
-                  {kageTemplate?.availability === "experimental" ? "Experimental" : "Available"}
+                  Available Now
                 </Badge>
                 <span className="text-xs text-emerald-300/60 font-sans">ThreeUI World</span>
               </div>
@@ -631,6 +644,12 @@ export default function TemplatesPage() {
               <p className="text-xs text-emerald-100/75 leading-relaxed font-light">
                 {kageTemplate?.description}
               </p>
+              <div className="flex flex-wrap gap-1.5 pt-2">
+                <CapabilityChip capability="letter" templateId="kage" />
+                {kageTemplate?.supportedModules?.map((mod) => (
+                  <CapabilityChip key={mod} capability={mod as any} templateId="kage" />
+                ))}
+              </div>
             </div>
 
             <div className="pt-4 border-t border-white/[0.08] flex items-center justify-between gap-3">

@@ -105,8 +105,10 @@ export const KageLandingPage: React.FC<KageLandingPageProps> = ({
         try {
           if (!(window as any).__kage) {
             const script = document.createElement("script");
+            script.id = "kage-boot-script";
             script.src = "/landing-pages/kage-boot.js";
-            // Check if already booted
+            script.async = true;
+            document.body.appendChild(script);
           }
         } catch (err) {
           console.warn("Kage runtime init notice:", err);
@@ -121,12 +123,22 @@ export const KageLandingPage: React.FC<KageLandingPageProps> = ({
 
     return () => {
       isMounted = false;
-      // Cleanup Kage renderer if present
+      const script = document.getElementById("kage-boot-script");
+      if (script?.parentNode) {
+        script.parentNode.removeChild(script);
+      }
       const kage = (window as any).__kage;
-      if (kage && kage.renderer) {
+      if (kage) {
         try {
-          kage.renderer.dispose?.();
+          if (kage.renderer) {
+            kage.renderer.dispose?.();
+            if (typeof kage.renderer.forceContextLoss === "function") {
+              kage.renderer.forceContextLoss();
+            }
+          }
         } catch {}
+        delete (window as any).__kage;
+        delete (window as any).__secret;
       }
     };
   }, []);
@@ -167,6 +179,12 @@ export const KageLandingPage: React.FC<KageLandingPageProps> = ({
         className="fixed inset-0 pointer-events-none opacity-20 z-1"
         aria-hidden="true"
       />
+      <div className="cur-dot" id="cursor" style={{ display: "none" }} aria-hidden="true" />
+      <div id="fg-sky" style={{ display: "none" }} aria-hidden="true" />
+      <div id="nav" style={{ display: "none" }} aria-hidden="true">
+        <div id="rail" />
+      </div>
+      <div id="hero" style={{ display: "none" }} aria-hidden="true" />
 
       {/* Preloader element needed by authored script */}
       <div id="pre" className="done pointer-events-none" aria-hidden="true">

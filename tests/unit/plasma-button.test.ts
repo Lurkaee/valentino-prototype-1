@@ -34,7 +34,7 @@ describe("ThreeUI Plasma Button Source Integrity & Color Configuration", () => {
       const fullPath = path.resolve(process.cwd(), spec.file);
       expect(fs.existsSync(fullPath), `File must exist: ${spec.file}`).toBe(true);
 
-      const content = fs.readFileSync(fullPath, "utf8");
+      const content = fs.readFileSync(fullPath, "utf8").replace(/\r\n/g, "\n");
       const computedHash = crypto
         .createHash("sha256")
         .update(content)
@@ -90,6 +90,7 @@ describe("ThreeUI Plasma Button Source Integrity & Color Configuration", () => {
       "valentine",
       "midnightRose",
       "cloudNine",
+      "kage",
       "goldenHour",
       "stardust",
     ];

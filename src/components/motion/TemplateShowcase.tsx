@@ -5,295 +5,300 @@ import { motion, useReducedMotion } from "motion/react";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
 import { CurtainLink } from "@/components/motion/PageCurtains";
+import { getAllTemplates } from "@/templates/registry";
+import { CapabilityChip, CapabilityKey } from "@/components/ui/CapabilityChip";
 
-interface TemplateItem {
+interface WorldPresentationMeta {
   id: string;
   name: string;
-  status: "active" | "coming-soon";
-  statusLabel: string;
-  palette: string;
-  description: string;
-  mood: string;
-  accentBg: string;
-  accentBorder: string;
-  accentColor: string;
+  subtitle: string;
+  badge: string;
   icon: string;
+  quote: string;
+  signature: string;
+  atmosphereTone: string;
+  accentCardBorder: string;
+  accentCardBg: string;
+  accentGlow: string;
+  accentPill: string;
+  sampleSender: string;
+  sampleRecipient: string;
+  capabilities: CapabilityKey[];
+  swatches?: { id: string; name: string; color: string }[];
 }
 
-const TEMPLATES: TemplateItem[] = [
-  {
+const WORLD_PRESENTATIONS: Record<string, WorldPresentationMeta> = {
+  "midnight-rose": {
     id: "midnight-rose",
     name: "Midnight Rose",
-    status: "active",
-    statusLabel: "Flagship · Available Now",
-    palette: "Deep Berry · Crimson · Obsidian · Gold",
-    description:
-      "Our signature starlight love letter sealed with digital wax. Designed for deep affection, quiet declarations, and an unforgettable reveal.",
-    mood: "Intimate & Romantic",
-    accentBg: "from-rose-900/40 via-rose-950/60 to-black/80",
-    accentBorder: "border-rose-500/40",
-    accentColor: "text-rose-300",
+    subtitle: "Starlight & Digital Wax Letter",
+    badge: "Flagship World",
     icon: "🌹",
+    quote: "“A cinematic declaration wrapped in starlight, candlelit velvet, and an interactive wax seal.”",
+    signature: "Physical envelope + interactive crimson wax seal reveal",
+    atmosphereTone: "Deep Obsidian · Crimson Rose · Gold Dust · Starlight",
+    accentCardBorder: "border-rose-500/30 hover:border-rose-500/50",
+    accentCardBg: "bg-gradient-to-br from-[#1A0A12]/90 via-[#12040C]/90 to-[#0A0207]/95",
+    accentGlow: "from-rose-600/20 via-rose-950/40 to-transparent",
+    accentPill: "bg-rose-950/80 border-rose-500/40 text-rose-200",
+    sampleSender: "Yours Always",
+    sampleRecipient: "Dearest Maya",
+    capabilities: ["letter", "timeline", "quiz", "secret", "openWhen"],
+    swatches: [
+      { id: "crimson-rose", name: "Crimson", color: "#e11d48" },
+      { id: "midnight-violet", name: "Violet", color: "#9333ea" },
+      { id: "champagne-gold", name: "Gold", color: "#d97706" },
+    ],
   },
-  {
+  "cloud-nine": {
     id: "cloud-nine",
     name: "Cloud Nine",
-    status: "coming-soon",
-    statusLabel: "In Development",
-    palette: "Blush Pink · Soft Sunset · Powder Cream",
-    description:
-      "Floating amongst sunset clouds with gentle heart drifts and playful warmth. For the person who makes life feel weightless.",
-    mood: "Cute & Dreamy",
-    accentBg: "from-pink-900/30 via-rose-950/40 to-black/80",
-    accentBorder: "border-pink-500/30",
-    accentColor: "text-pink-300",
+    subtitle: "Dreamy Pastel Sky & Clouds",
+    badge: "Luminous World",
     icon: "☁️",
+    quote: "“Floating weightlessly above sunset clouds, with gentle heart drifts and playful warmth.”",
+    signature: "Celestial blessing + interactive cloud envelope fold",
+    atmosphereTone: "Baby Pink · Lavender · Luminous Pearl · Soft Sunset",
+    accentCardBorder: "border-pink-300/30 hover:border-pink-300/50",
+    accentCardBg: "bg-gradient-to-br from-[#1C1220]/90 via-[#160E1A]/90 to-[#0F0B14]/95",
+    accentGlow: "from-pink-500/20 via-purple-950/40 to-transparent",
+    accentPill: "bg-pink-950/80 border-pink-400/40 text-pink-200",
+    sampleSender: "Forever in the Clouds",
+    sampleRecipient: "Dearest Angel",
+    capabilities: ["letter", "timeline", "quiz", "openWhen"],
+    swatches: [
+      { id: "blush-sky", name: "Blush Sky", color: "#f472b6" },
+      { id: "sunset-coral", name: "Sunset", color: "#fb7185" },
+      { id: "lavender-dream", name: "Lavender", color: "#c084fc" },
+    ],
   },
-  {
-    id: "golden-hour",
-    name: "Golden Hour",
-    status: "coming-soon",
-    statusLabel: "In Development",
-    palette: "Champagne · Warm Peach · Amber Glow",
-    description:
-      "Basked in the golden warmth of late afternoon sunlight. Deckled cotton paper borders and nostalgic prose.",
-    mood: "Warm & Nostalgic",
-    accentBg: "from-amber-900/30 via-stone-950/50 to-black/80",
-    accentBorder: "border-amber-500/30",
-    accentColor: "text-amber-300",
-    icon: "✨",
+  "kage": {
+    id: "kage",
+    name: "Kage (影)",
+    subtitle: "Kyoto Sanctuary & 3D Shaders",
+    badge: "ThreeUI WebGL World",
+    icon: "⛩️",
+    quote: "“A Kyoto mountain temple at twilight. Drifting mist, Japanese stone lanterns, and quiet secrets.”",
+    signature: "Kyoto mist canvas + authentic WebGL Three.js shaders",
+    atmosphereTone: "Sacred Emerald · Kyoto Teal · Temple Stone · Sacred Cedar",
+    accentCardBorder: "border-emerald-500/30 hover:border-emerald-500/50",
+    accentCardBg: "bg-gradient-to-br from-[#061511]/90 via-[#040E0B]/90 to-[#020705]/95",
+    accentGlow: "from-emerald-600/20 via-teal-950/40 to-transparent",
+    accentPill: "bg-emerald-950/80 border-emerald-500/40 text-emerald-200",
+    sampleSender: "With all my heart",
+    sampleRecipient: "Aoi",
+    capabilities: ["letter", "secret"],
+    swatches: [
+      { id: "kyoto-crimson", name: "Kyoto Crimson", color: "#e0231c" },
+      { id: "sanctuary-emerald", name: "Sanctuary Emerald", color: "#10b981" },
+      { id: "moonlit-stone", name: "Moonlit Stone", color: "#94a3b8" },
+    ],
   },
-  {
-    id: "love-letter",
-    name: "Love Letter",
-    status: "coming-soon",
-    statusLabel: "In Development",
-    palette: "Ivory Stationery · Burgundy Ink · Silk Ribbon",
-    description:
-      "A tribute to traditional correspondence. Elegant fountain pen flourishes, vintage paper texture, and deckled edges.",
-    mood: "Timeless & Classical",
-    accentBg: "from-rose-950/30 via-stone-950/50 to-black/80",
-    accentBorder: "border-rose-400/30",
-    accentColor: "text-rose-200",
-    icon: "💌",
-  },
-  {
-    id: "stardust",
-    name: "Stardust",
-    status: "coming-soon",
-    statusLabel: "In Development",
-    palette: "Midnight Violet · Celestial Lilac · Soft Silver",
-    description:
-      "A starry night sky with glowing constellations that unlock your love notes as your partner explores the cosmos.",
-    mood: "Mystical & Celestial",
-    accentBg: "from-purple-900/30 via-indigo-950/50 to-black/80",
-    accentBorder: "border-purple-500/30",
-    accentColor: "text-purple-300",
-    icon: "⭐",
-  },
-];
+};
 
 export function TemplateShowcase({ className = "" }: { className?: string }) {
-  const [activeTemplateId, setActiveTemplateId] = useState<string>("midnight-rose");
-  const [selectedSwatch, setSelectedSwatch] = useState<"crimson" | "violet" | "gold">("crimson");
+  const [activeWorldId, setActiveWorldId] = useState<string>("midnight-rose");
+  const [selectedSwatch, setSelectedSwatch] = useState<string>("crimson-rose");
   const shouldReduceMotion = useReducedMotion();
 
-  const activeTemplate = TEMPLATES.find((t) => t.id === activeTemplateId) || TEMPLATES[0];
+  const allTemplates = getAllTemplates();
+  const availableTemplates = allTemplates.filter((t) => t.availability === "available");
+
+  const currentMeta = WORLD_PRESENTATIONS[activeWorldId] || WORLD_PRESENTATIONS["midnight-rose"];
 
   return (
-    <section id="templates" className={`w-full max-w-6xl mx-auto px-6 py-24 relative z-10 ${className}`}>
-      {/* Section Header with Soft Viewport Entrance */}
+    <section id="worlds" className={`w-full max-w-6xl mx-auto px-6 py-20 relative z-10 ${className}`}>
+      {/* Section Header */}
       <motion.div
         initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 16 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-60px" }}
         transition={{ duration: 0.5, ease: "easeOut" }}
-        className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-12"
+        className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-10"
       >
         <div>
           <Badge
-            variant="rose"
+            variant="neutral"
             size="sm"
-            className="mb-3 tracking-widest uppercase text-[11px] bg-rose-950/70 border-rose-400/40 text-rose-200"
+            className="mb-3 tracking-widest uppercase text-[11px] bg-white/[0.06] border-white/15 text-ivory-200"
           >
-            The Collection
+            The World Collection
           </Badge>
-          <h2 className="text-3xl sm:text-5xl font-serif font-medium text-[#FAF8F5]">
-            Choose Your Atmosphere
+          <h2 className="text-3xl sm:text-5xl font-serif font-medium text-white tracking-tight">
+            Three Distinct Visual Worlds
           </h2>
-          <p className="text-sm sm:text-base text-[#FAF8F5]/75 font-light mt-2 max-w-lg">
-            Every love story has its own rhythm. Select a canvas that reflects how you want your partner to feel.
+          <p className="text-sm sm:text-base text-white/70 font-light mt-2 max-w-xl">
+            Valentino provides complete, authentic creative worlds — each designed with its own atmosphere, typography, interactions, and emotional signature.
           </p>
         </div>
         <CurtainLink href="/templates">
           <Button
             variant="outline"
             size="sm"
-            className="text-xs px-4 border-white/20 hover:border-white/40 text-[#FAF8F5]"
+            className="text-xs px-4 border-white/20 hover:border-white/40 text-white rounded-full"
           >
-            View All Templates →
+            Open Showroom →
           </Button>
         </CurtainLink>
       </motion.div>
 
-      {/* Main Interactive Showcase (Inspired by Skiper 6) */}
+      {/* Main Interactive Showcase */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-        {/* Left: Template Selector List (Hover to expand / preview) */}
-        <div className="lg:col-span-5 space-y-3 flex flex-col justify-between">
-          {TEMPLATES.map((tmpl) => {
-            const isSelected = tmpl.id === activeTemplateId;
+        {/* Left: World Selectors */}
+        <div className="lg:col-span-5 space-y-3.5 flex flex-col justify-between">
+          {availableTemplates.map((tmpl) => {
+            const isSelected = tmpl.id === activeWorldId;
+            const meta = WORLD_PRESENTATIONS[tmpl.id];
             return (
               <div
                 key={tmpl.id}
-                onMouseEnter={() => setActiveTemplateId(tmpl.id)}
-                onClick={() => setActiveTemplateId(tmpl.id)}
-                className={`p-4 sm:p-5 rounded-2xl border transition-all duration-300 cursor-pointer select-none relative group ${
+                onClick={() => {
+                  setActiveWorldId(tmpl.id);
+                  if (meta?.swatches?.[0]) setSelectedSwatch(meta.swatches[0].id);
+                }}
+                className={`p-5 rounded-2xl border transition-all duration-300 cursor-pointer select-none relative group ${
                   isSelected
-                    ? "bg-[#2A0818]/90 border-rose-400/50 shadow-lg shadow-rose-950/50 translate-x-1"
-                    : "bg-[#14030B]/40 border-white/[0.06] hover:bg-[#1E0512]/60 hover:border-white/15"
+                    ? `${meta?.accentCardBorder || "border-white/40"} ${meta?.accentCardBg || "bg-white/10"} shadow-xl translate-x-1`
+                    : "bg-white/[0.02] border-white/[0.06] hover:bg-white/[0.05] hover:border-white/15"
                 }`}
                 role="button"
                 tabIndex={0}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" || e.key === " ") {
                     e.preventDefault();
-                    setActiveTemplateId(tmpl.id);
+                    setActiveWorldId(tmpl.id);
+                    if (meta?.swatches?.[0]) setSelectedSwatch(meta.swatches[0].id);
                   }
                 }}
+                aria-pressed={isSelected}
+                aria-label={`Select ${tmpl.name} world`}
               >
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <span className="text-xl">{tmpl.icon}</span>
+                  <div className="flex items-center gap-3.5">
+                    <span className="text-2xl select-none">{meta?.icon || "✦"}</span>
                     <div>
-                      <h3 className="font-serif text-lg font-medium text-[#FAF8F5] group-hover:text-rose-200 transition-colors">
-                        {tmpl.name}
-                      </h3>
-                      <span className="text-[11px] text-[#FAF8F5]/60 font-sans block">
-                        {tmpl.mood}
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-serif text-lg font-medium text-white group-hover:text-rose-200 transition-colors">
+                          {tmpl.name}
+                        </h3>
+                        {isSelected && (
+                          <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-white/10 border border-white/20 text-white/80 font-mono">
+                            Selected
+                          </span>
+                        )}
+                      </div>
+                      <span className="text-xs text-white/60 font-sans block mt-0.5">
+                        {meta?.subtitle || tmpl.tagline}
                       </span>
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2">
-                    {tmpl.status === "active" ? (
-                      <span className="text-[10px] uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-rose-950/80 border border-rose-500/40 text-rose-300 font-mono">
-                        Available
-                      </span>
-                    ) : (
-                      <span className="text-[10px] uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-white/5 border border-white/10 text-white/50 font-mono">
-                        Soon
-                      </span>
-                    )}
-                    <span
-                      className={`text-rose-400 transition-transform duration-300 ${
-                        isSelected ? "translate-x-0 opacity-100" : "-translate-x-1 opacity-0 group-hover:opacity-60"
-                      }`}
-                    >
-                      →
-                    </span>
-                  </div>
+                  <span
+                    className={`text-white/60 transition-transform duration-300 ${
+                      isSelected ? "translate-x-0 opacity-100 text-white" : "-translate-x-1 opacity-0 group-hover:opacity-60"
+                    }`}
+                  >
+                    →
+                  </span>
                 </div>
               </div>
             );
           })}
+
+          <div className="p-4 rounded-2xl border border-white/[0.06] bg-white/[0.01] text-xs text-white/50 space-y-1">
+            <span className="font-medium text-white/80">Every World Includes:</span>
+            <p>Non-destructive world switching · Private unguessable URLs · Concurrency locking · Autosave.</p>
+          </div>
         </div>
 
         {/* Right: Rich Interactive Spotlight Card */}
-        <div className="lg:col-span-7 rounded-3xl border border-rose-500/25 bg-[#18040F]/80 backdrop-blur-xl p-7 sm:p-10 shadow-2xl relative overflow-hidden flex flex-col justify-between">
-          {/* Ambient background glow matching active template */}
+        <div className={`lg:col-span-7 rounded-3xl border ${currentMeta.accentCardBorder} ${currentMeta.accentCardBg} backdrop-blur-xl p-7 sm:p-9 shadow-2xl relative overflow-hidden flex flex-col justify-between transition-all duration-500`}>
+          {/* Ambient background glow */}
           <div
-            className={`absolute inset-0 bg-gradient-to-br ${activeTemplate.accentBg} opacity-60 pointer-events-none transition-all duration-700`}
+            className={`absolute inset-0 bg-gradient-to-br ${currentMeta.accentGlow} pointer-events-none transition-all duration-700`}
           />
 
           <div className="relative z-10 space-y-6">
-            {/* Top Badge & Palette Name */}
+            {/* Top Badge & Atmosphere */}
             <div className="flex items-center justify-between border-b border-white/[0.08] pb-4">
-              <Badge variant="rose" size="md" className="tracking-wider uppercase text-[11px]">
-                {activeTemplate.statusLabel}
-              </Badge>
-              <span className="text-xs font-mono text-[#FAF8F5]/60">
-                {activeTemplate.palette}
+              <span className={`text-[11px] font-mono uppercase tracking-widest px-3 py-0.5 rounded-full border ${currentMeta.accentPill}`}>
+                {currentMeta.badge}
+              </span>
+              <span className="text-xs font-mono text-white/60">
+                {currentMeta.atmosphereTone}
               </span>
             </div>
 
-            {/* Template Title & Story */}
-            <div className="space-y-3">
-              <h2 className="text-3xl sm:text-4xl font-serif font-medium text-[#FAF8F5]">
-                {activeTemplate.name}
-              </h2>
-              <p className="text-sm sm:text-base text-[#FAF8F5]/80 font-light leading-relaxed">
-                {activeTemplate.description}
+            {/* Title & Atmosphere Quote */}
+            <div className="space-y-2">
+              <div className="flex items-center gap-3">
+                <span className="text-3xl select-none">{currentMeta.icon}</span>
+                <h3 className="text-3xl sm:text-4xl font-serif font-medium text-white">
+                  {currentMeta.name}
+                </h3>
+              </div>
+              <p className="text-sm sm:text-base text-white/80 font-serif italic leading-relaxed pt-1">
+                {currentMeta.quote}
               </p>
             </div>
 
-            {/* Interactive Color Palette Swatches (specifically for Midnight Rose) */}
-            {activeTemplate.id === "midnight-rose" && (
-              <div className="space-y-2.5 pt-2">
-                <span className="block text-xs uppercase tracking-wider text-[#FAF8F5]/60 font-medium">
-                  Select Accent Palette:
+            {/* Signature Experience & Interactive Capability Buttons */}
+            <div className="space-y-3 pt-2">
+              <span className="block text-xs uppercase tracking-wider text-white/50 font-medium">
+                Supported Experience Modules (Click to Launch):
+              </span>
+              <div className="flex flex-wrap gap-2">
+                {currentMeta.capabilities.map((cap) => (
+                  <CapabilityChip
+                    key={cap}
+                    capability={cap}
+                    templateId={currentMeta.id}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Optional Palette Swatches */}
+            {currentMeta.swatches && currentMeta.swatches.length > 0 && (
+              <div className="space-y-2 pt-1">
+                <span className="block text-xs uppercase tracking-wider text-white/50 font-medium">
+                  Atmospheric Accents:
                 </span>
-                <div className="flex flex-wrap gap-2.5">
-                  <button
-                    type="button"
-                    onClick={() => setSelectedSwatch("crimson")}
-                    className={`px-3.5 py-1.5 rounded-xl text-xs font-medium border flex items-center gap-2 transition-all ${
-                      selectedSwatch === "crimson"
-                        ? "border-rose-500 bg-rose-950/70 text-white shadow-md shadow-rose-950/60"
-                        : "border-white/10 bg-white/5 text-[#FAF8F5]/70 hover:bg-white/10"
-                    }`}
-                  >
-                    <span className="w-2.5 h-2.5 rounded-full bg-rose-500" /> Crimson
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setSelectedSwatch("violet")}
-                    className={`px-3.5 py-1.5 rounded-xl text-xs font-medium border flex items-center gap-2 transition-all ${
-                      selectedSwatch === "violet"
-                        ? "border-purple-500 bg-purple-950/70 text-white shadow-md shadow-purple-950/60"
-                        : "border-white/10 bg-white/5 text-[#FAF8F5]/70 hover:bg-white/10"
-                    }`}
-                  >
-                    <span className="w-2.5 h-2.5 rounded-full bg-purple-500" /> Violet
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setSelectedSwatch("gold")}
-                    className={`px-3.5 py-1.5 rounded-xl text-xs font-medium border flex items-center gap-2 transition-all ${
-                      selectedSwatch === "gold"
-                        ? "border-amber-500 bg-amber-950/70 text-white shadow-md shadow-amber-950/60"
-                        : "border-white/10 bg-white/5 text-[#FAF8F5]/70 hover:bg-white/10"
-                    }`}
-                  >
-                    <span className="w-2.5 h-2.5 rounded-full bg-amber-500" /> Gold
-                  </button>
+                <div className="flex flex-wrap gap-2">
+                  {currentMeta.swatches.map((swatch) => (
+                    <button
+                      key={swatch.id}
+                      type="button"
+                      onClick={() => setSelectedSwatch(swatch.id)}
+                      className={`px-3 py-1.5 rounded-xl text-xs font-medium border flex items-center gap-2 transition-all ${
+                        selectedSwatch === swatch.id
+                          ? "border-white/40 bg-white/15 text-white shadow-sm"
+                          : "border-white/10 bg-white/5 text-white/70 hover:bg-white/10"
+                      }`}
+                    >
+                      <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: swatch.color }} />
+                      <span>{swatch.name}</span>
+                    </button>
+                  ))}
                 </div>
               </div>
             )}
 
-            {/* Visual Preview Moment */}
-            <div className="p-5 rounded-2xl bg-black/40 border border-white/[0.08] flex items-center gap-4">
-              <div className="w-12 h-12 rounded-full bg-rose-700/80 border border-rose-500/80 flex items-center justify-center text-xl shrink-0 shadow-lg shadow-rose-950/80">
-                💌
-              </div>
-              <div className="space-y-0.5">
-                <span className="text-xs uppercase tracking-wider text-rose-300 font-sans font-medium">
-                  {activeTemplate.name} Preview
-                </span>
-                <p className="text-xs text-[#FAF8F5]/70 italic">
-                  &ldquo;A private letter, sealed with wax and starlight.&rdquo;
-                </p>
-              </div>
+            {/* Signature Details Box */}
+            <div className="p-4 rounded-2xl bg-black/40 border border-white/[0.08] flex items-center justify-between text-xs text-white/70">
+              <span className="text-white/50">Signature Mechanism:</span>
+              <span className="font-medium text-white">{currentMeta.signature}</span>
             </div>
           </div>
 
           {/* Action CTA */}
-          <div className="relative z-10 pt-8 mt-4 border-t border-white/[0.08] flex flex-col sm:flex-row items-center justify-between gap-4">
-            <span className="text-xs text-[#FAF8F5]/60 font-sans">
-              No registration · Instant publish
+          <div className="relative z-10 pt-6 mt-6 border-t border-white/[0.08] flex flex-col sm:flex-row items-center justify-between gap-4">
+            <span className="text-xs text-white/60 font-sans">
+              No registration required · Instant private link
             </span>
-            <CurtainLink href="/create" className="w-full sm:w-auto">
+            <CurtainLink href={`/create?template=${currentMeta.id}`} className="w-full sm:w-auto">
               <Button size="md" variant="primary" className="w-full sm:w-auto px-6 py-2.5 rounded-full">
-                <span>Customize {activeTemplate.name}</span>
+                <span>Customize {currentMeta.name}</span>
                 <span>→</span>
               </Button>
             </CurtainLink>
