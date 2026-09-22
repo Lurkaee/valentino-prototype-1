@@ -6,37 +6,39 @@ export function validateOrigin(req: NextRequest): { valid: boolean; reason?: str
     return { valid: false, reason: "Missing Origin header" };
   }
 
-  const appUrl = process.env.APP_URL || "http://localhost:3000";
-
   try {
     const originUrl = new URL(origin);
-    const expectedUrl = new URL(appUrl);
+    const normalizedOrigin = originUrl.origin.toLowerCase();
 
-    // Normalize comparison (protocol + host)
-    if (originUrl.origin.toLowerCase() === expectedUrl.origin.toLowerCase()) {
-      return { valid: true };
+    // 1. Derive the current request's own origin from trusted host & protocol headers
+    const host = req.headers.get("x-forwarded-host") || req.headers.get("host");
+    if (host) {
+      const proto =
+        req.headers.get("x-forwarded-proto") ||
+        (req.nextUrl?.protocol ? req.nextUrl.protocol.replace(":", "") : "https");
+      const requestOrigin = `${proto}://${host}`.toLowerCase();
+      if (normalizedOrigin === requestOrigin) {
+        return { valid: true };
+      }
     }
 
-    // In Vercel Preview environments, allow same-origin requests matching the verified deployment host
-    // (via x-forwarded-host or host header). Rejects all unrelated third-party origins.
-    if (process.env.VERCEL_ENV === "preview") {
-      const host = req.headers.get("x-forwarded-host") || req.headers.get("host");
-      if (host) {
-        const proto = req.headers.get("x-forwarded-proto") || "https";
-        const expectedPreviewOrigin = `${proto}://${host}`.toLowerCase();
-        if (originUrl.origin.toLowerCase() === expectedPreviewOrigin) {
-          return { valid: true };
-        }
-        return {
-          valid: false,
-          reason: `Origin mismatch in preview: expected ${expectedPreviewOrigin}, received ${originUrl.origin}`,
-        };
+    // 2. Also check against configured APP_URL if specified
+    const appUrl = process.env.APP_URL;
+    if (appUrl) {
+      const expectedAppUrl = new URL(appUrl);
+      if (normalizedOrigin === expectedAppUrl.origin.toLowerCase()) {
+        return { valid: true };
+      }
+    } else {
+      // Local fallback if no APP_URL configured
+      if (normalizedOrigin === "http://localhost:3000") {
+        return { valid: true };
       }
     }
 
     return {
       valid: false,
-      reason: `Origin mismatch: expected ${expectedUrl.origin}, received ${originUrl.origin}`,
+      reason: "Request origin not allowed",
     };
   } catch {
     return { valid: false, reason: "Invalid Origin header URL" };

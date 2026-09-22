@@ -36,7 +36,7 @@ test.describe("Gate 4B: Templates Showroom Renaissance", () => {
     // Verify customize button for Midnight Rose
     const customizeMidnight = page.locator('a:has-text("Customize Midnight Rose")');
     await expect(customizeMidnight).toBeVisible();
-    await expect(customizeMidnight).toHaveAttribute("href", "/create");
+    await expect(customizeMidnight).toHaveAttribute("href", "/create?template=midnight-rose");
 
     // Capture screenshot of featured world stage
     await page.screenshot({

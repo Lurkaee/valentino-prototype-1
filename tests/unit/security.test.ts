@@ -72,39 +72,37 @@ describe("Security & Cryptographic Helpers", () => {
       });
       const result = validateOrigin(req);
       expect(result.valid).toBe(false);
-      expect(result.reason).toContain("Origin mismatch");
+      expect(result.reason).toBe("Request origin not allowed");
     });
 
-    it("in Vercel preview, accepts same-origin matching host and rejects third-party", async () => {
-      const originalEnv = process.env.VERCEL_ENV;
-      process.env.VERCEL_ENV = "preview";
-      try {
-        const { validateOrigin } = await import("@/lib/csrf");
-        const { NextRequest } = await import("next/server");
-        const previewHost = "valentino-preview-abc123.vercel.app";
+    it("accepts same-origin matching request host and protocol without needing VERCEL_ENV", async () => {
+      const { validateOrigin } = await import("@/lib/csrf");
+      const { NextRequest } = await import("next/server");
+      const previewHost = "valentino-preview-amdzup.vercel.app";
 
-        // Same-origin preview request
-        const validReq = new NextRequest(`https://${previewHost}/api/experiences`, {
-          method: "POST",
-          headers: {
-            origin: `https://${previewHost}`,
-            host: previewHost,
-          },
-        });
-        expect(validateOrigin(validReq).valid).toBe(true);
+      // Same-origin preview request
+      const validReq = new NextRequest(`https://${previewHost}/api/experiences`, {
+        method: "POST",
+        headers: {
+          origin: `https://${previewHost}`,
+          host: previewHost,
+          "x-forwarded-proto": "https",
+        },
+      });
+      expect(validateOrigin(validReq).valid).toBe(true);
 
-        // Attacker request to preview deployment
-        const attackerReq = new NextRequest(`https://${previewHost}/api/experiences`, {
-          method: "POST",
-          headers: {
-            origin: "https://evil-site.com",
-            host: previewHost,
-          },
-        });
-        expect(validateOrigin(attackerReq).valid).toBe(false);
-      } finally {
-        process.env.VERCEL_ENV = originalEnv;
-      }
+      // Attacker request to deployment
+      const attackerReq = new NextRequest(`https://${previewHost}/api/experiences`, {
+        method: "POST",
+        headers: {
+          origin: "https://evil-site.com",
+          host: previewHost,
+          "x-forwarded-proto": "https",
+        },
+      });
+      const attackResult = validateOrigin(attackerReq);
+      expect(attackResult.valid).toBe(false);
+      expect(attackResult.reason).toBe("Request origin not allowed");
     });
   });
 });

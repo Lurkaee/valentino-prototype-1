@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef, useCallback, Suspense } from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { ExperienceRenderer } from "@/templates/ExperienceRenderer";
 import {
   MidnightRoseDraftConfig,
@@ -31,7 +31,7 @@ import { ContentReadinessBar } from "@/components/studio/ContentReadinessBar";
 import { ModuleManager } from "@/modules/editor/ModuleManager";
 import { FeatureDefinition } from "@/features/types";
 
-export default function EditExperiencePage() {
+function EditExperienceContent() {
   const params = useParams<{ publicId: string }>();
   const publicId = params.publicId;
 
@@ -70,6 +70,25 @@ export default function EditExperiencePage() {
   const [mobileTab, setMobileTab] = useState<"form" | "preview">("form");
   const [activeSection, setActiveSection] = useState<"world" | "story" | "moments" | "mood" | "preview">("story");
   const [showAdvancedStory, setShowAdvancedStory] = useState(false);
+  const searchParams = useSearchParams();
+
+  // Deep-linking focus support
+  useEffect(() => {
+    const focus = searchParams?.get("focus");
+    if (!focus) return;
+    if (focus === "letter" || focus === "story") {
+      setActiveSection("story");
+    } else if (focus === "timeline" || focus === "quiz" || focus === "secret" || focus === "openWhen") {
+      setActiveSection("moments");
+      setActiveMomentKey(focus as any);
+    } else if (focus === "mood" || focus === "decor") {
+      setActiveSection("mood");
+    } else if (focus === "world") {
+      setWorldModalOpen(true);
+    } else if (focus === "preview") {
+      setActiveSection("preview");
+    }
+  }, [searchParams]);
 
   const configRef = useRef(config);
   configRef.current = config;
@@ -1284,5 +1303,19 @@ export default function EditExperiencePage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function EditExperiencePage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-[#0E0D12] text-white flex items-center justify-center">
+          <div className="w-10 h-10 border-2 border-rose-500/20 border-t-rose-500 rounded-full animate-spin" />
+        </div>
+      }
+    >
+      <EditExperienceContent />
+    </Suspense>
   );
 }

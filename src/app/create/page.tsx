@@ -72,16 +72,22 @@ function CreateExperienceContent() {
 
         if (!res.ok) {
           const data = await res.json().catch(() => ({}));
-          throw new Error(data.error || "Failed to initialize experience");
+          console.error("Create experience error details:", data);
+          throw new Error("We couldn't complete that action right now. Please try again.");
         }
 
         const { publicId } = await res.json();
         if (isMounted) {
-          router.replace(`/edit/${publicId}`);
+          const focus = searchParams.get("focus");
+          const targetUrl = focus
+            ? `/edit/${publicId}?focus=${encodeURIComponent(focus)}`
+            : `/edit/${publicId}`;
+          router.replace(targetUrl);
         }
       } catch (err: any) {
         if (isMounted) {
-          setError(err.message || "An unexpected error occurred while setting up your canvas.");
+          console.error("Create experience initialization failed:", err);
+          setError("We couldn't complete that action right now. Please try again.");
         }
       }
     }
@@ -159,7 +165,7 @@ function CreateExperienceContent() {
                   ? "A dreamy pastel world with Devotion Letter · Celestial Blessing · Story Chapters"
                   : templateId === "kage"
                   ? "A Kyoto mountain temple with Japanese Mist · Intimate Letter · Secret Note"
-                  : "A cinematic letter world with Love Letter · Memories · Interactive Moments"}
+                  : "A cinematic letter world with Love Letter · Story Timeline · Interactive Moments"}
               </p>
             </div>
           </div>
