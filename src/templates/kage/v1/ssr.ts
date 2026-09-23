@@ -1,12 +1,23 @@
 import { sanitizeText } from "@/lib/sanitize";
 import { KagePublishedConfig } from "./schema";
+import {
+  renderModulesHtml,
+  renderReactionsAndReplyHtml,
+  renderPrintKeepsakeButton,
+  PRINT_MEDIA_STYLES,
+  getModulesClientScript,
+} from "@/modules/ssrModules";
 
-export function renderKageSsrHtml(config: KagePublishedConfig): string {
+export function renderKageSsrHtml(config: KagePublishedConfig, publicId: string = ""): string {
   const partnerName = sanitizeText(config.partnerName || "Dearest");
   const greeting = sanitizeText(config.greeting || "Where stillness reveals the unseen");
   const message = sanitizeText(config.message || "In the quiet of the night, every thought of you is a light through the shadows.");
   const signOff = sanitizeText(config.signOff || "With all my heart");
   const senderName = sanitizeText(config.senderName || "Yours Always");
+
+  const modulesHtml = renderModulesHtml(config.modules, config.moduleOrder, publicId);
+  const interactionsHtml = renderReactionsAndReplyHtml(publicId);
+  const printKeepsakeBtn = renderPrintKeepsakeButton();
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -107,6 +118,7 @@ export function renderKageSsrHtml(config: KagePublishedConfig): string {
       font-size: 1.75rem;
       color: #FAF8F5;
     }
+    .hidden { display: none !important; }
     footer {
       font-size: 0.65rem;
       letter-spacing: 0.25em;
@@ -115,26 +127,59 @@ export function renderKageSsrHtml(config: KagePublishedConfig): string {
       padding: 2rem 0 1rem;
       text-align: center;
     }
+    ${PRINT_MEDIA_STYLES}
   </style>
 </head>
 <body>
   <div class="wrapper" data-testid="kage-container">
-    <div style="text-align: center; width: 100%; margin: auto 0;">
+    <div style="text-align: center; width: 100%; max-width: 36rem; margin: auto 0;">
       <span class="badge">${greeting}</span>
       <h1 data-testid="recipient-name">${partnerName}</h1>
       <div class="card">
         <div class="gold-rim"></div>
+        <!-- Read Aloud Speech Synthesis Button -->
+        <div style="display: flex; justify-content: flex-end; margin-bottom: 0.75rem;">
+          <button
+            type="button"
+            id="read-aloud-btn"
+            data-testid="read-aloud-btn"
+            aria-label="Listen to Letter"
+            style="display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.3rem 0.75rem; border-radius: 9999px; font-size: 0.7rem; color: #6EE7B7; background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.3); cursor: pointer; transition: all 0.2s;"
+          >
+            <span>🔊</span> <span>Listen to Letter</span>
+          </button>
+        </div>
         <div class="letter-message" data-testid="letter-message">${message}</div>
         <div class="signoff">
           <p class="signoff-title">${signOff}</p>
           <p class="signoff-sender" data-testid="sender-name">${senderName}</p>
         </div>
+
+        ${modulesHtml}
+
+        ${interactionsHtml}
+
+        ${printKeepsakeBtn}
       </div>
     </div>
     <footer>
       <span>VALENTINO</span> · <span>KAGE WORLD</span> · <span>KYOTO SANCTUARY</span>
     </footer>
   </div>
+
+  <script>
+    (function() {
+      function setup() {
+        ${getModulesClientScript(publicId)}
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', setup);
+      } else {
+        setup();
+      }
+    })();
+  </script>
 </body>
 </html>`;
 }

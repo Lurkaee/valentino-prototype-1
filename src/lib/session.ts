@@ -56,3 +56,17 @@ export function buildSetCookieHeader(
     },
   };
 }
+
+export async function verifySessionCookie(
+  req: NextRequest,
+  publicId: string,
+  storedHash: string
+): Promise<{ authenticated: boolean; error?: string }> {
+  const token = getEditCredentialFromRequest(req, publicId);
+  if (!token) {
+    return { authenticated: false, error: "Missing session token" };
+  }
+  const { verifyEditCredential } = await import("@/lib/security");
+  const valid = verifyEditCredential(token, storedHash);
+  return { authenticated: valid, error: valid ? undefined : "Invalid session token" };
+}

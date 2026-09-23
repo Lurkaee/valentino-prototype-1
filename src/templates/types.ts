@@ -31,5 +31,5 @@ export interface TemplateDefinition<TDraft = any, TPublished = any> {
   normalizeConfig: (raw: unknown, isPublic?: boolean) => TPublished;
   Component: React.ComponentType<TemplateRenderProps<TPublished>>;
 
-  renderSsrHtml?: (config: TPublished) => string;
+  renderSsrHtml?: (config: TPublished, publicId?: string) => string;
 }

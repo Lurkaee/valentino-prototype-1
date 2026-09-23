@@ -1,7 +1,8 @@
+import crypto from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { ExperienceStatus } from "@prisma/client";
-import { verifyEditCredential } from "@/lib/security";
+import { verifyEditCredential, encryptSecretPayload } from "@/lib/security";
 import {
   getEditCredentialFromRequest,
   isSessionExpired,
@@ -10,6 +11,7 @@ import { validateOrigin, validateJsonContentType } from "@/lib/csrf";
 import { rateLimiter, getAnonymizedKey } from "@/lib/rate-limiter";
 import { getTemplateDefinition } from "@/templates/registry";
 import { logger } from "@/lib/logger";
+import { snapshotPublishedMedia } from "@/lib/media";
 
 export const dynamic = "force-dynamic";
 
@@ -122,8 +124,135 @@ export async function POST(req: NextRequest, { params }: RouteParams) {
     );
   }
 
-  // 9. Normalize config and snapshot in transaction
-  const normalizedConfig = template.normalizeConfig(strictResult.data);
+  // 9. Extract referenced media IDs for stable snapshotting
+  const referencedMediaIds: string[] = [];
+  const rawDraft = draftConfig as any;
+
+  function extractMediaId(val: unknown): string | null {
+    if (typeof val !== "string" || !val) return null;
+    const match = val.match(/\/media\/([a-zA-Z0-9_-]+)$/);
+    if (match) return match[1];
+    if (!val.startsWith("http") && !val.startsWith("/")) return val;
+    return null;
+  }
+
+  function toPublicMediaUrl(val: string | null | undefined): string | null | undefined {
+    if (!val || typeof val !== "string") return val;
+    const mId = extractMediaId(val);
+    if (mId) return `/api/media/${publicId}/${mId}`;
+    return val;
+  }
+
+  if (rawDraft?.heroMediaId) {
+    const id = extractMediaId(rawDraft.heroMediaId);
+    if (id) referencedMediaIds.push(id);
+  }
+
+  const draftModules = rawDraft?.modules;
+  if (draftModules && typeof draftModules === "object") {
+    if (Array.isArray(draftModules.memories?.items)) {
+      for (const item of draftModules.memories.items) {
+        const id = item?.mediaId || extractMediaId(item?.url);
+        if (id) referencedMediaIds.push(id);
+      }
+    }
+    if (draftModules.voiceNote) {
+      const id = draftModules.voiceNote.mediaId || extractMediaId(draftModules.voiceNote.url);
+      if (id) referencedMediaIds.push(id);
+    }
+    if (draftModules.videoMemory) {
+      const id = draftModules.videoMemory.mediaId || extractMediaId(draftModules.videoMemory.url);
+      if (id) referencedMediaIds.push(id);
+    }
+  }
+
+  if (rawDraft?.soundtrackUrl) {
+    const id = extractMediaId(rawDraft.soundtrackUrl);
+    if (id) referencedMediaIds.push(id);
+  }
+
+  // 10. Extract server-side scheduled unlock
+  let scheduledUnlockDate: Date | null = null;
+  const rawScheduled = rawDraft?.delivery?.scheduledUnlockAt || rawDraft?.scheduledUnlockAt;
+  if (rawScheduled) {
+    const parsed = new Date(rawScheduled);
+    if (!isNaN(parsed.getTime())) {
+      scheduledUnlockDate = parsed;
+    }
+  }
+
+  // 11. Normalize config and snapshot in transaction
+  const normalizedConfig = template.normalizeConfig(strictResult.data) as any;
+
+  if (normalizedConfig?.heroMediaId) {
+    normalizedConfig.heroMediaId = toPublicMediaUrl(normalizedConfig.heroMediaId);
+  }
+  if (normalizedConfig?.soundtrackUrl) {
+    normalizedConfig.soundtrackUrl = toPublicMediaUrl(normalizedConfig.soundtrackUrl);
+  }
+  if (normalizedConfig?.modules) {
+    if (Array.isArray(normalizedConfig.modules.memories?.items)) {
+      normalizedConfig.modules.memories.items = normalizedConfig.modules.memories.items.map((item: any) => ({
+        ...item,
+        url: toPublicMediaUrl(item.url),
+      }));
+    }
+    if (normalizedConfig.modules.voiceNote?.url) {
+      normalizedConfig.modules.voiceNote.url = toPublicMediaUrl(normalizedConfig.modules.voiceNote.url);
+    }
+    if (normalizedConfig.modules.videoMemory?.url) {
+      normalizedConfig.modules.videoMemory.url = toPublicMediaUrl(normalizedConfig.modules.videoMemory.url);
+    }
+  }
+
+  // Handle Secret Module & Question Lock cryptographically: salt + sha256 + AES-256-GCM
+  if (normalizedConfig?.modules?.secret) {
+    const rawSecret = rawDraft?.modules?.secret;
+    if (rawSecret && rawSecret.enabled) {
+      const question = (rawSecret.question || rawSecret.questionLock?.question || "").trim();
+      const rawAnswer = (rawSecret.answer || rawSecret.questionLock?.answer || "").trim();
+      const plainSecret = (rawSecret.concealedSecret || rawSecret.secretContent || "").trim();
+
+      normalizedConfig.modules.secret.enabled = true;
+      if (rawSecret.prompt) {
+        normalizedConfig.modules.secret.prompt = rawSecret.prompt.trim();
+      }
+
+      if (question && rawAnswer) {
+        const salt = crypto.randomBytes(16).toString("hex");
+        const answerHash = crypto
+          .createHash("sha256")
+          .update(salt + rawAnswer.toLowerCase())
+          .digest("hex");
+
+        normalizedConfig.modules.secret.question = question;
+        normalizedConfig.modules.secret.salt = salt;
+        normalizedConfig.modules.secret.answerHash = answerHash;
+        normalizedConfig.modules.secret.questionLock = {
+          enabled: true,
+          question,
+          answerHash,
+          answerSalt: salt,
+        };
+      }
+
+      if (plainSecret) {
+        normalizedConfig.modules.secret.encryptedSecret = encryptSecretPayload(plainSecret);
+      }
+
+      // Security: ensure raw answer and plain-text secret are completely removed from publishedConfig
+      delete normalizedConfig.modules.secret.answer;
+      delete normalizedConfig.modules.secret.concealedSecret;
+      delete normalizedConfig.modules.secret.secretContent;
+      if (normalizedConfig.modules.secret.questionLock) {
+        delete normalizedConfig.modules.secret.questionLock.answer;
+      }
+    }
+  }
+
+  // Snapshot media records to PUBLISHED status
+  await snapshotPublishedMedia(experience.id, referencedMediaIds);
+
   const now = new Date();
 
   await db.experience.update({
@@ -132,6 +261,7 @@ export async function POST(req: NextRequest, { params }: RouteParams) {
       publishedConfig: JSON.stringify(normalizedConfig),
       publishedRevision: experience.draftRevision,
       publishedAt: now,
+      scheduledUnlockAt: scheduledUnlockDate,
       status: ExperienceStatus.PUBLISHED,
     },
   });

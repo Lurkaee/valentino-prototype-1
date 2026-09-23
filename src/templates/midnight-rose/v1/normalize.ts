@@ -42,11 +42,21 @@ export function normalizeMidnightRoseConfig(
       ? obj.heroMediaId.trim()
       : null;
 
+  const soundtrackUrl =
+    typeof obj.soundtrackUrl === "string" && obj.soundtrackUrl.trim()
+      ? obj.soundtrackUrl.trim()
+      : null;
+
+  const scheduledUnlockAt =
+    typeof obj.scheduledUnlockAt === "string" && obj.scheduledUnlockAt.trim()
+      ? obj.scheduledUnlockAt.trim()
+      : null;
+
   const decor = normalizeValentineDecor(obj.decor);
   const modules = normalizeAllModules(obj.modules, isPublic);
   const moduleOrder = Array.isArray(obj.moduleOrder)
     ? (obj.moduleOrder as string[])
-    : ["timeline", "quiz", "secret", "openWhen"];
+    : ["voiceNote", "videoMemory", "memories", "timeline", "quiz", "secret", "openWhen"];
 
   return {
     partnerName,
@@ -56,6 +66,8 @@ export function normalizeMidnightRoseConfig(
     signOff,
     accentTheme,
     heroMediaId,
+    soundtrackUrl,
+    scheduledUnlockAt,
     decor,
     modules,
     moduleOrder,

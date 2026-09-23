@@ -14,7 +14,15 @@ interface ModulesRendererProps {
   className?: string;
 }
 
-const DEFAULT_ORDER = ["timeline", "quiz", "secret", "openWhen"];
+const DEFAULT_ORDER = [
+  "voiceNote",
+  "videoMemory",
+  "memories",
+  "timeline",
+  "quiz",
+  "secret",
+  "openWhen",
+];
 
 export const ModulesRenderer: React.FC<ModulesRendererProps> = ({
   modules,

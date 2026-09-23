@@ -3,6 +3,23 @@ import { db } from "@/lib/db";
 import { ExperienceStatus } from "@prisma/client";
 import { sanitizeText } from "@/lib/sanitize";
 import { getTemplateDefinition, midnightRoseV1 } from "@/templates/registry";
+import {
+  normalizeValentineDecor,
+  getPaperOption,
+  getRibbonOption,
+  getSealOption,
+  getBloomSlots,
+  CHARM_POSITIONS,
+  CURATED_FLOWERS,
+  CURATED_CHARMS,
+} from "@/types/decor";
+import {
+  renderModulesHtml,
+  renderReactionsAndReplyHtml,
+  renderPrintKeepsakeButton,
+  PRINT_MEDIA_STYLES,
+  getModulesClientScript,
+} from "@/modules/ssrModules";
 
 export const dynamic = "force-dynamic";
 
@@ -103,7 +120,7 @@ function render410Html(): string {
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Valentine Unavailable — Valentino</title>
+  <title>Valentine Retired — Valentino</title>
   <meta name="robots" content="noindex, nofollow" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -177,16 +194,168 @@ function render410Html(): string {
 </html>`;
 }
 
-import {
-  normalizeValentineDecor,
-  getPaperOption,
-  getRibbonOption,
-  getSealOption,
-  getBloomSlots,
-  CHARM_POSITIONS,
-  CURATED_FLOWERS,
-  CURATED_CHARMS,
-} from "@/types/decor";
+function renderLockedCountdownHtml(unlockAt: Date, publicId: string): string {
+  const targetIso = unlockAt.toISOString();
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>A Valentine Sealed in Time — Valentino</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0A090C;
+      background-image: radial-gradient(ellipse at 50% 20%, #1c0f18 0%, #0A090C 80%, #050406 100%);
+      color: #FAF8F5;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      text-align: center;
+      padding: 1.5rem;
+    }
+    .countdown-card {
+      max-width: 32rem;
+      width: 100%;
+      padding: 3rem 2rem;
+      background: rgba(26, 12, 22, 0.88);
+      border: 1px solid rgba(244, 63, 94, 0.3);
+      border-radius: 2rem;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9), 0 0 35px rgba(225, 29, 72, 0.15);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+    .badge {
+      display: inline-block;
+      padding: 0.35rem 0.85rem;
+      border-radius: 9999px;
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      background: rgba(225, 29, 72, 0.2);
+      border: 1px solid rgba(251, 113, 133, 0.4);
+      color: #FDA4AF;
+      margin-bottom: 1.25rem;
+    }
+    .lock-icon { font-size: 3rem; margin-bottom: 0.75rem; animation: pulse 3s infinite ease-in-out; }
+    h1 {
+      font-family: Georgia, serif;
+      font-size: 1.75rem;
+      margin-bottom: 0.5rem;
+      color: #FAF8F5;
+      font-weight: 400;
+    }
+    p.desc {
+      font-size: 0.875rem;
+      color: #D5CEBF;
+      font-style: italic;
+      margin-bottom: 2rem;
+      line-height: 1.5;
+    }
+    .timer-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+    }
+    .timer-unit {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 1rem;
+      padding: 0.85rem 0.25rem;
+    }
+    .unit-value {
+      display: block;
+      font-size: 1.75rem;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      color: #FDA4AF;
+      font-family: system-ui, sans-serif;
+    }
+    .unit-label {
+      display: block;
+      font-size: 0.65rem;
+      color: rgba(250, 248, 245, 0.6);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-top: 0.25rem;
+    }
+    .note {
+      font-size: 0.75rem;
+      color: rgba(250, 248, 245, 0.5);
+      letter-spacing: 0.05em;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 0.9; }
+      50% { transform: scale(1.05); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="countdown-card" data-testid="scheduled-countdown-container" data-unlock-iso="${targetIso}">
+    <div class="badge">✦ TIME-LOCKED VALENTINE — sealed until appointed date ✦</div>
+    <div class="lock-icon">🔒</div>
+    <h1>TIME-LOCKED VALENTINE</h1>
+    <p class="desc">This Valentine is sealed until the appointed hour and will reveal its contents automatically.</p>
+
+    <div class="timer-grid">
+      <div class="timer-unit">
+        <span class="unit-value" data-testid="countdown-days" id="cd-days">00</span>
+        <span class="unit-label">Days</span>
+      </div>
+      <div class="timer-unit">
+        <span class="unit-value" data-testid="countdown-hours" id="cd-hours">00</span>
+        <span class="unit-label">Hours</span>
+      </div>
+      <div class="timer-unit">
+        <span class="unit-value" data-testid="countdown-minutes" id="cd-minutes">00</span>
+        <span class="unit-label">Mins</span>
+      </div>
+      <div class="timer-unit">
+        <span class="unit-value" data-testid="countdown-seconds" id="cd-seconds">00</span>
+        <span class="unit-label">Secs</span>
+      </div>
+    </div>
+
+    <div class="note">✦ Automatically unseals when the countdown completes ✦</div>
+  </div>
+
+  <script>
+    (function() {
+      var targetTime = new Date("${targetIso}").getTime();
+      function update() {
+        var now = Date.now();
+        var diff = targetTime - now;
+        if (diff <= 0) {
+          window.location.reload();
+          return;
+        }
+        var days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        var hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        var minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+        var dEl = document.getElementById("cd-days");
+        var hEl = document.getElementById("cd-hours");
+        var mEl = document.getElementById("cd-minutes");
+        var sEl = document.getElementById("cd-seconds");
+
+        if (dEl) dEl.textContent = String(days).padStart(2, "0");
+        if (hEl) hEl.textContent = String(hours).padStart(2, "0");
+        if (mEl) mEl.textContent = String(minutes).padStart(2, "0");
+        if (sEl) sEl.textContent = String(seconds).padStart(2, "0");
+      }
+      update();
+      setInterval(update, 1000);
+    })();
+  </script>
+</body>
+</html>`;
+}
 
 interface PublishedConfig {
   partnerName?: string;
@@ -199,6 +368,7 @@ interface PublishedConfig {
   decor?: unknown;
   modules?: any;
   moduleOrder?: string[];
+  soundtrackUrl?: string | null;
 }
 
 const ACCENTS: Record<
@@ -254,99 +424,9 @@ function renderPublicHtml(config: PublishedConfig, publicId: string = ""): strin
   const signOff = sanitizeText(config.signOff || "With all my love");
   const senderName = sanitizeText(config.senderName || "Yours Always");
 
-  let modulesHtml = "";
-  if (config.modules && typeof config.modules === "object") {
-    const modules = config.modules as Record<string, any>;
-    const order = Array.isArray(config.moduleOrder) && config.moduleOrder.length > 0
-      ? config.moduleOrder
-      : ["timeline", "quiz", "secret", "openWhen"];
-
-    const rendered: string[] = [];
-
-    for (const modId of order) {
-      const m = modules[modId];
-      if (!m || !m.enabled) continue;
-
-      if (modId === "timeline" && m.items && m.items.length > 0) {
-        rendered.push(`
-          <div class="module-timeline-card" data-testid="module-timeline" style="margin-top: 1.5rem; padding: 1.25rem; border-radius: 1rem; background: rgba(32, 6, 21, 0.85); border: 1px solid rgba(244, 63, 94, 0.25);">
-            <div style="font-size: 0.65rem; color: #FDA4AF; text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.35rem; font-weight: 600;">⏳ Timeline of Us</div>
-            <h3 style="font-family: Georgia, serif; font-size: 1.15rem; color: #FAF8F5; margin-bottom: 0.85rem;">${sanitizeText(m.title || "Our Journey")}</h3>
-            <div style="display: flex; flex-direction: column; gap: 0.75rem; border-left: 2px solid rgba(244, 63, 94, 0.3); padding-left: 0.85rem; margin-left: 0.35rem;">
-              ${(m.items || []).map((item: any) => `
-                <div class="timeline-item">
-                  <div style="font-size: 0.7rem; color: #FDA4AF; font-weight: 500;">${sanitizeText(item.date || "")}</div>
-                  <div style="font-size: 0.9rem; font-weight: 600; color: #FAF8F5;">${sanitizeText(item.title || "")}</div>
-                  <div style="font-size: 0.8rem; color: #D5CEBF; font-weight: 300;">${sanitizeText(item.description || "")}</div>
-                </div>
-              `).join("")}
-            </div>
-          </div>
-        `);
-      }
-
-      if (modId === "quiz" && m.questions && m.questions.length > 0) {
-        rendered.push(`
-          <div class="module-quiz-card" data-testid="module-quiz" style="margin-top: 1.5rem; padding: 1.25rem; border-radius: 1rem; background: rgba(32, 6, 21, 0.85); border: 1px solid rgba(244, 63, 94, 0.25);">
-            <div style="font-size: 0.65rem; color: #FDA4AF; text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.35rem; font-weight: 600;">💘 Love Quiz</div>
-            <h3 style="font-family: Georgia, serif; font-size: 1.15rem; color: #FAF8F5; margin-bottom: 0.85rem;">${sanitizeText(m.title || "How Well Do You Know Us?")}</h3>
-            <div id="quiz-container">
-              <div id="quiz-question" style="font-size: 0.9rem; color: #FAF8F5; margin-bottom: 0.65rem;">
-                ${sanitizeText(m.questions[0]?.question || "")}
-              </div>
-              <div class="quiz-options" style="display: flex; flex-direction: column; gap: 0.4rem;">
-                ${(m.questions[0]?.options || []).map((opt: string, optIdx: number) => `
-                  <button type="button" data-testid="quiz-option-${optIdx}" class="quiz-opt-btn" style="padding: 0.55rem 0.85rem; border-radius: 0.5rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); color: #FAF8F5; text-align: left; cursor: pointer; font-size: 0.8rem; transition: background 0.2s;">
-                    ${sanitizeText(opt)}
-                  </button>
-                `).join("")}
-              </div>
-              <div id="quiz-feedback" data-testid="quiz-feedback-pill" class="hidden" style="margin-top: 0.65rem; padding: 0.45rem 0.65rem; border-radius: 0.5rem; font-size: 0.75rem; background: rgba(16, 185, 129, 0.2); border: 1px solid rgba(16, 185, 129, 0.4); color: #6EE7B7;">
-                ✓ ${sanitizeText(m.questions[0]?.explanation || "Everything about you makes my heart smile.")}
-              </div>
-              <button type="button" id="quiz-next" data-testid="quiz-next-button" class="hidden" style="margin-top: 0.65rem; padding: 0.35rem 0.75rem; border-radius: 9999px; background: #E11D48; color: white; border: none; font-size: 0.7rem; font-weight: 500; cursor: pointer;">
-                Complete Quiz
-              </button>
-            </div>
-          </div>
-        `);
-      }
-
-      if (modId === "secret") {
-        rendered.push(`
-          <div class="module-secret-card" data-testid="module-secret" style="margin-top: 1.5rem; padding: 1.25rem; border-radius: 1rem; background: rgba(32, 6, 21, 0.85); border: 1px solid rgba(244, 63, 94, 0.25);">
-            <div style="font-size: 0.65rem; color: #FDA4AF; text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.35rem; font-weight: 600;">🔐 Secret Note</div>
-            <p style="font-size: 0.9rem; color: #FAF8F5; margin-bottom: 0.85rem;">${sanitizeText(m.prompt || "A secret note just for you")}</p>
-            <button type="button" id="reveal-secret-btn" data-testid="reveal-secret-button" style="padding: 0.5rem 1.15rem; border-radius: 9999px; background: linear-gradient(135deg, #E11D48, #9F1239); color: white; border: 1px solid #FB7185; font-size: 0.75rem; font-weight: 500; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem;">
-              <span>✨</span> <span>Tap to Reveal Secret</span>
-            </button>
-            <div id="revealed-secret" data-testid="revealed-secret-content" class="hidden" style="margin-top: 0.75rem; padding: 0.85rem; border-radius: 0.75rem; background: rgba(0,0,0,0.4); border: 1px solid rgba(244, 63, 94, 0.3); font-family: Georgia, serif; font-style: italic; color: #FDA4AF; font-size: 0.9rem; line-height: 1.5;"></div>
-          </div>
-        `);
-      }
-
-      if (modId === "openWhen" && m.letters && m.letters.length > 0) {
-        rendered.push(`
-          <div class="module-openwhen-card" data-testid="module-open-when" style="margin-top: 1.5rem; padding: 1.25rem; border-radius: 1rem; background: rgba(32, 6, 21, 0.85); border: 1px solid rgba(244, 63, 94, 0.25);">
-            <div style="font-size: 0.65rem; color: #FDA4AF; text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.35rem; font-weight: 600;">💌 Open When...</div>
-            <h3 style="font-family: Georgia, serif; font-size: 1.15rem; color: #FAF8F5; margin-bottom: 0.85rem;">${sanitizeText(m.title || "Open When You Need Me")}</h3>
-            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-              ${(m.letters || []).map((letter: any) => `
-                <div class="openwhen-item" style="padding: 0.65rem; border-radius: 0.5rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1);">
-                  <div style="font-size: 0.85rem; font-weight: 600; color: #FDA4AF;">${sanitizeText(letter.situation || "")}</div>
-                  <div style="font-size: 0.8rem; color: #D5CEBF; font-style: italic; margin-top: 0.25rem;">${sanitizeText(letter.message || "")}</div>
-                </div>
-              `).join("")}
-            </div>
-          </div>
-        `);
-      }
-    }
-
-    if (rendered.length > 0) {
-      modulesHtml = rendered.join("\n");
-    }
-  }
+  const modulesHtml = renderModulesHtml(config.modules, config.moduleOrder, publicId);
+  const interactionsHtml = renderReactionsAndReplyHtml(publicId);
+  const printKeepsakeBtn = renderPrintKeepsakeButton();
 
   const decor = normalizeValentineDecor(config.decor);
   const paper = getPaperOption(decor.paper);
@@ -676,6 +756,7 @@ function renderPublicHtml(config: PublishedConfig, publicId: string = ""): strin
       }
       .pulse-halo { display: none; }
     }
+    ${PRINT_MEDIA_STYLES}
   </style>
 </head>
 <body>
@@ -690,6 +771,7 @@ function renderPublicHtml(config: PublishedConfig, publicId: string = ""): strin
       <button
         type="button"
         id="soundtrack-toggle"
+        data-soundtrack-url="${sanitizeText(config.soundtrackUrl || "")}"
         aria-label="Play romantic soundtrack"
         style="display: flex; align-items: center; gap: 0.4rem; padding: 0.3rem 0.85rem; border-radius: 9999px; font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; font-family: system-ui, sans-serif; border: 1px solid rgba(244,63,94,0.4); background: rgba(76,5,25,0.6); color: #FDA4AF; backdrop-filter: blur(8px); cursor: pointer; transition: all 0.3s;"
       >
@@ -738,6 +820,19 @@ function renderPublicHtml(config: PublishedConfig, publicId: string = ""): strin
           <div class="paper-card">
             <div class="paper-gold-line"></div>
 
+            <!-- Read Aloud Speech Synthesis Button -->
+            <div style="display: flex; justify-content: flex-end; margin-bottom: 0.75rem;">
+              <button
+                type="button"
+                id="read-aloud-btn"
+                data-testid="read-aloud-btn"
+                aria-label="Listen to Letter"
+                style="display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.3rem 0.75rem; border-radius: 9999px; font-size: 0.7rem; color: #9F1239; background: rgba(244,63,94,0.1); border: 1px solid rgba(244,63,94,0.25); cursor: pointer; transition: all 0.2s;"
+              >
+                <span>🔊</span> <span>Listen to Letter</span>
+              </button>
+            </div>
+
             <div class="message-card" data-testid="letter-message">${message}</div>
             <div class="signoff-box">
               <div class="signoff-label">${signOff}</div>
@@ -763,6 +858,10 @@ function renderPublicHtml(config: PublishedConfig, publicId: string = ""): strin
           }
 
           ${modulesHtml}
+
+          ${interactionsHtml}
+
+          ${printKeepsakeBtn}
 
           <div class="closing-scene" style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; align-items: center; text-align: center; gap: 0.85rem;">
             <div style="width: 100%; height: 1px; background: linear-gradient(90deg, transparent, rgba(244,63,94,0.3), transparent);"></div>
@@ -819,14 +918,35 @@ function renderPublicHtml(config: PublishedConfig, publicId: string = ""): strin
         if (sealBtn) sealBtn.addEventListener('click', unseal);
         if (resealBtn) resealBtn.addEventListener('click', reseal);
 
-        // Ambient soundscape Web Audio toggle
+        // Ambient soundscape Web Audio or custom audio toggle
         var audioCtx = null;
         var isPlaying = false;
         var oscs = [];
         var gainNode = null;
+        var customAudio = null;
 
         if (musicBtn) {
+          var customUrl = musicBtn.getAttribute('data-soundtrack-url');
+          if (customUrl) {
+            customAudio = new Audio(customUrl);
+            customAudio.loop = true;
+          }
+
           musicBtn.addEventListener('click', function() {
+            if (customAudio) {
+              if (isPlaying) {
+                customAudio.pause();
+                isPlaying = false;
+                musicBtn.setAttribute('aria-label', 'Play romantic soundtrack');
+              } else {
+                customAudio.play().then(function() {
+                  isPlaying = true;
+                  musicBtn.setAttribute('aria-label', 'Mute romantic soundtrack');
+                }).catch(function(){});
+              }
+              return;
+            }
+
             if (isPlaying) {
               if (gainNode && audioCtx) {
                 gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.3);
@@ -872,7 +992,7 @@ function renderPublicHtml(config: PublishedConfig, publicId: string = ""): strin
           });
         }
 
-        // Modules interactivity: Quiz
+        // Quiz interactions
         var quizOptBtns = document.querySelectorAll('.quiz-opt-btn');
         var feedbackPill = document.getElementById('quiz-feedback');
         var nextBtn = document.getElementById('quiz-next');
@@ -885,14 +1005,14 @@ function renderPublicHtml(config: PublishedConfig, publicId: string = ""): strin
           });
         }
 
-        // Modules interactivity: Secret reveal via privacy-isolated API
+        // Tap-to-Reveal Secret (non-question locked)
         var revealSecretBtn = document.getElementById('reveal-secret-btn');
         var revealedSecretEl = document.getElementById('revealed-secret');
         if (revealSecretBtn && revealedSecretEl) {
           revealSecretBtn.addEventListener('click', function() {
             revealSecretBtn.disabled = true;
             revealSecretBtn.textContent = 'Unfolding secret...';
-            fetch('/api/experiences/${publicId}/secret')
+            fetch('/api/experiences/' + encodeURIComponent('${publicId}') + '/secret')
               .then(function(res) { return res.json(); })
               .then(function(data) {
                 if (data.secretContent) {
@@ -910,6 +1030,8 @@ function renderPublicHtml(config: PublishedConfig, publicId: string = ""): strin
               });
           });
         }
+
+        ${getModulesClientScript(publicId)}
       }
 
       if (document.readyState === 'loading') {
@@ -951,7 +1073,18 @@ export async function GET(request: Request, { params }: RouteParams) {
     return new NextResponse(render404Html(), { status: 404, headers: COMMON_HEADERS });
   }
 
-  // 4. Published experience renders with real HTTP 200 OK
+  // 4. Server-Enforced Scheduled Reveal: if locked in the future, render locked countdown view
+  if (experience.scheduledUnlockAt) {
+    const unlockTime = new Date(experience.scheduledUnlockAt).getTime();
+    if (Date.now() < unlockTime) {
+      return new NextResponse(renderLockedCountdownHtml(experience.scheduledUnlockAt, publicId), {
+        status: 200,
+        headers: COMMON_HEADERS,
+      });
+    }
+  }
+
+  // 5. Published experience renders with real HTTP 200 OK
   if (experience.status === ExperienceStatus.PUBLISHED) {
     let rawConfig: unknown;
     try {
@@ -963,9 +1096,8 @@ export async function GET(request: Request, { params }: RouteParams) {
     const template = getTemplateDefinition(experience.templateId, experience.templateVersion) || midnightRoseV1;
     const config = template.normalizeConfig(rawConfig, true);
 
-
     if (template.renderSsrHtml) {
-      return new NextResponse(template.renderSsrHtml(config), { status: 200, headers: COMMON_HEADERS });
+      return new NextResponse(template.renderSsrHtml(config, publicId), { status: 200, headers: COMMON_HEADERS });
     }
 
     return new NextResponse(renderPublicHtml(config as PublishedConfig, publicId), { status: 200, headers: COMMON_HEADERS });

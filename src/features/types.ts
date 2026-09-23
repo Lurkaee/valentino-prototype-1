@@ -74,7 +74,7 @@ export interface FeatureDefinition {
   discoveryContext: ("moments" | "story" | "mood" | "preview" | "templates" | "world")[];
   badges?: string[];
   samplePreview?: {
-    type: "timeline" | "quiz" | "secret" | "envelope" | "decor" | "world" | "audio" | "qr";
+    type: "timeline" | "quiz" | "secret" | "envelope" | "decor" | "world" | "audio" | "qr" | "polaroid";
     caption?: string;
   };
 }
