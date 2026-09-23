@@ -18,6 +18,8 @@ next-env.d.ts
 
 # local data
 .local-media/
+storage/media/*
+!storage/media/.gitkeep
 *.db
 *.sqlite
 

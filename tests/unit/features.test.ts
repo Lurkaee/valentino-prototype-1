@@ -45,17 +45,21 @@ describe("Gate 4D - Feature Discovery & Capability Catalog", () => {
     expect(availableIds).toContain("floral-charms");
     expect(availableIds).toContain("visual-worlds");
     expect(availableIds).toContain("plasma-interaction");
+    // Phase 5B available features
+    expect(availableIds).toContain("memories");
+    expect(availableIds).toContain("voice-note");
+    expect(availableIds).toContain("video-capsule");
+    expect(availableIds).toContain("read-aloud");
+    expect(availableIds).toContain("acoustic-soundtrack");
+    expect(availableIds).toContain("scheduled-reveal");
+    expect(availableIds).toContain("recipient-reactions");
+    expect(availableIds).toContain("qr-keepsake");
+    expect(availableIds).toContain("printable-keepsake");
 
     // Coming soon features must be roadmap only
     const roadmapIds = roadmap.map((f) => f.id);
-    expect(roadmapIds).toContain("acoustic-soundtrack");
-    expect(roadmapIds).toContain("voice-note");
-    expect(roadmapIds).toContain("video-capsule");
-    expect(roadmapIds).toContain("scheduled-reveal");
-    expect(roadmapIds).toContain("recipient-reactions");
     expect(roadmapIds).toContain("bucket-list");
     expect(roadmapIds).toContain("scratch-card");
-    expect(roadmapIds).toContain("qr-keepsake");
     expect(roadmapIds).toContain("romance-copilot");
   });
 

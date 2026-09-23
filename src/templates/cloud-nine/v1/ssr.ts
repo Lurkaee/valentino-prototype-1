@@ -1,6 +1,13 @@
 import { sanitizeText } from "@/lib/sanitize";
 import { CloudNinePublishedConfig } from "./schema";
 import { resolveTemplateDecor } from "../../shared/compatibility";
+import {
+  renderModulesHtml,
+  renderReactionsAndReplyHtml,
+  renderPrintKeepsakeButton,
+  PRINT_MEDIA_STYLES,
+  getModulesClientScript,
+} from "@/modules/ssrModules";
 
 const THEME_ACCENTS: Record<
   string,
@@ -35,13 +42,17 @@ const THEME_ACCENTS: Record<
   },
 };
 
-export function renderCloudNineSsrHtml(config: CloudNinePublishedConfig): string {
+export function renderCloudNineSsrHtml(config: CloudNinePublishedConfig, publicId: string = ""): string {
   const theme = THEME_ACCENTS[config.accentTheme || "blush-sky"] || THEME_ACCENTS["blush-sky"];
   const greeting = sanitizeText(config.greeting || "To My Sweetest Soul");
   const partnerName = sanitizeText(config.partnerName || "Dearest");
   const message = sanitizeText(config.message || "You lift my spirits into the clouds, making every day feel like sweet magic.");
   const signOff = sanitizeText(config.signOff || "Forever in the clouds");
   const senderName = sanitizeText(config.senderName || "Yours in Starlight");
+
+  const modulesHtml = renderModulesHtml(config.modules, config.moduleOrder, publicId);
+  const interactionsHtml = renderReactionsAndReplyHtml(publicId);
+  const printKeepsakeBtn = renderPrintKeepsakeButton();
 
   const presentation = resolveTemplateDecor(config.decor, "cloud-nine");
   const { paper, ribbon, waxSeal, blooms, charms } = presentation;
@@ -391,6 +402,7 @@ export function renderCloudNineSsrHtml(config: CloudNinePublishedConfig): string
       }
       .pulse-halo { display: none; }
     }
+    ${PRINT_MEDIA_STYLES}
   </style>
 </head>
 <body>
@@ -399,7 +411,7 @@ export function renderCloudNineSsrHtml(config: CloudNinePublishedConfig): string
 
     <div class="top-bar">
       <div class="top-label">Celestial Love Letter</div>
-      <button type="button" id="soundtrack-toggle" aria-label="Play romantic soundtrack" class="music-btn">
+      <button type="button" id="soundtrack-toggle" data-soundtrack-url="${sanitizeText((config as any).soundtrackUrl || "")}" aria-label="Play romantic soundtrack" class="music-btn">
         <span style="font-size: 0.8rem;">♡</span>
         <span>Our Song</span>
       </button>
@@ -445,6 +457,18 @@ export function renderCloudNineSsrHtml(config: CloudNinePublishedConfig): string
         <div class="letter-box hidden" data-testid="unsealed-letter">
           <div class="paper-card">
             <div class="paper-gold-line"></div>
+            <!-- Read Aloud Speech Synthesis Button -->
+            <div style="display: flex; justify-content: flex-end; margin-bottom: 0.75rem;">
+              <button
+                type="button"
+                id="read-aloud-btn"
+                data-testid="read-aloud-btn"
+                aria-label="Listen to Letter"
+                style="display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.3rem 0.75rem; border-radius: 9999px; font-size: 0.7rem; color: #831843; background: rgba(244,114,182,0.15); border: 1px solid rgba(244,114,182,0.4); cursor: pointer; transition: all 0.2s;"
+              >
+                <span>🔊</span> <span>Listen to Letter</span>
+              </button>
+            </div>
             <div class="message-card" data-testid="letter-message">${message}</div>
             <div class="signoff-box">
               <div class="signoff-label">${signOff}</div>
@@ -469,6 +493,8 @@ export function renderCloudNineSsrHtml(config: CloudNinePublishedConfig): string
               : ""
           }
 
+          ${modulesHtml}
+
           <!-- Signature Cloud Nine Interaction -->
           <div class="star-wish-box">
             <button type="button" id="celestial-wish-btn" class="star-wish-btn" aria-label="Release a celestial blessing">
@@ -484,6 +510,10 @@ export function renderCloudNineSsrHtml(config: CloudNinePublishedConfig): string
               </p>
             </div>
           </div>
+
+          ${interactionsHtml}
+
+          ${printKeepsakeBtn}
 
           <div class="closing-scene" style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(244,114,182,0.25); display: flex; flex-direction: column; align-items: center; text-align: center; gap: 0.85rem;">
             <div style="width: 100%; height: 1px; background: linear-gradient(90deg, transparent, rgba(244,114,182,0.5), transparent);"></div>
@@ -557,8 +587,29 @@ export function renderCloudNineSsrHtml(config: CloudNinePublishedConfig): string
         var oscs = [];
         var gainNode = null;
 
+        var customAudio = null;
         if (musicBtn) {
+          var customUrl = musicBtn.getAttribute('data-soundtrack-url');
+          if (customUrl) {
+            customAudio = new Audio(customUrl);
+            customAudio.loop = true;
+          }
+
           musicBtn.addEventListener('click', function() {
+            if (customAudio) {
+              if (isPlaying) {
+                customAudio.pause();
+                isPlaying = false;
+                musicBtn.setAttribute('aria-label', 'Play romantic soundtrack');
+              } else {
+                customAudio.play().then(function() {
+                  isPlaying = true;
+                  musicBtn.setAttribute('aria-label', 'Mute romantic soundtrack');
+                }).catch(function(){});
+              }
+              return;
+            }
+
             if (isPlaying) {
               if (gainNode && audioCtx) {
                 gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.3);
@@ -603,6 +654,8 @@ export function renderCloudNineSsrHtml(config: CloudNinePublishedConfig): string
             }
           });
         }
+
+        ${getModulesClientScript(publicId)}
       }
 
       if (document.readyState === 'loading') {

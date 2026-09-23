@@ -37,6 +37,99 @@ import {
 } from "./open-when/schema";
 import { OpenWhenModule } from "./open-when";
 
+import {
+  memoriesDraftSchema,
+  memoriesPublishSchema,
+  normalizeMemoriesConfig,
+  MemoriesDraftConfig,
+  MemoriesPublishedConfig,
+} from "./memories/schema";
+import { MemoriesModule } from "./memories";
+
+import {
+  voiceNoteDraftSchema,
+  voiceNotePublishSchema,
+  normalizeVoiceNoteConfig,
+  VoiceNoteDraftConfig,
+  VoiceNotePublishedConfig,
+} from "./voice-note/schema";
+import { VoiceNoteModule } from "./voice-note";
+
+import {
+  videoMemoryDraftSchema,
+  videoMemoryPublishSchema,
+  normalizeVideoMemoryConfig,
+  VideoMemoryDraftConfig,
+  VideoMemoryPublishedConfig,
+} from "./video-memory/schema";
+import { VideoMemoryModule } from "./video-memory";
+
+export const memoriesModuleDef: ModuleDefinition<
+  MemoriesDraftConfig,
+  MemoriesPublishedConfig
+> = {
+  id: "memories",
+  version: "v1",
+  name: "Photo Memories",
+  description: "Cherished photos, milestones, and romantic captions.",
+  icon: "📸",
+  draftSchema: memoriesDraftSchema,
+  publishSchema: memoriesPublishSchema,
+  defaultConfig: {
+    enabled: false,
+    title: "Our Cherished Memories",
+    subtitle: "Fragments of light and laughter we hold forever",
+    items: [],
+  },
+  normalizeConfig: normalizeMemoriesConfig,
+  Component: MemoriesModule,
+};
+
+export const voiceNoteModuleDef: ModuleDefinition<
+  VoiceNoteDraftConfig,
+  VoiceNotePublishedConfig
+> = {
+  id: "voiceNote",
+  version: "v1",
+  name: "Voice Note",
+  description: "A whispered personal message from your heart.",
+  icon: "🎙️",
+  draftSchema: voiceNoteDraftSchema,
+  publishSchema: voiceNotePublishSchema,
+  defaultConfig: {
+    enabled: false,
+    url: "",
+    title: "Voice Note",
+    caption: "A personal message from my heart to yours",
+    duration: 0,
+  },
+  normalizeConfig: normalizeVoiceNoteConfig,
+  Component: VoiceNoteModule,
+};
+
+export const videoMemoryModuleDef: ModuleDefinition<
+  VideoMemoryDraftConfig,
+  VideoMemoryPublishedConfig
+> = {
+  id: "videoMemory",
+  version: "v1",
+  name: "Video Memory Capsule",
+  description: "A motion memory preserved in time.",
+  icon: "🎞️",
+  draftSchema: videoMemoryDraftSchema,
+  publishSchema: videoMemoryPublishSchema,
+  defaultConfig: {
+    enabled: false,
+    url: "",
+    posterUrl: "",
+    caption: "A motion memory preserved in time",
+    title: "Video Memory",
+  },
+  normalizeConfig: normalizeVideoMemoryConfig,
+  Component: VideoMemoryModule,
+};
+
+
 export const timelineModuleDef: ModuleDefinition<
   TimelineDraftConfig,
   TimelinePublishedConfig
@@ -136,7 +229,10 @@ export function registerModule(definition: ModuleDefinition<any, any>) {
   modulesMap.set(definition.id, definition);
 }
 
-// Initial registered active modules for Gate 3
+// Initial registered active modules
+registerModule(memoriesModuleDef);
+registerModule(voiceNoteModuleDef);
+registerModule(videoMemoryModuleDef);
 registerModule(timelineModuleDef);
 registerModule(quizModuleDef);
 registerModule(secretModuleDef);
@@ -160,6 +256,9 @@ export function getAllModules(): ModuleDefinition<any, any>[] {
 // Composed Zod schemas for experience templates
 export const modulesDraftSchema = z
   .object({
+    memories: memoriesDraftSchema.optional(),
+    voiceNote: voiceNoteDraftSchema.optional(),
+    videoMemory: videoMemoryDraftSchema.optional(),
     timeline: timelineDraftSchema.optional(),
     quiz: quizDraftSchema.optional(),
     secret: secretDraftSchema.optional(),
@@ -170,6 +269,9 @@ export const modulesDraftSchema = z
 
 export const modulesPublishSchema = z
   .object({
+    memories: memoriesPublishSchema.optional(),
+    voiceNote: voiceNotePublishSchema.optional(),
+    videoMemory: videoMemoryPublishSchema.optional(),
     timeline: timelinePublishSchema.optional(),
     quiz: quizPublishSchema.optional(),
     secret: secretPublishSchema.optional(),
@@ -179,6 +281,9 @@ export const modulesPublishSchema = z
   .optional();
 
 export interface ModulesConfig {
+  memories?: MemoriesPublishedConfig;
+  voiceNote?: VoiceNotePublishedConfig;
+  videoMemory?: VideoMemoryPublishedConfig;
   timeline?: TimelinePublishedConfig;
   quiz?: QuizPublishedConfig;
   secret?: SecretPublishedConfig;
@@ -197,6 +302,15 @@ export function normalizeAllModules(
   const obj = rawModules as Record<string, any>;
   const result: ModulesConfig = {};
 
+  if (obj.memories) {
+    result.memories = normalizeMemoriesConfig(obj.memories, isPublic);
+  }
+  if (obj.voiceNote) {
+    result.voiceNote = normalizeVoiceNoteConfig(obj.voiceNote, isPublic);
+  }
+  if (obj.videoMemory) {
+    result.videoMemory = normalizeVideoMemoryConfig(obj.videoMemory, isPublic);
+  }
   if (obj.timeline) {
     result.timeline = normalizeTimelineConfig(obj.timeline);
   }
@@ -212,7 +326,16 @@ export function normalizeAllModules(
 
   // Pass-through any future modules registered dynamically
   for (const [key, val] of Object.entries(obj)) {
-    if (!result[key] && key !== "timeline" && key !== "quiz" && key !== "secret" && key !== "openWhen") {
+    if (
+      !result[key] &&
+      key !== "memories" &&
+      key !== "voiceNote" &&
+      key !== "videoMemory" &&
+      key !== "timeline" &&
+      key !== "quiz" &&
+      key !== "secret" &&
+      key !== "openWhen"
+    ) {
       const def = getModuleDefinition(key);
       if (def) {
         result[key] = def.normalizeConfig(val, isPublic);

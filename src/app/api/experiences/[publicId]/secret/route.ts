@@ -1,69 +1,92 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-import { ExperienceStatus } from "@prisma/client";
-import { rateLimiter, getAnonymizedKey } from "@/lib/rate-limiter";
-
-export const dynamic = "force-dynamic";
+import { validateOrigin } from "@/lib/csrf";
+import { serverLogger } from "@/lib/logger";
+import { decryptSecretPayload } from "@/lib/security";
 
 interface RouteParams {
   params: Promise<{ publicId: string }>;
 }
 
+export const dynamic = "force-dynamic";
+
+/**
+ * Public Secret Note Reveal Endpoint.
+ * Serves secret note content only if the experience is PUBLISHED,
+ * scheduled reveal has elapsed, and questionLock is NOT enabled.
+ * If questionLock IS enabled, callers must use /secret/verify with the correct answer.
+ */
 export async function GET(req: NextRequest, { params }: RouteParams) {
   const { publicId } = await params;
 
-  // 1. Rate limiting (max 60 requests per minute per IP/experience)
-  const clientIp = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "127.0.0.1";
-  const rateLimitKey = getAnonymizedKey("secret-reveal", `${clientIp}:${publicId}`);
-  const limitResult = await rateLimiter.check(rateLimitKey, 60, 60 * 1000);
-
-  if (!limitResult.allowed) {
-    return NextResponse.json(
-      { error: "Too many requests. Please wait a moment." },
-      { status: 429, headers: { "Retry-After": limitResult.resetSeconds.toString(), "Cache-Control": "no-store" } }
-    );
+  // 1. Origin verification
+  const originCheck = validateOrigin(req);
+  if (!originCheck.valid) {
+    return NextResponse.json({ error: "Request origin not allowed" }, { status: 403 });
   }
 
-  // 2. Fetch experience
+  // 2. Lookup experience
   const experience = await db.experience.findUnique({
     where: { publicId },
-    select: {
-      status: true,
-      publishedConfig: true,
-    },
   });
-
-  if (!experience) {
-    return NextResponse.json({ error: "Experience not found" }, { status: 404 });
+  if (!experience || experience.status !== "PUBLISHED" || !experience.publishedConfig) {
+    return NextResponse.json({ error: "Experience not available" }, { status: 404 });
   }
 
-  // 3. Only published experiences can reveal public secret
-  if (experience.status !== ExperienceStatus.PUBLISHED || !experience.publishedConfig) {
-    return NextResponse.json({ error: "Experience not published" }, { status: 403 });
-  }
-
-  try {
-    const config = JSON.parse(experience.publishedConfig);
-    const secretConfig = config?.modules?.secret;
-
-    if (!secretConfig || !secretConfig.enabled) {
-      return NextResponse.json({ error: "Secret module not enabled" }, { status: 404 });
+  // 3. Scheduled Reveal check
+  if (experience.scheduledUnlockAt) {
+    const unlockTime = new Date(experience.scheduledUnlockAt).getTime();
+    if (Date.now() < unlockTime) {
+      return NextResponse.json(
+        { error: "Experience is locked until scheduled reveal" },
+        { status: 403 }
+      );
     }
-
-    const rawContent = typeof secretConfig.secretContent === "string" ? secretConfig.secretContent : "";
-
-    return NextResponse.json(
-      {
-        secretContent: rawContent,
-      },
-      {
-        headers: {
-          "Cache-Control": "no-store",
-          "X-Content-Type-Options": "nosniff",
-        },
-      }
-    );
-  } catch {
-    return NextResponse.json({ error: "Failed to parse secret content" }, { status: 500 });
   }
+
+  // 4. Parse published config
+  let config: any;
+  try {
+    config = JSON.parse(experience.publishedConfig);
+  } catch {
+    return NextResponse.json({ error: "Invalid experience data" }, { status: 500 });
+  }
+
+  const secretConfig = config.modules?.secret;
+  if (!secretConfig || !secretConfig.enabled) {
+    return NextResponse.json({ error: "No secret note available" }, { status: 404 });
+  }
+
+  // 5. Question Lock enforcement: if enabled or answerHash present, cannot reveal via plain GET
+  if (secretConfig.questionLock?.enabled || secretConfig.answerHash) {
+    return NextResponse.json(
+      { error: "This secret note is protected by a secret question. Verification required." },
+      { status: 403 }
+    );
+  }
+
+  let plainContent = "";
+  if (secretConfig.encryptedSecret) {
+    try {
+      plainContent = decryptSecretPayload(secretConfig.encryptedSecret);
+    } catch {
+      plainContent = "";
+    }
+  } else if (secretConfig.secretContent) {
+    plainContent = secretConfig.secretContent;
+  } else if (secretConfig.concealedSecret) {
+    plainContent = secretConfig.concealedSecret;
+  }
+
+  if (!plainContent) {
+    return NextResponse.json({ error: "No secret note available" }, { status: 404 });
+  }
+
+  serverLogger.info("Public secret note revealed", { publicId });
+
+  return NextResponse.json({
+    success: true,
+    secretContent: plainContent,
+    concealedSecret: plainContent,
+  });
 }

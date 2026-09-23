@@ -33,7 +33,7 @@ export const midnightRoseV1: TemplateDefinition<
   signature: "Physical envelope + interactive wax seal reveal",
   availability: "available",
   category: "Cinematic",
-  supportedModules: ["letter", "timeline", "quiz", "secret", "openWhen"],
+  supportedModules: ["letter", "memories", "voiceNote", "videoMemory", "timeline", "quiz", "secret", "openWhen"],
   draftSchema: midnightRoseDraftSchema,
   publishSchema: midnightRosePublishSchema,
   defaultConfig: {
@@ -63,7 +63,7 @@ export const cloudNineV1: TemplateDefinition<
   signature: "Celestial star blessing + pearl wax seal",
   availability: "available",
   category: "Dreamy",
-  supportedModules: ["letter", "timeline", "quiz", "openWhen"],
+  supportedModules: ["letter", "memories", "voiceNote", "videoMemory", "timeline", "quiz", "openWhen"],
   draftSchema: cloudNineDraftSchema,
   publishSchema: cloudNinePublishSchema,
   defaultConfig: {
@@ -104,7 +104,7 @@ export const kageV1: TemplateDefinition<
   signature: "Exact-source ThreeUI shaders + spatial temple path",
   availability: "available",
   category: "Immersive",
-  supportedModules: ["letter", "secret"],
+  supportedModules: ["letter", "memories", "voiceNote", "videoMemory", "secret"],
   draftSchema: kageDraftSchema,
   publishSchema: kagePublishSchema,
   defaultConfig: {
