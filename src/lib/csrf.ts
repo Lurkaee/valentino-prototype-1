@@ -10,12 +10,19 @@ export function validateOrigin(req: NextRequest): { valid: boolean; reason?: str
     const originUrl = new URL(origin);
     const normalizedOrigin = originUrl.origin.toLowerCase();
 
+    // 0. Local development and test origins
+    if (normalizedOrigin === "http://localhost:3000" || normalizedOrigin === "http://127.0.0.1:3000") {
+      return { valid: true };
+    }
+
     // 1. Derive the current request's own origin from trusted host & protocol headers
     const host = req.headers.get("x-forwarded-host") || req.headers.get("host");
     if (host) {
+      const isLocal = host.startsWith("localhost") || host.startsWith("127.0.0.1");
+      const defaultProto = isLocal ? "http" : "https";
       const proto =
         req.headers.get("x-forwarded-proto") ||
-        (req.nextUrl?.protocol ? req.nextUrl.protocol.replace(":", "") : "https");
+        (req.nextUrl?.protocol ? req.nextUrl.protocol.replace(":", "") : defaultProto);
       const requestOrigin = `${proto}://${host}`.toLowerCase();
       if (normalizedOrigin === requestOrigin) {
         return { valid: true };
@@ -27,11 +34,6 @@ export function validateOrigin(req: NextRequest): { valid: boolean; reason?: str
     if (appUrl) {
       const expectedAppUrl = new URL(appUrl);
       if (normalizedOrigin === expectedAppUrl.origin.toLowerCase()) {
-        return { valid: true };
-      }
-    } else {
-      // Local fallback if no APP_URL configured
-      if (normalizedOrigin === "http://localhost:3000") {
         return { valid: true };
       }
     }

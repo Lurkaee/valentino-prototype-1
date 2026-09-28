@@ -30,12 +30,78 @@ model Experience {
   publishedConfig        String?
   publishedRevision      Int?
   publishedAt            DateTime?
+  scheduledUnlockAt      DateTime?
   
   status                 ExperienceStatus @default(DRAFT)
   
   createdAt              DateTime  @default(now())
   updatedAt              DateTime  @updatedAt
 
+  media                  ExperienceMedia[]
+  reactions              ExperienceReaction[]
+  replies                ExperienceReply[]
+
   @@index([publicId])
   @@index([status])
+  @@index([scheduledUnlockAt])
+}
+
+enum MediaType {
+  PHOTO
+  AUDIO
+  VIDEO
+}
+
+enum MediaStatus {
+  DRAFT
+  PUBLISHED
+  ORPHANED
+  DELETED
+}
+
+model ExperienceMedia {
+  id           String      @id @default(cuid())
+  experienceId String
+  experience   Experience  @relation(fields: [experienceId], references: [id], onDelete: Cascade)
+
+  mediaType    MediaType
+  filename     String
+  storageKey   String      @unique
+  mimeType     String
+  sizeBytes    Int
+
+  caption      String?
+  altText      String?
+  displayOrder Int         @default(0)
+  status       MediaStatus @default(DRAFT)
+
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  @@index([experienceId])
+  @@index([storageKey])
+}
+
+model ExperienceReaction {
+  id           String     @id @default(cuid())
+  experienceId String
+  experience   Experience @relation(fields: [experienceId], references: [id], onDelete: Cascade)
+
+  reaction     String
+  note         String?
+  createdAt    DateTime   @default(now())
+
+  @@index([experienceId])
+}
+
+model ExperienceReply {
+  id           String     @id @default(cuid())
+  experienceId String
+  experience   Experience @relation(fields: [experienceId], references: [id], onDelete: Cascade)
+
+  senderName   String?
+  content      String
+  createdAt    DateTime   @default(now())
+
+  @@index([experienceId])
 }

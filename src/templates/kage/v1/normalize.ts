@@ -16,6 +16,7 @@ export function normalizeKageConfig(
       signOff: "With all my heart",
       accentTheme: "kyoto-crimson",
       heroMediaId: null,
+      soundtrackUrl: null,
       decor: DEFAULT_VALENTINE_DECOR,
       modules: {},
       moduleOrder: ["timeline", "quiz", "secret", "openWhen"],
@@ -50,6 +51,11 @@ export function normalizeKageConfig(
     heroMediaId = obj.heroMediaId.trim();
   }
 
+  let soundtrackUrl: string | null = null;
+  if (typeof obj.soundtrackUrl === "string" && obj.soundtrackUrl.trim()) {
+    soundtrackUrl = obj.soundtrackUrl.trim();
+  }
+
   const decor = normalizeValentineDecor(obj.decor);
   const modules = normalizeAllModules(obj.modules, isPublic);
 
@@ -65,6 +71,7 @@ export function normalizeKageConfig(
     signOff: signOff || "With all my heart",
     accentTheme,
     heroMediaId,
+    soundtrackUrl,
     decor,
     modules,
     moduleOrder,

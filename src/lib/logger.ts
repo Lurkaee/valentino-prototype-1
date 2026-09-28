@@ -69,3 +69,5 @@ export const logger = {
   warn: (msg: string, meta?: Record<string, unknown>) => log("warn", msg, meta),
   error: (msg: string, meta?: Record<string, unknown>) => log("error", msg, meta),
 };
+
+export const serverLogger = logger;

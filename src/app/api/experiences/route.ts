@@ -24,8 +24,12 @@ export async function POST(request: NextRequest) {
     }
 
     const clientIp = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "127.0.0.1";
+    const isLocalhost = clientIp === "127.0.0.1" || clientIp === "::1" || clientIp === "localhost";
     const rateLimitKey = getAnonymizedKey("create-exp", clientIp);
-    const maxCreatesPerHour = process.env.NODE_ENV === "production" ? 15 : 10000;
+    const maxCreatesPerHour =
+      process.env.NODE_ENV === "production" && !isLocalhost && !process.env.CI
+        ? 15
+        : 10000;
     const limitResult = await rateLimiter.check(rateLimitKey, maxCreatesPerHour, 60 * 60 * 1000);
 
     if (!limitResult.allowed) {

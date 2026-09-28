@@ -134,9 +134,10 @@ export const StudioHeader: React.FC<StudioHeaderProps> = ({
             size="sm"
             disabled={saveStatus === "saving" || isPublishing}
             onClick={onPublishClick}
-            className="hidden sm:inline-flex text-xs px-4 rounded-full font-ui shadow-lg shadow-rose-950/40 shrink-0"
+            className="inline-flex text-xs px-2.5 sm:px-4 rounded-full font-ui shadow-lg shadow-rose-950/40 shrink-0"
           >
-            {isPublishing ? "Publishing…" : "Publish Valentine 💌"}
+            <span className="hidden sm:inline">{isPublishing ? "Publishing…" : "Publish Valentine 💌"}</span>
+            <span className="sm:hidden">{isPublishing ? "…" : "Publish 💌"}</span>
           </Button>
         </div>
       </div>

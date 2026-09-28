@@ -846,6 +846,92 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
                 upon recipient tap.
               </p>
             </div>
+
+            {/* Secret Question Lock Option */}
+            <div className="pt-2 border-t border-white/[0.08] space-y-2.5">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  data-testid="toggle-question-lock"
+                  checked={Boolean(modules.secret.questionLock?.enabled)}
+                  onChange={(e) =>
+                    onChange((prev) => ({
+                      ...prev,
+                      secret: {
+                        ...prev.secret,
+                        questionLock: {
+                          ...(prev.secret?.questionLock || {}),
+                          enabled: e.target.checked,
+                          question: prev.secret?.questionLock?.question || "Where was our first kiss?",
+                          answer: prev.secret?.questionLock?.answer || "",
+                        },
+                      },
+                    }))
+                  }
+                  className="accent-rose-500 rounded"
+                />
+                <span className="text-xs text-white font-ui font-medium">
+                  Lock with a Secret Question 🗝️
+                </span>
+              </label>
+
+              {modules.secret.questionLock?.enabled && (
+                <div className="space-y-2 pl-6 animate-fadeIn">
+                  <div>
+                    <label className="text-[10px] text-white/60 font-ui block mb-1">
+                      Secret Question (visible to partner)
+                    </label>
+                    <input
+                      type="text"
+                      data-testid="input-question-lock-q"
+                      placeholder="e.g. What is the name of our special song?"
+                      value={modules.secret.questionLock?.question || ""}
+                      onChange={(e) =>
+                        onChange((prev) => ({
+                          ...prev,
+                          secret: {
+                            ...prev.secret,
+                            questionLock: {
+                              ...prev.secret.questionLock,
+                              question: e.target.value,
+                            },
+                          },
+                        }))
+                      }
+                      className="w-full text-xs px-3 py-2 rounded-xl bg-black/40 border border-white/[0.12] text-white focus:outline-none focus:border-rose-400 font-ui"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-[10px] text-white/60 font-ui block mb-1">
+                      Correct Answer (server-verified, timing-safe & salted)
+                    </label>
+                    <input
+                      type="text"
+                      data-testid="input-question-lock-a"
+                      placeholder="e.g. Yellow or Paris"
+                      value={modules.secret.questionLock?.answer || ""}
+                      onChange={(e) =>
+                        onChange((prev) => ({
+                          ...prev,
+                          secret: {
+                            ...prev.secret,
+                            questionLock: {
+                              ...prev.secret.questionLock,
+                              answer: e.target.value,
+                            },
+                          },
+                        }))
+                      }
+                      className="w-full text-xs px-3 py-2 rounded-xl bg-black/40 border border-white/[0.12] text-white focus:outline-none focus:border-rose-400 font-ui"
+                    />
+                    <p className="text-[10px] text-rose-300/60 font-ui font-light mt-0.5">
+                      🔒 The plain-text answer is never exposed to the client. Upon publishing, it is salted and SHA-256 hashed.
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}

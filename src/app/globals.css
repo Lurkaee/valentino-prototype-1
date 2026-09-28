@@ -130,3 +130,35 @@ body {
     scroll-behavior: auto !important;
   }
 }
+
+/* Printable Keepsake Styles */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #111111 !important;
+  }
+  .no-print,
+  button,
+  input,
+  header,
+  footer,
+  .ambient-glow,
+  .atmospheric-glow,
+  [data-testid="soundtrack-toggle-btn"],
+  [data-testid="read-aloud-toggle-btn"],
+  [data-testid="reseal-button"],
+  [data-testid="save-keepsake-btn"] {
+    display: none !important;
+  }
+  .glass-card,
+  .valentino-card,
+  [data-testid="letter-message"] {
+    border: 1px solid #ddd !important;
+    box-shadow: none !important;
+    background: transparent !important;
+    color: #111111 !important;
+  }
+  @page {
+    margin: 1.5cm;
+  }
+}

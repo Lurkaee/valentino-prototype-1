@@ -29,6 +29,8 @@ import { FeatureDiscoveryDrawer } from "@/components/studio/FeatureDiscoveryDraw
 import { ContextualSuggestion } from "@/components/studio/ContextualSuggestion";
 import { ContentReadinessBar } from "@/components/studio/ContentReadinessBar";
 import { ModuleManager } from "@/modules/editor/ModuleManager";
+import { MultimediaStorySection } from "@/components/studio/MultimediaStorySection";
+import { PreviewAndSendSection } from "@/components/studio/PreviewAndSendSection";
 import { FeatureDefinition } from "@/features/types";
 
 function EditExperienceContent() {
@@ -334,9 +336,12 @@ function EditExperienceContent() {
 
   // 6. Handle Publish Action
   const handlePublish = async () => {
-    if (saveStatus === "saving") return;
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+      debounceTimerRef.current = null;
+    }
 
-    if (isDirtyRef.current) {
+    if (isDirtyRef.current || saveStatus === "saving") {
       const saved = await performSave();
       if (!saved) return;
     }
@@ -345,7 +350,7 @@ function EditExperienceContent() {
     setPublishErrors([]);
 
     try {
-      const res = await fetch(`/api/experiences/${publicId}/publish`, {
+      let res = await fetch(`/api/experiences/${publicId}/publish`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -355,6 +360,25 @@ function EditExperienceContent() {
           expectedRevision: revisionRef.current,
         }),
       });
+
+      if (res.status === 409) {
+        const data = await res.json().catch(() => ({}));
+        if (data.currentRevision) {
+          revisionRef.current = data.currentRevision;
+          setRevision(data.currentRevision);
+          // Retry publish once with latest revision
+          res = await fetch(`/api/experiences/${publicId}/publish`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "Cache-Control": "no-store",
+            },
+            body: JSON.stringify({
+              expectedRevision: data.currentRevision,
+            }),
+          });
+        }
+      }
 
       if (res.status === 409) {
         const data = await res.json().catch(() => ({}));
@@ -491,9 +515,10 @@ function EditExperienceContent() {
           <div className="sticky top-0 z-10 bg-[#0E0C12]/95 backdrop-blur-md px-6 py-2.5 border-b border-white/[0.08] flex items-center gap-1.5 overflow-x-auto scrollbar-none">
             {[
               { id: "world", label: "1. World", icon: "🌐" },
-              { id: "story", label: "2. Story", icon: "✍️" },
+              { id: "story", label: "2. Story & Media", icon: "✍️" },
               { id: "moments", label: "3. Moments", icon: "✨" },
               { id: "mood", label: "4. Mood & Decor", icon: "🎨" },
+              { id: "preview", label: "5. Send & Keepsakes", icon: "🚀" },
             ].map((stage) => (
               <button
                 key={stage.id}
@@ -781,6 +806,14 @@ function EditExperienceContent() {
                       </div>
                     </div>
                   )}
+                </div>
+
+                <div className="pt-4 border-t border-white/[0.08]">
+                  <MultimediaStorySection
+                    publicId={publicId}
+                    modules={config.modules}
+                    onChange={handleModulesChange}
+                  />
                 </div>
               </div>
             </section>
@@ -1121,6 +1154,18 @@ function EditExperienceContent() {
                   })}
                 </div>
               </div>
+            </section>
+
+            {/* STAGE 5: Preview, Send & Keepsakes */}
+            <section id="section-preview" className="scroll-mt-16 border-t border-white/[0.08] pt-8">
+              <PreviewAndSendSection
+                publicId={publicId}
+                partnerName={config.partnerName}
+                soundtrackUrl={config.soundtrackUrl}
+                scheduledUnlockAt={config.scheduledUnlockAt}
+                onSoundtrackChange={(url) => handleConfigChange((prev) => ({ ...prev, soundtrackUrl: url }))}
+                onScheduleChange={(isoDate) => handleConfigChange((prev) => ({ ...prev, scheduledUnlockAt: isoDate }))}
+              />
             </section>
 
             {/* Validation Errors */}
