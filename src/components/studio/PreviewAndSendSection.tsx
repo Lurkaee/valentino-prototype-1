@@ -45,17 +45,17 @@ export const PreviewAndSendSection: React.FC<PreviewAndSendSectionProps> = ({
         </p>
       </div>
 
-      {/* 1. Background Music */}
+      {/* 1. Background Music (Creator-Uploaded Only) */}
       <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/[0.08] space-y-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="text-base select-none">🎵</span>
             <div>
               <span className="text-xs font-display font-medium text-white block">
-                Background Music / Soundtrack
+                Background Music (Creator Soundtrack)
               </span>
               <span className="text-[11px] text-white/50 font-ui">
-                Upload your song or use the ambient romantic harmonic soundscape.
+                Upload your own song, memory audio, or soundtrack (MP3/WAV up to 10 MB).
               </span>
             </div>
           </div>
@@ -65,7 +65,7 @@ export const PreviewAndSendSection: React.FC<PreviewAndSendSectionProps> = ({
               onClick={() => onSoundtrackChange(null)}
               className="text-[11px] text-rose-400 hover:text-rose-300 underline font-ui cursor-pointer"
             >
-              Reset to Ambient Tone
+              Remove Soundtrack
             </button>
           )}
         </div>
@@ -85,7 +85,7 @@ export const PreviewAndSendSection: React.FC<PreviewAndSendSectionProps> = ({
           </div>
         ) : (
           <div className="text-[11px] text-white/50 font-ui italic">
-            Default: Pure harmonic synthesizer chords (C#m / F# warm frequencies).
+            No soundtrack uploaded. Experience will remain ambiently silent unless a track is attached.
           </div>
         )}
       </div>

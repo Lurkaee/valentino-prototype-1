@@ -54,7 +54,7 @@ export const PartnerInteractionsPanel: React.FC<PartnerInteractionsPanelProps> =
 
       if (recRes.ok) {
         const recData = await recRes.json();
-        setCounts(recData.counts || {});
+        setCounts(recData.tallies || recData.counts || {});
       }
       if (repRes.ok) {
         const repData = await repRes.json();

@@ -543,6 +543,30 @@ export function getModulesClientScript(publicId: string): string {
       });
     }
 
+    // Tap-to-Reveal Secret (without Question Lock)
+    var revealSecretBtn = document.getElementById('reveal-secret-btn');
+    if (revealSecretBtn) {
+      revealSecretBtn.addEventListener('click', function() {
+        revealSecretBtn.disabled = true;
+        revealSecretBtn.textContent = 'Revealing...';
+        fetch('/api/experiences/' + encodeURIComponent('${publicId}') + '/secret', {
+          headers: { 'Cache-Control': 'no-store' }
+        })
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+          revealSecretBtn.classList.add('hidden');
+          if (revealedContent && data.secretContent) {
+            revealedContent.textContent = data.secretContent;
+            revealedContent.classList.remove('hidden');
+          }
+        })
+        .catch(function() {
+          revealSecretBtn.disabled = false;
+          revealSecretBtn.textContent = 'Tap to Reveal Secret';
+        });
+      });
+    }
+
     // Recipient Reactions
     var reactionBtns = document.querySelectorAll('.reaction-trigger-btn');
     var reactionToast = document.getElementById('reaction-toast');

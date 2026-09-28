@@ -124,6 +124,7 @@ export async function GET(req: NextRequest, { params }: RouteParams) {
       createdAt: r.createdAt.toISOString(),
     })),
     tallies,
+    counts: tallies,
     totalCount: reactions.length,
   });
 }

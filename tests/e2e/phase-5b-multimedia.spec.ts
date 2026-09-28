@@ -122,9 +122,9 @@ test.describe("Phase 5B: Multimedia, Delivery, Secret Lock & Recipient Interacti
     await expect(page.locator('[data-testid="publish-success-modal"]')).toBeVisible({ timeout: 25000 });
   });
 
-  test("2. Recipient Journey: Reading Letter, Interactive Modules, Reactions & Reply", async ({ page }) => {
+  test("2. Recipient Journey: Reading Letter, Interactive Modules, Reactions & Reply", async ({ page, context, request }) => {
     // 1. Create and publish an experience programmatically
-    const createRes = await page.request.post(`${APP_URL}/api/experiences`, {
+    const createRes = await request.post(`${APP_URL}/api/experiences`, {
       headers: { origin: APP_URL, "content-type": "application/json" },
       data: { templateId: "midnight-rose" },
     });
@@ -206,6 +206,18 @@ test.describe("Phase 5B: Multimedia, Delivery, Secret Lock & Recipient Interacti
     if (await printKeepsakeBtn.isVisible()) {
       await expect(printKeepsakeBtn).toBeVisible();
     }
+
+    // 6. Creator Journey: Return to Studio and verify partner reactions & reply
+    const storage = await request.storageState();
+    await context.addCookies(storage.cookies);
+    await page.goto(`${APP_URL}/edit/${publicId}`);
+    const previewSendTab = page.locator('button:has-text("Preview & Send")').first();
+    if (await previewSendTab.isVisible()) {
+      await previewSendTab.click();
+      await page.waitForTimeout(400);
+      const interactionsPanel = page.locator('[data-testid="partner-interactions-panel"]');
+      await expect(interactionsPanel).toBeVisible();
+    }
   });
 
   test("3. Responsive Viewports Check (360, 390, 768, 1024, 1280, 1440)", async ({ page }) => {
@@ -249,5 +261,83 @@ test.describe("Phase 5B: Multimedia, Delivery, Secret Lock & Recipient Interacti
       await expect(page.locator('[data-testid="recipient-name"]')).toBeVisible();
       await expect(page.locator('[data-testid="wax-seal-button"]')).toBeVisible();
     }
+  });
+
+  test("4. Template Compatibility: Cloud Nine & Kage SSR rendering with Phase 5B Modules", async ({ page }) => {
+    // 1. Cloud Nine Experience
+    const c9Res = await page.request.post(`${APP_URL}/api/experiences`, {
+      headers: { origin: APP_URL, "content-type": "application/json" },
+      data: { templateId: "cloud-nine" },
+    });
+    const { publicId: c9Id } = await c9Res.json();
+    const c9Cookie = c9Res.headers()["set-cookie"] || "";
+
+    await page.request.put(`${APP_URL}/api/experiences/${c9Id}/draft`, {
+      headers: { origin: APP_URL, "content-type": "application/json", cookie: c9Cookie },
+      data: {
+        baseRevision: 1,
+        draftConfig: {
+          partnerName: "Celeste",
+          senderName: "Atlas",
+          message: "Floating in pink clouds with you.",
+          soundtrackUrl: "https://example.com/audio.mp3",
+          modules: {
+            "voice-note": {
+              enabled: true,
+              caption: "Listen to the clouds whisper.",
+            },
+          },
+          moduleOrder: ["voice-note"],
+        },
+      },
+    });
+
+    await page.request.post(`${APP_URL}/api/experiences/${c9Id}/publish`, {
+      headers: { origin: APP_URL, "content-type": "application/json", cookie: c9Cookie },
+      data: { expectedRevision: 2 },
+    });
+
+    await page.goto(`${APP_URL}/v/${c9Id}`);
+    await expect(page.locator('[data-testid="recipient-name"]')).toHaveText("Celeste");
+    await expect(page.locator('[data-testid="wax-seal-button"]')).toBeVisible();
+    await expect(page.locator('#soundtrack-toggle')).toBeVisible();
+
+    // 2. Kage Experience
+    const kageRes = await page.request.post(`${APP_URL}/api/experiences`, {
+      headers: { origin: APP_URL, "content-type": "application/json" },
+      data: { templateId: "kage" },
+    });
+    const { publicId: kageId } = await kageRes.json();
+    const kageCookie = kageRes.headers()["set-cookie"] || "";
+
+    await page.request.put(`${APP_URL}/api/experiences/${kageId}/draft`, {
+      headers: { origin: APP_URL, "content-type": "application/json", cookie: kageCookie },
+      data: {
+        baseRevision: 1,
+        draftConfig: {
+          partnerName: "Kuro",
+          senderName: "Shiro",
+          message: "Where shadows fall and cherry blossoms rest.",
+          modules: {
+            "memories": {
+              enabled: true,
+              title: "Monochrome Echoes",
+              items: [],
+            },
+          },
+          moduleOrder: ["memories"],
+        },
+      },
+    });
+
+    await page.request.post(`${APP_URL}/api/experiences/${kageId}/publish`, {
+      headers: { origin: APP_URL, "content-type": "application/json", cookie: kageCookie },
+      data: { expectedRevision: 2 },
+    });
+
+    await page.goto(`${APP_URL}/v/${kageId}`);
+    await expect(page.locator('[data-testid="kage-container"]')).toBeVisible();
+    await expect(page.locator('[data-testid="recipient-name"]')).toHaveText("Kuro");
+    await expect(page.locator('[data-testid="read-aloud-btn"]')).toBeVisible();
   });
 });

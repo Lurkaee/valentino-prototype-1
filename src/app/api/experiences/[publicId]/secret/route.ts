@@ -19,10 +19,13 @@ export const dynamic = "force-dynamic";
 export async function GET(req: NextRequest, { params }: RouteParams) {
   const { publicId } = await params;
 
-  // 1. Origin verification
-  const originCheck = validateOrigin(req);
-  if (!originCheck.valid) {
-    return NextResponse.json({ error: "Request origin not allowed" }, { status: 403 });
+  // 1. Origin verification (if present, must be valid)
+  const origin = req.headers.get("origin");
+  if (origin) {
+    const originCheck = validateOrigin(req);
+    if (!originCheck.valid) {
+      return NextResponse.json({ error: "Request origin not allowed" }, { status: 403 });
+    }
   }
 
   // 2. Lookup experience

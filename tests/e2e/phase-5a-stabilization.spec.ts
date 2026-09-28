@@ -94,7 +94,7 @@ test.describe("Phase 5A: Post-Release Stabilization & World System Repair", () =
 
   test("4. Showroom world switching & dynamic Plasma button theming", async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 900 });
-    await page.goto(`${APP_URL}/templates`);
+    await page.goto(`${APP_URL}/templates`, { waitUntil: "domcontentloaded" });
 
     // Verify Initial Midnight Rose on Stage
     await expect(page.locator("#template-midnight-rose")).toBeVisible();
@@ -120,7 +120,7 @@ test.describe("Phase 5A: Post-Release Stabilization & World System Repair", () =
     page,
   }) => {
     await page.setViewportSize({ width: 1280, height: 900 });
-    await page.goto(`${APP_URL}/templates`);
+    await page.goto(`${APP_URL}/templates`, { waitUntil: "domcontentloaded" });
 
     // Switch stage to Kage
     const kageTab = page.locator('button:has-text("Kage")').first();

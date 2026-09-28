@@ -91,7 +91,12 @@ export function normalizeSecretConfig(raw: unknown, isPublic: boolean = false): 
       : typeof obj.concealedSecret === "string"
       ? obj.concealedSecret.trim()
       : "";
-  const hasContent = rawContent.length > 0;
+  const hasContent =
+    rawContent.length > 0 ||
+    Boolean(obj.encryptedSecret) ||
+    Boolean(obj.answerHash) ||
+    Boolean(obj.questionLock?.enabled) ||
+    (isPublic && Boolean(obj.enabled));
 
   const base: SecretPublishedConfig = {
     enabled: Boolean(obj.enabled && hasContent),

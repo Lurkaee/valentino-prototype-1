@@ -11,7 +11,7 @@ interface SoundtrackPlayerProps {
 
 export const SoundtrackPlayer: React.FC<SoundtrackPlayerProps> = ({
   url,
-  title = "Romantic Soundtrack",
+  title = "Creator Soundtrack",
   theme = "midnight-rose",
   className = "",
 }) => {

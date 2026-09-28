@@ -44,6 +44,7 @@ export const cloudNineDraftSchema = z.object({
   signOff: graphemeMax(100).optional().default(""),
   accentTheme: z.string().max(50).optional().default("blush-sky"),
   heroMediaId: z.string().max(200).optional().nullable(),
+  soundtrackUrl: z.string().max(500).optional().nullable(),
   decor: valentineDecorSchema,
   modules: modulesDraftSchema,
   moduleOrder: z.array(z.string()).optional(),
@@ -68,6 +69,7 @@ export const cloudNinePublishSchema = z.object({
     })
     .default("blush-sky"),
   heroMediaId: z.string().max(200).optional().nullable(),
+  soundtrackUrl: z.string().max(500).optional().nullable(),
   decor: valentineDecorSchema,
   modules: modulesPublishSchema,
   moduleOrder: z.array(z.string()).optional(),

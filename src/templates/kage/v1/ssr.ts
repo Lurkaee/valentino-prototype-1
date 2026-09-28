@@ -137,8 +137,19 @@ export function renderKageSsrHtml(config: KagePublishedConfig, publicId: string 
       <h1 data-testid="recipient-name">${partnerName}</h1>
       <div class="card">
         <div class="gold-rim"></div>
-        <!-- Read Aloud Speech Synthesis Button -->
-        <div style="display: flex; justify-content: flex-end; margin-bottom: 0.75rem;">
+        <!-- Soundtrack & Read Aloud Buttons -->
+        <div style="display: flex; justify-content: flex-end; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+          ${(config as any).soundtrackUrl ? `
+          <button
+            type="button"
+            id="soundtrack-toggle"
+            data-soundtrack-url="${sanitizeText((config as any).soundtrackUrl)}"
+            aria-label="Play Soundtrack"
+            style="display: inline-flex; align-items: center; gap: 0.35rem; padding: 0.3rem 0.75rem; border-radius: 9999px; font-size: 0.7rem; color: #6EE7B7; background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.3); cursor: pointer; transition: all 0.2s;"
+          >
+            <span>🎵</span> <span>Play Music</span>
+          </button>
+          ` : ''}
           <button
             type="button"
             id="read-aloud-btn"
@@ -170,6 +181,27 @@ export function renderKageSsrHtml(config: KagePublishedConfig, publicId: string 
   <script>
     (function() {
       function setup() {
+        var musicBtn = document.getElementById('soundtrack-toggle');
+        if (musicBtn) {
+          var url = musicBtn.getAttribute('data-soundtrack-url');
+          if (url) {
+            var audio = new Audio(url);
+            audio.loop = true;
+            var isPlaying = false;
+            musicBtn.addEventListener('click', function() {
+              if (isPlaying) {
+                audio.pause();
+                isPlaying = false;
+                musicBtn.innerHTML = '<span>🎵</span> <span>Play Music</span>';
+              } else {
+                audio.play().then(function() {
+                  isPlaying = true;
+                  musicBtn.innerHTML = '<span>🎶</span> <span>Pause Music</span>';
+                }).catch(function() {});
+              }
+            });
+          }
+        }
         ${getModulesClientScript(publicId)}
       }
 
