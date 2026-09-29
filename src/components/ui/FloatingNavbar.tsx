@@ -29,12 +29,12 @@ export function FloatingNavbar({ className = "" }: FloatingNavbarProps) {
   }, []);
 
   return (
-    <div className={`fixed top-3 sm:top-5 inset-x-0 z-40 flex justify-center px-3 sm:px-4 pointer-events-none ${className}`}>
+    <div className={`fixed top-3 sm:top-5 inset-x-0 z-30 z-floating-ui flex justify-center px-3 sm:px-4 pointer-events-none ${className}`}>
       <header
         className={`pointer-events-auto transition-all duration-300 ease-out flex items-center justify-between gap-3 sm:gap-6 rounded-full border backdrop-blur-xl ${
           isScrolled
-            ? "py-2 px-3.5 sm:px-6 bg-[#0E0D14]/90 border-white/[0.12] shadow-[0_16px_40px_-10px_rgba(0,0,0,0.8)]"
-            : "py-2 px-4 sm:px-6 bg-[#13111A]/80 border-white/[0.08] shadow-[0_10px_30px_-10px_rgba(0,0,0,0.5)]"
+            ? "py-2 px-3.5 sm:px-6 bg-[#16040E]/90 border-rose-500/20 shadow-[0_16px_40px_-10px_rgba(0,0,0,0.6)]"
+            : "py-2 px-4 sm:px-6 bg-[#180812]/80 border-white/[0.12] shadow-[0_10px_30px_-10px_rgba(40,5,20,0.3)]"
         }`}
       >
         {/* Left: Brand Monogram & Title */}

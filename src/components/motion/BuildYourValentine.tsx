@@ -148,13 +148,13 @@ export function BuildYourValentine({ className = "" }: { className?: string }) {
             size="sm"
             className="mb-4 bg-rose-100/90 text-[#881337] border-rose-300 font-sans tracking-widest uppercase font-medium"
           >
-            ✦ Interactive Romantic Studio ✦
+            ✦ World Personalization ✦
           </Badge>
-          <h2 className="text-3xl sm:text-5xl font-serif font-medium text-[#240412] tracking-tight mb-4">
-            Build Your Valentine
+          <h2 className="text-3xl sm:text-5xl font-serif font-medium text-[#240412] tracking-tight mb-4 leading-tight">
+            Design the little world they will enter.
           </h2>
           <p className="text-sm sm:text-base text-[#4A0E2E] font-normal leading-relaxed">
-            Craft a bespoke love letter. Select seasonal blooms, orbiting charms, luxury paper finish, and custom wax seals that will travel directly into your recipient&apos;s hands.
+            Before they read a single word, the atmosphere speaks for you. Select seasonal florals, orbiting charms, hand-pressed stationery, and a bespoke wax seal crafted for their private experience.
           </p>
 
           {/* Quick Inspirations / Presets */}

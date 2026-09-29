@@ -4,7 +4,13 @@ import React from "react";
 import { motion, useReducedMotion } from "motion/react";
 
 interface SectionDividerProps {
-  variant: "cream-to-berry" | "berry-to-midnight" | "sky-to-cream";
+  variant:
+    | "sky-to-cream"
+    | "cream-to-peach"
+    | "peach-to-berry"
+    | "cream-to-berry"
+    | "berry-to-midnight"
+    | "midnight-to-cream";
   className?: string;
 }
 
@@ -30,6 +36,52 @@ export function SectionDivider({ variant, className = "" }: SectionDividerProps)
               "linear-gradient(180deg, #FEDEEA 0%, #FEEBF2 35%, #FDF4EE 70%, #FDF8F3 100%)",
           }}
         />
+      </div>
+    );
+  }
+
+  if (variant === "cream-to-peach") {
+    return (
+      <div
+        className={`w-full relative overflow-hidden pointer-events-none select-none bg-[#FFF0EA] -mt-px ${className}`}
+        aria-hidden="true"
+      >
+        <div
+          className="w-full h-16 sm:h-24"
+          style={{
+            background:
+              "linear-gradient(180deg, #FDF8F3 0%, #FDF3ED 40%, #FEECE3 75%, #FFF0EA 100%)",
+          }}
+        />
+      </div>
+    );
+  }
+
+  if (variant === "peach-to-berry") {
+    return (
+      <div
+        className={`w-full relative overflow-hidden pointer-events-none select-none ${className}`}
+        aria-hidden="true"
+      >
+        <div
+          className="w-full h-24 sm:h-36 relative"
+          style={{
+            background:
+              "linear-gradient(180deg, #FFF0EA 0%, #FDE4DF 20%, #F3BDD1 45%, #C25686 70%, #681139 90%, #2A0619 100%)",
+          }}
+        >
+          {/* Ambient Candlelit Top Glow */}
+          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[600px] sm:w-[900px] h-24 rounded-full bg-rose-400/20 blur-3xl" />
+
+          {/* Organic wave contour */}
+          <svg
+            className="absolute bottom-0 inset-x-0 w-full h-10 sm:h-14 text-[#2A0619] fill-current block"
+            viewBox="0 0 1440 64"
+            preserveAspectRatio="none"
+          >
+            <path d="M0,32 C320,64 640,8 960,48 C1200,80 1360,16 1440,32 L1440,64 L0,64 Z" />
+          </svg>
+        </div>
       </div>
     );
   }
@@ -86,21 +138,47 @@ export function SectionDivider({ variant, className = "" }: SectionDividerProps)
     );
   }
 
-  // variant === "berry-to-midnight"
+  if (variant === "berry-to-midnight") {
+    return (
+      <div
+        className={`w-full relative overflow-hidden pointer-events-none select-none ${className}`}
+        aria-hidden="true"
+      >
+        <div
+          className="w-full h-20 sm:h-28"
+          style={{
+            background:
+              "linear-gradient(180deg, #2A0619 0%, #220414 35%, #18030E 70%, #12030A 100%)",
+          }}
+        >
+          {/* Soft starlight horizon glow */}
+          <div className="w-full h-px bg-gradient-to-r from-transparent via-rose-500/25 to-transparent" />
+        </div>
+      </div>
+    );
+  }
+
+  // variant === "midnight-to-cream"
   return (
     <div
       className={`w-full relative overflow-hidden pointer-events-none select-none ${className}`}
       aria-hidden="true"
     >
       <div
-        className="w-full h-20 sm:h-28"
+        className="w-full h-24 sm:h-36 relative"
         style={{
           background:
-            "linear-gradient(180deg, #16020D 0%, #1A0311 35%, #14020C 70%, #12030A 100%)",
+            "linear-gradient(180deg, #12030A 0%, #2D0818 25%, #6E1A3D 55%, #C26388 80%, #F5DDE7 92%, #FDF8F3 100%)",
         }}
       >
-        {/* Soft starlight horizon glow */}
-        <div className="w-full h-px bg-gradient-to-r from-transparent via-rose-500/20 to-transparent" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 w-[700px] h-24 rounded-full bg-rose-400/20 blur-3xl" />
+        <svg
+          className="absolute bottom-0 inset-x-0 w-full h-10 sm:h-14 text-[#FDF8F3] fill-current block"
+          viewBox="0 0 1440 64"
+          preserveAspectRatio="none"
+        >
+          <path d="M0,32 C360,64 720,12 1080,44 C1260,60 1380,24 1440,32 L1440,64 L0,64 Z" />
+        </svg>
       </div>
     </div>
   );
