@@ -1,0 +1,252 @@
+"use client";
+
+import React, { useState, useEffect } from "react";
+import { motion, useSpring, useScroll, useTransform } from "motion/react";
+import { DimensionalWorldProps } from "./types";
+import { useDeviceTier } from "./useDeviceTier";
+import { AtmosphericCanvas } from "./AtmosphericCanvas";
+import { DimensionalEntrance } from "./DimensionalEntrance";
+
+export const DimensionalWorld: React.FC<DimensionalWorldProps> = ({
+  theme,
+  accentVariant = "default",
+  activeScene = "welcome",
+  pacing = "balanced",
+  children,
+  recipientName,
+  greeting,
+  className = "",
+}) => {
+  const { tier, isReducedMotion, isMobile, canHover } = useDeviceTier();
+  const [pointer, setPointer] = useState({ x: 0, y: 0 });
+
+  // Spring-smoothed pointer parallax
+  const springConfig =
+    pacing === "calm"
+      ? { damping: 35, stiffness: 60 }
+      : pacing === "cinematic"
+      ? { damping: 22, stiffness: 100 }
+      : { damping: 28, stiffness: 80 };
+
+  const mouseX = useSpring(0, springConfig);
+  const mouseY = useSpring(0, springConfig);
+
+  useEffect(() => {
+    if (isReducedMotion || !canHover) return;
+
+    const handlePointerMove = (e: MouseEvent) => {
+      const { innerWidth, innerHeight } = window;
+      const x = (e.clientX / innerWidth - 0.5) * 2;
+      const y = (e.clientY / innerHeight - 0.5) * 2;
+      mouseX.set(x);
+      mouseY.set(y);
+      setPointer({ x, y });
+    };
+
+    window.addEventListener("mousemove", handlePointerMove, { passive: true });
+    return () => window.removeEventListener("mousemove", handlePointerMove);
+  }, [isReducedMotion, canHover, mouseX, mouseY]);
+
+  // Scroll-linked depth parallax for distant layers
+  const { scrollY } = useScroll();
+  const rawBgParallax = useTransform(scrollY, [0, 1000], [0, 60]);
+  const bgParallax = useSpring(rawBgParallax, springConfig);
+
+  // Parallax transforms by depth layer
+  const distantEnvX = useTransform(mouseX, (v) => (isReducedMotion ? 0 : v * -12));
+  const distantEnvY = useTransform(mouseY, (v) => (isReducedMotion ? 0 : v * -8));
+
+  const atmosphereX = useTransform(mouseX, (v) => (isReducedMotion ? 0 : v * -6));
+  const atmosphereY = useTransform(mouseY, (v) => (isReducedMotion ? 0 : v * -4));
+
+  const foregroundX = useTransform(mouseX, (v) => (isReducedMotion ? 0 : v * 10));
+  const foregroundY = useTransform(mouseY, (v) => (isReducedMotion ? 0 : v * 6));
+
+  return (
+    <DimensionalEntrance
+      theme={theme}
+      recipientName={recipientName}
+      greeting={greeting}
+      isReducedMotion={isReducedMotion}
+    >
+      <div
+        data-dimensional-world={theme}
+        data-device-tier={tier}
+        data-scene={activeScene}
+        data-accent-variant={accentVariant}
+        className={`relative w-full min-h-[100dvh] overflow-x-hidden ${className}`}
+        style={{ perspective: "1400px" }}
+      >
+        {/* =========================================================================
+            LAYER 0: DEEP BACKGROUND (Atmospheric Horizon & Radiant Gradient)
+           ========================================================================= */}
+        <div
+          data-layer="0-deep-background"
+          aria-hidden="true"
+          className="pointer-events-none fixed inset-0 z-0 transition-colors duration-1000"
+          style={{
+            background:
+              theme === "cloud-nine"
+                ? activeScene === "finale"
+                  ? "radial-gradient(ellipse at 50% 20%, #FFF0F5 0%, #FED9E8 40%, #E9D5FF 80%, #DDD6FE 100%)"
+                  : activeScene === "memories"
+                  ? "radial-gradient(ellipse at 50% 25%, #FFF5F7 0%, #FFE4EE 50%, #FBCFE8 100%)"
+                  : "radial-gradient(ellipse at 50% 15%, #FFF5F7 0%, #FFEBF2 45%, #FDE2ED 75%, #FBCFE8 100%)"
+                : theme === "midnight-rose"
+                ? activeScene === "finale"
+                  ? "radial-gradient(ellipse at 50% 20%, #1A0510 0%, #10020A 50%, #060104 100%)"
+                  : "radial-gradient(ellipse at 50% 20%, #15030D 0%, #0D0207 60%, #050103 100%)"
+                : "radial-gradient(ellipse at 50% 20%, #0B120E 0%, #070B09 60%, #030504 100%)",
+          }}
+        />
+
+        {/* =========================================================================
+            LAYER 1: DISTANT ENVIRONMENT (Distant Sky / Sunset Haze / Mountain Silhouette)
+           ========================================================================= */}
+        <motion.div
+          data-layer="1-distant-environment"
+          aria-hidden="true"
+          style={{
+            x: distantEnvX,
+            y: isReducedMotion ? 0 : distantEnvY,
+          }}
+          className="pointer-events-none fixed inset-x-[-4%] -top-[5%] h-[115%] z-1 will-change-transform opacity-75"
+        >
+          {theme === "cloud-nine" && (
+            <div
+              className="w-full h-full"
+              style={{
+                background:
+                  "radial-gradient(ellipse 110% 70% at 50% 10%, rgba(254, 215, 226, 0.8) 0%, rgba(253, 230, 238, 0.4) 40%, transparent 75%)",
+              }}
+            />
+          )}
+
+          {theme === "midnight-rose" && (
+            <div
+              className="w-full h-full"
+              style={{
+                background:
+                  "radial-gradient(ellipse 100% 60% at 50% 0%, rgba(244, 63, 94, 0.18) 0%, rgba(136, 19, 55, 0.12) 40%, transparent 80%)",
+              }}
+            />
+          )}
+
+          {theme === "kage" && (
+            <div
+              className="w-full h-full"
+              style={{
+                background:
+                  "radial-gradient(ellipse 100% 60% at 50% 0%, rgba(16, 185, 129, 0.14) 0%, rgba(6, 78, 59, 0.1) 40%, transparent 80%)",
+              }}
+            />
+          )}
+        </motion.div>
+
+        {/* =========================================================================
+            LAYER 2: VOLUMETRIC ATMOSPHERE (Volumetric Clouds / Mist / Luminous Glow)
+           ========================================================================= */}
+        <motion.div
+          data-layer="2-atmosphere"
+          aria-hidden="true"
+          style={{
+            x: atmosphereX,
+            y: isReducedMotion ? 0 : atmosphereY,
+          }}
+          className="pointer-events-none fixed inset-0 z-2 will-change-transform"
+        >
+          {theme === "cloud-nine" && (
+            <>
+              {/* Soft Center Sunlight Glow */}
+              <div
+                className="absolute top-[-5%] left-1/2 -translate-x-1/2 w-[700px] sm:w-[1100px] h-[550px] rounded-full blur-[75px] opacity-75"
+                style={{
+                  background:
+                    "radial-gradient(circle at 50% 35%, rgba(255, 248, 238, 0.95) 0%, rgba(254, 225, 220, 0.6) 45%, rgba(253, 205, 225, 0.25) 70%, transparent 100%)",
+                }}
+              />
+              {/* Floating Cloud Silhouettes */}
+              <div className="absolute top-16 -left-16 w-80 h-36 bg-white/40 rounded-full blur-2xl animate-[pulse_7s_ease-in-out_infinite]" />
+              <div className="absolute top-44 -right-20 w-96 h-44 bg-pink-200/35 rounded-full blur-3xl animate-[pulse_9s_ease-in-out_infinite]" />
+            </>
+          )}
+
+          {theme === "midnight-rose" && (
+            <>
+              {/* Candlelight / Starlight Glow */}
+              <div
+                className="absolute top-0 left-1/2 -translate-x-1/2 w-[650px] sm:w-[900px] h-[500px] rounded-full blur-[80px] opacity-55"
+                style={{
+                  background:
+                    "radial-gradient(circle at 50% 30%, rgba(244, 63, 94, 0.25) 0%, rgba(190, 18, 60, 0.15) 45%, transparent 75%)",
+                }}
+              />
+              <div className="absolute top-20 -left-10 w-72 h-36 bg-rose-950/40 rounded-full blur-3xl" />
+              <div className="absolute top-60 -right-16 w-80 h-40 bg-purple-950/30 rounded-full blur-3xl" />
+            </>
+          )}
+        </motion.div>
+
+        {/* =========================================================================
+            LAYER 3: MIDGROUND DYNAMIC PARTICLES (Hardware-Accelerated Canvas)
+           ========================================================================= */}
+        <AtmosphericCanvas
+          theme={theme}
+          tier={tier}
+          isReducedMotion={isReducedMotion}
+          className="z-3"
+        />
+
+        {/* =========================================================================
+            LAYER 4 & 5: PRIMARY STORY & INTERACTIVE CONTENT
+           ========================================================================= */}
+        <div data-layer="4-primary-story" className="relative z-10 w-full">
+          {children}
+        </div>
+
+        {/* =========================================================================
+            LAYER 6: FOREGROUND ACCENT DEPTH (Soft edge vignette & light wrap)
+           ========================================================================= */}
+        <motion.div
+          data-layer="5-foreground-wrap"
+          aria-hidden="true"
+          style={{
+            x: foregroundX,
+            y: isReducedMotion ? 0 : foregroundY,
+          }}
+          className="pointer-events-none fixed inset-0 z-20 will-change-transform"
+        >
+          {theme === "cloud-nine" && (
+            <div
+              className="w-full h-full opacity-40 mix-blend-soft-light"
+              style={{
+                background:
+                  "radial-gradient(circle at center, transparent 65%, rgba(251, 207, 232, 0.6) 100%)",
+              }}
+            />
+          )}
+
+          {theme === "midnight-rose" && (
+            <div
+              className="w-full h-full opacity-60"
+              style={{
+                background:
+                  "radial-gradient(circle at center, transparent 60%, rgba(0, 0, 0, 0.6) 100%)",
+              }}
+            />
+          )}
+
+          {theme === "kage" && (
+            <div
+              className="w-full h-full opacity-70"
+              style={{
+                background:
+                  "radial-gradient(circle at center, transparent 55%, rgba(5, 9, 7, 0.75) 100%)",
+              }}
+            />
+          )}
+        </motion.div>
+      </div>
+    </DimensionalEntrance>
+  );
+};

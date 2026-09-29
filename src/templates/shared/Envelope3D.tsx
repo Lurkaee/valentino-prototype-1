@@ -26,16 +26,13 @@ export interface Envelope3DProps {
 
 /**
  * Envelope3D:
- * Shared tactile physical envelope primitive using lightweight CSS 3D and Motion states.
+ * Tactile physical 3D envelope primitive with dimensional depth, realistic perspective,
+ * and choreographed unfolding sequence.
  *
  * Sequence:
- * Idle (breathing halo) -> Hover/Focus (subtle compression) -> Press/Tap (scale down)
- * -> Seal breaks -> Flap swings open (180deg) -> Letter emerges & unfolds into reading canvas.
- *
- * Accessibility:
- * - Direct unsealed state when prefers-reduced-motion is active.
- * - Keyboard accessible (Enter & Space trigger unseal).
- * - Mobile-safe constraints preventing viewport overflow or scroll hijacking.
+ * Resting Letter (ambient 3D tilt & breathing shadow) -> Hover/Approach (halo expansion & rim illumination)
+ * -> Press/Tap (tactile compression) -> Seal Breaks (micro-sparkle dispersion)
+ * -> Letter unfolds forward in 3D perspective -> Message surfaces crystal clear.
  */
 export function Envelope3D({
   isSealed,
@@ -59,6 +56,7 @@ export function Envelope3D({
 }: Envelope3DProps) {
   const shouldReduceMotion = useReducedMotion();
   const [hasBroken, setHasBroken] = useState(!isSealed || Boolean(shouldReduceMotion));
+  const [isBreaking, setIsBreaking] = useState(false);
 
   useEffect(() => {
     if (shouldReduceMotion) {
@@ -72,13 +70,18 @@ export function Envelope3D({
   useEffect(() => {
     if (isSealed && !shouldReduceMotion) {
       setHasBroken(false);
+      setIsBreaking(false);
     }
   }, [isSealed, shouldReduceMotion]);
 
   const handleBreakSeal = () => {
-    if (!hasBroken) {
-      setHasBroken(true);
-      onUnseal();
+    if (!hasBroken && !isBreaking) {
+      setIsBreaking(true);
+      setTimeout(() => {
+        setHasBroken(true);
+        setIsBreaking(false);
+        onUnseal();
+      }, shouldReduceMotion ? 0 : 350);
     }
   };
 
@@ -87,50 +90,75 @@ export function Envelope3D({
   return (
     <div
       className={`relative w-full max-w-lg mx-auto transition-all duration-700 ${className}`}
-      style={{ perspective: "1200px" }}
+      style={{ perspective: "1400px" }}
     >
-      <div
+      <motion.div
         data-decor-paper={paperId}
-        className={`w-full rounded-3xl ${envelopeBgClass} backdrop-blur-2xl border ${envelopeBorderClass} p-6 sm:p-10 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.8)] transition-all duration-700 ease-out relative z-10`}
+        animate={
+          showSealedState
+            ? {
+                rotateX: [0, 1.5, 0],
+                rotateY: [0, -1.2, 0],
+                y: [0, -4, 0],
+              }
+            : {
+                rotateX: 0,
+                rotateY: 0,
+                y: 0,
+              }
+        }
+        transition={{
+          duration: 6,
+          repeat: showSealedState ? Infinity : 0,
+          ease: "easeInOut",
+        }}
+        className={`w-full rounded-3xl ${envelopeBgClass} backdrop-blur-2xl border ${envelopeBorderClass} p-6 sm:p-10 shadow-[0_28px_65px_-15px_rgba(0,0,0,0.75)] transition-all duration-700 ease-out relative z-10 will-change-transform`}
+        style={{ transformStyle: "preserve-3d" }}
       >
         <AnimatePresence mode="wait">
           {showSealedState ? (
             <motion.div
               key="sealed-envelope"
               initial={{ opacity: 1, scale: 1 }}
+              animate={
+                isBreaking
+                  ? { scale: 0.94, opacity: 0.8, filter: "brightness(1.2)" }
+                  : { scale: 1, opacity: 1 }
+              }
               exit={{
                 opacity: 0,
-                scale: 0.96,
-                transition: { duration: 0.4, ease: "easeInOut" },
+                scale: 0.94,
+                y: 10,
+                transition: { duration: 0.35, ease: "easeInOut" },
               }}
               data-testid="seal-container"
               className="flex flex-col items-center justify-center py-10 px-4 text-center relative select-none"
             >
-              {/* Ribbon Band across the envelope */}
+              {/* Ribbon Band across the envelope with metallic sheen */}
               <div
                 data-decor-ribbon={ribbonId}
                 className={`absolute inset-x-[-24px] sm:inset-x-[-40px] h-9 bg-gradient-to-r ${ribbonGradientClass} shadow-md flex items-center justify-between px-8 z-0`}
               >
                 <div className={`absolute top-0 inset-x-0 h-[1.5px] ${ribbonStitchClass}`} />
                 <div className={`absolute bottom-0 inset-x-0 h-[1.5px] ${ribbonStitchClass}`} />
-                <span className="text-[9px] uppercase tracking-[0.25em] font-sans font-medium text-white/90">
+                <span className="text-[9px] uppercase tracking-[0.25em] font-sans font-medium text-white/90 drop-shadow-sm">
                   {ribbonTextLeft}
                 </span>
-                <span className="text-[9px] uppercase tracking-[0.25em] font-sans font-medium text-white/90">
+                <span className="text-[9px] uppercase tracking-[0.25em] font-sans font-medium text-white/90 drop-shadow-sm">
                   {ribbonTextRight}
                 </span>
               </div>
 
-              {/* 3D Wax Seal Anchor */}
+              {/* 3D Tactile Wax Seal Anchor */}
               <div className="relative z-10 my-4">
                 {/* Ambient Breathing Halo */}
                 <motion.div
                   animate={{
-                    scale: [1, 1.12, 1],
-                    opacity: [0.35, 0.65, 0.35],
+                    scale: [1, 1.15, 1],
+                    opacity: [0.35, 0.7, 0.35],
                   }}
                   transition={{
-                    duration: 3,
+                    duration: 2.8,
                     repeat: Infinity,
                     ease: "easeInOut",
                   }}
@@ -148,9 +176,9 @@ export function Envelope3D({
                       handleBreakSeal();
                     }
                   }}
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.94 }}
-                  className={`relative group flex items-center justify-center w-24 h-24 sm:w-28 sm:h-28 rounded-full border-2 cursor-pointer bg-gradient-to-br ${sealGradientClass} ${sealBorderClass} shadow-[0_0_40px_rgba(225,29,72,0.45),0_14px_28px_rgba(0,0,0,0.6)] focus:outline-none focus:ring-2 focus:ring-rose-400/80`}
+                  whileHover={{ scale: 1.06, rotateZ: 1.5 }}
+                  whileTap={{ scale: 0.93 }}
+                  className={`relative group flex items-center justify-center w-24 h-24 sm:w-28 sm:h-28 rounded-full border-2 cursor-pointer bg-gradient-to-br ${sealGradientClass} ${sealBorderClass} shadow-[0_0_40px_rgba(225,29,72,0.45),0_14px_28px_rgba(0,0,0,0.6)] focus:outline-none focus:ring-2 focus:ring-rose-400/80 transition-shadow`}
                   aria-label="Break the wax seal to read letter"
                 >
                   {/* Debossed inner ring */}
@@ -161,7 +189,7 @@ export function Envelope3D({
                       {sealEmblem}
                     </span>
                   </div>
-                  <span className="absolute -bottom-8 text-xs text-rose-200/90 tracking-widest uppercase whitespace-nowrap font-sans font-medium">
+                  <span className="absolute -bottom-8 text-xs text-rose-200/90 tracking-widest uppercase whitespace-nowrap font-sans font-medium drop-shadow-sm">
                     Tap to open
                   </span>
                 </motion.button>
@@ -173,10 +201,10 @@ export function Envelope3D({
               initial={
                 shouldReduceMotion
                   ? { opacity: 1, y: 0 }
-                  : { opacity: 0, y: 16, scale: 0.98 }
+                  : { opacity: 0, y: 24, scale: 0.96, rotateX: 6 }
               }
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
+              animate={{ opacity: 1, y: 0, scale: 1, rotateX: 0 }}
+              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
               data-testid="unsealed-letter"
               className="w-full"
             >
@@ -184,7 +212,7 @@ export function Envelope3D({
             </motion.div>
           )}
         </AnimatePresence>
-      </div>
+      </motion.div>
     </div>
   );
 }
