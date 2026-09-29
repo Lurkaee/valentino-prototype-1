@@ -11,7 +11,7 @@ import { buildSetCookieHeader } from "@/lib/session";
 import { validateOrigin } from "@/lib/csrf";
 import { rateLimiter, getAnonymizedKey } from "@/lib/rate-limiter";
 import { logger } from "@/lib/logger";
-import { midnightRoseV1 } from "@/templates/registry";
+import { getTemplateDefinition, midnightRoseV1 } from "@/templates/registry";
 
 export async function POST(request: NextRequest) {
   try {
@@ -24,8 +24,13 @@ export async function POST(request: NextRequest) {
     }
 
     const clientIp = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "127.0.0.1";
+    const isLocalhost = clientIp === "127.0.0.1" || clientIp === "::1" || clientIp === "localhost";
     const rateLimitKey = getAnonymizedKey("create-exp", clientIp);
-    const limitResult = await rateLimiter.check(rateLimitKey, 10, 60 * 60 * 1000);
+    const maxCreatesPerHour =
+      process.env.NODE_ENV === "production" && !isLocalhost && !process.env.CI
+        ? 15
+        : 10000;
+    const limitResult = await rateLimiter.check(rateLimitKey, maxCreatesPerHour, 60 * 60 * 1000);
 
     if (!limitResult.allowed) {
       return NextResponse.json(
@@ -45,7 +50,38 @@ export async function POST(request: NextRequest) {
     const credentialHash = hashEditCredential(rawCredential);
     const issuedAt = new Date();
 
-    const defaultConfigJson = JSON.stringify(midnightRoseV1.defaultConfig);
+    let selectedTemplate = midnightRoseV1;
+    let initialConfig = { ...midnightRoseV1.defaultConfig };
+
+    try {
+      const body = await request.json().catch(() => null);
+      if (body && typeof body === "object") {
+        if (body.templateId !== undefined) {
+          if (typeof body.templateId !== "string" || !body.templateId.trim() || body.templateId.length > 50) {
+            return NextResponse.json({ error: "Invalid templateId" }, { status: 400 });
+          }
+          const targetVersion = typeof body.templateVersion === "string" && body.templateVersion.trim() ? body.templateVersion.trim() : "v1";
+          const found = getTemplateDefinition(body.templateId.trim(), targetVersion);
+          if (!found) {
+            return NextResponse.json(
+              { error: `Invalid or unsupported template: ${body.templateId} (${targetVersion})` },
+              { status: 400 }
+            );
+          }
+          selectedTemplate = found;
+          initialConfig = { ...found.defaultConfig };
+        }
+
+        if (body.initialDecor) {
+          const { normalizeValentineDecor } = await import("@/types/decor");
+          initialConfig.decor = normalizeValentineDecor(body.initialDecor);
+        }
+      }
+    } catch {
+      // Gracefully fall back to defaults
+    }
+
+    const defaultConfigJson = JSON.stringify(initialConfig);
 
     await db.experience.create({
       data: {
@@ -53,8 +89,8 @@ export async function POST(request: NextRequest) {
         editCredentialHash: credentialHash,
         editCredentialVersion: 1,
         editCredentialIssuedAt: issuedAt,
-        templateId: midnightRoseV1.id,
-        templateVersion: midnightRoseV1.version,
+        templateId: selectedTemplate.id,
+        templateVersion: selectedTemplate.version,
         draftConfig: defaultConfigJson,
         draftRevision: 1,
         status: ExperienceStatus.DRAFT,

@@ -4,8 +4,13 @@ import {
   ACCENT_THEMES,
   AccentTheme,
 } from "./schema";
+import { normalizeValentineDecor } from "@/types/decor";
+import { normalizeAllModules } from "@/modules/registry";
 
-export function normalizeMidnightRoseConfig(raw: unknown): MidnightRosePublishedConfig {
+export function normalizeMidnightRoseConfig(
+  raw: unknown,
+  isPublic: boolean = false
+): MidnightRosePublishedConfig {
   const obj = typeof raw === "object" && raw !== null ? (raw as Record<string, unknown>) : {};
 
   const partnerName = sanitizeText(typeof obj.partnerName === "string" ? obj.partnerName : "");
@@ -37,6 +42,22 @@ export function normalizeMidnightRoseConfig(raw: unknown): MidnightRosePublished
       ? obj.heroMediaId.trim()
       : null;
 
+  const soundtrackUrl =
+    typeof obj.soundtrackUrl === "string" && obj.soundtrackUrl.trim()
+      ? obj.soundtrackUrl.trim()
+      : null;
+
+  const scheduledUnlockAt =
+    typeof obj.scheduledUnlockAt === "string" && obj.scheduledUnlockAt.trim()
+      ? obj.scheduledUnlockAt.trim()
+      : null;
+
+  const decor = normalizeValentineDecor(obj.decor);
+  const modules = normalizeAllModules(obj.modules, isPublic);
+  const moduleOrder = Array.isArray(obj.moduleOrder)
+    ? (obj.moduleOrder as string[])
+    : ["voiceNote", "videoMemory", "memories", "timeline", "quiz", "secret", "openWhen"];
+
   return {
     partnerName,
     senderName,
@@ -45,5 +66,11 @@ export function normalizeMidnightRoseConfig(raw: unknown): MidnightRosePublished
     signOff,
     accentTheme,
     heroMediaId,
+    soundtrackUrl,
+    scheduledUnlockAt,
+    decor,
+    modules,
+    moduleOrder,
   };
 }
+

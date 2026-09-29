@@ -1,0 +1,7 @@
+ThreeUI Community Components
+MIT License
+https://threeui.com
+Copyright (c) 2024-2026 DesignCode / ThreeUI Community Authors
+
+Bundled fonts licensed under SIL Open Font License 1.1
+Three.js runtime licensed under MIT License

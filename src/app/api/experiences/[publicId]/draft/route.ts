@@ -11,6 +11,8 @@ import { rateLimiter, getAnonymizedKey } from "@/lib/rate-limiter";
 import { getTemplateDefinition } from "@/templates/registry";
 import { logger } from "@/lib/logger";
 
+export const dynamic = "force-dynamic";
+
 interface RouteParams {
   params: Promise<{ publicId: string }>;
 }
@@ -148,7 +150,7 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
-  const { draftConfig, baseRevision } = body;
+  const { draftConfig, baseRevision, templateId, templateVersion } = body;
   if (typeof baseRevision !== "number") {
     return NextResponse.json(
       { error: "baseRevision number is required for optimistic concurrency" },
@@ -173,7 +175,10 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
   }
 
   // 8. Validate draftConfig against template's lenient draftSchema
-  const template = getTemplateDefinition(experience.templateId, experience.templateVersion);
+  const targetTemplateId = typeof templateId === "string" ? templateId : experience.templateId;
+  const targetTemplateVersion = typeof templateVersion === "string" ? templateVersion : experience.templateVersion;
+
+  const template = getTemplateDefinition(targetTemplateId, targetTemplateVersion);
   if (!template) {
     return NextResponse.json({ error: "Template definition not found" }, { status: 400 });
   }
@@ -190,36 +195,54 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
   }
 
   // 9. Update draft in database
-  const updatedExperience = await db.experience.update({
-    where: { publicId, draftRevision: baseRevision },
-    data: {
-      draftConfig: JSON.stringify(parseResult.data),
-      draftRevision: { increment: 1 },
-    },
-  });
-
-  // 10. Re-issue sliding cookie (clamped to remaining absolute lifetime)
-  const cookieData = buildSetCookieHeader(
-    publicId,
-    token,
-    experience.editCredentialIssuedAt
-  );
-
-  const response = NextResponse.json(
-    {
-      success: true,
-      draftRevision: updatedExperience.draftRevision,
-      savedAt: new Date().toISOString(),
-    },
-    {
-      headers: {
-        "Cache-Control": "no-store",
-        "X-Content-Type-Options": "nosniff",
+  try {
+    const updatedExperience = await db.experience.update({
+      where: { publicId, draftRevision: baseRevision },
+      data: {
+        templateId: targetTemplateId,
+        templateVersion: targetTemplateVersion,
+        draftConfig: JSON.stringify(parseResult.data),
+        draftRevision: { increment: 1 },
       },
+    });
+
+    // 10. Re-issue sliding cookie (clamped to remaining absolute lifetime)
+    const cookieData = buildSetCookieHeader(
+      publicId,
+      token,
+      experience.editCredentialIssuedAt
+    );
+
+    const response = NextResponse.json(
+      {
+        success: true,
+        templateId: updatedExperience.templateId,
+        templateVersion: updatedExperience.templateVersion,
+        draftRevision: updatedExperience.draftRevision,
+        savedAt: new Date().toISOString(),
+      },
+      {
+        headers: {
+          "Cache-Control": "no-store",
+          "X-Content-Type-Options": "nosniff",
+        },
+      }
+    );
+
+    response.cookies.set(cookieData.name, cookieData.value, cookieData.options as any);
+
+    return response;
+  } catch (err: any) {
+    if (err?.code === "P2025") {
+      const current = await db.experience.findUnique({ where: { publicId } });
+      return NextResponse.json(
+        {
+          error: "Draft changed elsewhere",
+          currentRevision: current?.draftRevision ?? baseRevision,
+        },
+        { status: 409, headers: { "Cache-Control": "no-store" } }
+      );
     }
-  );
-
-  response.cookies.set(cookieData.name, cookieData.value, cookieData.options as any);
-
-  return response;
+    throw err;
+  }
 }

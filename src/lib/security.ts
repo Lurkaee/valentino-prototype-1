@@ -1,5 +1,6 @@
 import crypto from "crypto";
 import { customAlphabet } from "nanoid";
+export { graphemeMax } from "./sanitize";
 
 // 128+ bit cryptographic random publicId (22 chars with alphabet of 64 chars = 64^22 = 2^132)
 const nanoid128 = customAlphabet(
@@ -43,4 +44,31 @@ export function verifyEditCredential(credential: string, storedHash: string): bo
   } catch {
     return false;
   }
+}
+
+export interface EncryptedPayload {
+  ciphertext: string;
+  iv: string;
+  tag: string;
+}
+
+export function encryptSecretPayload(plaintext: string): EncryptedPayload {
+  const pepper = getPepper();
+  const key = crypto.createHash("sha256").update(pepper).digest();
+  const iv = crypto.randomBytes(12);
+  const cipher = crypto.createCipheriv("aes-256-gcm", key, iv);
+  let ciphertext = cipher.update(plaintext, "utf8", "hex");
+  ciphertext += cipher.final("hex");
+  const tag = cipher.getAuthTag().toString("hex");
+  return { ciphertext, iv: iv.toString("hex"), tag };
+}
+
+export function decryptSecretPayload(payload: EncryptedPayload): string {
+  const pepper = getPepper();
+  const key = crypto.createHash("sha256").update(pepper).digest();
+  const decipher = crypto.createDecipheriv("aes-256-gcm", key, Buffer.from(payload.iv, "hex"));
+  decipher.setAuthTag(Buffer.from(payload.tag, "hex"));
+  let plaintext = decipher.update(payload.ciphertext, "hex", "utf8");
+  plaintext += decipher.final("utf8");
+  return plaintext;
 }

@@ -64,6 +64,42 @@ describe("API Integration Tests", () => {
     expect(record?.editCredentialIssuedAt).toBeDefined();
   });
 
+  it("POST /api/experiences: accepts optional initialDecor and persists it in draftConfig", async () => {
+    const customDecor = {
+      blooms: ["crimson-rose", "wild-daisy"],
+      charms: ["sparkle"],
+      paper: "handmade-cream",
+      ribbon: "velvet-crimson",
+      waxSeal: "champagne-gold",
+    };
+
+    const req = new NextRequest(`${APP_URL}/api/experiences`, {
+      method: "POST",
+      headers: {
+        origin: APP_URL,
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        initialDecor: customDecor,
+      }),
+    });
+
+    const res = await createExperience(req);
+    expect(res.status).toBe(201);
+    const body = await res.json();
+
+    const record = await db.experience.findUnique({ where: { publicId: body.publicId } });
+    expect(record).not.toBeNull();
+    const parsedDraft = JSON.parse(record!.draftConfig);
+    expect(parsedDraft.decor.blooms).toEqual(customDecor.blooms);
+    expect(parsedDraft.decor.charms).toEqual(customDecor.charms);
+    expect(parsedDraft.decor.paper).toBe(customDecor.paper);
+    expect(parsedDraft.decor.ribbon).toBe(customDecor.ribbon);
+    expect(parsedDraft.decor.waxSeal).toBe(customDecor.waxSeal);
+  });
+
+
+
   it("GET & PUT /api/experiences/[publicId]/draft: enforces auth and optimistic revision locking", async () => {
     // 1. Create an experience
     const createReq = new NextRequest(`${APP_URL}/api/experiences`, {
@@ -272,5 +308,81 @@ describe("API Integration Tests", () => {
     const mwRes = middleware(statusReq);
     expect(mwRes.headers.get("cache-control")).toBe("no-store");
     expect(mwRes.headers.get("x-robots-tag")).toContain("noindex");
+  });
+
+  it("POST /api/experiences: accepts valid templateId and persists it in DB and draft GET", async () => {
+    const createReq = new NextRequest(`${APP_URL}/api/experiences`, {
+      method: "POST",
+      headers: {
+        origin: APP_URL,
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        templateId: "midnight-rose",
+        templateVersion: "v1",
+      }),
+    });
+
+    const createRes = await createExperience(createReq);
+    expect(createRes.status).toBe(201);
+    const { publicId } = await createRes.json();
+
+    // Verify DB record contains templateId and templateVersion
+    const record = await db.experience.findUnique({ where: { publicId } });
+    expect(record).toBeDefined();
+    expect(record?.templateId).toBe("midnight-rose");
+    expect(record?.templateVersion).toBe("v1");
+
+    // Verify GET draft returns the persisted templateId and templateVersion
+    const cookieHeader = createRes.headers.get("set-cookie");
+    const getReq = new NextRequest(`${APP_URL}/api/experiences/${publicId}/draft`, {
+      method: "GET",
+      headers: {
+        cookie: cookieHeader || "",
+      },
+    });
+    const draftRes = await getDraft(getReq, { params: Promise.resolve({ publicId }) });
+    expect(draftRes.status).toBe(200);
+    const draftData = await draftRes.json();
+    expect(draftData.templateId).toBe("midnight-rose");
+    expect(draftData.templateVersion).toBe("v1");
+  });
+
+  it("POST /api/experiences: rejects unknown templateId with 400 Bad Request", async () => {
+    const createReq = new NextRequest(`${APP_URL}/api/experiences`, {
+      method: "POST",
+      headers: {
+        origin: APP_URL,
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        templateId: "non-existent-template-id",
+        templateVersion: "v1",
+      }),
+    });
+
+    const createRes = await createExperience(createReq);
+    expect(createRes.status).toBe(400);
+    const body = await createRes.json();
+    expect(body.error).toContain("Invalid or unsupported template");
+  });
+
+  it("POST /api/experiences: rejects unsupported templateVersion with 400 Bad Request", async () => {
+    const createReq = new NextRequest(`${APP_URL}/api/experiences`, {
+      method: "POST",
+      headers: {
+        origin: APP_URL,
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        templateId: "midnight-rose",
+        templateVersion: "v999",
+      }),
+    });
+
+    const createRes = await createExperience(createReq);
+    expect(createRes.status).toBe(400);
+    const body = await createRes.json();
+    expect(body.error).toContain("Invalid or unsupported template");
   });
 });
