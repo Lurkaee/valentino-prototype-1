@@ -31,12 +31,12 @@ const WORLD_PRESENTATIONS: Record<string, WorldPresentationMeta> = {
   "midnight-rose": {
     id: "midnight-rose",
     name: "Midnight Rose",
-    subtitle: "Starlight & Digital Wax Letter",
+    subtitle: "Private Midnight Garden & Velvet",
     badge: "Flagship World",
     icon: "🌹",
-    quote: "“A cinematic declaration wrapped in starlight, candlelit velvet, and an interactive wax seal.”",
-    signature: "Physical envelope + interactive crimson wax seal reveal",
-    atmosphereTone: "Deep Obsidian · Crimson Rose · Gold Dust · Starlight",
+    quote: "“A private midnight garden of candlelight, drifting rose petals, moonlight, and intimate devotion.”",
+    signature: "Candlelit velvet · Drifting roses · Moonlight mist · Tactile crimson wax seal",
+    atmosphereTone: "Midnight Velvet · Crimson Rose · Gold Dust · Starlight",
     accentCardBorder: "border-rose-500/30 hover:border-rose-500/50",
     accentCardBg: "bg-gradient-to-br from-[#1A0A12]/90 via-[#12040C]/90 to-[#0A0207]/95",
     accentGlow: "from-rose-600/20 via-rose-950/40 to-transparent",
@@ -45,20 +45,20 @@ const WORLD_PRESENTATIONS: Record<string, WorldPresentationMeta> = {
     sampleRecipient: "Dearest Maya",
     capabilities: ["letter", "timeline", "quiz", "secret", "openWhen"],
     swatches: [
-      { id: "crimson-rose", name: "Crimson", color: "#e11d48" },
-      { id: "midnight-violet", name: "Violet", color: "#9333ea" },
-      { id: "champagne-gold", name: "Gold", color: "#d97706" },
+      { id: "crimson-rose", name: "Crimson Velvet", color: "#e11d48" },
+      { id: "midnight-violet", name: "Midnight Violet", color: "#9333ea" },
+      { id: "champagne-gold", name: "Candlelit Gold", color: "#d97706" },
     ],
   },
   "cloud-nine": {
     id: "cloud-nine",
     name: "Cloud Nine",
-    subtitle: "Dreamy Pastel Sky & Clouds",
+    subtitle: "Dreamy Sunset & Floating Clouds",
     badge: "Luminous World",
     icon: "☁️",
-    quote: "“Floating weightlessly above sunset clouds, with gentle heart drifts and playful warmth.”",
-    signature: "Celestial blessing + interactive cloud envelope fold",
-    atmosphereTone: "Baby Pink · Lavender · Luminous Pearl · Soft Sunset",
+    quote: "“A dreamy sunset world of weightless clouds, golden twilight, and starlight romance.”",
+    signature: "Dreamy sunset · Cloud depth · Floating heart motion · Story chapters",
+    atmosphereTone: "Sunset Blush · Lavender Mist · Luminous Pearl · Soft Clouds",
     accentCardBorder: "border-pink-300/30 hover:border-pink-300/50",
     accentCardBg: "bg-gradient-to-br from-[#1C1220]/90 via-[#160E1A]/90 to-[#0F0B14]/95",
     accentGlow: "from-pink-500/20 via-purple-950/40 to-transparent",
@@ -68,18 +68,18 @@ const WORLD_PRESENTATIONS: Record<string, WorldPresentationMeta> = {
     capabilities: ["letter", "timeline", "quiz", "openWhen"],
     swatches: [
       { id: "blush-sky", name: "Blush Sky", color: "#f472b6" },
-      { id: "sunset-coral", name: "Sunset", color: "#fb7185" },
-      { id: "lavender-dream", name: "Lavender", color: "#c084fc" },
+      { id: "sunset-coral", name: "Sunset Horizon", color: "#fb7185" },
+      { id: "lavender-dream", name: "Lavender Dream", color: "#c084fc" },
     ],
   },
   "kage": {
     id: "kage",
     name: "Kage (影)",
-    subtitle: "Kyoto Sanctuary & 3D Shaders",
-    badge: "ThreeUI WebGL World",
+    subtitle: "Kyoto Sanctuary & Mist",
+    badge: "Spatial World",
     icon: "⛩️",
-    quote: "“A Kyoto mountain temple at twilight. Drifting mist, Japanese stone lanterns, and quiet secrets.”",
-    signature: "Kyoto mist canvas + authentic WebGL Three.js shaders",
+    quote: "“A Kyoto digital sanctuary at twilight. Drifting mountain mist, warm stone lanterns, and quiet depth.”",
+    signature: "Spatial WebGL environment · Japanese mist · Lantern warmth · Sacred cedar tranquility",
     atmosphereTone: "Sacred Emerald · Kyoto Teal · Temple Stone · Sacred Cedar",
     accentCardBorder: "border-emerald-500/30 hover:border-emerald-500/50",
     accentCardBg: "bg-gradient-to-br from-[#061511]/90 via-[#040E0B]/90 to-[#020705]/95",
@@ -244,8 +244,8 @@ export function TemplateShowcase({ className = "" }: { className?: string }) {
 
             {/* Signature Experience & Interactive Capability Buttons */}
             <div className="space-y-3 pt-2">
-              <span className="block text-xs uppercase tracking-wider text-white/50 font-medium">
-                Supported Experience Modules (Click to Launch):
+              <span className="block text-xs uppercase tracking-wider text-rose-300/80 font-mono font-medium">
+                Atmospheric Story Modules:
               </span>
               <div className="flex flex-wrap gap-2">
                 {currentMeta.capabilities.map((cap) => (

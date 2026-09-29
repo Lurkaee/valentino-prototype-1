@@ -10,7 +10,6 @@ interface StoryScene {
   title: string;
   description: string;
   icon: string;
-  accent: string;
   preview: {
     tag: string;
     subtitle: string;
@@ -21,72 +20,93 @@ interface StoryScene {
 const SCENES: StoryScene[] = [
   {
     id: "scene-1",
-    step: "Scene 01",
-    title: "Choose the mood",
+    step: "01 · Entrance",
+    title: "A world created just for them",
     description:
-      "Select a romantic atmosphere that mirrors your shared memories — from deep midnight rose to warm sunset champagne.",
-    icon: "✨",
-    accent: "from-rose-600/30 to-rose-950/40 border-rose-500/30",
+      "They arrive at a private romantic sanctuary. Floating sunset clouds, candlelit midnight roses, or a quiet Kyoto mountain temple establish an atmosphere that belongs only to the two of you.",
+    icon: "🌌",
     preview: {
-      tag: "Atmosphere",
-      subtitle: "Midnight Rose v1",
-      body: "Deep berry, rose candlelight, and starlight skies.",
+      tag: "The Welcome",
+      subtitle: "To My Favorite Person",
+      body: "“Before you read what is inside, know that this entire space was built for you.”",
     },
   },
   {
     id: "scene-2",
-    step: "Scene 02",
-    title: "Write what's in your heart",
+    step: "02 · Narrative",
+    title: "The story of how you grew",
     description:
-      "A calm, distraction-free writing desk with real-time preview and instant autosave. No rush, just your thoughts.",
-    icon: "✍️",
-    accent: "from-pink-600/30 to-purple-950/40 border-pink-500/30",
+      "Tell your love story through dedicated chapters. Pair words with shared photographs, unspoken memories, and the quiet moments that turned strangers into everything.",
+    icon: "📖",
     preview: {
-      tag: "Private Studio",
-      subtitle: "Dearest Maya",
-      body: "“Every quiet moment with you feels like starlight...”",
+      tag: "Story Chapters",
+      subtitle: "Where It All Began",
+      body: "“It wasn't a sudden spark — it was a thousand little conversations that felt like coming home.”",
     },
   },
   {
     id: "scene-3",
-    step: "Scene 03",
-    title: "Seal the surprise",
+    step: "03 · Timeline",
+    title: "Every milestone preserved in time",
     description:
-      "Your letter is placed inside a beautiful digital envelope, sealed with realistic crimson wax before sending.",
-    icon: "💌",
-    accent: "from-amber-600/30 to-rose-950/40 border-amber-500/30",
+      "Map the path you walked together — that nervous first date, late-night phone calls, the first trip away, and the milestones that define your bond.",
+    icon: "🕰️",
     preview: {
-      tag: "Signature Touch",
-      subtitle: "Sealed with Wax",
-      body: "Tactile digital seal locks the letter until tapped.",
+      tag: "Shared Timeline",
+      subtitle: "October 14th · First Coffee",
+      body: "“The cups grew cold because neither of us wanted the evening to end.”",
     },
   },
   {
     id: "scene-4",
-    step: "Scene 04",
-    title: "Send the private link",
+    step: "04 · Moments",
+    title: "Playful memories & sweet discoveries",
     description:
-      "One secret, unguessable link. No app downloads, no accounts, and never indexed by search engines.",
-    icon: "🔒",
-    accent: "from-emerald-600/30 to-slate-950/40 border-emerald-500/30",
+      "Bring your story to life with tactile moments — playful relationship trivia, scratch cards with hidden compliments, and reasons why you love them.",
+    icon: "✨",
     preview: {
-      tag: "Total Privacy",
-      subtitle: "valentino.love/v/...",
-      body: "Encrypted token access stored only on your devices.",
+      tag: "Interactive Moments",
+      subtitle: "Who Fell First?",
+      body: "“You still claim it was mutual, but your smile gave it away the moment we said goodbye.”",
     },
   },
   {
     id: "scene-5",
-    step: "Scene 05",
-    title: "Watch them open it",
+    step: "05 · Secrets",
+    title: "Open When envelopes for future days",
     description:
-      "They break the wax seal with a single tap, watching your letter unfold in a quiet, cinematic reveal.",
-    icon: "🌹",
-    accent: "from-rose-500/30 to-pink-950/40 border-rose-400/40",
+      "Leave sealed envelopes waiting for the moments they need you most — Open When you miss me, Open When you have had a hard day, or Open when you need reminding of how loved you are.",
+    icon: "💌",
     preview: {
-      tag: "The Moment",
-      subtitle: "Unsealed with Love",
-      body: "“You turned ordinary days into poetry.”",
+      tag: "Open When",
+      subtitle: "Open When You Miss Me",
+      body: "“Close your eyes. Take a deep breath. I am always closer than you think.”",
+    },
+  },
+  {
+    id: "scene-6",
+    step: "06 · Future",
+    title: "Whispers for the road ahead",
+    description:
+      "Seal heartfelt vows and dream together of future adventures — trips you will take, dreams you will build, and quiet evenings yet to come.",
+    icon: "💫",
+    preview: {
+      tag: "Promises & Future",
+      subtitle: "My Promise to You",
+      body: "“To choose you every morning, even on the quiet days when words are few.”",
+    },
+  },
+  {
+    id: "scene-7",
+    step: "07 · Keepsake",
+    title: "A lasting digital keepsake",
+    description:
+      "Conclude with an emotional finale. A bespoke digital wax seal and tactile keepsake they can return to whenever they want to feel close to you.",
+    icon: "🌹",
+    preview: {
+      tag: "The Finale",
+      subtitle: "Forever Yours",
+      body: "“With all my heart, now and in every chapter yet to come.”",
     },
   },
 ];
@@ -99,46 +119,45 @@ export function ScrollStorytelling({ className = "" }: { className?: string }) {
   return (
     <section
       id="how-it-works"
-      className={`w-full max-w-6xl mx-auto px-6 py-20 sm:py-32 relative z-10 ${className}`}
+      className={`w-full max-w-6xl mx-auto px-6 py-20 sm:py-28 relative z-10 ${className}`}
     >
       {/* Header with Warm Candlelit Eyebrow */}
-      <div className="text-center max-w-2xl mx-auto mb-14 sm:mb-20">
+      <div className="text-center max-w-2xl mx-auto mb-14 sm:mb-18">
         <Badge
           variant="rose"
           size="sm"
-          className="mb-4 tracking-widest uppercase text-[11px] bg-[#3B0C1E]/80 border-rose-400/40 text-rose-200 shadow-[0_2px_12px_rgba(225,29,72,0.2)]"
+          className="mb-4 tracking-widest uppercase text-[11px] bg-rose-100/90 border-rose-300 text-[#881337] shadow-2xs font-medium font-sans"
         >
-          Made for the moment
+          ✦ Relationship Storytelling ✦
         </Badge>
-        <h2 className="text-3xl sm:text-5xl font-serif font-medium text-[#FAF8F5] tracking-tight mb-4 leading-[1.18]">
-          A love letter that feels as intentional as paper.
+        <h2 className="text-3xl sm:text-5xl font-serif font-medium text-[#240412] tracking-tight mb-4 leading-tight">
+          Build a story that unfolds like a memory.
         </h2>
-        <p className="text-sm sm:text-base text-[#FAF8F5]/75 font-light leading-relaxed">
-          From the first word to the moment they break the wax seal, every detail was designed to make someone feel truly cherished.
+        <p className="text-sm sm:text-base text-[#4A0E2E] font-normal leading-relaxed">
+          Valentino is not a static webpage. It is an emotional progression that moves from your very first moments to your shared future.
         </p>
       </div>
 
       {/* Scrollytelling Showcase */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-start relative">
         {/* Left: Interactive & Scroll-Sensitive Scene Steps */}
-        <div className="lg:col-span-6 space-y-4">
+        <div className="lg:col-span-6 space-y-3.5">
           {SCENES.map((scene, idx) => {
             const isActive = idx === activeSceneIndex;
             return (
               <motion.div
                 key={scene.id}
                 onViewportEnter={() => {
-                  // Only auto-advance on larger screens so mobile scrolling remains completely unhindered
                   if (typeof window !== "undefined" && window.innerWidth >= 1024) {
                     setActiveSceneIndex(idx);
                   }
                 }}
                 viewport={{ margin: "-30% 0px -40% 0px" }}
                 onClick={() => setActiveSceneIndex(idx)}
-                className={`p-5 sm:p-6 rounded-2xl border transition-all duration-500 cursor-pointer select-none ${
+                className={`p-4 sm:p-5 rounded-2xl border transition-all duration-300 cursor-pointer select-none ${
                   isActive
-                    ? "bg-gradient-to-r from-[#2F081B]/95 via-[#230514]/90 to-[#1D0411]/90 border-rose-400/50 shadow-[0_12px_36px_-10px_rgba(225,29,72,0.25)] -translate-y-0.5"
-                    : "bg-[#14030B]/40 border-white/[0.06] hover:bg-[#1C0510]/60 hover:border-white/15"
+                    ? "bg-white/90 border-rose-400 shadow-[0_8px_28px_-8px_rgba(225,29,72,0.18)] -translate-y-0.5"
+                    : "bg-white/40 border-rose-100/80 hover:bg-white/70 hover:border-rose-200"
                 }`}
                 role="button"
                 tabIndex={0}
@@ -149,29 +168,29 @@ export function ScrollStorytelling({ className = "" }: { className?: string }) {
                   }
                 }}
               >
-                <div className="flex items-start gap-4">
+                <div className="flex items-start gap-3.5">
                   <span
-                    className={`w-10 h-10 rounded-xl flex items-center justify-center text-base shrink-0 border transition-all duration-300 ${
+                    className={`w-9 h-9 rounded-xl flex items-center justify-center text-sm shrink-0 border transition-all duration-300 ${
                       isActive
-                        ? "bg-gradient-to-br from-rose-500 to-rose-700 border-rose-300/80 text-white shadow-md shadow-rose-950/60 scale-105"
-                        : "bg-white/[0.04] border-white/10 text-white/50"
+                        ? "bg-gradient-to-br from-rose-500 to-rose-700 border-rose-300 text-white shadow-sm scale-105"
+                        : "bg-rose-50 border-rose-100 text-[#881337]"
                     }`}
                   >
                     {scene.icon}
                   </span>
-                  <div className="space-y-1.5 flex-1">
-                    <div className="flex items-center gap-2.5">
-                      <span className="text-[10px] uppercase tracking-[0.2em] font-mono text-rose-300/90 font-medium">
+                  <div className="space-y-1 flex-1">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] uppercase tracking-[0.18em] font-mono text-[#881337] font-semibold">
                         {scene.step}
                       </span>
                       {isActive && (
-                        <span className="w-1.5 h-1.5 rounded-full bg-rose-400 shadow-[0_0_8px_#FB7185]" />
+                        <span className="w-1.5 h-1.5 rounded-full bg-rose-500 shadow-[0_0_6px_#FB7185]" />
                       )}
                     </div>
-                    <h3 className="text-lg font-serif font-medium text-[#FAF8F5]">
+                    <h3 className="text-base sm:text-lg font-serif font-medium text-[#240412]">
                       {scene.title}
                     </h3>
-                    <p className="text-xs sm:text-sm text-[#FAF8F5]/70 font-light leading-relaxed">
+                    <p className="text-xs sm:text-sm text-[#4A0E2E]/85 font-normal leading-relaxed">
                       {scene.description}
                     </p>
                   </div>
@@ -181,15 +200,14 @@ export function ScrollStorytelling({ className = "" }: { className?: string }) {
           })}
         </div>
 
-        {/* Right: Sticky Pinned Visual Card Canvas (Desktop) / Fluid Canvas (Mobile) */}
-        <div className="lg:col-span-6 lg:sticky lg:top-32 flex items-center justify-center">
+        {/* Right: Sticky Pinned Visual Card Canvas */}
+        <div className="lg:col-span-6 lg:sticky lg:top-28 flex items-center justify-center">
           <div className="w-full max-w-md relative">
-            {/* Ambient backlight glow matching the scene palette */}
-            <div className="absolute -inset-6 rounded-3xl bg-gradient-to-r from-rose-600/20 via-pink-500/15 to-transparent blur-3xl opacity-75 pointer-events-none" />
+            {/* Ambient backlight glow */}
+            <div className="absolute -inset-6 rounded-3xl bg-gradient-to-r from-rose-400/25 via-pink-300/20 to-transparent blur-3xl opacity-75 pointer-events-none" />
 
             {/* Visual Frame */}
-            <div className="relative rounded-3xl bg-[#1A0510]/85 border border-rose-500/25 p-7 sm:p-9 shadow-2xl backdrop-blur-xl min-h-[380px] flex flex-col justify-between overflow-hidden">
-              {/* Scene Content Transition: Crossfade & Subtle Depth Dissolve (No 3D flips) */}
+            <div className="relative rounded-3xl bg-gradient-to-br from-[#2A0619] via-[#1F0413] to-[#14020C] border border-rose-400/30 p-7 sm:p-9 shadow-2xl text-white min-h-[380px] flex flex-col justify-between overflow-hidden">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={currentScene.id}
@@ -208,47 +226,47 @@ export function ScrollStorytelling({ className = "" }: { className?: string }) {
                     scale: shouldReduceMotion ? 1 : 0.98,
                     y: shouldReduceMotion ? 0 : -8,
                   }}
-                  transition={{ duration: 0.32, ease: "easeOut" }}
+                  transition={{ duration: 0.28, ease: "easeOut" }}
                   className="space-y-6"
                 >
-                  <div className="flex items-center justify-between border-b border-white/[0.08] pb-4">
-                    <span className="text-[11px] uppercase tracking-[0.2em] px-3.5 py-1 rounded-full bg-rose-950/70 border border-rose-400/40 text-rose-200 font-medium font-sans">
+                  <div className="flex items-center justify-between border-b border-white/[0.1] pb-4">
+                    <span className="text-[11px] uppercase tracking-[0.2em] px-3.5 py-1 rounded-full bg-rose-950/80 border border-rose-400/40 text-rose-200 font-medium font-sans">
                       {currentScene.preview.tag}
                     </span>
-                    <span className="text-xs font-mono text-[#FAF8F5]/60 font-medium">
+                    <span className="text-xs font-mono text-white/60 font-medium">
                       {currentScene.step}
                     </span>
                   </div>
 
-                  <div className="space-y-3 py-4">
-                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-rose-600 to-pink-700 border border-rose-400/60 shadow-lg shadow-rose-950/60 flex items-center justify-center text-2xl">
+                  <div className="space-y-3 py-3">
+                    <div className="w-13 h-13 rounded-2xl bg-gradient-to-br from-rose-600 to-pink-700 border border-rose-300/40 shadow-lg shadow-rose-950/60 flex items-center justify-center text-2xl">
                       {currentScene.icon}
                     </div>
-                    <h4 className="text-2xl font-serif font-medium text-[#FAF8F5]">
+                    <h4 className="text-2xl font-serif font-medium text-white">
                       {currentScene.preview.subtitle}
                     </h4>
-                    <p className="text-sm sm:text-base text-[#FAF8F5]/80 font-light leading-relaxed italic">
+                    <p className="text-sm sm:text-base text-white/85 font-light leading-relaxed italic">
                       {currentScene.preview.body}
                     </p>
                   </div>
 
-                  <div className="pt-4 border-t border-white/[0.06] flex items-center justify-between text-xs text-[#FAF8F5]/60">
-                    <span>Crafted with devotion</span>
+                  <div className="pt-4 border-t border-white/[0.08] flex items-center justify-between text-xs text-white/60 font-sans">
+                    <span>A private world for two</span>
                     <span className="text-rose-300 font-serif font-medium">Valentino Experience</span>
                   </div>
                 </motion.div>
               </AnimatePresence>
 
               {/* Step Indicator Dots */}
-              <div className="flex items-center justify-center gap-2 pt-6">
+              <div className="flex items-center justify-center gap-1.5 pt-6">
                 {SCENES.map((_, i) => (
                   <button
                     key={i}
                     onClick={() => setActiveSceneIndex(i)}
-                    className={`h-1.5 rounded-full transition-all duration-400 ${
-                      i === activeSceneIndex ? "w-8 bg-rose-400 shadow-[0_0_8px_#FB7185]" : "w-1.5 bg-white/20 hover:bg-white/40"
+                    className={`h-1.5 rounded-full transition-all duration-300 ${
+                      i === activeSceneIndex ? "w-7 bg-rose-400 shadow-[0_0_8px_#FB7185]" : "w-1.5 bg-white/20 hover:bg-white/40"
                     }`}
-                    aria-label={`Go to scene ${i + 1}`}
+                    aria-label={`Go to step ${i + 1}`}
                   />
                 ))}
               </div>

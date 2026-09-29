@@ -5,7 +5,45 @@
 :root {
   --background: #0a090c;
   --foreground: #faf8f5;
+
+  /* Phase 5F Public Valentino Design System Tokens */
+  --surface-pink-sky: #FEDEEA;
+  --surface-pink-soft: #FDE8F0;
+  --surface-cream-paper: #FDF8F3;
+  --surface-cream-warm: #FFFBF5;
+  --surface-soft-peach: #FFF0EA;
+  --surface-peach-blush: #FCE7E1;
+  --surface-berry-velvet: #2A0619;
+  --surface-berry-deep: #1A0311;
+  --surface-midnight-rose: #12030A;
+
+  --text-editorial-primary: #240412;
+  --text-editorial-secondary: #4A0E2E;
+  --text-editorial-muted: #6B2346;
+  --text-editorial-light: #FAF8F5;
+  --text-editorial-light-muted: rgba(250, 248, 245, 0.75);
+
+  --accent-berry: #881337;
+  --accent-rose: #E11D48;
+  --accent-rose-soft: #FB7185;
+  --accent-champagne: #D97706;
+
+  --border-public-cream: rgba(136, 19, 55, 0.1);
+  --border-public-rose: rgba(225, 29, 72, 0.2);
+  --border-public-dark: rgba(255, 255, 255, 0.08);
+
+  --shadow-public-soft: 0 16px 36px -12px rgba(136, 19, 55, 0.08);
+  --shadow-public-lift: 0 24px 48px -14px rgba(136, 19, 55, 0.12);
+  --shadow-public-glow: 0 0 40px -10px rgba(225, 29, 72, 0.25);
 }
+
+/* Phase 5F Standardized 5-Tier Layer Hierarchy */
+.z-world-bg { z-index: 0; }
+.z-atmosphere { z-index: 10; }
+.z-content { z-index: 20; }
+.z-floating-ui { z-index: 30; }
+.z-modal { z-index: 40; }
+.z-system-feedback { z-index: 50; }
 
 html {
   scroll-behavior: smooth;
@@ -21,8 +59,8 @@ body {
 }
 
 ::selection {
-  background-color: rgba(224, 159, 156, 0.28);
-  color: #faf8f5;
+  background-color: rgba(225, 29, 72, 0.2);
+  color: #240412;
 }
 
 /* 3-Tier Valentino Typography System */
@@ -105,6 +143,32 @@ body {
 
 .glow-violet {
   box-shadow: 0 0 40px -10px rgba(147, 51, 234, 0.3);
+}
+
+.glow-rose-soft {
+  box-shadow: 0 0 40px -8px rgba(225, 29, 72, 0.18);
+}
+
+/* Phase 5F Public Romantic Surface Classes */
+.paper-card {
+  background: var(--surface-cream-paper);
+  border: 1px solid var(--border-public-cream);
+  box-shadow: var(--shadow-public-soft);
+  color: var(--text-editorial-primary);
+}
+
+.peach-card {
+  background: var(--surface-soft-peach);
+  border: 1px solid rgba(225, 29, 72, 0.12);
+  box-shadow: var(--shadow-public-soft);
+  color: var(--text-editorial-primary);
+}
+
+.velvet-card {
+  background: linear-gradient(135deg, rgba(42, 6, 25, 0.95) 0%, rgba(26, 3, 17, 0.95) 100%);
+  border: 1px solid var(--border-public-rose);
+  box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.6), 0 0 35px -8px rgba(225, 29, 72, 0.2);
+  color: var(--text-editorial-light);
 }
 
 @keyframes fadeIn {
