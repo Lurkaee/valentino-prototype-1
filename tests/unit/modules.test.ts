@@ -9,29 +9,45 @@ import { normalizeSecretConfig, secretDraftSchema, secretPublishSchema } from "@
 import { normalizeTimelineConfig, timelineDraftSchema, timelinePublishSchema } from "@/modules/timeline/schema";
 import { normalizeQuizConfig, quizDraftSchema, quizPublishSchema } from "@/modules/quiz/schema";
 import { normalizeOpenWhenConfig, openWhenDraftSchema, openWhenPublishSchema } from "@/modules/open-when/schema";
+import { normalizeReasonsConfig, reasonsDraftSchema, reasonsPublishSchema } from "@/modules/reasons/schema";
+import { normalizeComplimentsConfig, complimentsDraftSchema, complimentsPublishSchema } from "@/modules/compliments/schema";
+import { normalizeFortuneCookieConfig, fortuneCookieDraftSchema, fortuneCookiePublishSchema } from "@/modules/fortune-cookie/schema";
+import { normalizeScratchCardConfig, scratchCardDraftSchema, scratchCardPublishSchema } from "@/modules/scratch-card/schema";
+import { normalizePromisesConfig, promisesDraftSchema, promisesPublishSchema } from "@/modules/promises/schema";
+import { normalizeFutureAdventuresConfig, futureAdventuresDraftSchema, futureAdventuresPublishSchema } from "@/modules/future-adventures/schema";
+import { normalizeAdventureSpinnerConfig, adventureSpinnerDraftSchema, adventureSpinnerPublishSchema } from "@/modules/adventure-spinner/schema";
+import { normalizeFinaleConfig, finaleDraftSchema, finalePublishSchema } from "@/modules/finale/schema";
 import { getTemplateDefinition } from "@/templates/registry";
 import { kageDraftSchema, kagePublishSchema } from "@/templates/kage/v1/schema";
 import { normalizeKageConfig } from "@/templates/kage/v1/normalize";
 
 describe("Experience Module Engine", () => {
   describe("Module Registry & Extensibility", () => {
-    it("has the initial 4 modules registered", () => {
+    it("has all Phase 5A, 5B, and 5C interactive modules registered", () => {
       const all = getAllModules();
       const ids = all.map((m) => m.id);
       expect(ids).toContain("timeline");
       expect(ids).toContain("quiz");
       expect(ids).toContain("secret");
       expect(ids).toContain("openWhen");
-      expect(all.length).toBeGreaterThanOrEqual(4);
+      expect(ids).toContain("reasons");
+      expect(ids).toContain("compliments");
+      expect(ids).toContain("fortuneCookie");
+      expect(ids).toContain("scratchCard");
+      expect(ids).toContain("promises");
+      expect(ids).toContain("futureAdventures");
+      expect(ids).toContain("adventureSpinner");
+      expect(ids).toContain("finale");
+      expect(all.length).toBeGreaterThanOrEqual(12);
     });
 
     it("allows registering future modules without rewriting engine", () => {
       const dummyDefinition = {
-        id: "fortuneCookie",
+        id: "customFutureAddon",
         version: "v1",
-        name: "Fortune Cookie",
-        description: "Crack open romantic fortunes",
-        icon: "🥠",
+        name: "Custom Addon",
+        description: "Future romantic interaction",
+        icon: "✨",
         draftSchema: timelineDraftSchema,
         publishSchema: timelinePublishSchema,
         defaultConfig: { enabled: false },
@@ -40,9 +56,9 @@ describe("Experience Module Engine", () => {
       };
 
       registerModule(dummyDefinition as any);
-      const retrieved = getModuleDefinition("fortuneCookie");
+      const retrieved = getModuleDefinition("customFutureAddon");
       expect(retrieved).toBeDefined();
-      expect(retrieved?.name).toBe("Fortune Cookie");
+      expect(retrieved?.name).toBe("Custom Addon");
     });
   });
 
@@ -190,6 +206,153 @@ describe("Experience Module Engine", () => {
       expect(normalized.envelopes.length).toBe(1);
       expect(normalized.envelopes[0].title).toBe("Open when you miss me");
       expect(normalized.envelopes[0].message).toBe("Look up at the moon, we are under the same sky.");
+    });
+  });
+
+  describe("Reasons I Love You Module", () => {
+    it("validates and normalizes reasons config with fallback ids and defaults", () => {
+      const raw = {
+        enabled: true,
+        title: "50 Reasons",
+        items: [
+          { text: "Your crooked smile every morning" },
+          { title: "Laughter", text: "How we laugh until we cry" },
+        ],
+      };
+      const normalized = normalizeReasonsConfig(raw);
+      expect(normalized.enabled).toBe(true);
+      expect(normalized.items.length).toBe(2);
+      expect(normalized.items[0].id).toBe("reason-1");
+      expect(normalized.items[0].text).toBe("Your crooked smile every morning");
+      expect(normalized.items[1].title).toBe("Laughter");
+    });
+  });
+
+  describe("Compliment Machine Module", () => {
+    it("validates pool of compliments and filters empty strings", () => {
+      const raw = {
+        enabled: true,
+        title: "Sweet Words",
+        items: ["You light up my life", " ", "Your heart is golden"],
+      };
+      const normalized = normalizeComplimentsConfig(raw);
+      expect(normalized.enabled).toBe(true);
+      expect(normalized.items.length).toBe(2);
+      expect(normalized.items[0]).toBe("You light up my life");
+      expect(normalized.items[1]).toBe("Your heart is golden");
+    });
+  });
+
+  describe("Fortune Cookie Module", () => {
+    it("normalizes fortunes array and maintains enabled state", () => {
+      const raw = {
+        enabled: true,
+        title: "Destiny Cookies",
+        fortunes: ["A trip is in our near future", "A long warm hug awaits you tonight"],
+      };
+      const normalized = normalizeFortuneCookieConfig(raw);
+      expect(normalized.enabled).toBe(true);
+      expect(normalized.fortunes.length).toBe(2);
+      expect(normalized.fortunes[0]).toContain("near future");
+    });
+  });
+
+  describe("Scratch Card Module", () => {
+    it("validates scratch-off front message and hidden surprise", () => {
+      const valid = scratchCardPublishSchema.safeParse({
+        enabled: true,
+        title: "Scratch to Win My Heart",
+        frontMessage: "Scratch with love ✦",
+        hiddenMessage: "Pack your bags, we are going to Paris!",
+      });
+      expect(valid.success).toBe(true);
+
+      const raw = {
+        enabled: true,
+        hiddenMessage: "Dinner is on me tonight!",
+      };
+      const normalized = normalizeScratchCardConfig(raw);
+      expect(normalized.enabled).toBe(true);
+      expect(normalized.hiddenMessage).toBe("Dinner is on me tonight!");
+    });
+  });
+
+  describe("Promise Wall Module", () => {
+    it("normalizes promise items and sets default category", () => {
+      const raw = {
+        enabled: true,
+        title: "Our Vows",
+        items: [
+          { text: "Always make you laugh when you feel down" },
+          { text: "More Sunday morning road trips", category: "adventures" },
+        ],
+      };
+      const normalized = normalizePromisesConfig(raw);
+      expect(normalized.enabled).toBe(true);
+      expect(normalized.items.length).toBe(2);
+      expect(normalized.items[0].category).toBe("vow");
+      expect(normalized.items[1].category).toBe("adventures");
+    });
+  });
+
+  describe("Future Adventures / Bucket List Module", () => {
+    it("normalizes adventure items and categorizes planned vs completed vs someday", () => {
+      const raw = {
+        enabled: true,
+        title: "Our Co-op Bucket List",
+        items: [
+          { title: "Northern Lights in Norway", status: "someday" },
+          { title: "Watch the sunrise on the coast", status: "completed" },
+          { title: "Cook handmade pasta together", status: "planned" },
+        ],
+      };
+      const normalized = normalizeFutureAdventuresConfig(raw);
+      expect(normalized.enabled).toBe(true);
+      expect(normalized.items.length).toBe(3);
+      expect(normalized.items[0].status).toBe("someday");
+      expect(normalized.items[1].status).toBe("completed");
+      expect(normalized.items[2].status).toBe("planned");
+    });
+  });
+
+  describe("Adventure Spinner Module", () => {
+    it("validates minimum 2 options for spinning wheel", () => {
+      const invalid = adventureSpinnerPublishSchema.safeParse({
+        enabled: true,
+        title: "Date Night Wheel",
+        options: [{ id: "1", label: "Only One Option" }],
+      });
+      expect(invalid.success).toBe(false);
+
+      const raw = {
+        enabled: true,
+        options: [
+          { label: "Stargazing Picnic" },
+          { label: "Candlelit Italian Dinner" },
+          { label: "Arcade and Bubble Tea" },
+        ],
+      };
+      const normalized = normalizeAdventureSpinnerConfig(raw);
+      expect(normalized.enabled).toBe(true);
+      expect(normalized.options.length).toBe(3);
+      expect(normalized.options[0].id).toBe("spin-1");
+    });
+  });
+
+  describe("Emotional Finale Module", () => {
+    it("validates declaration and keepsake prompts", () => {
+      const raw = {
+        enabled: true,
+        title: "Forever Yours",
+        declaration: "Every moment leading up to this was worth finding you.",
+        signature: "Always, your love",
+        showKeepsakePrompt: true,
+      };
+      const normalized = normalizeFinaleConfig(raw);
+      expect(normalized.enabled).toBe(true);
+      expect(normalized.declaration).toBe("Every moment leading up to this was worth finding you.");
+      expect(normalized.signature).toBe("Always, your love");
+      expect(normalized.showKeepsakePrompt).toBe(true);
     });
   });
 

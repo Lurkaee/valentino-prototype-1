@@ -10,10 +10,23 @@ interface ModuleManagerProps {
   onChange: (updater: (prevModules: any) => any) => void;
   onOpenFeatureDrawer?: () => void;
   onSelectFeature?: (feature: FeatureDefinition) => void;
-  externalActiveMoment?: "timeline" | "quiz" | "secret" | "openWhen" | null;
+  externalActiveMoment?: ActiveMoment;
 }
 
-type ActiveMoment = "timeline" | "quiz" | "secret" | "openWhen" | null;
+export type ActiveMoment =
+  | "timeline"
+  | "quiz"
+  | "secret"
+  | "openWhen"
+  | "reasons"
+  | "compliments"
+  | "fortuneCookie"
+  | "scratchCard"
+  | "promises"
+  | "futureAdventures"
+  | "adventureSpinner"
+  | "finale"
+  | null;
 
 export const ModuleManager: React.FC<ModuleManagerProps> = ({
   modules = {},
@@ -35,15 +48,44 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
   const quizEnabled = Boolean(modules?.quiz?.enabled);
   const secretEnabled = Boolean(modules?.secret?.enabled);
   const openWhenEnabled = Boolean(modules?.openWhen?.enabled);
+  const reasonsEnabled = Boolean(modules?.reasons?.enabled);
+  const complimentsEnabled = Boolean(modules?.compliments?.enabled);
+  const fortuneCookieEnabled = Boolean(modules?.fortuneCookie?.enabled);
+  const scratchCardEnabled = Boolean(modules?.scratchCard?.enabled);
+  const promisesEnabled = Boolean(modules?.promises?.enabled);
+  const futureAdventuresEnabled = Boolean(modules?.futureAdventures?.enabled);
+  const adventureSpinnerEnabled = Boolean(modules?.adventureSpinner?.enabled);
+  const finaleEnabled = Boolean(modules?.finale?.enabled);
 
-  const anyEnabled = timelineEnabled || quizEnabled || secretEnabled || openWhenEnabled;
+  const anyEnabled =
+    timelineEnabled ||
+    quizEnabled ||
+    secretEnabled ||
+    openWhenEnabled ||
+    reasonsEnabled ||
+    complimentsEnabled ||
+    fortuneCookieEnabled ||
+    scratchCardEnabled ||
+    promisesEnabled ||
+    futureAdventuresEnabled ||
+    adventureSpinnerEnabled ||
+    finaleEnabled;
+
   const activeCount =
     (timelineEnabled ? 1 : 0) +
     (quizEnabled ? 1 : 0) +
     (secretEnabled ? 1 : 0) +
-    (openWhenEnabled ? 1 : 0);
+    (openWhenEnabled ? 1 : 0) +
+    (reasonsEnabled ? 1 : 0) +
+    (complimentsEnabled ? 1 : 0) +
+    (fortuneCookieEnabled ? 1 : 0) +
+    (scratchCardEnabled ? 1 : 0) +
+    (promisesEnabled ? 1 : 0) +
+    (futureAdventuresEnabled ? 1 : 0) +
+    (adventureSpinnerEnabled ? 1 : 0) +
+    (finaleEnabled ? 1 : 0);
 
-  const toggleModule = (key: "timeline" | "quiz" | "secret" | "openWhen", defaultData: any) => {
+  const toggleModule = (key: string, defaultData: any) => {
     onChange((prev: any) => {
       const current = prev?.[key] || {};
       const nextEnabled = !current.enabled;
@@ -57,7 +99,7 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
       };
     });
     if (!modules?.[key]?.enabled) {
-      setActiveMoment(key);
+      setActiveMoment(key as ActiveMoment);
     } else if (activeMoment === key) {
       setActiveMoment(null);
     }
@@ -331,6 +373,402 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
               <span className="text-[10px] text-white/50 font-ui truncate block">Future envelopes</span>
             </div>
           </button>
+          {/* 5. Reasons I Love You */}
+          <button
+            type="button"
+            data-testid="toggle-module-reasons"
+            onClick={() => {
+              if (!reasonsEnabled) {
+                toggleModule("reasons", {
+                  title: "Reasons I Love You",
+                  subtitle: "A few of the countless reasons why my heart chose you",
+                  viewMode: "step",
+                  items: [
+                    {
+                      id: "r1",
+                      title: "Your Gentle Laugh",
+                      text: "The way you laugh when you think nobody is watching makes any room feel like home.",
+                    },
+                    {
+                      id: "r2",
+                      title: "How You Care",
+                      text: "Your empathy is boundless, and the kindness you give to the world inspires me daily.",
+                    },
+                    {
+                      id: "r3",
+                      title: "Every Ordinary Morning",
+                      text: "Even quiet mornings with coffee and your presence feel like a dream.",
+                    },
+                  ],
+                });
+              } else {
+                setActiveMoment(activeMoment === "reasons" ? null : "reasons");
+              }
+            }}
+            className={`p-3 rounded-xl border text-left flex flex-col justify-between transition-all cursor-pointer group ${
+              reasonsEnabled
+                ? "border-rose-400/40 bg-rose-950/40 text-white shadow-xs"
+                : "border-white/[0.08] bg-white/[0.03] text-white/70 hover:bg-white/[0.06] hover:border-white/[0.15]"
+            }`}
+          >
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-lg select-none">💖</span>
+              <span
+                className={`text-[10px] font-ui px-1.5 py-0.5 rounded-md ${
+                  reasonsEnabled
+                    ? "bg-rose-500/20 text-rose-300 font-medium"
+                    : "bg-white/[0.06] text-white/50"
+                }`}
+              >
+                {reasonsEnabled ? "✓ Active" : "+ Add"}
+              </span>
+            </div>
+            <div>
+              <span className="text-xs font-display font-medium block text-white">Reasons</span>
+              <span className="text-[10px] text-white/50 font-ui truncate block">Why I love you</span>
+            </div>
+          </button>
+
+          {/* 6. Compliment Machine */}
+          <button
+            type="button"
+            data-testid="toggle-module-compliments"
+            onClick={() => {
+              if (!complimentsEnabled) {
+                const initialCompliments = [
+                  "Your smile is my favorite thing in the universe.",
+                  "You make the world warmer just by existing in it.",
+                  "I fall in love with you all over again every single day.",
+                  "You have the kindest, most radiant heart.",
+                ];
+                toggleModule("compliments", {
+                  title: "Heartfelt Reminders",
+                  subtitle: "Whenever you need a reminder of how extraordinary you are",
+                  buttonLabel: "Tell Me Something Sweet",
+                  items: initialCompliments,
+                  pool: initialCompliments,
+                });
+              } else {
+                setActiveMoment(activeMoment === "compliments" ? null : "compliments");
+              }
+            }}
+            className={`p-3 rounded-xl border text-left flex flex-col justify-between transition-all cursor-pointer group ${
+              complimentsEnabled
+                ? "border-rose-400/40 bg-rose-950/40 text-white shadow-xs"
+                : "border-white/[0.08] bg-white/[0.03] text-white/70 hover:bg-white/[0.06] hover:border-white/[0.15]"
+            }`}
+          >
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-lg select-none">✨</span>
+              <span
+                className={`text-[10px] font-ui px-1.5 py-0.5 rounded-md ${
+                  complimentsEnabled
+                    ? "bg-rose-500/20 text-rose-300 font-medium"
+                    : "bg-white/[0.06] text-white/50"
+                }`}
+              >
+                {complimentsEnabled ? "✓ Active" : "+ Add"}
+              </span>
+            </div>
+            <div>
+              <span className="text-xs font-display font-medium block text-white">Compliments</span>
+              <span className="text-[10px] text-white/50 font-ui truncate block">Instant sweetness</span>
+            </div>
+          </button>
+
+          {/* 7. Fortune Cookie */}
+          <button
+            type="button"
+            data-testid="toggle-module-fortuneCookie"
+            onClick={() => {
+              if (!fortuneCookieEnabled) {
+                toggleModule("fortuneCookie", {
+                  title: "Your Fortune Awaits",
+                  subtitle: "Crack open a sweet whisper about what the future holds for us",
+                  fortunes: [
+                    "A lifetime of quiet morning coffee and warm hugs is guaranteed.",
+                    "The stars have aligned: an unforgettable date night is coming soon.",
+                    "You will always find home inside my arms, no matter the storm.",
+                  ],
+                });
+              } else {
+                setActiveMoment(activeMoment === "fortuneCookie" ? null : "fortuneCookie");
+              }
+            }}
+            className={`p-3 rounded-xl border text-left flex flex-col justify-between transition-all cursor-pointer group ${
+              fortuneCookieEnabled
+                ? "border-rose-400/40 bg-rose-950/40 text-white shadow-xs"
+                : "border-white/[0.08] bg-white/[0.03] text-white/70 hover:bg-white/[0.06] hover:border-white/[0.15]"
+            }`}
+          >
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-lg select-none">🥠</span>
+              <span
+                className={`text-[10px] font-ui px-1.5 py-0.5 rounded-md ${
+                  fortuneCookieEnabled
+                    ? "bg-rose-500/20 text-rose-300 font-medium"
+                    : "bg-white/[0.06] text-white/50"
+                }`}
+              >
+                {fortuneCookieEnabled ? "✓ Active" : "+ Add"}
+              </span>
+            </div>
+            <div>
+              <span className="text-xs font-display font-medium block text-white">Fortune Cookie</span>
+              <span className="text-[10px] text-white/50 font-ui truncate block">Playful fortunes</span>
+            </div>
+          </button>
+
+          {/* 8. Scratch Card */}
+          <button
+            type="button"
+            data-testid="toggle-module-scratchCard"
+            onClick={() => {
+              if (!scratchCardEnabled) {
+                toggleModule("scratchCard", {
+                  title: "Scratch to Reveal",
+                  subtitle: "A tactile secret hidden just under the surface",
+                  frontMessage: "Scratch below with your finger or mouse to unveil the surprise",
+                  hiddenMessage: "I loved you yesterday, I love you today, and I'll love you forever.",
+                  coverColor: "#E11D48",
+                });
+              } else {
+                setActiveMoment(activeMoment === "scratchCard" ? null : "scratchCard");
+              }
+            }}
+            className={`p-3 rounded-xl border text-left flex flex-col justify-between transition-all cursor-pointer group ${
+              scratchCardEnabled
+                ? "border-rose-400/40 bg-rose-950/40 text-white shadow-xs"
+                : "border-white/[0.08] bg-white/[0.03] text-white/70 hover:bg-white/[0.06] hover:border-white/[0.15]"
+            }`}
+          >
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-lg select-none">🪄</span>
+              <span
+                className={`text-[10px] font-ui px-1.5 py-0.5 rounded-md ${
+                  scratchCardEnabled
+                    ? "bg-rose-500/20 text-rose-300 font-medium"
+                    : "bg-white/[0.06] text-white/50"
+                }`}
+              >
+                {scratchCardEnabled ? "✓ Active" : "+ Add"}
+              </span>
+            </div>
+            <div>
+              <span className="text-xs font-display font-medium block text-white">Scratch Card</span>
+              <span className="text-[10px] text-white/50 font-ui truncate block">Tactile reveal</span>
+            </div>
+          </button>
+
+          {/* 9. Promise Wall */}
+          <button
+            type="button"
+            data-testid="toggle-module-promises"
+            onClick={() => {
+              if (!promisesEnabled) {
+                const initialPromises = [
+                  {
+                    id: "p1",
+                    text: "I promise to always listen with an open heart, even when words are hard to find.",
+                    category: "Devotion",
+                  },
+                  {
+                    id: "p2",
+                    text: "I promise to save the last bite of dessert for you, always.",
+                    category: "Sweetness",
+                  },
+                  {
+                    id: "p3",
+                    text: "I promise to be your safest refuge on your darkest days.",
+                    category: "Forever",
+                  },
+                ];
+                toggleModule("promises", {
+                  title: "My Vows & Promises",
+                  subtitle: "Words etched into eternity between us",
+                  items: initialPromises,
+                  promises: initialPromises,
+                });
+              } else {
+                setActiveMoment(activeMoment === "promises" ? null : "promises");
+              }
+            }}
+            className={`p-3 rounded-xl border text-left flex flex-col justify-between transition-all cursor-pointer group ${
+              promisesEnabled
+                ? "border-rose-400/40 bg-rose-950/40 text-white shadow-xs"
+                : "border-white/[0.08] bg-white/[0.03] text-white/70 hover:bg-white/[0.06] hover:border-white/[0.15]"
+            }`}
+          >
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-lg select-none">💍</span>
+              <span
+                className={`text-[10px] font-ui px-1.5 py-0.5 rounded-md ${
+                  promisesEnabled
+                    ? "bg-rose-500/20 text-rose-300 font-medium"
+                    : "bg-white/[0.06] text-white/50"
+                }`}
+              >
+                {promisesEnabled ? "✓ Active" : "+ Add"}
+              </span>
+            </div>
+            <div>
+              <span className="text-xs font-display font-medium block text-white">Promise Wall</span>
+              <span className="text-[10px] text-white/50 font-ui truncate block">Lifelong vows</span>
+            </div>
+          </button>
+
+          {/* 10. Future Adventures */}
+          <button
+            type="button"
+            data-testid="toggle-module-futureAdventures"
+            onClick={() => {
+              if (!futureAdventuresEnabled) {
+                const initialAdventures = [
+                  {
+                    id: "a1",
+                    title: "Watch the sunrise on the coast",
+                    description: "Blankets, warm cocoa, and early ocean air",
+                    category: "Travel",
+                    status: "planned" as const,
+                  },
+                  {
+                    id: "a2",
+                    title: "Cook a 5-course dinner from scratch",
+                    description: "Messy kitchen, favorite playlist playing",
+                    category: "Date",
+                    status: "someday" as const,
+                  },
+                  {
+                    id: "a3",
+                    title: "Our very first road trip together",
+                    description: "Windows down, singing off-key",
+                    category: "Memory",
+                    status: "completed" as const,
+                  },
+                ];
+                toggleModule("futureAdventures", {
+                  title: "Our Bucket List",
+                  subtitle: "The adventures we have lived, and the ones waiting for us",
+                  items: initialAdventures,
+                  adventures: initialAdventures,
+                });
+              } else {
+                setActiveMoment(activeMoment === "futureAdventures" ? null : "futureAdventures");
+              }
+            }}
+            className={`p-3 rounded-xl border text-left flex flex-col justify-between transition-all cursor-pointer group ${
+              futureAdventuresEnabled
+                ? "border-rose-400/40 bg-rose-950/40 text-white shadow-xs"
+                : "border-white/[0.08] bg-white/[0.03] text-white/70 hover:bg-white/[0.06] hover:border-white/[0.15]"
+            }`}
+          >
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-lg select-none">🗺️</span>
+              <span
+                className={`text-[10px] font-ui px-1.5 py-0.5 rounded-md ${
+                  futureAdventuresEnabled
+                    ? "bg-rose-500/20 text-rose-300 font-medium"
+                    : "bg-white/[0.06] text-white/50"
+                }`}
+              >
+                {futureAdventuresEnabled ? "✓ Active" : "+ Add"}
+              </span>
+            </div>
+            <div>
+              <span className="text-xs font-display font-medium block text-white">Adventures</span>
+              <span className="text-[10px] text-white/50 font-ui truncate block">Bucket list</span>
+            </div>
+          </button>
+
+          {/* 11. Adventure Spinner */}
+          <button
+            type="button"
+            data-testid="toggle-module-adventureSpinner"
+            onClick={() => {
+              if (!adventureSpinnerEnabled) {
+                toggleModule("adventureSpinner", {
+                  title: "What Should We Do Next?",
+                  subtitle: "Can't decide? Let the adventure wheel choose our next date!",
+                  options: [
+                    "Candlelit Dinner & Vinyl Records",
+                    "Stargazing on the Roof",
+                    "Spontaneous Late-Night Boba Run",
+                    "Cozy Blanket Fort Movie Marathon",
+                    "Try a New Little Bistro in Town",
+                  ],
+                });
+              } else {
+                setActiveMoment(activeMoment === "adventureSpinner" ? null : "adventureSpinner");
+              }
+            }}
+            className={`p-3 rounded-xl border text-left flex flex-col justify-between transition-all cursor-pointer group ${
+              adventureSpinnerEnabled
+                ? "border-rose-400/40 bg-rose-950/40 text-white shadow-xs"
+                : "border-white/[0.08] bg-white/[0.03] text-white/70 hover:bg-white/[0.06] hover:border-white/[0.15]"
+            }`}
+          >
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-lg select-none">🎡</span>
+              <span
+                className={`text-[10px] font-ui px-1.5 py-0.5 rounded-md ${
+                  adventureSpinnerEnabled
+                    ? "bg-rose-500/20 text-rose-300 font-medium"
+                    : "bg-white/[0.06] text-white/50"
+                }`}
+              >
+                {adventureSpinnerEnabled ? "✓ Active" : "+ Add"}
+              </span>
+            </div>
+            <div>
+              <span className="text-xs font-display font-medium block text-white">Date Spinner</span>
+              <span className="text-[10px] text-white/50 font-ui truncate block">Spin to decide</span>
+            </div>
+          </button>
+
+          {/* 12. Emotional Finale */}
+          <button
+            type="button"
+            data-testid="toggle-module-finale"
+            onClick={() => {
+              if (!finaleEnabled) {
+                toggleModule("finale", {
+                  title: "To You, Always",
+                  subtitle: "The culmination of our story",
+                  declaration:
+                    "From the very first moment to every tomorrow, you are the greatest adventure of my life. My heart is yours, today and forever.",
+                  signature: "Always & Forever",
+                  promisesHighlight: "With every memory, reason, and vow — I choose you.",
+                  sealText: "Seal Our Forever",
+                  showKeepsakeAction: true,
+                  showKeepsakePrompt: true,
+                });
+              } else {
+                setActiveMoment(activeMoment === "finale" ? null : "finale");
+              }
+            }}
+            className={`p-3 rounded-xl border text-left flex flex-col justify-between transition-all cursor-pointer group ${
+              finaleEnabled
+                ? "border-rose-400/40 bg-rose-950/40 text-white shadow-xs"
+                : "border-white/[0.08] bg-white/[0.03] text-white/70 hover:bg-white/[0.06] hover:border-white/[0.15]"
+            }`}
+          >
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-lg select-none">🌹</span>
+              <span
+                className={`text-[10px] font-ui px-1.5 py-0.5 rounded-md ${
+                  finaleEnabled
+                    ? "bg-rose-500/20 text-rose-300 font-medium"
+                    : "bg-white/[0.06] text-white/50"
+                }`}
+              >
+                {finaleEnabled ? "✓ Active" : "+ Add"}
+              </span>
+            </div>
+            <div>
+              <span className="text-xs font-display font-medium block text-white">Finale</span>
+              <span className="text-[10px] text-white/50 font-ui truncate block">Grand declaration</span>
+            </div>
+          </button>
         </div>
 
         {/* Feature Discovery Action Row: Explore More & Surprise Me */}
@@ -352,6 +790,14 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
               ...(quizEnabled ? ["quiz"] : []),
               ...(secretEnabled ? ["secret"] : []),
               ...(openWhenEnabled ? ["openWhen"] : []),
+              ...(reasonsEnabled ? ["reasons"] : []),
+              ...(complimentsEnabled ? ["compliments"] : []),
+              ...(fortuneCookieEnabled ? ["fortuneCookie"] : []),
+              ...(scratchCardEnabled ? ["scratchCard"] : []),
+              ...(promisesEnabled ? ["promises"] : []),
+              ...(futureAdventuresEnabled ? ["futureAdventures"] : []),
+              ...(adventureSpinnerEnabled ? ["adventureSpinner"] : []),
+              ...(finaleEnabled ? ["finale"] : []),
             ]}
             onSelectFeature={(feature) => {
               if (feature.targetModuleKey) {
@@ -1081,6 +1527,999 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
                   />
                 </div>
               ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 5. Reasons I Love You Form */}
+      {reasonsEnabled && activeMoment === "reasons" && (
+        <div
+          data-testid="reasons-module-editor"
+          className="p-5 rounded-2xl bg-white/[0.03] border border-rose-500/30 space-y-4 animate-fadeIn"
+        >
+          <div className="flex items-center justify-between border-b border-white/[0.08] pb-3">
+            <div className="flex items-center gap-2">
+              <span className="text-base">💖</span>
+              <div>
+                <span className="text-sm font-display font-medium text-white block">
+                  Reasons I Love You
+                </span>
+                <span className="text-[11px] text-white/50 font-ui">
+                  Specific, heartfelt reasons celebrating what makes them irreplaceable
+                </span>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => toggleModule("reasons", {})}
+              className="text-[11px] text-rose-400 hover:text-rose-300 underline font-ui cursor-pointer"
+            >
+              Disable Moment
+            </button>
+          </div>
+
+          <div className="space-y-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="text-[11px] text-white/70 font-ui font-medium block mb-1">
+                  Module Title
+                </label>
+                <input
+                  type="text"
+                  data-testid="input-reasons-title"
+                  value={modules.reasons?.title || ""}
+                  onChange={(e) =>
+                    onChange((prev) => ({
+                      ...prev,
+                      reasons: { ...prev.reasons, title: e.target.value },
+                    }))
+                  }
+                  className="w-full text-xs px-3.5 py-2.5 rounded-xl bg-black/40 border border-white/[0.12] text-white focus:outline-none focus:border-rose-400 font-ui"
+                />
+              </div>
+              <div>
+                <label className="text-[11px] text-white/70 font-ui font-medium block mb-1">
+                  Display Mode
+                </label>
+                <select
+                  data-testid="select-reasons-viewmode"
+                  value={modules.reasons?.viewMode || "step"}
+                  onChange={(e) =>
+                    onChange((prev) => ({
+                      ...prev,
+                      reasons: { ...prev.reasons, viewMode: e.target.value },
+                    }))
+                  }
+                  className="w-full text-xs px-3.5 py-2.5 rounded-xl bg-black/40 border border-white/[0.12] text-white focus:outline-none focus:border-rose-400 font-ui"
+                >
+                  <option value="step">Step-by-step Surprise</option>
+                  <option value="all">Browse All Cards</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Reasons List */}
+            <div className="space-y-2.5 pt-1">
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] text-white/70 font-ui font-medium">
+                  Reasons ({modules.reasons?.items?.length || 0})
+                </span>
+                <button
+                  type="button"
+                  data-testid="reasons-add-item"
+                  onClick={() =>
+                    onChange((prev) => ({
+                      ...prev,
+                      reasons: {
+                        ...prev.reasons,
+                        items: [
+                          ...(prev.reasons?.items || []),
+                          {
+                            id: `r-${Date.now()}`,
+                            title: "Another Reason",
+                            text: "Write what makes your heart skip a beat...",
+                          },
+                        ],
+                      },
+                    }))
+                  }
+                  className="text-[11px] px-2.5 py-1 rounded-lg bg-white/[0.08] hover:bg-white/[0.15] text-white border border-white/[0.1] font-ui transition-colors cursor-pointer"
+                >
+                  + Add Reason
+                </button>
+              </div>
+
+              {(modules.reasons?.items || []).map((item: any, idx: number) => (
+                <div
+                  key={item.id || idx}
+                  className="p-3.5 rounded-xl bg-black/30 border border-white/[0.06] space-y-2"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] text-rose-300 font-mono">
+                      Reason #{idx + 1}
+                    </span>
+                    <button
+                      type="button"
+                      data-testid={`reasons-delete-item-${idx}`}
+                      onClick={() =>
+                        onChange((prev) => ({
+                          ...prev,
+                          reasons: {
+                            ...prev.reasons,
+                            items: prev.reasons.items.filter((_: any, i: number) => i !== idx),
+                          },
+                        }))
+                      }
+                      className="text-[10px] text-rose-400/80 hover:text-rose-300 font-ui"
+                    >
+                      Remove ✕
+                    </button>
+                  </div>
+                  <input
+                    type="text"
+                    data-testid={`input-reason-title-${idx}`}
+                    placeholder="Short Title (e.g. Your Morning Smile)"
+                    value={item.title || ""}
+                    onChange={(e) =>
+                      onChange((prev) => {
+                        const items = [...prev.reasons.items];
+                        items[idx].title = e.target.value;
+                        return { ...prev, reasons: { ...prev.reasons, items } };
+                      })
+                    }
+                    className="w-full text-xs px-2.5 py-2 rounded-lg bg-black/40 border border-white/[0.1] text-white font-ui"
+                  />
+                  <textarea
+                    rows={2}
+                    data-testid={`input-reason-text-${idx}`}
+                    placeholder="The full reason why..."
+                    value={item.text || ""}
+                    onChange={(e) =>
+                      onChange((prev) => {
+                        const items = [...prev.reasons.items];
+                        items[idx].text = e.target.value;
+                        return { ...prev, reasons: { ...prev.reasons, items } };
+                      })
+                    }
+                    className="w-full text-xs px-2.5 py-2 rounded-lg bg-black/40 border border-white/[0.1] text-white resize-none font-ui"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 6. Compliment Machine Form */}
+      {complimentsEnabled && activeMoment === "compliments" && (
+        <div
+          data-testid="compliments-module-editor"
+          className="p-5 rounded-2xl bg-white/[0.03] border border-rose-500/30 space-y-4 animate-fadeIn"
+        >
+          <div className="flex items-center justify-between border-b border-white/[0.08] pb-3">
+            <div className="flex items-center gap-2">
+              <span className="text-base">✨</span>
+              <div>
+                <span className="text-sm font-display font-medium text-white block">
+                  Compliment Machine
+                </span>
+                <span className="text-[11px] text-white/50 font-ui">
+                  A personal pool of affirmations to brighten their spirits
+                </span>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => toggleModule("compliments", {})}
+              className="text-[11px] text-rose-400 hover:text-rose-300 underline font-ui cursor-pointer"
+            >
+              Disable Moment
+            </button>
+          </div>
+
+          <div className="space-y-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="text-[11px] text-white/70 font-ui font-medium block mb-1">
+                  Module Title
+                </label>
+                <input
+                  type="text"
+                  data-testid="input-compliments-title"
+                  value={modules.compliments?.title || ""}
+                  onChange={(e) =>
+                    onChange((prev) => ({
+                      ...prev,
+                      compliments: { ...prev.compliments, title: e.target.value },
+                    }))
+                  }
+                  className="w-full text-xs px-3.5 py-2.5 rounded-xl bg-black/40 border border-white/[0.12] text-white font-ui"
+                />
+              </div>
+              <div>
+                <label className="text-[11px] text-white/70 font-ui font-medium block mb-1">
+                  Button Text
+                </label>
+                <input
+                  type="text"
+                  data-testid="input-compliments-button-label"
+                  value={modules.compliments?.buttonLabel || ""}
+                  onChange={(e) =>
+                    onChange((prev) => ({
+                      ...prev,
+                      compliments: { ...prev.compliments, buttonLabel: e.target.value },
+                    }))
+                  }
+                  className="w-full text-xs px-3.5 py-2.5 rounded-xl bg-black/40 border border-white/[0.12] text-white font-ui"
+                />
+              </div>
+            </div>
+
+            {/* Compliments Pool */}
+            <div className="space-y-2.5 pt-1">
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] text-white/70 font-ui font-medium">
+                  Compliment Pool ({modules.compliments?.pool?.length || 0})
+                </span>
+                <button
+                  type="button"
+                  data-testid="compliments-add-item"
+                  onClick={() =>
+                    onChange((prev) => ({
+                      ...prev,
+                      compliments: {
+                        ...prev.compliments,
+                        pool: [...(prev.compliments?.pool || []), "You make every room brighter."],
+                      },
+                    }))
+                  }
+                  className="text-[11px] px-2.5 py-1 rounded-lg bg-white/[0.08] hover:bg-white/[0.15] text-white border border-white/[0.1] font-ui transition-colors cursor-pointer"
+                >
+                  + Add Compliment
+                </button>
+              </div>
+
+              {(modules.compliments?.pool || []).map((comp: string, idx: number) => (
+                <div key={idx} className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    data-testid={`input-compliment-text-${idx}`}
+                    value={comp}
+                    onChange={(e) =>
+                      onChange((prev) => {
+                        const pool = [...prev.compliments.pool];
+                        pool[idx] = e.target.value;
+                        return { ...prev, compliments: { ...prev.compliments, pool } };
+                      })
+                    }
+                    className="flex-1 text-xs px-2.5 py-2 rounded-lg bg-black/40 border border-white/[0.1] text-white font-ui"
+                  />
+                  <button
+                    type="button"
+                    data-testid={`compliments-delete-item-${idx}`}
+                    onClick={() =>
+                      onChange((prev) => ({
+                        ...prev,
+                        compliments: {
+                          ...prev.compliments,
+                          pool: prev.compliments.pool.filter((_: any, i: number) => i !== idx),
+                        },
+                      }))
+                    }
+                    className="text-xs px-2 py-1 text-rose-400 hover:text-rose-300 font-ui"
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 7. Fortune Cookie Form */}
+      {fortuneCookieEnabled && activeMoment === "fortuneCookie" && (
+        <div
+          data-testid="fortuneCookie-module-editor"
+          className="p-5 rounded-2xl bg-white/[0.03] border border-rose-500/30 space-y-4 animate-fadeIn"
+        >
+          <div className="flex items-center justify-between border-b border-white/[0.08] pb-3">
+            <div className="flex items-center gap-2">
+              <span className="text-base">🥠</span>
+              <div>
+                <span className="text-sm font-display font-medium text-white block">
+                  Fortune Cookie
+                </span>
+                <span className="text-[11px] text-white/50 font-ui">
+                  Playful fortunes and predictions for your shared future
+                </span>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => toggleModule("fortuneCookie", {})}
+              className="text-[11px] text-rose-400 hover:text-rose-300 underline font-ui cursor-pointer"
+            >
+              Disable Moment
+            </button>
+          </div>
+
+          <div className="space-y-3">
+            <div>
+              <label className="text-[11px] text-white/70 font-ui font-medium block mb-1">
+                Module Title
+              </label>
+              <input
+                type="text"
+                data-testid="input-fortune-title"
+                value={modules.fortuneCookie?.title || ""}
+                onChange={(e) =>
+                  onChange((prev) => ({
+                    ...prev,
+                    fortuneCookie: { ...prev.fortuneCookie, title: e.target.value },
+                  }))
+                }
+                className="w-full text-xs px-3.5 py-2.5 rounded-xl bg-black/40 border border-white/[0.12] text-white font-ui"
+              />
+            </div>
+
+            {/* Fortunes List */}
+            <div className="space-y-2.5 pt-1">
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] text-white/70 font-ui font-medium">
+                  Fortunes ({modules.fortuneCookie?.fortunes?.length || 0})
+                </span>
+                <button
+                  type="button"
+                  data-testid="fortune-add-item"
+                  onClick={() =>
+                    onChange((prev) => ({
+                      ...prev,
+                      fortuneCookie: {
+                        ...prev.fortuneCookie,
+                        fortunes: [
+                          ...(prev.fortuneCookie?.fortunes || []),
+                          "A magical trip together is closer than you think.",
+                        ],
+                      },
+                    }))
+                  }
+                  className="text-[11px] px-2.5 py-1 rounded-lg bg-white/[0.08] hover:bg-white/[0.15] text-white border border-white/[0.1] font-ui transition-colors cursor-pointer"
+                >
+                  + Add Fortune
+                </button>
+              </div>
+
+              {(modules.fortuneCookie?.fortunes || []).map((fortune: string, idx: number) => (
+                <div key={idx} className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    data-testid={`input-fortune-text-${idx}`}
+                    value={fortune}
+                    onChange={(e) =>
+                      onChange((prev) => {
+                        const fortunes = [...prev.fortuneCookie.fortunes];
+                        fortunes[idx] = e.target.value;
+                        return { ...prev, fortuneCookie: { ...prev.fortuneCookie, fortunes } };
+                      })
+                    }
+                    className="flex-1 text-xs px-2.5 py-2 rounded-lg bg-black/40 border border-white/[0.1] text-white font-ui"
+                  />
+                  <button
+                    type="button"
+                    data-testid={`fortune-delete-item-${idx}`}
+                    onClick={() =>
+                      onChange((prev) => ({
+                        ...prev,
+                        fortuneCookie: {
+                          ...prev.fortuneCookie,
+                          fortunes: prev.fortuneCookie.fortunes.filter((_: any, i: number) => i !== idx),
+                        },
+                      }))
+                    }
+                    className="text-xs px-2 py-1 text-rose-400 hover:text-rose-300 font-ui"
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 8. Scratch Card Form */}
+      {scratchCardEnabled && activeMoment === "scratchCard" && (
+        <div
+          data-testid="scratchCard-module-editor"
+          className="p-5 rounded-2xl bg-white/[0.03] border border-rose-500/30 space-y-4 animate-fadeIn"
+        >
+          <div className="flex items-center justify-between border-b border-white/[0.08] pb-3">
+            <div className="flex items-center gap-2">
+              <span className="text-base">🪄</span>
+              <div>
+                <span className="text-sm font-display font-medium text-white block">
+                  Scratch to Reveal Card
+                </span>
+                <span className="text-[11px] text-white/50 font-ui">
+                  A tactile scratch-off surprise hiding a romantic message
+                </span>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => toggleModule("scratchCard", {})}
+              className="text-[11px] text-rose-400 hover:text-rose-300 underline font-ui cursor-pointer"
+            >
+              Disable Moment
+            </button>
+          </div>
+
+          <div className="space-y-3">
+            <div>
+              <label className="text-[11px] text-white/70 font-ui font-medium block mb-1">
+                Module Title
+              </label>
+              <input
+                type="text"
+                data-testid="input-scratch-title"
+                value={modules.scratchCard?.title || ""}
+                onChange={(e) =>
+                  onChange((prev) => ({
+                    ...prev,
+                    scratchCard: { ...prev.scratchCard, title: e.target.value },
+                  }))
+                }
+                className="w-full text-xs px-3.5 py-2.5 rounded-xl bg-black/40 border border-white/[0.12] text-white font-ui"
+              />
+            </div>
+            <div>
+              <label className="text-[11px] text-white/70 font-ui font-medium block mb-1">
+                Front Foil Instruction
+              </label>
+              <input
+                type="text"
+                data-testid="input-scratch-front-message"
+                value={modules.scratchCard?.frontMessage || ""}
+                onChange={(e) =>
+                  onChange((prev) => ({
+                    ...prev,
+                    scratchCard: { ...prev.scratchCard, frontMessage: e.target.value },
+                  }))
+                }
+                className="w-full text-xs px-3.5 py-2.5 rounded-xl bg-black/40 border border-white/[0.12] text-white font-ui"
+              />
+            </div>
+            <div>
+              <label className="text-[11px] text-white/70 font-ui font-medium block mb-1">
+                Hidden Secret Message (Revealed on Scratch)
+              </label>
+              <textarea
+                rows={3}
+                data-testid="input-scratch-hidden-message"
+                value={modules.scratchCard?.hiddenMessage || ""}
+                onChange={(e) =>
+                  onChange((prev) => ({
+                    ...prev,
+                    scratchCard: { ...prev.scratchCard, hiddenMessage: e.target.value },
+                  }))
+                }
+                className="w-full text-xs px-3.5 py-2.5 rounded-xl bg-black/40 border border-white/[0.12] text-white resize-none font-ui"
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 9. Promise Wall Form */}
+      {promisesEnabled && activeMoment === "promises" && (
+        <div
+          data-testid="promises-module-editor"
+          className="p-5 rounded-2xl bg-white/[0.03] border border-rose-500/30 space-y-4 animate-fadeIn"
+        >
+          <div className="flex items-center justify-between border-b border-white/[0.08] pb-3">
+            <div className="flex items-center gap-2">
+              <span className="text-base">💍</span>
+              <div>
+                <span className="text-sm font-display font-medium text-white block">
+                  Promise Wall & Vows
+                </span>
+                <span className="text-[11px] text-white/50 font-ui">
+                  Permanent heartfelt vows and promises made to each other
+                </span>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => toggleModule("promises", {})}
+              className="text-[11px] text-rose-400 hover:text-rose-300 underline font-ui cursor-pointer"
+            >
+              Disable Moment
+            </button>
+          </div>
+
+          <div className="space-y-3">
+            <div>
+              <label className="text-[11px] text-white/70 font-ui font-medium block mb-1">
+                Module Title
+              </label>
+              <input
+                type="text"
+                data-testid="input-promises-title"
+                value={modules.promises?.title || ""}
+                onChange={(e) =>
+                  onChange((prev) => ({
+                    ...prev,
+                    promises: { ...prev.promises, title: e.target.value },
+                  }))
+                }
+                className="w-full text-xs px-3.5 py-2.5 rounded-xl bg-black/40 border border-white/[0.12] text-white font-ui"
+              />
+            </div>
+
+            {/* Promises List */}
+            <div className="space-y-2.5 pt-1">
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] text-white/70 font-ui font-medium">
+                  Promises ({modules.promises?.promises?.length || 0})
+                </span>
+                <button
+                  type="button"
+                  data-testid="promises-add-item"
+                  onClick={() =>
+                    onChange((prev) => ({
+                      ...prev,
+                      promises: {
+                        ...prev.promises,
+                        promises: [
+                          ...(prev.promises?.promises || []),
+                          {
+                            id: `p-${Date.now()}`,
+                            category: "Forever",
+                            text: "I promise to always choose you, through every season.",
+                          },
+                        ],
+                      },
+                    }))
+                  }
+                  className="text-[11px] px-2.5 py-1 rounded-lg bg-white/[0.08] hover:bg-white/[0.15] text-white border border-white/[0.1] font-ui transition-colors cursor-pointer"
+                >
+                  + Add Promise
+                </button>
+              </div>
+
+              {(modules.promises?.promises || []).map((p: any, idx: number) => (
+                <div key={p.id || idx} className="p-3.5 rounded-xl bg-black/30 border border-white/[0.06] space-y-2">
+                  <div className="flex items-center justify-between">
+                    <input
+                      type="text"
+                      data-testid={`input-promise-category-${idx}`}
+                      placeholder="Category (e.g. Sweetness, Forever)"
+                      value={p.category || ""}
+                      onChange={(e) =>
+                        onChange((prev) => {
+                          const promises = [...prev.promises.promises];
+                          promises[idx].category = e.target.value;
+                          return { ...prev, promises: { ...prev.promises, promises } };
+                        })
+                      }
+                      className="text-xs px-2.5 py-1.5 rounded-lg bg-black/40 border border-white/[0.1] text-rose-300 font-mono w-40"
+                    />
+                    <button
+                      type="button"
+                      data-testid={`promises-delete-item-${idx}`}
+                      onClick={() =>
+                        onChange((prev) => ({
+                          ...prev,
+                          promises: {
+                            ...prev.promises,
+                            promises: prev.promises.promises.filter((_: any, i: number) => i !== idx),
+                          },
+                        }))
+                      }
+                      className="text-[10px] text-rose-400/80 hover:text-rose-300 font-ui"
+                    >
+                      Remove ✕
+                    </button>
+                  </div>
+                  <textarea
+                    rows={2}
+                    data-testid={`input-promise-text-${idx}`}
+                    placeholder="Your heartfelt promise…"
+                    value={p.text}
+                    onChange={(e) =>
+                      onChange((prev) => {
+                        const promises = [...prev.promises.promises];
+                        promises[idx].text = e.target.value;
+                        return { ...prev, promises: { ...prev.promises, promises } };
+                      })
+                    }
+                    className="w-full text-xs px-2.5 py-2 rounded-lg bg-black/40 border border-white/[0.1] text-white resize-none font-ui"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 10. Future Adventures Form */}
+      {futureAdventuresEnabled && activeMoment === "futureAdventures" && (
+        <div
+          data-testid="futureAdventures-module-editor"
+          className="p-5 rounded-2xl bg-white/[0.03] border border-rose-500/30 space-y-4 animate-fadeIn"
+        >
+          <div className="flex items-center justify-between border-b border-white/[0.08] pb-3">
+            <div className="flex items-center gap-2">
+              <span className="text-base">🗺️</span>
+              <div>
+                <span className="text-sm font-display font-medium text-white block">
+                  Future Adventures & Bucket List
+                </span>
+                <span className="text-[11px] text-white/50 font-ui">
+                  Co-op journeys, dates, and milestones to explore together
+                </span>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => toggleModule("futureAdventures", {})}
+              className="text-[11px] text-rose-400 hover:text-rose-300 underline font-ui cursor-pointer"
+            >
+              Disable Moment
+            </button>
+          </div>
+
+          <div className="space-y-3">
+            <div>
+              <label className="text-[11px] text-white/70 font-ui font-medium block mb-1">
+                Module Title
+              </label>
+              <input
+                type="text"
+                data-testid="input-adventures-title"
+                value={modules.futureAdventures?.title || ""}
+                onChange={(e) =>
+                  onChange((prev) => ({
+                    ...prev,
+                    futureAdventures: { ...prev.futureAdventures, title: e.target.value },
+                  }))
+                }
+                className="w-full text-xs px-3.5 py-2.5 rounded-xl bg-black/40 border border-white/[0.12] text-white font-ui"
+              />
+            </div>
+
+            {/* Adventures List */}
+            <div className="space-y-2.5 pt-1">
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] text-white/70 font-ui font-medium">
+                  Adventures ({modules.futureAdventures?.adventures?.length || 0})
+                </span>
+                <button
+                  type="button"
+                  data-testid="adventures-add-item"
+                  onClick={() =>
+                    onChange((prev) => ({
+                      ...prev,
+                      futureAdventures: {
+                        ...prev.futureAdventures,
+                        adventures: [
+                          ...(prev.futureAdventures?.adventures || []),
+                          {
+                            id: `a-${Date.now()}`,
+                            title: "New Dream Adventure",
+                            description: "Something wonderful to experience together",
+                            category: "Date",
+                            status: "planned",
+                          },
+                        ],
+                      },
+                    }))
+                  }
+                  className="text-[11px] px-2.5 py-1 rounded-lg bg-white/[0.08] hover:bg-white/[0.15] text-white border border-white/[0.1] font-ui transition-colors cursor-pointer"
+                >
+                  + Add Adventure
+                </button>
+              </div>
+
+              {(modules.futureAdventures?.adventures || []).map((adv: any, idx: number) => (
+                <div key={adv.id || idx} className="p-3.5 rounded-xl bg-black/30 border border-white/[0.06] space-y-2">
+                  <div className="flex items-center justify-between">
+                    <input
+                      type="text"
+                      data-testid={`input-adventure-title-${idx}`}
+                      placeholder="Adventure Title"
+                      value={adv.title}
+                      onChange={(e) =>
+                        onChange((prev) => {
+                          const adventures = [...prev.futureAdventures.adventures];
+                          adventures[idx].title = e.target.value;
+                          return { ...prev, futureAdventures: { ...prev.futureAdventures, adventures } };
+                        })
+                      }
+                      className="text-xs px-2.5 py-1.5 rounded-lg bg-black/40 border border-white/[0.1] text-white font-ui flex-1 mr-2"
+                    />
+                    <select
+                      data-testid={`select-adventure-status-${idx}`}
+                      value={adv.status || "planned"}
+                      onChange={(e) =>
+                        onChange((prev) => {
+                          const adventures = [...prev.futureAdventures.adventures];
+                          adventures[idx].status = e.target.value;
+                          return { ...prev, futureAdventures: { ...prev.futureAdventures, adventures } };
+                        })
+                      }
+                      className="text-xs px-2 py-1.5 rounded-lg bg-black/40 border border-white/[0.1] text-rose-300 font-ui"
+                    >
+                      <option value="planned">Planned</option>
+                      <option value="completed">Completed</option>
+                      <option value="someday">Someday</option>
+                    </select>
+                    <button
+                      type="button"
+                      data-testid={`adventures-delete-item-${idx}`}
+                      onClick={() =>
+                        onChange((prev) => ({
+                          ...prev,
+                          futureAdventures: {
+                            ...prev.futureAdventures,
+                            adventures: prev.futureAdventures.adventures.filter((_: any, i: number) => i !== idx),
+                          },
+                        }))
+                      }
+                      className="text-[10px] text-rose-400/80 hover:text-rose-300 font-ui ml-2"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                  <input
+                    type="text"
+                    data-testid={`input-adventure-desc-${idx}`}
+                    placeholder="Short description or sweet note…"
+                    value={adv.description || ""}
+                    onChange={(e) =>
+                      onChange((prev) => {
+                        const adventures = [...prev.futureAdventures.adventures];
+                        adventures[idx].description = e.target.value;
+                        return { ...prev, futureAdventures: { ...prev.futureAdventures, adventures } };
+                      })
+                    }
+                    className="w-full text-xs px-2.5 py-1.5 rounded-lg bg-black/40 border border-white/[0.1] text-white/80 font-ui"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 11. Adventure Spinner Form */}
+      {adventureSpinnerEnabled && activeMoment === "adventureSpinner" && (
+        <div
+          data-testid="adventureSpinner-module-editor"
+          className="p-5 rounded-2xl bg-white/[0.03] border border-rose-500/30 space-y-4 animate-fadeIn"
+        >
+          <div className="flex items-center justify-between border-b border-white/[0.08] pb-3">
+            <div className="flex items-center gap-2">
+              <span className="text-base">🎡</span>
+              <div>
+                <span className="text-sm font-display font-medium text-white block">
+                  Adventure & Date Spinner
+                </span>
+                <span className="text-[11px] text-white/50 font-ui">
+                  Playful wheel to choose your next spontaneous romantic date
+                </span>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => toggleModule("adventureSpinner", {})}
+              className="text-[11px] text-rose-400 hover:text-rose-300 underline font-ui cursor-pointer"
+            >
+              Disable Moment
+            </button>
+          </div>
+
+          <div className="space-y-3">
+            <div>
+              <label className="text-[11px] text-white/70 font-ui font-medium block mb-1">
+                Module Title
+              </label>
+              <input
+                type="text"
+                data-testid="input-spinner-title"
+                value={modules.adventureSpinner?.title || ""}
+                onChange={(e) =>
+                  onChange((prev) => ({
+                    ...prev,
+                    adventureSpinner: { ...prev.adventureSpinner, title: e.target.value },
+                  }))
+                }
+                className="w-full text-xs px-3.5 py-2.5 rounded-xl bg-black/40 border border-white/[0.12] text-white font-ui"
+              />
+            </div>
+
+            {/* Spinner Options */}
+            <div className="space-y-2.5 pt-1">
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] text-white/70 font-ui font-medium">
+                  Date Options ({modules.adventureSpinner?.options?.length || 0})
+                </span>
+                <button
+                  type="button"
+                  data-testid="spinner-add-item"
+                  onClick={() =>
+                    onChange((prev) => ({
+                      ...prev,
+                      adventureSpinner: {
+                        ...prev.adventureSpinner,
+                        options: [
+                          ...(prev.adventureSpinner?.options || []),
+                          "Spontaneous midnight dessert run",
+                        ],
+                      },
+                    }))
+                  }
+                  className="text-[11px] px-2.5 py-1 rounded-lg bg-white/[0.08] hover:bg-white/[0.15] text-white border border-white/[0.1] font-ui transition-colors cursor-pointer"
+                >
+                  + Add Option
+                </button>
+              </div>
+
+              {(modules.adventureSpinner?.options || []).map((opt: string, idx: number) => (
+                <div key={idx} className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    data-testid={`input-spinner-option-${idx}`}
+                    value={opt}
+                    onChange={(e) =>
+                      onChange((prev) => {
+                        const options = [...prev.adventureSpinner.options];
+                        options[idx] = e.target.value;
+                        return { ...prev, adventureSpinner: { ...prev.adventureSpinner, options } };
+                      })
+                    }
+                    className="flex-1 text-xs px-2.5 py-2 rounded-lg bg-black/40 border border-white/[0.1] text-white font-ui"
+                  />
+                  <button
+                    type="button"
+                    data-testid={`spinner-delete-item-${idx}`}
+                    onClick={() =>
+                      onChange((prev) => ({
+                        ...prev,
+                        adventureSpinner: {
+                          ...prev.adventureSpinner,
+                          options: prev.adventureSpinner.options.filter((_: any, i: number) => i !== idx),
+                        },
+                      }))
+                    }
+                    className="text-xs px-2 py-1 text-rose-400 hover:text-rose-300 font-ui"
+                  >
+                    ✕
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 12. Emotional Finale Form */}
+      {finaleEnabled && activeMoment === "finale" && (
+        <div
+          data-testid="finale-module-editor"
+          className="p-5 rounded-2xl bg-white/[0.03] border border-rose-500/30 space-y-4 animate-fadeIn"
+        >
+          <div className="flex items-center justify-between border-b border-white/[0.08] pb-3">
+            <div className="flex items-center gap-2">
+              <span className="text-base">🌹</span>
+              <div>
+                <span className="text-sm font-display font-medium text-white block">
+                  Emotional Finale & Grand Declaration
+                </span>
+                <span className="text-[11px] text-white/50 font-ui">
+                  The crowning scene of your entire romantic experience
+                </span>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => toggleModule("finale", {})}
+              className="text-[11px] text-rose-400 hover:text-rose-300 underline font-ui cursor-pointer"
+            >
+              Disable Moment
+            </button>
+          </div>
+
+          <div className="space-y-3">
+            <div>
+              <label className="text-[11px] text-white/70 font-ui font-medium block mb-1">
+                Finale Title
+              </label>
+              <input
+                type="text"
+                data-testid="input-finale-title"
+                value={modules.finale?.title || ""}
+                onChange={(e) =>
+                  onChange((prev) => ({
+                    ...prev,
+                    finale: { ...prev.finale, title: e.target.value },
+                  }))
+                }
+                className="w-full text-xs px-3.5 py-2.5 rounded-xl bg-black/40 border border-white/[0.12] text-white font-ui"
+              />
+            </div>
+            <div>
+              <label className="text-[11px] text-white/70 font-ui font-medium block mb-1">
+                Final Declaration of Love
+              </label>
+              <textarea
+                rows={4}
+                data-testid="input-finale-declaration"
+                value={modules.finale?.declaration || ""}
+                onChange={(e) =>
+                  onChange((prev) => ({
+                    ...prev,
+                    finale: { ...prev.finale, declaration: e.target.value },
+                  }))
+                }
+                className="w-full text-xs px-3.5 py-2.5 rounded-xl bg-black/40 border border-white/[0.12] text-white resize-none font-ui"
+              />
+            </div>
+            <div>
+              <label className="text-[11px] text-white/70 font-ui font-medium block mb-1">
+                Highlight of Promises or Memories (Optional)
+              </label>
+              <input
+                type="text"
+                data-testid="input-finale-promises-highlight"
+                value={modules.finale?.promisesHighlight || ""}
+                onChange={(e) =>
+                  onChange((prev) => ({
+                    ...prev,
+                    finale: { ...prev.finale, promisesHighlight: e.target.value },
+                  }))
+                }
+                className="w-full text-xs px-3.5 py-2.5 rounded-xl bg-black/40 border border-white/[0.12] text-white font-ui"
+              />
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+              <div>
+                <label className="text-[11px] text-white/70 font-ui font-medium block mb-1">
+                  Seal Button Text
+                </label>
+                <input
+                  type="text"
+                  data-testid="input-finale-seal-text"
+                  value={modules.finale?.sealText || ""}
+                  onChange={(e) =>
+                    onChange((prev) => ({
+                      ...prev,
+                      finale: { ...prev.finale, sealText: e.target.value },
+                    }))
+                  }
+                  className="w-full text-xs px-3.5 py-2.5 rounded-xl bg-black/40 border border-white/[0.12] text-white font-ui"
+                />
+              </div>
+              <div className="flex items-center gap-2 pt-5">
+                <input
+                  type="checkbox"
+                  id="checkbox-finale-keepsake"
+                  data-testid="checkbox-finale-keepsake"
+                  checked={Boolean(modules.finale?.showKeepsakeAction)}
+                  onChange={(e) =>
+                    onChange((prev) => ({
+                      ...prev,
+                      finale: { ...prev.finale, showKeepsakeAction: e.target.checked },
+                    }))
+                  }
+                  className="rounded text-rose-500 focus:ring-rose-400"
+                />
+                <label htmlFor="checkbox-finale-keepsake" className="text-xs text-white/80 font-ui cursor-pointer">
+                  Prompt keepsakes on completion
+                </label>
+              </div>
             </div>
           </div>
         </div>

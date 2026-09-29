@@ -411,12 +411,10 @@ export function renderCloudNineSsrHtml(config: CloudNinePublishedConfig, publicI
 
     <div class="top-bar">
       <div class="top-label">Celestial Love Letter</div>
-      ${(config as any).soundtrackUrl ? `
-      <button type="button" id="soundtrack-toggle" data-soundtrack-url="${sanitizeText((config as any).soundtrackUrl)}" aria-label="Play soundtrack" class="music-btn">
+      <button type="button" id="soundtrack-toggle" data-soundtrack-url="${sanitizeText((config as any).soundtrackUrl || '')}" aria-label="Play soundtrack" class="music-btn">
         <span style="font-size: 0.8rem;">♡</span>
-        <span>Play Music</span>
+        <span>${(config as any).soundtrackUrl ? 'Play Music' : 'Our Song'}</span>
       </button>
-      ` : ''}
     </div>
 
     <div class="content-container">

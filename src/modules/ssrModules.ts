@@ -185,18 +185,208 @@ export function renderModulesHtml(
     }
 
     // 7. Open When Letters Module
-    if (modId === "openWhen" && m.letters && m.letters.length > 0) {
+    const openWhenItems = m.envelopes || m.letters;
+    if (modId === "openWhen" && Array.isArray(openWhenItems) && openWhenItems.length > 0) {
       rendered.push(`
         <div class="module-openwhen-card" data-testid="module-open-when" style="margin-top: 1.5rem; padding: 1.25rem; border-radius: 1rem; background: rgba(32, 6, 21, 0.85); border: 1px solid rgba(244, 63, 94, 0.25);">
           <div style="font-size: 0.65rem; color: #FDA4AF; text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.35rem; font-weight: 600;">💌 Open When...</div>
           <h3 style="font-family: Georgia, serif; font-size: 1.15rem; color: #FAF8F5; margin-bottom: 0.85rem;">${sanitizeText(m.title || "Open When You Need Me")}</h3>
           <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-            ${(m.letters || []).map((letter: any) => `
-              <div class="openwhen-item" style="padding: 0.65rem; border-radius: 0.5rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1);">
-                <div style="font-size: 0.85rem; font-weight: 600; color: #FDA4AF;">${sanitizeText(letter.situation || "")}</div>
-                <div style="font-size: 0.8rem; color: #D5CEBF; font-style: italic; margin-top: 0.25rem;">${sanitizeText(letter.message || "")}</div>
+            ${openWhenItems.map((letter: any, lIdx: number) => `
+              <div class="openwhen-item" data-testid="open-when-envelope-${lIdx}" style="padding: 0.75rem; border-radius: 0.5rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1);">
+                <div style="font-size: 0.85rem; font-weight: 600; color: #FDA4AF;">${sanitizeText(letter.title || letter.situation || "")}</div>
+                ${letter.context ? `<div style="font-size: 0.7rem; color: #D5CEBF; opacity: 0.75; font-style: italic;">${sanitizeText(letter.context)}</div>` : ""}
+                <div style="font-size: 0.8rem; color: #FAF8F5; font-style: italic; margin-top: 0.35rem; line-height: 1.4;">${sanitizeText(letter.message || "")}</div>
               </div>
             `).join("")}
+          </div>
+        </div>
+      `);
+    }
+
+    // 8. Reasons I Love You Module
+    if (modId === "reasons" && Array.isArray(m.items) && m.items.length > 0) {
+      rendered.push(`
+        <div class="module-reasons-card" data-testid="reasons-module-container" style="margin-top: 1.5rem; padding: 1.25rem; border-radius: 1rem; background: rgba(32, 6, 21, 0.85); border: 1px solid rgba(244, 63, 94, 0.25); text-align: center;">
+          <div style="font-size: 0.65rem; color: #FDA4AF; text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.35rem; font-weight: 600;">💖 Reasons I Love You</div>
+          <h3 style="font-family: Georgia, serif; font-size: 1.15rem; color: #FAF8F5; margin-bottom: 0.35rem;">${sanitizeText(m.title || "Reasons I Love You")}</h3>
+          ${m.subtitle ? `<p style="font-size: 0.8rem; color: #D5CEBF; margin-bottom: 0.85rem;">${sanitizeText(m.subtitle)}</p>` : ""}
+          <div style="background: rgba(0,0,0,0.4); border: 1px solid rgba(244, 63, 94, 0.3); border-radius: 0.75rem; padding: 1.25rem; max-width: 22rem; margin: 0 auto; min-height: 8rem; display: flex; flex-direction: column; justify-content: center;">
+            <div id="reasons-step-number" data-testid="reasons-counter" style="font-size: 0.7rem; color: #FDA4AF; font-family: monospace; margin-bottom: 0.35rem;">Reason 1 of ${m.items.length}</div>
+            <h4 id="reasons-item-title" data-testid="reasons-item-title" style="font-size: 1rem; color: #FAF8F5; font-weight: 600; margin-bottom: 0.25rem;">${sanitizeText(m.items[0]?.title || "")}</h4>
+            <p id="reasons-item-text" data-testid="reasons-item-text" style="font-family: Georgia, serif; font-style: italic; color: #FDA4AF; font-size: 0.9rem; line-height: 1.4;">${sanitizeText(m.items[0]?.text || "")}</p>
+          </div>
+          <div style="display: flex; justify-content: center; gap: 0.75rem; margin-top: 0.85rem;">
+            <button type="button" id="reasons-prev-btn" data-testid="reasons-prev-btn" aria-label="Previous reason" style="padding: 0.35rem 0.85rem; border-radius: 9999px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: #FAF8F5; font-size: 0.75rem; cursor: pointer;">← Previous</button>
+            <button type="button" id="reasons-next-btn" data-testid="reasons-next-btn" aria-label="Next reason" style="padding: 0.35rem 0.85rem; border-radius: 9999px; background: #E11D48; border: none; color: #fff; font-size: 0.75rem; font-weight: 500; cursor: pointer;">Next Reason →</button>
+          </div>
+          <script id="reasons-data" type="application/json">${JSON.stringify(m.items)}</script>
+        </div>
+      `);
+    }
+
+    // 9. Compliment Machine Module
+    const compPool = Array.isArray(m.pool) && m.pool.length > 0 ? m.pool : (Array.isArray(m.items) ? m.items : []);
+    if (modId === "compliments" && compPool.length > 0) {
+      rendered.push(`
+        <div class="module-compliments-card" data-testid="compliments-module-container" style="margin-top: 1.5rem; padding: 1.25rem; border-radius: 1rem; background: rgba(32, 6, 21, 0.85); border: 1px solid rgba(244, 63, 94, 0.25); text-align: center;">
+          <div style="font-size: 0.65rem; color: #FDA4AF; text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.35rem; font-weight: 600;">✨ Compliment Machine</div>
+          <h3 style="font-family: Georgia, serif; font-size: 1.15rem; color: #FAF8F5; margin-bottom: 0.85rem;">${sanitizeText(m.title || "Heartfelt Reminders")}</h3>
+          <div id="compliment-display-card" data-testid="compliment-display" style="background: rgba(0,0,0,0.35); border: 1px solid rgba(244, 63, 94, 0.3); border-radius: 0.75rem; padding: 1rem; max-width: 22rem; margin: 0 auto 0.85rem; min-height: 4.5rem; display: flex; align-items: center; justify-content: center;">
+            <p id="compliment-display-text" data-testid="compliment-display-text" style="font-family: Georgia, serif; font-style: italic; color: #FDA4AF; font-size: 0.95rem; line-height: 1.4;">${sanitizeText(compPool[0] || "")}</p>
+          </div>
+          <button type="button" id="compliment-trigger-btn" data-testid="compliment-trigger-btn" style="padding: 0.5rem 1.25rem; border-radius: 9999px; background: linear-gradient(135deg, #E11D48, #BE123C); color: white; border: 1px solid #FB7185; font-size: 0.75rem; font-weight: 500; cursor: pointer; display: inline-flex; align-items: center; gap: 0.35rem;">
+            <span>✨</span> <span>${sanitizeText(m.buttonLabel || "Tell Me Something Sweet")}</span>
+          </button>
+          <script id="compliments-data" type="application/json">${JSON.stringify(compPool)}</script>
+        </div>
+      `);
+    }
+
+    // 10. Fortune Cookie Module
+    const fortList = Array.isArray(m.fortunes) && m.fortunes.length > 0 ? m.fortunes : (Array.isArray(m.items) ? m.items : []);
+    if (modId === "fortuneCookie" && fortList.length > 0) {
+      rendered.push(`
+        <div class="module-fortune-card" data-testid="fortune-cookie-module-container" style="margin-top: 1.5rem; padding: 1.25rem; border-radius: 1rem; background: rgba(32, 6, 21, 0.85); border: 1px solid rgba(244, 63, 94, 0.25); text-align: center;">
+          <div style="font-size: 0.65rem; color: #FDA4AF; text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.35rem; font-weight: 600;">🥠 Fortune Cookie</div>
+          <h3 style="font-family: Georgia, serif; font-size: 1.15rem; color: #FAF8F5; margin-bottom: 0.5rem;">${sanitizeText(m.title || "Your Fortune Awaits")}</h3>
+          <div style="margin: 1rem 0;">
+            <button type="button" id="fortune-crack-btn" data-testid="crack-cookie-btn" aria-label="Crack open fortune cookie" style="background: none; border: none; font-size: 3rem; cursor: pointer; transition: transform 0.2s;">
+              🥠
+            </button>
+          </div>
+          <div id="fortune-slip" data-testid="fortune-slip" style="background: #FFFBEB; color: #78350F; border: 1px dashed #D97706; border-radius: 0.5rem; padding: 0.85rem; max-width: 20rem; margin: 0 auto; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
+            <div style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; color: #B45309; margin-bottom: 0.25rem;">Secret Fortune</div>
+            <p id="fortune-slip-text" style="font-family: Georgia, serif; font-style: italic; font-size: 0.85rem; line-height: 1.4;">${sanitizeText(fortList[0] || "")}</p>
+          </div>
+          <script id="fortunes-data" type="application/json">${JSON.stringify(fortList)}</script>
+        </div>
+      `);
+    }
+
+    // 11. Scratch Card Module
+    if (modId === "scratchCard" && (m.hiddenMessage || m.enabled)) {
+      rendered.push(`
+        <div class="module-scratch-card" data-testid="scratch-card-module-container" style="margin-top: 1.5rem; padding: 1.25rem; border-radius: 1rem; background: rgba(32, 6, 21, 0.85); border: 1px solid rgba(244, 63, 94, 0.25); text-align: center;">
+          <div style="font-size: 0.65rem; color: #FDA4AF; text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.35rem; font-weight: 600;">🪄 Scratch to Reveal</div>
+          <h3 style="font-family: Georgia, serif; font-size: 1.15rem; color: #FAF8F5; margin-bottom: 0.35rem;">${sanitizeText(m.title || "Scratch to Reveal")}</h3>
+          <p style="font-size: 0.8rem; color: #D5CEBF; margin-bottom: 0.85rem;">${sanitizeText(m.frontMessage || "Scratch below to unveil my secret message")}</p>
+          <div style="position: relative; width: 18rem; max-width: 90vw; height: 7.5rem; margin: 0 auto; border-radius: 0.75rem; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.5); border: 1px solid rgba(244,63,94,0.4);">
+            <div id="scratch-hidden-content" data-testid="scratch-hidden-content" style="position: absolute; inset: 0; background: linear-gradient(135deg, #1C0512, #3B0723); display: flex; align-items: center; justify-content: center; padding: 1rem; text-align: center;">
+              <span id="scratch-revealed-text" data-testid="scratch-revealed-text" style="font-family: Georgia, serif; font-style: italic; color: #FDA4AF; font-size: 0.95rem; line-height: 1.4;">${sanitizeText(m.hiddenMessage || "Surprise Uncovered! You are my forever.")}</span>
+            </div>
+            <canvas id="scratch-card-canvas" data-testid="scratch-card-canvas" width="288" height="120" style="position: absolute; inset: 0; width: 100%; height: 100%; cursor: crosshair; touch-action: none;"></canvas>
+          </div>
+
+          <div style="margin-top: 0.75rem;">
+            <button type="button" id="scratch-reveal-btn" data-testid="scratch-reveal-btn" aria-label="Reveal secret message" style="font-size: 0.75rem; color: #FDA4AF; background: none; border: 1px solid rgba(244,63,94,0.3); border-radius: 9999px; padding: 0.3rem 0.85rem; cursor: pointer;">
+              Reveal Instantly
+            </button>
+          </div>
+        </div>
+      `);
+    }
+
+    // 12. Promise Wall Module
+    const promList = Array.isArray(m.promises) && m.promises.length > 0 ? m.promises : (Array.isArray(m.items) ? m.items : []);
+    if (modId === "promises" && promList.length > 0) {
+      rendered.push(`
+        <div class="module-promises-card" data-testid="promises-module-container" style="margin-top: 1.5rem; padding: 1.25rem; border-radius: 1rem; background: rgba(32, 6, 21, 0.85); border: 1px solid rgba(244, 63, 94, 0.25);">
+          <div style="font-size: 0.65rem; color: #FDA4AF; text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.35rem; font-weight: 600; text-align: center;">💍 Promise Wall</div>
+          <h3 style="font-family: Georgia, serif; font-size: 1.15rem; color: #FAF8F5; margin-bottom: 0.35rem; text-align: center;">${sanitizeText(m.title || "My Vows & Promises")}</h3>
+          ${m.subtitle ? `<p style="font-size: 0.8rem; color: #D5CEBF; text-align: center; margin-bottom: 0.85rem;">${sanitizeText(m.subtitle)}</p>` : ""}
+          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr)); gap: 0.65rem;">
+            ${promList.map((p: any, pIdx: number) => `
+              <div class="promise-item" data-testid="promise-card-${pIdx}" style="padding: 0.75rem; border-radius: 0.65rem; background: rgba(0,0,0,0.35); border: 1px solid rgba(244, 63, 94, 0.2); display: flex; flex-direction: column; justify-content: space-between;">
+                ${p.category ? `<div style="font-size: 0.65rem; color: #FDA4AF; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.25rem;">${sanitizeText(p.category)}</div>` : ""}
+                <div style="font-family: Georgia, serif; font-style: italic; color: #FAF8F5; font-size: 0.85rem; line-height: 1.4;">${sanitizeText(p.text || "")}</div>
+                <div style="margin-top: 0.5rem; display: flex; justify-content: space-between; align-items: center;">
+                  <span class="promise-tag" style="font-size: 0.6rem; color: #FDA4AF; opacity: 0.8;">HELD IN HEART</span>
+                  <button type="button" class="promise-heart-btn" data-testid="promise-heart-btn-${pIdx}" aria-label="Heart this promise" style="background: none; border: none; font-size: 0.9rem; cursor: pointer; color: #FDA4AF;">🤍</button>
+                </div>
+              </div>
+            `).join("")}
+          </div>
+        </div>
+      `);
+    }
+
+    // 13. Future Adventures Module
+    const advList = Array.isArray(m.adventures) && m.adventures.length > 0 ? m.adventures : (Array.isArray(m.items) ? m.items : []);
+    if (modId === "futureAdventures" && advList.length > 0) {
+      rendered.push(`
+        <div class="module-adventures-card" data-testid="future-adventures-module-container" style="margin-top: 1.5rem; padding: 1.25rem; border-radius: 1rem; background: rgba(32, 6, 21, 0.85); border: 1px solid rgba(244, 63, 94, 0.25);">
+          <div style="font-size: 0.65rem; color: #FDA4AF; text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.35rem; font-weight: 600; text-align: center;">🗺️ Future Adventures</div>
+          <h3 style="font-family: Georgia, serif; font-size: 1.15rem; color: #FAF8F5; margin-bottom: 0.35rem; text-align: center;">${sanitizeText(m.title || "Our Bucket List")}</h3>
+          <div style="display: flex; justify-content: center; gap: 0.35rem; margin-bottom: 0.85rem; flex-wrap: wrap;">
+            <button type="button" class="adv-filter-btn" data-filter="all" data-testid="adventure-filter-all" style="padding: 0.25rem 0.65rem; border-radius: 9999px; background: #E11D48; color: white; border: none; font-size: 0.7rem; cursor: pointer;">All</button>
+            <button type="button" class="adv-filter-btn" data-filter="planned" data-testid="adventure-filter-planned" style="padding: 0.25rem 0.65rem; border-radius: 9999px; background: rgba(255,255,255,0.1); color: #FAF8F5; border: 1px solid rgba(255,255,255,0.2); font-size: 0.7rem; cursor: pointer;">Planned</button>
+            <button type="button" class="adv-filter-btn" data-filter="completed" data-testid="adventure-filter-completed" style="padding: 0.25rem 0.65rem; border-radius: 9999px; background: rgba(255,255,255,0.1); color: #FAF8F5; border: 1px solid rgba(255,255,255,0.2); font-size: 0.7rem; cursor: pointer;">Completed</button>
+            <button type="button" class="adv-filter-btn" data-filter="someday" data-testid="adventure-filter-someday" style="padding: 0.25rem 0.65rem; border-radius: 9999px; background: rgba(255,255,255,0.1); color: #FAF8F5; border: 1px solid rgba(255,255,255,0.2); font-size: 0.7rem; cursor: pointer;">Someday</button>
+          </div>
+          <div id="adventures-list" style="display: flex; flex-direction: column; gap: 0.5rem;">
+            ${advList.map((adv: any) => `
+              <div class="adventure-item" data-testid="adventure-item" data-status="${sanitizeText(adv.status || 'planned')}" style="padding: 0.65rem 0.85rem; border-radius: 0.5rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                  <div style="font-size: 0.85rem; font-weight: 600; color: #FAF8F5;">${sanitizeText(adv.title || "")}</div>
+                  ${adv.description ? `<div style="font-size: 0.75rem; color: #D5CEBF; font-style: italic;">${sanitizeText(adv.description)}</div>` : ""}
+                </div>
+                <span style="font-size: 0.65rem; padding: 0.15rem 0.45rem; border-radius: 9999px; text-transform: uppercase; font-weight: 600; ${adv.status === 'completed' ? 'background: rgba(16,185,129,0.2); color: #6EE7B7;' : adv.status === 'someday' ? 'background: rgba(168,85,247,0.2); color: #C084FC;' : 'background: rgba(244,63,94,0.2); color: #FDA4AF;'}">${sanitizeText(adv.status || "planned")}</span>
+              </div>
+            `).join("")}
+          </div>
+        </div>
+      `);
+    }
+
+    // 14. Adventure Spinner Module
+    const spinOptions = Array.isArray(m.options) ? m.options.map((o: any) => typeof o === "string" ? o : (o?.label || "")) : [];
+    if (modId === "adventureSpinner" && spinOptions.length > 0) {
+      rendered.push(`
+        <div class="module-spinner-card" data-testid="adventure-spinner-module-container" style="margin-top: 1.5rem; padding: 1.25rem; border-radius: 1rem; background: rgba(32, 6, 21, 0.85); border: 1px solid rgba(244, 63, 94, 0.25); text-align: center;">
+          <div style="font-size: 0.65rem; color: #FDA4AF; text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.35rem; font-weight: 600;">🎡 Adventure Spinner</div>
+          <h3 style="font-family: Georgia, serif; font-size: 1.15rem; color: #FAF8F5; margin-bottom: 0.85rem;">${sanitizeText(m.title || "What Should We Do Next?")}</h3>
+          <div style="position: relative; width: 10rem; height: 10rem; margin: 0 auto 1rem; border-radius: 9999px; border: 4px solid #FB7185; background: radial-gradient(circle, #380720 0%, #15020E 100%); display: flex; align-items: center; justify-content: center; box-shadow: 0 0 25px rgba(244,63,94,0.3);">
+            <div id="spinner-pointer" style="position: absolute; top: -10px; font-size: 1.25rem; color: #FDA4AF; z-index: 2;">▼</div>
+            <div id="spinner-wheel-display" data-testid="spinner-wheel" style="transition: transform 3s cubic-bezier(0.15, 0.9, 0.2, 1); font-size: 2.25rem;">
+              🎡
+            </div>
+          </div>
+
+          <div id="spinner-result" data-testid="spinner-result-card" style="background: rgba(0,0,0,0.4); border: 1px solid rgba(244, 63, 94, 0.3); border-radius: 0.5rem; padding: 0.75rem; max-width: 18rem; margin: 0 auto 0.75rem; font-family: Georgia, serif; font-style: italic; color: #FDA4AF; font-size: 0.9rem; min-height: 2.5rem; display: flex; align-items: center; justify-content: center;">
+            Spin the wheel to decide!
+          </div>
+
+          <div style="display: flex; justify-content: center; gap: 0.5rem;">
+            <button type="button" id="spinner-spin-btn" data-testid="spinner-spin-btn" style="padding: 0.45rem 1.15rem; border-radius: 9999px; background: linear-gradient(135deg, #E11D48, #BE123C); color: white; border: 1px solid #FB7185; font-size: 0.75rem; font-weight: 500; cursor: pointer;">Spin Wheel</button>
+            <button type="button" id="spinner-pick-btn" data-testid="spinner-fallback-btn" style="padding: 0.45rem 0.85rem; border-radius: 9999px; background: rgba(255,255,255,0.1); color: #FAF8F5; border: 1px solid rgba(255,255,255,0.2); font-size: 0.75rem; cursor: pointer;">Quick Pick</button>
+          </div>
+          <script id="spinner-data" type="application/json">${JSON.stringify(spinOptions)}</script>
+        </div>
+      `);
+    }
+
+    // 15. Finale Module
+    if (modId === "finale" && m.declaration) {
+      rendered.push(`
+        <div class="module-finale-card" data-testid="finale-module-container" style="margin-top: 2rem; padding: 1.75rem 1.25rem; border-radius: 1.25rem; background: linear-gradient(180deg, rgba(32, 6, 21, 0.9) 0%, rgba(15, 2, 10, 0.95) 100%); border: 1px solid rgba(244, 63, 94, 0.4); text-align: center; position: relative; overflow: hidden;">
+          <div style="font-size: 0.65rem; color: #FDA4AF; text-transform: uppercase; letter-spacing: 0.2em; margin-bottom: 0.5rem; font-weight: 600;">🌹 Final Declaration</div>
+          <h2 style="font-family: Georgia, serif; font-size: 1.35rem; color: #FAF8F5; margin-bottom: 0.85rem;">${sanitizeText(m.title || "To You, Always")}</h2>
+          <div data-testid="finale-declaration" style="font-family: Georgia, serif; font-size: 1.05rem; line-height: 1.6; color: #FDA4AF; font-style: italic; max-width: 26rem; margin: 0 auto 1.25rem;">
+            ${sanitizeText(m.declaration)}
+          </div>
+          ${m.promisesHighlight ? `
+            <div data-testid="finale-promises" style="background: rgba(0,0,0,0.35); border-left: 2px solid #FB7185; padding: 0.65rem 1rem; max-width: 22rem; margin: 0 auto 1.25rem; font-size: 0.8rem; color: #FAF8F5; font-style: italic;">
+              ${sanitizeText(m.promisesHighlight)}
+            </div>
+          ` : ""}
+          <div style="margin-top: 1rem;">
+            <button type="button" id="finale-seal-btn" data-testid="finale-seal-journey-btn" style="padding: 0.6rem 1.5rem; border-radius: 9999px; background: linear-gradient(135deg, #E11D48, #9F1239); color: white; border: 1px solid #FB7185; font-size: 0.8rem; font-weight: 600; cursor: pointer; box-shadow: 0 4px 15px rgba(225,29,72,0.4);">
+              ${sanitizeText(m.sealText || "Seal Our Forever")}
+            </button>
+          </div>
+          <div id="finale-seal-toast" data-testid="finale-seal-toast" class="hidden" style="margin-top: 0.85rem; font-size: 0.85rem; color: #6EE7B7; font-weight: 500;">
+            ✨ Sealed in My Heart forever.
           </div>
         </div>
       `);
@@ -282,7 +472,11 @@ export const PRINT_MEDIA_STYLES = `
     .seal-box, #reseal-btn, .recipient-interactions-section,
     [data-testid="recipient-reply-card"], #print-keepsake-btn,
     #read-aloud-btn, #voice-play-btn, #voice-scrub-bar, #memory-prev-btn,
-    #memory-next-btn, .memory-thumbnails, #secret-verify-form, #reveal-secret-btn {
+    #memory-next-btn, .memory-thumbnails, #secret-verify-form, #reveal-secret-btn,
+    #reasons-prev-btn, #reasons-next-btn, #compliment-trigger-btn,
+    #fortune-crack-btn, #scratch-card-canvas, #scratch-reveal-btn,
+    .promise-heart-btn, .adv-filter-btn, #spinner-spin-btn, #spinner-pick-btn,
+    #finale-seal-btn {
       display: none !important;
     }
     .wrapper {
@@ -312,7 +506,9 @@ export const PRINT_MEDIA_STYLES = `
     }
     .module-memories-card, .module-voice-card, .module-video-card,
     .module-timeline-card, .module-quiz-card, .module-secret-card,
-    .module-openwhen-card {
+    .module-openwhen-card, .module-reasons-card, .module-compliments-card,
+    .module-fortune-card, .module-scratch-card, .module-promises-card,
+    .module-adventures-card, .module-spinner-card, .module-finale-card {
       background: transparent !important;
       border: 1px solid #E7E5E4 !important;
       color: #1C1917 !important;
@@ -640,6 +836,245 @@ export function getModulesClientScript(publicId: string): string {
             replyError.classList.remove('hidden');
           }
         });
+      });
+    }
+
+    // Reasons I Love You Interaction
+    var reasonsDataEl = document.getElementById('reasons-data');
+    var reasonsList = [];
+    if (reasonsDataEl) {
+      try { reasonsList = JSON.parse(reasonsDataEl.textContent || '[]'); } catch(e){}
+    }
+    if (reasonsList.length > 0) {
+      var reasonIdx = 0;
+      var rStep = document.getElementById('reasons-step-number');
+      var rTitle = document.getElementById('reasons-item-title');
+      var rText = document.getElementById('reasons-item-text');
+      var rPrev = document.getElementById('reasons-prev-btn');
+      var rNext = document.getElementById('reasons-next-btn');
+
+      function showReason(idx) {
+        if (idx < 0) idx = reasonsList.length - 1;
+        if (idx >= reasonsList.length) idx = 0;
+        reasonIdx = idx;
+        var r = reasonsList[reasonIdx];
+        if (rStep) rStep.textContent = 'Reason ' + (reasonIdx + 1) + ' of ' + reasonsList.length;
+        if (rTitle) rTitle.textContent = r.title || '';
+        if (rText) rText.textContent = r.text || '';
+      }
+
+      if (rPrev) rPrev.addEventListener('click', function() { showReason(reasonIdx - 1); });
+      if (rNext) rNext.addEventListener('click', function() { showReason(reasonIdx + 1); });
+    }
+
+    // Compliment Machine Interaction
+    var compDataEl = document.getElementById('compliments-data');
+    var compPool = [];
+    if (compDataEl) {
+      try { compPool = JSON.parse(compDataEl.textContent || '[]'); } catch(e){}
+    }
+    var compBtn = document.getElementById('compliment-trigger-btn');
+    var compText = document.getElementById('compliment-display-text');
+    var lastCompIdx = 0;
+    if (compBtn && compPool.length > 0) {
+      compBtn.addEventListener('click', function() {
+        var nextIdx = lastCompIdx;
+        if (compPool.length > 1) {
+          while (nextIdx === lastCompIdx) {
+            nextIdx = Math.floor(Math.random() * compPool.length);
+          }
+        } else {
+          nextIdx = 0;
+        }
+        lastCompIdx = nextIdx;
+        if (compText) {
+          compText.style.opacity = '0';
+          setTimeout(function() {
+            compText.textContent = compPool[nextIdx];
+            compText.style.opacity = '1';
+          }, 150);
+        }
+      });
+    }
+
+    // Fortune Cookie Interaction
+    var fortDataEl = document.getElementById('fortunes-data');
+    var fortPool = [];
+    if (fortDataEl) {
+      try { fortPool = JSON.parse(fortDataEl.textContent || '[]'); } catch(e){}
+    }
+    var fortBtn = document.getElementById('fortune-crack-btn');
+    var fortSlip = document.getElementById('fortune-slip');
+    var fortSlipText = document.getElementById('fortune-slip-text');
+    var lastFortIdx = 0;
+    if (fortBtn && fortPool.length > 0) {
+      fortBtn.addEventListener('click', function() {
+        var rand = Math.floor(Math.random() * fortPool.length);
+        lastFortIdx = rand;
+        fortBtn.style.transform = 'scale(1.2) rotate(15deg)';
+        setTimeout(function() {
+          fortBtn.style.transform = 'scale(1) rotate(0deg)';
+          if (fortSlipText) fortSlipText.textContent = fortPool[rand];
+          if (fortSlip) {
+            fortSlip.style.display = 'block';
+            fortSlip.style.animation = 'fadeIn 0.4s ease';
+          }
+        }, 200);
+      });
+    }
+
+    // Scratch Card Interaction
+    var scratchCanvas = document.getElementById('scratch-card-canvas');
+    var scratchRevealBtn = document.getElementById('scratch-reveal-btn');
+    if (scratchCanvas) {
+      var sCtx = scratchCanvas.getContext('2d');
+      if (sCtx) {
+        var sW = scratchCanvas.width;
+        var sH = scratchCanvas.height;
+        // Draw metallic gradient foil
+        var grad = sCtx.createLinearGradient(0, 0, sW, sH);
+        grad.addColorStop(0, '#E11D48');
+        grad.addColorStop(0.5, '#BE123C');
+        grad.addColorStop(1, '#881337');
+        sCtx.fillStyle = grad;
+        sCtx.fillRect(0, 0, sW, sH);
+
+        sCtx.fillStyle = '#FDA4AF';
+        sCtx.font = 'bold 12px sans-serif';
+        sCtx.textAlign = 'center';
+        sCtx.fillText('✦ SCRATCH HERE ✦', sW / 2, sH / 2 + 4);
+
+        var isScratching = false;
+
+        function scratch(e) {
+          if (!isScratching) return;
+          var rect = scratchCanvas.getBoundingClientRect();
+          var scaleX = scratchCanvas.width / rect.width;
+          var scaleY = scratchCanvas.height / rect.height;
+          var clientX = e.clientX || (e.touches && e.touches[0] ? e.touches[0].clientX : 0);
+          var clientY = e.clientY || (e.touches && e.touches[0] ? e.touches[0].clientY : 0);
+          var x = (clientX - rect.left) * scaleX;
+          var y = (clientY - rect.top) * scaleY;
+
+          sCtx.globalCompositeOperation = 'destination-out';
+          sCtx.beginPath();
+          sCtx.arc(x, y, 18, 0, Math.PI * 2);
+          sCtx.fill();
+        }
+
+        scratchCanvas.addEventListener('mousedown', function(e) { isScratching = true; scratch(e); });
+        window.addEventListener('mouseup', function() { isScratching = false; });
+        scratchCanvas.addEventListener('mousemove', scratch);
+
+        scratchCanvas.addEventListener('touchstart', function(e) { isScratching = true; scratch(e); }, { passive: true });
+        window.addEventListener('touchend', function() { isScratching = false; });
+        scratchCanvas.addEventListener('touchmove', scratch, { passive: true });
+      }
+    }
+    if (scratchRevealBtn && scratchCanvas) {
+      scratchRevealBtn.addEventListener('click', function() {
+        var sCtx = scratchCanvas.getContext('2d');
+        if (sCtx) {
+          sCtx.clearRect(0, 0, scratchCanvas.width, scratchCanvas.height);
+        }
+        scratchCanvas.style.display = 'none';
+      });
+    }
+
+    // Promise Wall Hearts
+    var promiseHeartBtns = document.querySelectorAll('.promise-heart-btn');
+    if (promiseHeartBtns.length > 0) {
+      promiseHeartBtns.forEach(function(pBtn) {
+        pBtn.addEventListener('click', function() {
+          if (pBtn.textContent === '🤍') {
+            pBtn.textContent = '❤️';
+            pBtn.style.transform = 'scale(1.25)';
+          } else {
+            pBtn.textContent = '🤍';
+            pBtn.style.transform = 'scale(1)';
+          }
+          setTimeout(function() { pBtn.style.transform = 'scale(1)'; }, 200);
+        });
+      });
+    }
+
+    // Future Adventures Filter
+    var advFilterBtns = document.querySelectorAll('.adv-filter-btn');
+    var advItems = document.querySelectorAll('.adventure-item');
+    if (advFilterBtns.length > 0 && advItems.length > 0) {
+      advFilterBtns.forEach(function(fBtn) {
+        fBtn.addEventListener('click', function() {
+          var targetFilter = fBtn.getAttribute('data-filter') || 'all';
+          advFilterBtns.forEach(function(b) {
+            b.style.background = 'rgba(255,255,255,0.1)';
+            b.style.color = '#FAF8F5';
+          });
+          fBtn.style.background = '#E11D48';
+          fBtn.style.color = 'white';
+
+          advItems.forEach(function(item) {
+            var s = item.getAttribute('data-status');
+            if (targetFilter === 'all' || s === targetFilter) {
+              item.style.display = 'flex';
+            } else {
+              item.style.display = 'none';
+            }
+          });
+        });
+      });
+    }
+
+    // Adventure Spinner Interaction
+    var spinDataEl = document.getElementById('spinner-data');
+    var spinOptions = [];
+    if (spinDataEl) {
+      try { spinOptions = JSON.parse(spinDataEl.textContent || '[]'); } catch(e){}
+    }
+    var spinBtn = document.getElementById('spinner-spin-btn');
+    var pickBtn = document.getElementById('spinner-pick-btn');
+    var wheelEl = document.getElementById('spinner-wheel-display');
+    var resultEl = document.getElementById('spinner-result');
+    var currentRotation = 0;
+
+    function selectAdventure(opt) {
+      if (resultEl) {
+        resultEl.textContent = '✦ ' + opt + ' ✦';
+        resultEl.style.color = '#FDA4AF';
+        resultEl.style.fontWeight = 'bold';
+      }
+    }
+
+    if (spinOptions.length > 0) {
+      if (spinBtn) {
+        spinBtn.addEventListener('click', function() {
+          var chosenIdx = Math.floor(Math.random() * spinOptions.length);
+          currentRotation += 720 + Math.floor(Math.random() * 360);
+          if (wheelEl) wheelEl.style.transform = 'rotate(' + currentRotation + 'deg)';
+          if (resultEl) resultEl.textContent = 'Spinning for you...';
+          setTimeout(function() {
+            selectAdventure(spinOptions[chosenIdx]);
+          }, 3000);
+        });
+      }
+      if (pickBtn) {
+        pickBtn.addEventListener('click', function() {
+          var chosenIdx = Math.floor(Math.random() * spinOptions.length);
+          selectAdventure(spinOptions[chosenIdx]);
+        });
+      }
+    }
+
+    // Finale Seal Interaction
+    var finaleSealBtn = document.getElementById('finale-seal-btn');
+    var finaleToast = document.getElementById('finale-seal-toast');
+    if (finaleSealBtn) {
+      finaleSealBtn.addEventListener('click', function() {
+        finaleSealBtn.disabled = true;
+        finaleSealBtn.style.opacity = '0.6';
+        finaleSealBtn.textContent = 'Sealed in My Heart 💖';
+        if (finaleToast) {
+          finaleToast.classList.remove('hidden');
+        }
       });
     }
   `;

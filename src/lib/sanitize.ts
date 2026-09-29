@@ -14,6 +14,13 @@ export function countGraphemes(text: string): number {
   return Array.from(text).length;
 }
 
+import { z } from "zod";
+
+export const graphemeMax = (max: number) =>
+  z.string().refine((val) => countGraphemes(val) <= max, {
+    message: `Must not exceed ${max} characters`,
+  });
+
 // Strip bidi overrides (U+202A to U+202E) and isolates (U+2066 to U+2069),
 // and ASCII control characters except \n and \r, while keeping ZWJ (\u200D) and ZWNJ (\u200C)
 export function sanitizeText(

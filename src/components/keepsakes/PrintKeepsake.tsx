@@ -11,6 +11,7 @@ export const PrintKeepsakeButton: React.FC<PrintKeepsakeButtonProps> = ({
   className = "",
   theme = "midnight-rose",
 }) => {
+
   const handlePrint = () => {
     if (typeof window !== "undefined") {
       window.print();
@@ -48,3 +49,5 @@ export const PrintKeepsakeButton: React.FC<PrintKeepsakeButtonProps> = ({
     </button>
   );
 };
+
+export const PrintKeepsake = PrintKeepsakeButton;

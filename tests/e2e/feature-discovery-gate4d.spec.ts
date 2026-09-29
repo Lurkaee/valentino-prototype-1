@@ -42,16 +42,19 @@ test.describe("Gate 4D: Feature Discovery & Capability Renaissance", () => {
     await expect(momentsTab).toBeVisible();
     await momentsTab.click();
 
-    // Verify Available feature cards are visible
+    // Verify Available feature cards are visible (including Love Quiz and completed Bucket List)
     const quizCard = page.locator('[data-testid="feature-card-quiz"]');
     await expect(quizCard).toBeVisible();
     await expect(quizCard).toContainText("Love Quiz");
 
+    const bucketListCard = page.locator('[data-testid="feature-card-bucket-list"]');
+    await expect(bucketListCard).toBeVisible();
+
     // Verify Roadmap cards are displayed truthfully
-    const bucketListRoadmap = page.locator('[data-testid="roadmap-card-bucket-list"]');
-    await expect(bucketListRoadmap).toBeVisible();
-    await expect(bucketListRoadmap).toContainText("Coming Soon");
-    await expect(bucketListRoadmap).toContainText("Future Adventures & Bucket List");
+    const milestoneRoadmap = page.locator('[data-testid="roadmap-card-milestones"]');
+    await expect(milestoneRoadmap).toBeVisible();
+    await expect(milestoneRoadmap).toContainText("Coming Soon");
+    await expect(milestoneRoadmap).toContainText("Relationship Milestones & Timeline");
 
     // 6. Test Keyboard Dismiss (Escape key)
     await page.keyboard.press("Escape");

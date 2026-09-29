@@ -223,8 +223,10 @@ export function validateMediaBuffer(
   };
 }
 
+import { mediaStorage } from "@/lib/storage";
+
 /**
- * Saves media file to private disk and registers in DB.
+ * Saves media file to private storage (via MediaStorageService adapter) and registers in DB.
  */
 export async function savePrivateMedia(
   experienceId: string,
@@ -243,9 +245,9 @@ export async function savePrivateMedia(
   const highEntropySuffix = crypto.randomBytes(18).toString("hex");
   const safeExt = getSafeExtension(meta.mimeType);
   const storageKey = `${meta.mediaType.toLowerCase()}_${Date.now()}_${highEntropySuffix}${safeExt}`;
-  const filePath = path.join(PRIVATE_MEDIA_DIR, storageKey);
 
-  await fs.promises.writeFile(filePath, buffer, { mode: 0o600 });
+  // Persist via decoupled storage service
+  await mediaStorage.write(storageKey, buffer, { mimeType: meta.mimeType });
 
   const record = await db.experienceMedia.create({
     data: {
@@ -303,14 +305,7 @@ export async function deletePrivateMedia(
     data: { status: "DELETED" },
   });
 
-  const filePath = getPrivateMediaFilePath(media.storageKey);
-  if (fs.existsSync(filePath)) {
-    try {
-      await fs.promises.unlink(filePath);
-    } catch {
-      // Ignored non-fatal unlink error
-    }
-  }
+  await mediaStorage.delete(media.storageKey);
 
   return true;
 }
