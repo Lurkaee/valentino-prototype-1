@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import fs from "fs";
 import { db } from "@/lib/db";
 import { getPrivateMediaFilePath } from "@/lib/media";
+import { mediaStorage } from "@/lib/storage";
 
 interface RouteParams {
   params: Promise<{ publicId: string; mediaId: string }>;
@@ -45,26 +46,40 @@ export async function GET(req: NextRequest, { params }: RouteParams) {
     return new NextResponse("Not Found or Private", { status: 404 });
   }
 
-  // 5. Read from private storage
-  const filePath = getPrivateMediaFilePath(media.storageKey);
-  if (!fs.existsSync(filePath)) {
+  // 5. Read from storage service adapter
+  const localPath = mediaStorage.getFilePath(media.storageKey);
+  if (localPath && fs.existsSync(localPath)) {
+    const fileStream = fs.createReadStream(localPath);
+    const stream = new ReadableStream({
+      start(controller) {
+        fileStream.on("data", (chunk) => controller.enqueue(chunk));
+        fileStream.on("end", () => controller.close());
+        fileStream.on("error", (err) => controller.error(err));
+      },
+    });
+
+    return new NextResponse(stream as any, {
+      status: 200,
+      headers: {
+        "Content-Type": media.mimeType,
+        "Content-Length": media.sizeBytes.toString(),
+        "X-Content-Type-Options": "nosniff",
+        "Cache-Control": "public, max-age=86400, immutable",
+      },
+    });
+  }
+
+  // Fallback to memory or custom storage adapter read
+  const buffer = await mediaStorage.read(media.storageKey);
+  if (!buffer) {
     return new NextResponse("File missing", { status: 404 });
   }
 
-  const fileStream = fs.createReadStream(filePath);
-  const stream = new ReadableStream({
-    start(controller) {
-      fileStream.on("data", (chunk) => controller.enqueue(chunk));
-      fileStream.on("end", () => controller.close());
-      fileStream.on("error", (err) => controller.error(err));
-    },
-  });
-
-  return new NextResponse(stream as any, {
+  return new NextResponse(new Uint8Array(buffer), {
     status: 200,
     headers: {
       "Content-Type": media.mimeType,
-      "Content-Length": media.sizeBytes.toString(),
+      "Content-Length": buffer.length.toString(),
       "X-Content-Type-Options": "nosniff",
       "Cache-Control": "public, max-age=86400, immutable",
     },

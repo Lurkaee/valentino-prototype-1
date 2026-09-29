@@ -5,6 +5,7 @@ import React from "react";
 interface ModuleHeaderProps {
   title: string;
   subtitle?: string;
+  icon?: string;
   theme?: string;
   className?: string;
 }
@@ -12,6 +13,7 @@ interface ModuleHeaderProps {
 export const ModuleHeader: React.FC<ModuleHeaderProps> = ({
   title,
   subtitle,
+  icon,
   theme = "midnight-rose",
   className = "",
 }) => {

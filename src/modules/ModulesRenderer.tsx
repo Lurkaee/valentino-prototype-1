@@ -19,9 +19,17 @@ const DEFAULT_ORDER = [
   "videoMemory",
   "memories",
   "timeline",
+  "reasons",
+  "compliments",
+  "fortuneCookie",
+  "scratchCard",
+  "promises",
+  "futureAdventures",
+  "adventureSpinner",
   "quiz",
   "secret",
   "openWhen",
+  "finale",
 ];
 
 export const ModulesRenderer: React.FC<ModulesRendererProps> = ({
@@ -36,7 +44,14 @@ export const ModulesRenderer: React.FC<ModulesRendererProps> = ({
     return null;
   }
 
-  const order = moduleOrder && moduleOrder.length > 0 ? moduleOrder : DEFAULT_ORDER;
+  const order = moduleOrder && moduleOrder.length > 0 ? [...moduleOrder] : [...DEFAULT_ORDER];
+
+  // Append any enabled modules not in order
+  for (const modId of Object.keys(modules)) {
+    if (modules[modId]?.enabled && !order.includes(modId)) {
+      order.push(modId);
+    }
+  }
 
   // Render modules in specified or default order
   const renderedModules: React.ReactNode[] = [];

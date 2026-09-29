@@ -1,5 +1,6 @@
 import crypto from "crypto";
 import { customAlphabet } from "nanoid";
+export { graphemeMax } from "./sanitize";
 
 // 128+ bit cryptographic random publicId (22 chars with alphabet of 64 chars = 64^22 = 2^132)
 const nanoid128 = customAlphabet(

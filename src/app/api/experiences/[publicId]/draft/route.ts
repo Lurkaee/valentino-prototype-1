@@ -195,40 +195,54 @@ export async function PUT(req: NextRequest, { params }: RouteParams) {
   }
 
   // 9. Update draft in database
-  const updatedExperience = await db.experience.update({
-    where: { publicId, draftRevision: baseRevision },
-    data: {
-      templateId: targetTemplateId,
-      templateVersion: targetTemplateVersion,
-      draftConfig: JSON.stringify(parseResult.data),
-      draftRevision: { increment: 1 },
-    },
-  });
-
-  // 10. Re-issue sliding cookie (clamped to remaining absolute lifetime)
-  const cookieData = buildSetCookieHeader(
-    publicId,
-    token,
-    experience.editCredentialIssuedAt
-  );
-
-  const response = NextResponse.json(
-    {
-      success: true,
-      templateId: updatedExperience.templateId,
-      templateVersion: updatedExperience.templateVersion,
-      draftRevision: updatedExperience.draftRevision,
-      savedAt: new Date().toISOString(),
-    },
-    {
-      headers: {
-        "Cache-Control": "no-store",
-        "X-Content-Type-Options": "nosniff",
+  try {
+    const updatedExperience = await db.experience.update({
+      where: { publicId, draftRevision: baseRevision },
+      data: {
+        templateId: targetTemplateId,
+        templateVersion: targetTemplateVersion,
+        draftConfig: JSON.stringify(parseResult.data),
+        draftRevision: { increment: 1 },
       },
+    });
+
+    // 10. Re-issue sliding cookie (clamped to remaining absolute lifetime)
+    const cookieData = buildSetCookieHeader(
+      publicId,
+      token,
+      experience.editCredentialIssuedAt
+    );
+
+    const response = NextResponse.json(
+      {
+        success: true,
+        templateId: updatedExperience.templateId,
+        templateVersion: updatedExperience.templateVersion,
+        draftRevision: updatedExperience.draftRevision,
+        savedAt: new Date().toISOString(),
+      },
+      {
+        headers: {
+          "Cache-Control": "no-store",
+          "X-Content-Type-Options": "nosniff",
+        },
+      }
+    );
+
+    response.cookies.set(cookieData.name, cookieData.value, cookieData.options as any);
+
+    return response;
+  } catch (err: any) {
+    if (err?.code === "P2025") {
+      const current = await db.experience.findUnique({ where: { publicId } });
+      return NextResponse.json(
+        {
+          error: "Draft changed elsewhere",
+          currentRevision: current?.draftRevision ?? baseRevision,
+        },
+        { status: 409, headers: { "Cache-Control": "no-store" } }
+      );
     }
-  );
-
-  response.cookies.set(cookieData.name, cookieData.value, cookieData.options as any);
-
-  return response;
+    throw err;
+  }
 }

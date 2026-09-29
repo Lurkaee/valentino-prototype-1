@@ -63,7 +63,21 @@ function EditExperienceContent() {
   // Modals & Navigation
   const [worldModalOpen, setWorldModalOpen] = useState(false);
   const [featureDrawerOpen, setFeatureDrawerOpen] = useState(false);
-  const [activeMomentKey, setActiveMomentKey] = useState<"timeline" | "quiz" | "secret" | "openWhen" | null>(null);
+  const [activeMomentKey, setActiveMomentKey] = useState<
+    | "timeline"
+    | "quiz"
+    | "secret"
+    | "openWhen"
+    | "reasons"
+    | "compliments"
+    | "fortuneCookie"
+    | "scratchCard"
+    | "promises"
+    | "futureAdventures"
+    | "adventureSpinner"
+    | "finale"
+    | null
+  >(null);
   const [publishModalOpen, setPublishModalOpen] = useState(false);
   const [publishErrors, setPublishErrors] = useState<string[]>([]);
   const [isPublishing, setIsPublishing] = useState(false);
@@ -80,7 +94,20 @@ function EditExperienceContent() {
     if (!focus) return;
     if (focus === "letter" || focus === "story") {
       setActiveSection("story");
-    } else if (focus === "timeline" || focus === "quiz" || focus === "secret" || focus === "openWhen") {
+    } else if (
+      focus === "timeline" ||
+      focus === "quiz" ||
+      focus === "secret" ||
+      focus === "openWhen" ||
+      focus === "reasons" ||
+      focus === "compliments" ||
+      focus === "fortuneCookie" ||
+      focus === "scratchCard" ||
+      focus === "promises" ||
+      focus === "futureAdventures" ||
+      focus === "adventureSpinner" ||
+      focus === "finale"
+    ) {
       setActiveSection("moments");
       setActiveMomentKey(focus as any);
     } else if (focus === "mood" || focus === "decor") {
@@ -99,6 +126,8 @@ function EditExperienceContent() {
   const revisionRef = useRef(revision);
   revisionRef.current = revision;
   const isDirtyRef = useRef(false);
+  const isSavingRef = useRef(false);
+  const pendingSaveRef = useRef(false);
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // 1. Initial Draft Fetch
@@ -140,6 +169,7 @@ function EditExperienceContent() {
             });
           }
           if (data.draftRevision) {
+            revisionRef.current = data.draftRevision;
             setRevision(data.draftRevision);
           }
           setSaveStatus("saved");
@@ -168,6 +198,12 @@ function EditExperienceContent() {
     async (keepalive = false): Promise<boolean> => {
       if (!publicId || !isDirtyRef.current) return true;
 
+      if (isSavingRef.current) {
+        pendingSaveRef.current = true;
+        return false;
+      }
+
+      isSavingRef.current = true;
       setSaveStatus("saving");
       try {
         const res = await fetch(`/api/experiences/${publicId}/draft`, {
@@ -187,9 +223,13 @@ function EditExperienceContent() {
 
         if (res.status === 409) {
           const conflictData = await res.json().catch(() => ({}));
-          setSaveStatus("conflict");
           if (conflictData.currentRevision) {
+            revisionRef.current = conflictData.currentRevision;
             setRevision(conflictData.currentRevision);
+          }
+          setSaveStatus("conflict");
+          if (isDirtyRef.current) {
+            pendingSaveRef.current = true;
           }
           return false;
         }
@@ -201,13 +241,24 @@ function EditExperienceContent() {
 
         const result = await res.json();
         isDirtyRef.current = false;
-        setRevision(result.draftRevision);
+        if (result.draftRevision) {
+          revisionRef.current = result.draftRevision;
+          setRevision(result.draftRevision);
+        }
         setSaveStatus("saved");
         setLastSavedTime(new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }));
         return true;
       } catch {
         setSaveStatus("offline");
         return false;
+      } finally {
+        isSavingRef.current = false;
+        if (pendingSaveRef.current) {
+          pendingSaveRef.current = false;
+          setTimeout(() => {
+            performSave();
+          }, 50);
+        }
       }
     },
     [publicId]

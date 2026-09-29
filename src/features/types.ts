@@ -68,13 +68,25 @@ export interface FeatureDefinition {
   availability: FeatureAvailability;
   icon: string;
   actionType?: FeatureActionType;
-  targetModuleKey?: "timeline" | "quiz" | "secret" | "openWhen";
+  targetModuleKey?:
+    | "timeline"
+    | "quiz"
+    | "secret"
+    | "openWhen"
+    | "reasons"
+    | "compliments"
+    | "fortuneCookie"
+    | "scratchCard"
+    | "promises"
+    | "futureAdventures"
+    | "adventureSpinner"
+    | "finale";
   targetSection?: "world" | "story" | "moments" | "mood" | "preview";
   compatibleTemplates: string[];
   discoveryContext: ("moments" | "story" | "mood" | "preview" | "templates" | "world")[];
   badges?: string[];
   samplePreview?: {
-    type: "timeline" | "quiz" | "secret" | "envelope" | "decor" | "world" | "audio" | "qr" | "polaroid";
+    type: "timeline" | "quiz" | "secret" | "envelope" | "decor" | "world" | "audio" | "qr" | "polaroid" | "reasons" | "card";
     caption?: string;
   };
 }
