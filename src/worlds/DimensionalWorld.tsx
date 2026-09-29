@@ -144,13 +144,24 @@ export const DimensionalWorld: React.FC<DimensionalWorldProps> = ({
           )}
 
           {theme === "kage" && (
-            <div
-              className="w-full h-full"
-              style={{
-                background:
-                  "radial-gradient(ellipse 100% 60% at 50% 0%, rgba(16, 185, 129, 0.14) 0%, rgba(6, 78, 59, 0.1) 40%, transparent 80%)",
-              }}
-            />
+            <div className="relative w-full h-full">
+              {/* Soft Vermilion / Amber Temple Lantern Glow */}
+              <div
+                className="absolute inset-0"
+                style={{
+                  background:
+                    "radial-gradient(ellipse 65% 55% at 50% 10%, rgba(224, 35, 28, 0.16) 0%, rgba(255, 90, 60, 0.07) 35%, rgba(16, 185, 129, 0.05) 55%, transparent 75%)",
+                }}
+              />
+              {/* Distant Kyoto Mountain Ridge Silhouette */}
+              <div
+                className="absolute bottom-0 inset-x-0 h-52 opacity-30 pointer-events-none"
+                style={{
+                  background:
+                    "radial-gradient(ellipse at 50% 100%, rgba(3, 5, 4, 0.95) 0%, rgba(7, 11, 9, 0.75) 60%, transparent 100%)",
+                }}
+              />
+            </div>
           )}
         </motion.div>
 
@@ -194,6 +205,21 @@ export const DimensionalWorld: React.FC<DimensionalWorldProps> = ({
               />
               <div className="absolute top-20 -left-10 w-72 h-36 bg-rose-950/40 rounded-full blur-3xl" />
               <div className="absolute top-60 -right-16 w-80 h-40 bg-purple-950/30 rounded-full blur-3xl" />
+            </>
+          )}
+
+          {theme === "kage" && (
+            <>
+              {/* Kyoto Sanctuary Mist & Stone Lantern Warmth */}
+              <div
+                className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] sm:w-[950px] h-[550px] rounded-full blur-[90px] opacity-45 pointer-events-none"
+                style={{
+                  background:
+                    "radial-gradient(circle at 50% 25%, rgba(224, 35, 28, 0.2) 0%, rgba(16, 185, 129, 0.12) 45%, transparent 75%)",
+                }}
+              />
+              <div className="absolute top-28 -left-16 w-80 h-40 bg-emerald-950/30 rounded-full blur-3xl pointer-events-none" />
+              <div className="absolute top-52 -right-16 w-88 h-44 bg-[#0a120e]/40 rounded-full blur-3xl pointer-events-none" />
             </>
           )}
         </motion.div>

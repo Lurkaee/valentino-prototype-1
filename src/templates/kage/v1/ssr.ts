@@ -127,12 +127,70 @@ export function renderKageSsrHtml(config: KagePublishedConfig, publicId: string 
       padding: 2rem 0 1rem;
       text-align: center;
     }
+    .deep-bg-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background: radial-gradient(ellipse at 50% 20%, #0B120E 0%, #070B09 60%, #030504 100%);
+    }
+    .distant-env-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+    }
+    .lantern-radial {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 65% 55% at 50% 10%, rgba(224, 35, 28, 0.16) 0%, rgba(255, 90, 60, 0.07) 35%, rgba(16, 185, 129, 0.05) 55%, transparent 75%);
+    }
+    .mountain-silhouette {
+      position: absolute;
+      bottom: 0;
+      inset-x: 0;
+      height: 14rem;
+      opacity: 0.3;
+      background: radial-gradient(ellipse at 50% 100%, rgba(3, 5, 4, 0.95) 0%, rgba(7, 11, 9, 0.75) 60%, transparent 100%);
+    }
+    .atmosphere-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .cedar-mist {
+      position: absolute;
+      bottom: 0;
+      left: -10%;
+      right: -10%;
+      height: 380px;
+      background: radial-gradient(ellipse at 50% 100%, rgba(16, 185, 129, 0.08) 0%, rgba(6, 78, 59, 0.04) 50%, transparent 80%);
+      filter: blur(20px);
+    }
+    .foreground-wrap-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      pointer-events: none;
+      opacity: 0.7;
+      background: radial-gradient(circle at center, transparent 55%, rgba(5, 9, 7, 0.75) 100%);
+    }
     ${PRINT_MEDIA_STYLES}
   </style>
 </head>
 <body>
-  <div class="wrapper" data-testid="kage-container">
-    <div style="text-align: center; width: 100%; max-width: 36rem; margin: auto 0;">
+  <div class="wrapper" data-dimensional-world="kage" data-scene="welcome" data-testid="kage-container">
+    <div data-layer="0-deep-background" class="deep-bg-layer" aria-hidden="true"></div>
+    <div data-layer="1-distant-environment" class="distant-env-layer" aria-hidden="true">
+      <div class="lantern-radial"></div>
+      <div class="mountain-silhouette"></div>
+    </div>
+    <div data-layer="2-atmosphere" class="atmosphere-layer" aria-hidden="true">
+      <div class="cedar-mist"></div>
+    </div>
+
+    <div data-layer="4-primary-story" style="text-align: center; width: 100%; max-width: 36rem; margin: auto 0; position: relative; z-index: 10;">
       <span class="badge">${greeting}</span>
       <h1 data-testid="recipient-name">${partnerName}</h1>
       <div class="card">
@@ -173,9 +231,10 @@ export function renderKageSsrHtml(config: KagePublishedConfig, publicId: string 
         ${printKeepsakeBtn}
       </div>
     </div>
-    <footer>
+    <footer style="position: relative; z-index: 10;">
       <span>VALENTINO</span> · <span>KAGE WORLD</span> · <span>KYOTO SANCTUARY</span>
     </footer>
+    <div data-layer="5-foreground-wrap" class="foreground-wrap-layer" aria-hidden="true"></div>
   </div>
 
   <script>

@@ -205,10 +205,14 @@ export const AtmosphericCanvas: React.FC<AtmosphericCanvasProps> = ({
           ctx.ellipse(0, 0, p.size, p.size * 0.55, 0, 0, Math.PI * 2);
           ctx.fill();
         } else {
-          // Kyoto ember
-          ctx.fillStyle = `rgba(224, 35, 28, ${alpha})`;
+          // Kyoto ember with soft warm core
+          const emberGrad = ctx.createRadialGradient(0, 0, 0, 0, 0, p.size * 1.5);
+          emberGrad.addColorStop(0, `rgba(255, 120, 80, ${alpha * 1.2})`);
+          emberGrad.addColorStop(0.4, `rgba(224, 35, 28, ${alpha * 0.8})`);
+          emberGrad.addColorStop(1, "rgba(224, 35, 28, 0)");
+          ctx.fillStyle = emberGrad;
           ctx.beginPath();
-          ctx.arc(0, 0, p.size * 0.7, 0, Math.PI * 2);
+          ctx.arc(0, 0, p.size * 1.5, 0, Math.PI * 2);
           ctx.fill();
         }
 
