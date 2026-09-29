@@ -13,6 +13,7 @@ export const OpenWhenModule: React.FC<ModuleRenderProps<OpenWhenPublishedConfig>
   className = "",
 }) => {
   const [openedId, setOpenedId] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
 
   if (!config.enabled || !config.envelopes || config.envelopes.length === 0) {
     return null;
@@ -20,6 +21,14 @@ export const OpenWhenModule: React.FC<ModuleRenderProps<OpenWhenPublishedConfig>
 
   const isCloudNine = theme === "cloud-nine" || theme === "blush-sky" || theme === "peach-sorbet" || theme === "lavender-mist";
   const isKage = theme === "kage";
+
+  const categories = Array.from(
+    new Set(config.envelopes.map((e) => (e as any).category || "miss-me"))
+  );
+
+  const displayedEnvelopes = selectedCategory === "all"
+    ? config.envelopes
+    : config.envelopes.filter((e) => ((e as any).category || "miss-me") === selectedCategory);
 
   const envelopeCardBg = isCloudNine
     ? "bg-white/90 border-pink-200/80 text-pink-950 hover:border-pink-300"
@@ -47,8 +56,41 @@ export const OpenWhenModule: React.FC<ModuleRenderProps<OpenWhenPublishedConfig>
         theme={theme}
       />
 
+      {/* Category Pills Filter */}
+      {categories.length > 1 && (
+        <div className="flex flex-wrap items-center justify-center gap-1.5 mb-6 max-w-lg mx-auto">
+          <button
+            type="button"
+            data-testid="open-when-cat-all"
+            onClick={() => setSelectedCategory("all")}
+            className={`px-3 py-1 rounded-full text-xs font-ui transition-all ${
+              selectedCategory === "all"
+                ? "bg-white/20 text-white font-medium border border-white/30 shadow-sm"
+                : "bg-white/5 text-white/60 hover:text-white/90 border border-transparent"
+            }`}
+          >
+            All ({config.envelopes.length})
+          </button>
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              type="button"
+              data-testid={`open-when-cat-${cat}`}
+              onClick={() => setSelectedCategory(cat)}
+              className={`px-3 py-1 rounded-full text-xs font-ui capitalize transition-all ${
+                selectedCategory === cat
+                  ? "bg-white/20 text-white font-medium border border-white/30 shadow-sm"
+                  : "bg-white/5 text-white/60 hover:text-white/90 border border-transparent"
+              }`}
+            >
+              {cat.replace("-", " ")}
+            </button>
+          ))}
+        </div>
+      )}
+
       <div className="max-w-xl mx-auto grid grid-cols-1 sm:grid-cols-2 gap-4 my-4">
-        {config.envelopes.map((env, idx) => {
+        {displayedEnvelopes.map((env, idx) => {
           const isOpen = openedId === env.id;
 
           return (

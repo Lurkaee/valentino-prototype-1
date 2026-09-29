@@ -39,6 +39,7 @@ export const KageComponent: React.FC<ComponentProps> = ({ config, mode, publicId
           <ModulesRenderer
             modules={config.modules}
             moduleOrder={config.moduleOrder}
+            narrative={config.narrative}
             mode={mode}
             publicId={publicId}
             theme="kage"

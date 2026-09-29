@@ -6,6 +6,7 @@ import {
 } from "./schema";
 import { normalizeValentineDecor } from "@/types/decor";
 import { normalizeAllModules } from "@/modules/registry";
+import { normalizeNarrativeConfig } from "@/narrative/schema";
 
 export function normalizeMidnightRoseConfig(
   raw: unknown,
@@ -54,6 +55,7 @@ export function normalizeMidnightRoseConfig(
 
   const decor = normalizeValentineDecor(obj.decor);
   const modules = normalizeAllModules(obj.modules, isPublic);
+  const narrative = normalizeNarrativeConfig(obj.narrative);
   const moduleOrder = Array.isArray(obj.moduleOrder)
     ? (obj.moduleOrder as string[])
     : ["voiceNote", "videoMemory", "memories", "timeline", "quiz", "secret", "openWhen"];
@@ -71,6 +73,7 @@ export function normalizeMidnightRoseConfig(
     decor,
     modules,
     moduleOrder,
+    narrative,
   };
 }
 

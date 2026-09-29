@@ -386,6 +386,7 @@ export const CloudNineComponent: React.FC<ComponentProps> = ({ config, mode, pub
                   <ModulesRenderer
                     modules={config.modules}
                     moduleOrder={config.moduleOrder}
+                    narrative={config.narrative}
                     mode={mode}
                     publicId={publicId}
                     theme={config.accentTheme || "blush-sky"}

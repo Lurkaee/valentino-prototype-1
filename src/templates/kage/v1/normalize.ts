@@ -2,6 +2,7 @@ import { sanitizeText } from "@/lib/sanitize";
 import { KagePublishedConfig, KageTheme, KAGE_THEMES } from "./schema";
 import { normalizeValentineDecor, DEFAULT_VALENTINE_DECOR } from "@/types/decor";
 import { normalizeAllModules } from "@/modules/registry";
+import { normalizeNarrativeConfig } from "@/narrative/schema";
 
 export function normalizeKageConfig(
   raw: unknown,
@@ -20,6 +21,7 @@ export function normalizeKageConfig(
       decor: DEFAULT_VALENTINE_DECOR,
       modules: {},
       moduleOrder: ["timeline", "quiz", "secret", "openWhen"],
+      narrative: normalizeNarrativeConfig(undefined),
     };
   }
 
@@ -58,6 +60,7 @@ export function normalizeKageConfig(
 
   const decor = normalizeValentineDecor(obj.decor);
   const modules = normalizeAllModules(obj.modules, isPublic);
+  const narrative = normalizeNarrativeConfig(obj.narrative);
 
   const moduleOrder = Array.isArray(obj.moduleOrder)
     ? obj.moduleOrder.filter((m: any) => typeof m === "string")
@@ -75,5 +78,6 @@ export function normalizeKageConfig(
     decor,
     modules,
     moduleOrder,
+    narrative,
   };
 }

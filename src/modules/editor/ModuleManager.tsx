@@ -983,6 +983,7 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
                     <input
                       type="text"
                       placeholder="Title"
+                      data-testid={`input-timeline-item-title-${idx}`}
                       value={item.title}
                       onChange={(e) =>
                         onChange((prev) => {
@@ -996,11 +997,45 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
                     <input
                       type="text"
                       placeholder="Date or Timeframe"
+                      data-testid={`input-timeline-item-date-${idx}`}
                       value={item.date}
                       onChange={(e) =>
                         onChange((prev) => {
                           const items = [...prev.timeline.items];
                           items[idx].date = e.target.value;
+                          return { ...prev, timeline: { ...prev.timeline, items } };
+                        })
+                      }
+                      className="text-xs px-2.5 py-2 rounded-lg bg-black/40 border border-white/[0.1] text-white font-ui"
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    <select
+                      value={item.category || "MEMORIES"}
+                      onChange={(e) =>
+                        onChange((prev) => {
+                          const items = [...prev.timeline.items];
+                          items[idx].category = e.target.value;
+                          return { ...prev, timeline: { ...prev.timeline, items } };
+                        })
+                      }
+                      className="text-xs px-2.5 py-2 rounded-lg bg-black/40 border border-white/[0.1] text-white font-ui"
+                    >
+                      <option value="FIRSTS">FIRSTS</option>
+                      <option value="MEMORIES">MEMORIES</option>
+                      <option value="PLACES">PLACES</option>
+                      <option value="ADVENTURES">ADVENTURES</option>
+                      <option value="SPECIAL DAYS">SPECIAL DAYS</option>
+                      <option value="FUTURE">FUTURE</option>
+                    </select>
+                    <input
+                      type="text"
+                      placeholder="Location (e.g. Paris, Coffee Shop)"
+                      value={item.location || ""}
+                      onChange={(e) =>
+                        onChange((prev) => {
+                          const items = [...prev.timeline.items];
+                          items[idx].location = e.target.value;
                           return { ...prev, timeline: { ...prev.timeline, items } };
                         })
                       }
@@ -1019,6 +1054,19 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
                       })
                     }
                     className="w-full text-xs px-2.5 py-2 rounded-lg bg-black/40 border border-white/[0.1] text-white resize-none font-ui"
+                  />
+                  <input
+                    type="text"
+                    placeholder="Next-step reveal or note (optional)"
+                    value={item.nextStepMessage || ""}
+                    onChange={(e) =>
+                      onChange((prev) => {
+                        const items = [...prev.timeline.items];
+                        items[idx].nextStepMessage = e.target.value;
+                        return { ...prev, timeline: { ...prev.timeline, items } };
+                      })
+                    }
+                    className="w-full text-xs px-2.5 py-1.5 rounded-lg bg-black/40 border border-white/[0.08] text-white font-ui"
                   />
                 </div>
               ))}
