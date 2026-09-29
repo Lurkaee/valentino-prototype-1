@@ -147,7 +147,7 @@ export const KageLandingPage: React.FC<KageLandingPageProps> = ({
     <div
       ref={containerRef}
       data-testid="kage-container"
-      className={`kage-root relative w-full min-h-[100dvh] bg-[#070b09] text-[#dfe7e0] overflow-x-hidden ${className}`}
+      className={`kage-root relative w-full min-h-[100dvh] bg-transparent text-[#dfe7e0] overflow-x-hidden ${className}`}
       style={
         {
           "--p-primary": primaryColor,

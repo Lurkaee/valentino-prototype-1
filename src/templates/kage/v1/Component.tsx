@@ -5,6 +5,7 @@ import { KagePublishedConfig } from "./schema";
 import { RenderMode } from "../../types";
 import { KageLandingPage } from "@/shaders/landing-pages/LandingPages";
 import { ModulesRenderer } from "@/modules/ModulesRenderer";
+import { DimensionalWorld } from "@/worlds/DimensionalWorld";
 
 interface ComponentProps {
   config: KagePublishedConfig;
@@ -20,32 +21,41 @@ export const KageComponent: React.FC<ComponentProps> = ({ config, mode, publicId
     : "#e0231c"; // Kyoto Crimson default
 
   return (
-    <KageLandingPage
-      headingFont="onest"
-      bodyFont="onest"
-      headingWeight="400"
-      bodyWeight="300"
-      primaryColor={themePrimaryColor}
-      headingSize={46}
-      bodySize={17}
-      headingLetterSpacing={-0.012}
-      partnerName={config.partnerName}
-      senderName={config.senderName}
+    <DimensionalWorld
+      theme="kage"
+      accentVariant={config.accentTheme}
+      recipientName={config.partnerName}
       greeting={config.greeting}
-      message={config.message}
-      signOff={config.signOff}
-      modulesNode={
-        config.modules && (
-          <ModulesRenderer
-            modules={config.modules}
-            moduleOrder={config.moduleOrder}
-            narrative={config.narrative}
-            mode={mode}
-            publicId={publicId}
-            theme="kage"
-          />
-        )
-      }
-    />
+      pacing={config.narrative?.pacing || "calm"}
+      activeScene="welcome"
+    >
+      <KageLandingPage
+        headingFont="onest"
+        bodyFont="onest"
+        headingWeight="400"
+        bodyWeight="300"
+        primaryColor={themePrimaryColor}
+        headingSize={46}
+        bodySize={17}
+        headingLetterSpacing={-0.012}
+        partnerName={config.partnerName}
+        senderName={config.senderName}
+        greeting={config.greeting}
+        message={config.message}
+        signOff={config.signOff}
+        modulesNode={
+          config.modules && (
+            <ModulesRenderer
+              modules={config.modules}
+              moduleOrder={config.moduleOrder}
+              narrative={config.narrative}
+              mode={mode}
+              publicId={publicId}
+              theme="kage"
+            />
+          )
+        }
+      />
+    </DimensionalWorld>
   );
 };

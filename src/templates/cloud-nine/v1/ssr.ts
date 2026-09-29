@@ -109,6 +109,50 @@ export function renderCloudNineSsrHtml(config: CloudNinePublishedConfig, publicI
       pointer-events: none;
       opacity: 0.7;
     }
+    .deep-bg-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background: radial-gradient(ellipse at 50% 15%, #FFF5F7 0%, #FFEBF2 45%, #FDE2ED 75%, #FBCFE8 100%);
+    }
+    .distant-env-layer {
+      position: fixed;
+      inset: -5% -5% auto -5%;
+      height: 115%;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0.35;
+      background-image: url('/clouds/sunset-sky.jpg');
+      background-size: cover;
+      background-position: center;
+      mix-blend-mode: soft-light;
+      filter: blur(1px);
+    }
+    .atmosphere-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .atmosphere-mist {
+      position: absolute;
+      top: 15%;
+      left: -10%;
+      right: -10%;
+      height: 550px;
+      background: radial-gradient(ellipse 65% 50% at 50% 50%, rgba(255, 255, 255, 0.85) 0%, rgba(254, 215, 226, 0.45) 45%, transparent 75%);
+      filter: blur(28px);
+    }
+    .foreground-wrap-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      pointer-events: none;
+      opacity: 0.35;
+      mix-blend-mode: soft-light;
+      background: radial-gradient(circle at center, transparent 65%, rgba(251, 207, 232, 0.6) 100%);
+    }
     .top-bar {
       position: relative;
       z-index: 30;
@@ -406,7 +450,12 @@ export function renderCloudNineSsrHtml(config: CloudNinePublishedConfig, publicI
   </style>
 </head>
 <body>
-  <div class="wrapper" data-testid="experience-container" data-decor-paper="${paper.id}" data-decor-ribbon="${ribbon.id}" data-decor-seal="${waxSeal.id}">
+  <div class="wrapper" data-dimensional-world="cloud-nine" data-scene="welcome" data-testid="experience-container" data-decor-paper="${paper.id}" data-decor-ribbon="${ribbon.id}" data-decor-seal="${waxSeal.id}">
+    <div data-layer="0-deep-background" class="deep-bg-layer" aria-hidden="true"></div>
+    <div data-layer="1-distant-environment" class="distant-env-layer" aria-hidden="true"></div>
+    <div data-layer="2-atmosphere" class="atmosphere-layer" aria-hidden="true">
+      <div class="atmosphere-mist"></div>
+    </div>
     <div class="ambient-glow"></div>
 
     <div class="top-bar">
@@ -417,7 +466,7 @@ export function renderCloudNineSsrHtml(config: CloudNinePublishedConfig, publicI
       </button>
     </div>
 
-    <div class="content-container">
+    <div data-layer="4-primary-story" class="content-container">
       <div class="blooms-container">
         ${bloomsHtml}
         ${charmsHtml}
@@ -541,6 +590,7 @@ export function renderCloudNineSsrHtml(config: CloudNinePublishedConfig, publicI
       <span style="margin: 0 0.5rem;">·</span>
       <span>CLOUD NINE</span>
     </footer>
+    <div data-layer="5-foreground-wrap" class="foreground-wrap-layer" aria-hidden="true"></div>
   </div>
 
   <script>

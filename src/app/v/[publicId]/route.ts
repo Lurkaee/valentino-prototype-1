@@ -492,6 +492,55 @@ function renderPublicHtml(config: PublishedConfig, publicId: string = ""): strin
       pointer-events: none;
       opacity: 0.65;
     }
+    .deep-bg-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background: radial-gradient(ellipse at 50% 15%, #18030E 0%, #0D0207 60%, #050103 100%);
+    }
+    .distant-env-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+    }
+    .moonbeam-cone {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 70% 85% at 50% -5%, rgba(255, 245, 235, 0.12) 0%, rgba(244, 63, 94, 0.08) 45%, transparent 80%);
+    }
+    .garden-silhouette {
+      position: absolute;
+      bottom: 0;
+      inset-x: 0;
+      height: 12rem;
+      opacity: 0.25;
+      background: radial-gradient(ellipse at 50% 100%, rgba(24, 4, 16, 0.95) 0%, rgba(13, 2, 7, 0.7) 60%, transparent 100%);
+    }
+    .atmosphere-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .midnight-mist {
+      position: absolute;
+      bottom: 0;
+      left: -10%;
+      right: -10%;
+      height: 380px;
+      background: radial-gradient(ellipse at 50% 100%, rgba(225, 29, 72, 0.12) 0%, rgba(136, 19, 55, 0.06) 50%, transparent 80%);
+      filter: blur(20px);
+    }
+    .foreground-wrap-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      pointer-events: none;
+      opacity: 0.6;
+      background: radial-gradient(circle at center, transparent 60%, rgba(0, 0, 0, 0.6) 100%);
+    }
     .content-container {
       position: relative;
       z-index: 10;
@@ -760,7 +809,15 @@ function renderPublicHtml(config: PublishedConfig, publicId: string = ""): strin
   </style>
 </head>
 <body>
-  <div class="wrapper" data-testid="experience-container">
+  <div class="wrapper" data-dimensional-world="midnight-rose" data-scene="welcome" data-testid="experience-container">
+    <div data-layer="0-deep-background" class="deep-bg-layer" aria-hidden="true"></div>
+    <div data-layer="1-distant-environment" class="distant-env-layer" aria-hidden="true">
+      <div class="moonbeam-cone"></div>
+      <div class="garden-silhouette"></div>
+    </div>
+    <div data-layer="2-atmosphere" class="atmosphere-layer" aria-hidden="true">
+      <div class="midnight-mist"></div>
+    </div>
     <div class="ambient-glow"></div>
 
     <!-- Top Navigation / Controls Bar -->
@@ -780,7 +837,7 @@ function renderPublicHtml(config: PublishedConfig, publicId: string = ""): strin
       </button>
     </div>
 
-    <div class="content-container">
+    <div data-layer="4-primary-story" class="content-container">
       <div class="blooms-container" style="position: absolute; top: 120px; left: 0; right: 0; height: 0; pointer-events: none; z-index: 20; display: flex; align-items: center; justify-content: center;">
         ${bloomsHtml}
         ${charmsHtml}
@@ -883,6 +940,7 @@ function renderPublicHtml(config: PublishedConfig, publicId: string = ""): strin
         </div>
       </div>
     </div>
+    <div data-layer="5-foreground-wrap" class="foreground-wrap-layer" aria-hidden="true"></div>
   </div>
 
   <script>
