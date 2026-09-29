@@ -1,10 +1,16 @@
 import { test, expect } from "@playwright/test";
 import path from "path";
+import fs from "fs";
 
 const APP_URL = process.env.APP_URL || "http://localhost:3000";
-const QA_DIR = "C:/Users/AYUSH/.gemini/antigravity-ide/brain/5b3d85b7-f4f3-4d6f-88c9-6f46f38b3788/visual_qa";
+const QA_DIR = process.env.QA_DIR || path.join(process.cwd(), "test-results", "visual_qa");
 
 test.describe("Phase 5F Step 5: Creator Studio Renaissance Visual QA & UX Architecture", () => {
+  test.beforeAll(async () => {
+    if (!fs.existsSync(QA_DIR)) {
+      fs.mkdirSync(QA_DIR, { recursive: true });
+    }
+  });
   test("Desktop (1440x900): 7-Stage Creation Journey, Stage Stepper, Canvas, & QA Screenshots", async ({
     page,
     context,
