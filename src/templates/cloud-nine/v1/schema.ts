@@ -34,6 +34,12 @@ export const valentineDecorSchema = z
 export type ValentineDecorConfig = z.infer<typeof valentineDecorSchema>;
 
 import { modulesDraftSchema, modulesPublishSchema, ModulesConfig } from "@/modules/registry";
+import {
+  narrativeDraftSchema,
+  narrativePublishSchema,
+  NarrativeDraftConfig,
+  NarrativePublishedConfig,
+} from "@/narrative/schema";
 
 // Lenient schema for draft saves
 export const cloudNineDraftSchema = z.object({
@@ -48,6 +54,7 @@ export const cloudNineDraftSchema = z.object({
   decor: valentineDecorSchema,
   modules: modulesDraftSchema,
   moduleOrder: z.array(z.string()).optional(),
+  narrative: narrativeDraftSchema.optional(),
 });
 
 export type CloudNineDraftConfig = z.infer<typeof cloudNineDraftSchema>;
@@ -73,9 +80,11 @@ export const cloudNinePublishSchema = z.object({
   decor: valentineDecorSchema,
   modules: modulesPublishSchema,
   moduleOrder: z.array(z.string()).optional(),
+  narrative: narrativePublishSchema.optional(),
 });
 
 export type CloudNinePublishedConfig = z.infer<typeof cloudNinePublishSchema> & {
   modules?: ModulesConfig;
+  narrative?: NarrativePublishedConfig;
 };
 

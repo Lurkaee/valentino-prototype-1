@@ -340,6 +340,7 @@ export const MidnightRoseComponent: React.FC<ComponentProps> = ({ config, mode, 
                   <ModulesRenderer
                     modules={config.modules}
                     moduleOrder={config.moduleOrder}
+                    narrative={config.narrative}
                     mode={mode}
                     publicId={publicId}
                     theme={config.accentTheme || "crimson-rose"}

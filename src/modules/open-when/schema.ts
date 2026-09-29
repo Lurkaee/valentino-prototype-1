@@ -6,9 +6,23 @@ const graphemeMax = (max: number) =>
     message: `Must not exceed ${max} characters`,
   });
 
+export const OPEN_WHEN_CATEGORIES = [
+  "miss-me",
+  "stressed",
+  "proud",
+  "hard-day",
+  "laugh",
+  "reminder",
+  "remember-us",
+  "custom",
+] as const;
+
+export type OpenWhenCategory = (typeof OPEN_WHEN_CATEGORIES)[number];
+
 export const openWhenEnvelopeDraftSchema = z.object({
   id: z.string().default(() => Math.random().toString(36).substring(2, 9)),
   title: graphemeMax(100).default(""),
+  category: z.string().max(50).optional().default("miss-me"),
   context: graphemeMax(100).optional().default(""),
   message: graphemeMax(2000).default(""),
   mediaId: z.string().max(200).optional().nullable(),
@@ -46,6 +60,7 @@ export type OpenWhenEnvelopeConfig = z.infer<typeof openWhenEnvelopeDraftSchema>
 export const openWhenEnvelopePublishSchema = z.object({
   id: z.string(),
   title: z.string().min(1, "Envelope title required").max(100),
+  category: z.string().max(50).optional().default("miss-me"),
   context: z.string().max(100).optional(),
   message: z.string().min(1, "Message required").max(2000),
   mediaId: z.string().max(200).optional().nullable(),
@@ -77,6 +92,7 @@ export function normalizeOpenWhenConfig(raw: unknown): OpenWhenPublishedConfig {
     .map((env: any, idx: number) => ({
       id: typeof env.id === "string" ? env.id : `env-${idx}`,
       title: typeof env.title === "string" ? env.title.trim() : "",
+      category: typeof env.category === "string" ? env.category.trim() : "miss-me",
       context: typeof env.context === "string" ? env.context.trim() : undefined,
       message: typeof env.message === "string" ? env.message.trim() : "",
       mediaId: typeof env.mediaId === "string" ? env.mediaId.trim() : null,

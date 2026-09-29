@@ -859,6 +859,137 @@ function EditExperienceContent() {
                   )}
                 </div>
 
+                {/* Narrative & Story Chapters Personalization */}
+                <div className="pt-4 border-t border-white/[0.08] space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <span className="text-xs uppercase tracking-wider text-rose-300 font-ui font-medium block">
+                        Story Chapters & Pacing
+                      </span>
+                      <span className="text-[11px] text-white/50 font-ui">
+                        Personalize the emotional journey and chapter grouping
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Emotional Pacing Selector */}
+                  <div className="grid grid-cols-3 gap-2">
+                    {[
+                      { id: "calm", label: "Calm", desc: "Gentle & spacious" },
+                      { id: "balanced", label: "Balanced", desc: "Natural flow" },
+                      { id: "cinematic", label: "Cinematic", desc: "Dramatic reveals" },
+                    ].map((p) => {
+                      const currentPacing = (config as any).narrative?.pacing || "balanced";
+                      const isSelected = currentPacing === p.id;
+                      return (
+                        <button
+                          key={p.id}
+                          type="button"
+                          data-testid={`pacing-option-${p.id}`}
+                          onClick={() =>
+                            handleConfigChange((prev: any) => ({
+                              ...prev,
+                              narrative: {
+                                ...(prev.narrative || {}),
+                                pacing: p.id,
+                              },
+                            }))
+                          }
+                          className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer ${
+                            isSelected
+                              ? "border-rose-400 bg-rose-950/60 text-white font-medium shadow-xs"
+                              : "border-white/[0.08] bg-white/[0.03] text-white/70 hover:bg-white/[0.06]"
+                          }`}
+                        >
+                          <div className="text-xs font-medium text-white">{p.label}</div>
+                          <div className="text-[10px] text-white/50">{p.desc}</div>
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* Personal Welcome Toggle & Message */}
+                  <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.08] space-y-2.5">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-medium text-white font-ui">
+                        Personal Welcome Greeting
+                      </span>
+                      <button
+                        type="button"
+                        data-testid="toggle-narrative-welcome"
+                        onClick={() =>
+                          handleConfigChange((prev: any) => {
+                            const cur = prev.narrative?.welcome || { enabled: false };
+                            return {
+                              ...prev,
+                              narrative: {
+                                ...(prev.narrative || {}),
+                                welcome: {
+                                  ...cur,
+                                  enabled: !cur.enabled,
+                                  recipientName: cur.recipientName || prev.partnerName || "",
+                                  greeting: cur.greeting || "Welcome, My Love",
+                                  message: cur.message || "A private story made only for you.",
+                                },
+                              },
+                            };
+                          })
+                        }
+                        className={`text-[10px] px-2 py-0.5 rounded-md font-ui cursor-pointer ${
+                          (config as any).narrative?.welcome?.enabled
+                            ? "bg-rose-500/20 text-rose-300 font-medium"
+                            : "bg-white/[0.06] text-white/50"
+                        }`}
+                      >
+                        {(config as any).narrative?.welcome?.enabled ? "✓ Enabled" : "+ Enable"}
+                      </button>
+                    </div>
+
+                    {(config as any).narrative?.welcome?.enabled && (
+                      <div className="space-y-2 pt-1 animate-fadeIn">
+                        <input
+                          type="text"
+                          placeholder="Welcome Greeting"
+                          data-testid="input-welcome-greeting"
+                          value={(config as any).narrative?.welcome?.greeting || ""}
+                          onChange={(e) =>
+                            handleConfigChange((prev: any) => ({
+                              ...prev,
+                              narrative: {
+                                ...(prev.narrative || {}),
+                                welcome: {
+                                  ...(prev.narrative?.welcome || {}),
+                                  greeting: e.target.value,
+                                },
+                              },
+                            }))
+                          }
+                          className="w-full text-xs px-3 py-1.5 rounded-lg bg-black/40 border border-white/[0.1] text-white font-ui"
+                        />
+                        <input
+                          type="text"
+                          placeholder="Personal intro sentence"
+                          data-testid="input-welcome-message"
+                          value={(config as any).narrative?.welcome?.message || ""}
+                          onChange={(e) =>
+                            handleConfigChange((prev: any) => ({
+                              ...prev,
+                              narrative: {
+                                ...(prev.narrative || {}),
+                                welcome: {
+                                  ...(prev.narrative?.welcome || {}),
+                                  message: e.target.value,
+                                },
+                              },
+                            }))
+                          }
+                          className="w-full text-xs px-3 py-1.5 rounded-lg bg-black/40 border border-white/[0.1] text-white font-ui"
+                        />
+                      </div>
+                    )}
+                  </div>
+                </div>
+
                 <div className="pt-4 border-t border-white/[0.08]">
                   <MultimediaStorySection
                     publicId={publicId}

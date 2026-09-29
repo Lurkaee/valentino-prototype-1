@@ -197,15 +197,28 @@ export function MemoriesModule({
 
       {/* Caption & Metadata Card */}
       {currentItem && (
-        <div className="mt-4 p-4 rounded-xl bg-white/[0.04] border border-white/[0.08] text-center space-y-1.5">
-          <div className="flex items-center justify-between text-[11px] text-white/40 font-mono">
-            <span>
-              {currentItem.date || ""}
-            </span>
-            <span data-testid="memories-counter">
+        <div className="mt-4 p-4 rounded-xl bg-white/[0.04] border border-white/[0.08] text-center space-y-2">
+          {/* Top meta row: date, location, emotional label, counter */}
+          <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] text-white/50 font-mono">
+            <div className="flex items-center gap-2 flex-wrap">
+              {currentItem.date && <span>📅 {currentItem.date}</span>}
+              {currentItem.location && (
+                <span className="inline-flex items-center gap-1 text-white/60">
+                  <span>📍</span>
+                  <span>{currentItem.location}</span>
+                </span>
+              )}
+              {currentItem.emotionalLabel && (
+                <span className="px-2 py-0.5 rounded-full bg-white/10 text-white/80 font-ui text-[10px]">
+                  ✨ {currentItem.emotionalLabel}
+                </span>
+              )}
+            </div>
+            <span data-testid="memories-counter" className="shrink-0">
               {currentIndex + 1} of {items.length}
             </span>
           </div>
+
           {currentItem.title && (
             <h4 className="text-sm font-display font-medium text-white/95">
               {currentItem.title}
@@ -215,6 +228,27 @@ export function MemoriesModule({
             <p className="text-xs text-white/80 font-romantic leading-relaxed max-w-lg mx-auto whitespace-pre-line break-words">
               {currentItem.caption}
             </p>
+          )}
+
+          {/* Related Milestone Link */}
+          {currentItem.relatedMilestoneId && (
+            <div className="pt-2">
+              <a
+                href="#module-timeline"
+                data-testid={`memory-milestone-link-${currentItem.id || currentIndex}`}
+                onClick={(e) => {
+                  const target = document.getElementById("module-timeline");
+                  if (target) {
+                    e.preventDefault();
+                    target.scrollIntoView({ behavior: "smooth" });
+                  }
+                }}
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-ui bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-rose-300 transition-colors"
+              >
+                <span>📜</span>
+                <span>View connected milestone in Timeline &rarr;</span>
+              </a>
+            </div>
           )}
         </div>
       )}

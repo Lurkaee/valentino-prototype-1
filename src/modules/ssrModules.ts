@@ -8,10 +8,46 @@ export interface SsrRenderOptions {
 export function renderModulesHtml(
   modulesConfig?: Record<string, any>,
   moduleOrder?: string[],
-  publicId: string = ""
+  publicId: string = "",
+  narrative?: any
 ): string {
-  if (!modulesConfig || typeof modulesConfig !== "object") {
+  if ((!modulesConfig || typeof modulesConfig !== "object") && !narrative?.welcome?.enabled) {
     return "";
+  }
+
+  const rendered: string[] = [];
+
+  // 0. Welcome Banner
+  if (narrative?.welcome?.enabled) {
+    rendered.push(`
+      <div class="narrative-welcome-banner" data-testid="narrative-welcome-banner" style="margin-top: 1.5rem; padding: 1.5rem; border-radius: 1.25rem; background: rgba(32, 6, 21, 0.85); border: 1px solid rgba(244, 63, 94, 0.3); text-align: center;">
+        <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">🌹✨</div>
+        <div style="font-size: 0.65rem; color: #FDA4AF; text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.25rem; font-weight: 600;">${sanitizeText(narrative.welcome.greeting || "Welcome, My Love")}</div>
+        ${narrative.welcome.recipientName ? `<h2 style="font-family: Georgia, serif; font-size: 1.5rem; color: #FAF8F5; margin-bottom: 0.5rem;">${sanitizeText(narrative.welcome.recipientName)}</h2>` : ""}
+        ${narrative.welcome.message ? `<p style="font-size: 0.9rem; color: #D5CEBF; font-style: italic; line-height: 1.6;">${sanitizeText(narrative.welcome.message)}</p>` : ""}
+      </div>
+    `);
+  }
+
+  // Emotional Recap
+  if (narrative?.recap?.enabled && modulesConfig) {
+    const memoryCount = (modulesConfig.memories?.items || []).length;
+    const milestoneCount = (modulesConfig.timeline?.items || []).length;
+    const reasonsCount = (modulesConfig.reasons?.items || []).length;
+    const promisesCount = (modulesConfig.promises?.items || []).length;
+
+    rendered.push(`
+      <div class="narrative-recap-banner" data-testid="narrative-emotional-recap" style="margin-top: 1.5rem; padding: 1.25rem; border-radius: 1rem; background: rgba(32, 6, 21, 0.75); border: 1px solid rgba(244, 63, 94, 0.25); text-align: center;">
+        <div style="font-size: 0.65rem; color: #FDA4AF; text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.35rem; font-weight: 600;">${sanitizeText(narrative.recap.title || "Our Story in Moments")}</div>
+        <p style="font-size: 0.8rem; color: #D5CEBF; font-style: italic; margin-bottom: 0.75rem;">${sanitizeText(narrative.recap.reflection || "")}</p>
+        <div style="display: flex; justify-content: center; gap: 0.75rem; flex-wrap: wrap;">
+          ${milestoneCount > 0 ? `<div style="padding: 0.5rem 0.85rem; border-radius: 0.75rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1);"><div style="font-size: 1.25rem; font-weight: 600; color: #FAF8F5;">${milestoneCount}</div><div style="font-size: 0.65rem; color: #FDA4AF; text-transform: uppercase;">Milestones</div></div>` : ""}
+          ${memoryCount > 0 ? `<div style="padding: 0.5rem 0.85rem; border-radius: 0.75rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1);"><div style="font-size: 1.25rem; font-weight: 600; color: #FAF8F5;">${memoryCount}</div><div style="font-size: 0.65rem; color: #FDA4AF; text-transform: uppercase;">Cherished Photos</div></div>` : ""}
+          ${reasonsCount > 0 ? `<div style="padding: 0.5rem 0.85rem; border-radius: 0.75rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1);"><div style="font-size: 1.25rem; font-weight: 600; color: #FAF8F5;">${reasonsCount}</div><div style="font-size: 0.65rem; color: #FDA4AF; text-transform: uppercase;">Reasons I Love Us</div></div>` : ""}
+          ${promisesCount > 0 ? `<div style="padding: 0.5rem 0.85rem; border-radius: 0.75rem; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1);"><div style="font-size: 1.25rem; font-weight: 600; color: #FAF8F5;">${promisesCount}</div><div style="font-size: 0.65rem; color: #FDA4AF; text-transform: uppercase;">Sacred Promises</div></div>` : ""}
+        </div>
+      </div>
+    `);
   }
 
   const order =
@@ -19,17 +55,16 @@ export function renderModulesHtml(
       ? [...moduleOrder]
       : ["voiceNote", "videoMemory", "memories", "timeline", "quiz", "secret", "openWhen"];
 
-  for (const modId of Object.keys(modulesConfig)) {
-    if (modulesConfig[modId]?.enabled && !order.includes(modId)) {
-      order.push(modId);
+  if (modulesConfig) {
+    for (const modId of Object.keys(modulesConfig)) {
+      if (modulesConfig[modId]?.enabled && !order.includes(modId)) {
+        order.push(modId);
+      }
     }
-  }
 
-  const rendered: string[] = [];
-
-  for (const modId of order) {
-    const m = modulesConfig[modId];
-    if (!m || !m.enabled) continue;
+    for (const modId of order) {
+      const m = modulesConfig[modId];
+      if (!m || !m.enabled) continue;
 
     // 1. Voice Note Module
     if (modId === "voiceNote" && m.url) {
@@ -116,12 +151,17 @@ export function renderModulesHtml(
         <div class="module-timeline-card" data-testid="module-timeline" style="margin-top: 1.5rem; padding: 1.25rem; border-radius: 1rem; background: rgba(32, 6, 21, 0.85); border: 1px solid rgba(244, 63, 94, 0.25);">
           <div style="font-size: 0.65rem; color: #FDA4AF; text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 0.35rem; font-weight: 600;">⏳ Timeline of Us</div>
           <h3 style="font-family: Georgia, serif; font-size: 1.15rem; color: #FAF8F5; margin-bottom: 0.85rem;">${sanitizeText(m.title || "Our Journey")}</h3>
-          <div style="display: flex; flex-direction: column; gap: 0.75rem; border-left: 2px solid rgba(244, 63, 94, 0.3); padding-left: 0.85rem; margin-left: 0.35rem;">
-            ${(m.items || []).map((item: any) => `
-              <div class="timeline-item">
-                <div style="font-size: 0.7rem; color: #FDA4AF; font-weight: 500;">${sanitizeText(item.date || "")}</div>
-                <div style="font-size: 0.9rem; font-weight: 600; color: #FAF8F5;">${sanitizeText(item.title || "")}</div>
-                <div style="font-size: 0.8rem; color: #D5CEBF; font-weight: 300;">${sanitizeText(item.description || "")}</div>
+          <div style="display: flex; flex-direction: column; gap: 0.85rem; border-left: 2px solid rgba(244, 63, 94, 0.3); padding-left: 0.85rem; margin-left: 0.35rem;">
+            ${(m.items || []).map((item: any, mIdx: number) => `
+              <div class="timeline-item" data-testid="timeline-milestone-${mIdx}" style="position: relative;">
+                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.2rem; flex-wrap: wrap;">
+                  <span style="font-size: 0.7rem; color: #FDA4AF; font-weight: 500;">${sanitizeText(item.date || "")}</span>
+                  ${item.category ? `<span style="font-size: 0.6rem; padding: 0.1rem 0.4rem; border-radius: 9999px; background: rgba(255,255,255,0.1); color: #FAF8F5; text-transform: uppercase;">${sanitizeText(item.category)}</span>` : ""}
+                  ${item.location ? `<span style="font-size: 0.65rem; color: #D5CEBF; opacity: 0.8;">📍 ${sanitizeText(item.location)}</span>` : ""}
+                </div>
+                <div style="font-size: 0.95rem; font-weight: 600; color: #FAF8F5;">${sanitizeText(item.title || "")}</div>
+                <div style="font-size: 0.8rem; color: #D5CEBF; font-weight: 300; margin-top: 0.15rem;">${sanitizeText(item.description || "")}</div>
+                ${item.nextStepMessage ? `<div style="font-size: 0.75rem; font-style: italic; color: #FDA4AF; margin-top: 0.25rem;">✨ ${sanitizeText(item.nextStepMessage)}</div>` : ""}
               </div>
             `).join("")}
           </div>
@@ -391,6 +431,7 @@ export function renderModulesHtml(
         </div>
       `);
     }
+  }
   }
 
   return rendered.join("\n");

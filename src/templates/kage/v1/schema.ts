@@ -1,7 +1,13 @@
 import { z } from "zod";
 import { countGraphemes } from "@/lib/sanitize";
 import { valentineDecorSchema } from "@/templates/midnight-rose/v1/schema";
-import { modulesDraftSchema, modulesPublishSchema } from "@/modules/registry";
+import { modulesDraftSchema, modulesPublishSchema, ModulesConfig } from "@/modules/registry";
+import {
+  narrativeDraftSchema,
+  narrativePublishSchema,
+  NarrativeDraftConfig,
+  NarrativePublishedConfig,
+} from "@/narrative/schema";
 
 const graphemeMax = (max: number) =>
   z.string().refine((val) => countGraphemes(val) <= max, {
@@ -33,6 +39,7 @@ export const kageDraftSchema = z.object({
   decor: valentineDecorSchema,
   modules: modulesDraftSchema,
   moduleOrder: z.array(z.string()).optional(),
+  narrative: narrativeDraftSchema.optional(),
 });
 
 export type KageDraftConfig = z.infer<typeof kageDraftSchema>;
@@ -49,6 +56,10 @@ export const kagePublishSchema = z.object({
   decor: valentineDecorSchema,
   modules: modulesPublishSchema,
   moduleOrder: z.array(z.string()).optional(),
+  narrative: narrativePublishSchema.optional(),
 });
 
-export type KagePublishedConfig = z.infer<typeof kagePublishSchema>;
+export type KagePublishedConfig = z.infer<typeof kagePublishSchema> & {
+  modules?: ModulesConfig;
+  narrative?: NarrativePublishedConfig;
+};

@@ -8,6 +8,11 @@ export const memoryItemSchema = z.object({
   caption: z.string().max(500).optional().default(""),
   date: z.string().max(50).optional().default(""),
   title: z.string().max(100).optional().default(""),
+  location: z.string().max(100).optional().default(""),
+  emotionalLabel: z.string().max(60).optional().default(""),
+  relatedMilestoneId: z.string().max(100).optional().nullable(),
+  nextModuleRef: z.string().max(100).optional().nullable(),
+  chapterId: z.string().max(100).optional().nullable(),
   order: z.number().int().default(0),
 });
 
@@ -50,7 +55,6 @@ export function normalizeMemoriesConfig(
   const formattedItems = sortedItems.map((item, idx) => {
     let url = item.url;
     if (isPublic && item.mediaId && url.includes("/api/experiences/")) {
-      // Replace draft URL with published recipient URL
       url = url.replace(/\/api\/experiences\/([^/]+)\/media\//, "/api/media/$1/");
     }
     return {
@@ -60,6 +64,11 @@ export function normalizeMemoriesConfig(
       caption: item.caption?.trim() || "",
       title: item.title?.trim() || "",
       date: item.date?.trim() || "",
+      location: item.location?.trim() || "",
+      emotionalLabel: item.emotionalLabel?.trim() || "",
+      relatedMilestoneId: item.relatedMilestoneId?.trim() || null,
+      nextModuleRef: item.nextModuleRef?.trim() || null,
+      chapterId: item.chapterId?.trim() || null,
     };
   });
 

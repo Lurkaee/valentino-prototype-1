@@ -68,17 +68,42 @@ export const FinaleModule: React.FC<ModuleRenderProps<FinalePublishedConfig>> = 
           </h3>
         )}
 
+        {/* Personal Reflection Card */}
+        {config.personalReflection && (
+          <div className="p-5 rounded-2xl bg-white/[0.04] border border-white/10 text-left space-y-2 max-w-lg mx-auto">
+            <span className="text-[10px] font-ui uppercase tracking-wider opacity-60 block">
+              💭 Personal Reflection
+            </span>
+            <p className="text-sm font-romantic leading-relaxed opacity-90 whitespace-pre-wrap">
+              {config.personalReflection}
+            </p>
+          </div>
+        )}
+
         <div className="relative py-4">
           <p className={`font-romantic text-xl sm:text-2xl leading-relaxed italic ${textBody}`}>
             &ldquo;{config.declaration}&rdquo;
           </p>
         </div>
 
-        {config.signature && (
-          <p className={`font-display text-base sm:text-lg italic ${textSign}`}>
-            — {config.signature}
-          </p>
+        {config.closingPromise && (
+          <div className="text-sm font-romantic italic opacity-80 max-w-md mx-auto">
+            &ldquo;{config.closingPromise}&rdquo;
+          </div>
         )}
+
+        <div className="flex flex-col items-center gap-1">
+          {config.signature && (
+            <p className={`font-display text-base sm:text-lg italic ${textSign}`}>
+              — {config.signature}
+            </p>
+          )}
+          {config.closingDate && (
+            <span className="text-xs font-mono opacity-50">
+              {config.closingDate}
+            </span>
+          )}
+        </div>
 
         {/* Seal Our Journey Interactive Button */}
         <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">

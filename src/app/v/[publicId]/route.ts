@@ -424,7 +424,7 @@ function renderPublicHtml(config: PublishedConfig, publicId: string = ""): strin
   const signOff = sanitizeText(config.signOff || "With all my love");
   const senderName = sanitizeText(config.senderName || "Yours Always");
 
-  const modulesHtml = renderModulesHtml(config.modules, config.moduleOrder, publicId);
+  const modulesHtml = renderModulesHtml(config.modules, config.moduleOrder, publicId, (config as any).narrative);
   const interactionsHtml = renderReactionsAndReplyHtml(publicId);
   const printKeepsakeBtn = renderPrintKeepsakeButton();
 

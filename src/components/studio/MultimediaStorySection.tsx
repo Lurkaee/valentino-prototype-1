@@ -9,6 +9,9 @@ interface MemoryItem {
   title?: string;
   caption?: string;
   date?: string;
+  location?: string;
+  emotionalLabel?: string;
+  relatedMilestoneId?: string;
 }
 
 interface MultimediaStorySectionProps {
@@ -357,6 +360,37 @@ export const MultimediaStorySection: React.FC<MultimediaStorySectionProps> = ({
                         }}
                         className="w-full text-xs px-2.5 py-1.5 rounded-lg bg-black/50 border border-white/[0.1] text-white/90 italic font-ui"
                       />
+
+                      <div className="grid grid-cols-2 gap-2">
+                        <input
+                          type="text"
+                          placeholder="Location (e.g. Paris)"
+                          value={(item as any).location || ""}
+                          onChange={(e) => {
+                            const updated = [...memoryItems];
+                            updated[idx] = { ...updated[idx], location: e.target.value };
+                            onChange((prev) => ({
+                              ...prev,
+                              memories: { ...prev.memories, items: updated },
+                            }));
+                          }}
+                          className="text-xs px-2.5 py-1.5 rounded-lg bg-black/50 border border-white/[0.1] text-white font-ui"
+                        />
+                        <input
+                          type="text"
+                          placeholder="Emotional label (e.g. Unforgettable)"
+                          value={(item as any).emotionalLabel || ""}
+                          onChange={(e) => {
+                            const updated = [...memoryItems];
+                            updated[idx] = { ...updated[idx], emotionalLabel: e.target.value };
+                            onChange((prev) => ({
+                              ...prev,
+                              memories: { ...prev.memories, items: updated },
+                            }));
+                          }}
+                          className="text-xs px-2.5 py-1.5 rounded-lg bg-black/50 border border-white/[0.1] text-white font-ui"
+                        />
+                      </div>
 
                       <div className="flex items-center justify-between pt-1">
                         <div className="flex items-center gap-1">
