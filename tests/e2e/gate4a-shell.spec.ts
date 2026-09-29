@@ -63,7 +63,7 @@ test.describe("Gate 4A: Design System & Core Shell Verification", () => {
     const templatesHeading = page.locator("h1");
     await expect(templatesHeading).toContainText("Choose Your Atmosphere");
 
-    const cta = page.locator("header a[href='/create'] button");
+    const cta = page.locator("header a[href^='/create'] button");
     await expect(cta).toBeVisible();
     await expect(cta).toHaveText("Create Experience");
 

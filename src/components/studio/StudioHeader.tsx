@@ -67,33 +67,31 @@ export const StudioHeader: React.FC<StudioHeaderProps> = ({
         </div>
 
         {/* Center / Right: Save Status & Actions */}
-        <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+        <div className="flex items-center gap-1 sm:gap-2.5 shrink-0">
           <div
             data-testid="save-status-pill"
             data-status={saveStatus}
-            className="text-[10px] sm:text-xs px-2 sm:px-3 py-1 rounded-full border border-white/[0.08] bg-white/[0.03] flex items-center gap-1 sm:gap-1.5 font-ui shrink-0 pointer-events-none select-none"
+            className="text-[10px] sm:text-xs px-1.5 sm:px-3 py-1 rounded-full border border-white/[0.08] bg-white/[0.03] flex items-center gap-1 sm:gap-1.5 font-ui shrink-0 pointer-events-none select-none"
           >
             {saveStatus === "saving" && (
               <span className="text-amber-400 animate-pulse flex items-center gap-1">
                 <span className="inline-block w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping" />
                 <span className="hidden sm:inline">Saving…</span>
-                <span className="sm:hidden">…</span>
               </span>
             )}
             {saveStatus === "saved" && (
               <span className="text-emerald-400 flex items-center gap-1">
                 <span>✓</span>
                 <span className="hidden sm:inline">Saved {lastSavedTime ? `at ${lastSavedTime}` : ""}</span>
-                <span className="sm:hidden">Saved</span>
               </span>
             )}
-            {saveStatus === "error" && <span className="text-rose-400">⚠️ Error</span>}
-            {saveStatus === "conflict" && <span className="text-rose-400">⚠️ Conflict</span>}
-            {saveStatus === "offline" && <span className="text-amber-400">⚡ Offline</span>}
+            {saveStatus === "error" && <span className="text-rose-400">⚠️<span className="hidden sm:inline"> Error</span></span>}
+            {saveStatus === "conflict" && <span className="text-rose-400">⚠️<span className="hidden sm:inline"> Conflict</span></span>}
+            {saveStatus === "offline" && <span className="text-amber-400">⚡<span className="hidden sm:inline"> Offline</span></span>}
             {saveStatus === "idle" && (
-              <span className="text-white/40">
-                <span className="hidden sm:inline">● Unsaved edits</span>
-                <span className="sm:hidden">● Unsaved</span>
+              <span className="text-white/40 flex items-center gap-1">
+                <span>●</span>
+                <span className="hidden sm:inline">Unsaved edits</span>
               </span>
             )}
           </div>
