@@ -28,7 +28,7 @@ test.describe("Phase 1 Acceptance Gate: Build Your Valentine Customization Engin
     // Step 1: Landing Page Builder Selection
     // ------------------------------------------------------------------------
     await creatorPage.goto(`${APP_URL}/`);
-    await expect(creatorPage.locator("h1")).toContainText("Create something they'll remember");
+    await expect(creatorPage.locator("h1")).toContainText(/Create (something they'll remember|a world made for someone you love)/);
 
     // Scroll to the builder studio
     const builderSection = creatorPage.locator("#build-your-valentine");

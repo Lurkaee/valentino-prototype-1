@@ -18,12 +18,14 @@ import {
   CURATED_SEALS,
   normalizeValentineDecor,
 } from "@/types/decor";
-import { getTemplateDefinition } from "@/templates/registry";
+import { getTemplateDefinition, getAllTemplates } from "@/templates/registry";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { AtmosphericGlow } from "@/components/ui/AtmosphericGlow";
 import { StudioHeader, SaveStatus } from "@/components/studio/StudioHeader";
+import { StudioStageStepper, StudioStageId } from "@/components/studio/StudioStageStepper";
+import { StoryChaptersVisualizer } from "@/components/studio/StoryChaptersVisualizer";
 import { WorldSelectorModal } from "@/components/studio/WorldSelectorModal";
 import { FeatureDiscoveryDrawer } from "@/components/studio/FeatureDiscoveryDrawer";
 import { ContextualSuggestion } from "@/components/studio/ContextualSuggestion";
@@ -84,16 +86,29 @@ function EditExperienceContent() {
   const [publicUrl, setPublicUrl] = useState<string>("");
   const [copied, setCopied] = useState(false);
   const [mobileTab, setMobileTab] = useState<"form" | "preview">("form");
-  const [activeSection, setActiveSection] = useState<"world" | "story" | "moments" | "mood" | "preview">("story");
+  const [activeSection, setActiveSection] = useState<StudioStageId>("world");
+  const [previewDeviceMode, setPreviewDeviceMode] = useState<"phone" | "tablet" | "expanded">("phone");
   const [showAdvancedStory, setShowAdvancedStory] = useState(false);
   const searchParams = useSearchParams();
+
+  const scrollToSection = useCallback((sectionId: StudioStageId) => {
+    setActiveSection(sectionId);
+    const element = document.getElementById(`section-${sectionId}`);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }, []);
 
   // Deep-linking focus support
   useEffect(() => {
     const focus = searchParams?.get("focus");
     if (!focus) return;
-    if (focus === "letter" || focus === "story") {
+    if (focus === "letter" || focus === "personalize") {
+      setActiveSection("personalize");
+      scrollToSection("personalize");
+    } else if (focus === "story" || focus === "chapters") {
       setActiveSection("story");
+      scrollToSection("story");
     } else if (
       focus === "timeline" ||
       focus === "quiz" ||
@@ -110,14 +125,20 @@ function EditExperienceContent() {
     ) {
       setActiveSection("moments");
       setActiveMomentKey(focus as any);
+      scrollToSection("moments");
     } else if (focus === "mood" || focus === "decor") {
       setActiveSection("mood");
+      scrollToSection("mood");
     } else if (focus === "world") {
       setWorldModalOpen(true);
     } else if (focus === "preview") {
       setActiveSection("preview");
+      scrollToSection("preview");
+    } else if (focus === "send") {
+      setActiveSection("send");
+      scrollToSection("send");
     }
-  }, [searchParams]);
+  }, [searchParams, scrollToSection]);
 
   const configRef = useRef(config);
   configRef.current = config;
@@ -139,20 +160,43 @@ function EditExperienceContent() {
           headers: { "Cache-Control": "no-store" },
         });
 
-        if (res.status === 401) {
-          setAuthError("No edit access for this Valentine experience. Your session may have expired.");
-          setIsLoading(false);
+        if (res.status === 401 || res.status === 403) {
+          if (isMounted) setAuthError("You do not have creator edit access for this Valentine.");
+          return;
+        }
+
+        if (res.status === 404) {
+          if (isMounted) setAuthError("Experience draft not found.");
           return;
         }
 
         if (!res.ok) {
-          setAuthError("Failed to load experience draft.");
-          setIsLoading(false);
+          if (isMounted) setAuthError("Unable to retrieve experience draft.");
           return;
         }
 
         const data = await res.json();
         if (isMounted) {
+          const loadedConfig = data.draftConfig || {};
+          setConfig({
+            partnerName: loadedConfig.partnerName || "",
+            senderName: loadedConfig.senderName || "",
+            greeting: loadedConfig.greeting || "To my favorite person",
+            message: loadedConfig.message || "",
+            signOff: loadedConfig.signOff || "With all my love",
+            accentTheme: loadedConfig.accentTheme || "crimson-rose",
+            decor: normalizeValentineDecor(loadedConfig.decor),
+            modules: loadedConfig.modules || {},
+            heroMediaId: loadedConfig.heroMediaId || null,
+            soundtrackUrl: loadedConfig.soundtrackUrl || null,
+            scheduledUnlockAt: loadedConfig.scheduledUnlockAt || null,
+            narrative: loadedConfig.narrative || {
+              chapters: [],
+              pacing: "balanced",
+              welcome: { enabled: false },
+            },
+          } as any);
+
           if (data.templateId) {
             const def = getTemplateDefinition(data.templateId, data.templateVersion || "v1");
             setTemplateMeta({
@@ -161,43 +205,31 @@ function EditExperienceContent() {
               name: def?.name || data.templateId,
             });
           }
-          if (data.draftConfig && !isDirtyRef.current) {
-            setConfig({
-              ...data.draftConfig,
-              decor: normalizeValentineDecor(data.draftConfig.decor),
-              modules: data.draftConfig.modules || {},
-            });
-          }
-          if (data.draftRevision) {
-            revisionRef.current = data.draftRevision;
-            setRevision(data.draftRevision);
-          }
+
+          const initialRev = data.draftRevision ?? data.revision ?? 1;
+          setRevision(initialRev);
+          revisionRef.current = initialRev;
           setSaveStatus("saved");
-          setLastSavedTime(new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }));
           setIsLoading(false);
         }
-      } catch {
+      } catch (err) {
         if (isMounted) {
-          setAuthError("Network error while connecting to edit session.");
+          setAuthError("A network error occurred while loading your draft.");
           setIsLoading(false);
         }
       }
     }
 
-    if (publicId) {
-      loadDraft();
-    }
+    loadDraft();
 
     return () => {
       isMounted = false;
     };
   }, [publicId]);
 
-  // 2. Perform Save
+  // 2. Perform Save API Call
   const performSave = useCallback(
     async (keepalive = false): Promise<boolean> => {
-      if (!publicId || !isDirtyRef.current) return true;
-
       if (isSavingRef.current) {
         pendingSaveRef.current = true;
         return false;
@@ -205,6 +237,14 @@ function EditExperienceContent() {
 
       isSavingRef.current = true;
       setSaveStatus("saving");
+
+      const payload = {
+        draftConfig: configRef.current,
+        baseRevision: revisionRef.current,
+        templateId: templateMetaRef.current.id,
+        templateVersion: templateMetaRef.current.version,
+      };
+
       try {
         const res = await fetch(`/api/experiences/${publicId}/draft`, {
           method: "PUT",
@@ -212,133 +252,102 @@ function EditExperienceContent() {
             "Content-Type": "application/json",
             "Cache-Control": "no-store",
           },
-          body: JSON.stringify({
-            draftConfig: configRef.current,
-            baseRevision: revisionRef.current,
-            templateId: templateMetaRef.current.id,
-            templateVersion: templateMetaRef.current.version,
-          }),
+          body: JSON.stringify(payload),
           keepalive,
         });
 
         if (res.status === 409) {
-          const conflictData = await res.json().catch(() => ({}));
-          if (conflictData.currentRevision) {
-            revisionRef.current = conflictData.currentRevision;
-            setRevision(conflictData.currentRevision);
-          }
+          const data = await res.json().catch(() => ({}));
           setSaveStatus("conflict");
-          if (isDirtyRef.current) {
-            pendingSaveRef.current = true;
+          if (data.currentRevision) {
+            revisionRef.current = data.currentRevision;
+            setRevision(data.currentRevision);
           }
+          isSavingRef.current = false;
           return false;
         }
 
         if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          console.error("DRAFT SAVE FAILED:", res.status, JSON.stringify(errData));
           setSaveStatus("error");
+          isSavingRef.current = false;
           return false;
         }
 
-        const result = await res.json();
+        const data = await res.json();
+        const nextRev = data.draftRevision ?? data.revision ?? revisionRef.current + 1;
+        revisionRef.current = nextRev;
+        setRevision(nextRev);
         isDirtyRef.current = false;
-        if (result.draftRevision) {
-          revisionRef.current = result.draftRevision;
-          setRevision(result.draftRevision);
-        }
         setSaveStatus("saved");
         setLastSavedTime(new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }));
-        return true;
-      } catch {
-        setSaveStatus("offline");
-        return false;
-      } finally {
         isSavingRef.current = false;
+
         if (pendingSaveRef.current) {
           pendingSaveRef.current = false;
-          setTimeout(() => {
-            performSave();
-          }, 50);
+          return performSave(false);
         }
+
+        return true;
+      } catch (err) {
+        setSaveStatus("offline");
+        isSavingRef.current = false;
+        return false;
       }
     },
     [publicId]
   );
 
-  // 3. Debounced Autosave on Config Change
-  const handleConfigChange = useCallback(
-    (updater: (prev: MidnightRoseDraftConfig) => MidnightRoseDraftConfig) => {
-      setConfig((prev) => {
-        const next = updater(prev);
-        isDirtyRef.current = true;
-        setSaveStatus("idle");
+  // 3. Debounced Autosave Trigger
+  const triggerDebouncedSave = useCallback(() => {
+    isDirtyRef.current = true;
+    setSaveStatus("idle");
 
-        if (debounceTimerRef.current) {
-          clearTimeout(debounceTimerRef.current);
-        }
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
 
-        debounceTimerRef.current = setTimeout(() => {
-          performSave();
-        }, 1000);
+    debounceTimerRef.current = setTimeout(() => {
+      performSave();
+    }, 1200);
+  }, [performSave]);
 
-        return next;
-      });
-    },
-    [performSave]
-  );
+  const handleConfigChange = (updater: (prev: MidnightRoseDraftConfig) => MidnightRoseDraftConfig) => {
+    setConfig((prev) => {
+      const next = updater(prev);
+      return next;
+    });
+    triggerDebouncedSave();
+  };
 
-  const handleModulesChange = useCallback(
-    (updater: (prevModules: any) => any) => {
-      handleConfigChange((prev: any) => ({
+  const handleModulesChange = useCallback((updater: (prevModules: any) => any) => {
+    setConfig((prev) => {
+      const nextModules = updater(prev.modules || {});
+      return {
         ...prev,
-        modules: updater(prev.modules || {}),
-      }));
-    },
-    [handleConfigChange]
-  );
+        modules: nextModules,
+      };
+    });
+    triggerDebouncedSave();
+  }, [triggerDebouncedSave]);
 
-  // Scroll to a specific stage section
-  const scrollToSection = useCallback((sectionId: string) => {
-    setActiveSection(sectionId as any);
-    const el = document.getElementById(`section-${sectionId}`);
-    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-  }, []);
 
-  // Handle activating or inspecting a feature from discovery surfaces
-  const handleSelectFeature = useCallback(
-    (feature: FeatureDefinition) => {
-      if (feature.targetModuleKey) {
-        const modKey = feature.targetModuleKey;
-        handleModulesChange((prev) => {
-          const current = prev?.[modKey] || {};
-          return {
-            ...prev,
-            [modKey]: {
-              ...current,
-              enabled: true,
-            },
-          };
-        });
-        setActiveMomentKey(modKey);
-        scrollToSection("moments");
-      } else if (feature.actionType === "open-world-modal") {
-        setWorldModalOpen(true);
-      } else if (feature.targetSection) {
-        scrollToSection(feature.targetSection);
-      }
-    },
-    [scrollToSection, handleModulesChange]
-  );
-
-  // 4. Non-Destructive World Selection
+  // 4. Non-Destructive World Switch
   const handleSelectWorld = (newTemplateId: string, newTemplateVersion: string) => {
-    const def = getTemplateDefinition(newTemplateId, newTemplateVersion);
+    const targetDef = getTemplateDefinition(newTemplateId, newTemplateVersion);
+
     const newMeta = {
       id: newTemplateId,
       version: newTemplateVersion,
-      name: def?.name || newTemplateId,
+      name: targetDef?.name || newTemplateId,
     };
+
     setTemplateMeta(newMeta);
     templateMetaRef.current = newMeta;
+    setWorldModalOpen(false);
+
+    // Immediate save after world switch
     isDirtyRef.current = true;
     setSaveStatus("idle");
 
@@ -417,7 +426,6 @@ function EditExperienceContent() {
         if (data.currentRevision) {
           revisionRef.current = data.currentRevision;
           setRevision(data.currentRevision);
-          // Retry publish once with latest revision
           res = await fetch(`/api/experiences/${publicId}/publish`, {
             method: "POST",
             headers: {
@@ -450,59 +458,67 @@ function EditExperienceContent() {
         return;
       }
 
-      const publishData = await res.json();
-      setPublicUrl(publishData.publicUrl || `${window.location.origin}/v/${publicId}`);
+      const data = await res.json();
+      setPublicUrl(data.publicUrl || `${window.location.origin}/v/${publicId}`);
       setPublishModalOpen(true);
-    } catch {
-      setPublishErrors(["Network error during publishing."]);
+    } catch (err) {
+      setPublishErrors(["A network error occurred while publishing. Please try again."]);
     } finally {
       setIsPublishing(false);
     }
   };
 
   const handleCopyLink = () => {
-    if (navigator?.clipboard?.writeText) {
-      navigator.clipboard
-        .writeText(publicUrl)
-        .then(() => {
-          setCopied(true);
-          setTimeout(() => setCopied(false), 2500);
-        })
-        .catch(() => {
-          try {
-            const textarea = document.createElement("textarea");
-            textarea.value = publicUrl;
-            document.body.appendChild(textarea);
-            textarea.select();
-            document.execCommand("copy");
-            document.body.removeChild(textarea);
-          } catch {
-            // Ignore
-          }
-          setCopied(true);
-          setTimeout(() => setCopied(false), 2500);
-        });
-    } else {
-      try {
-        const textarea = document.createElement("textarea");
-        textarea.value = publicUrl;
-        document.body.appendChild(textarea);
-        textarea.select();
-        document.execCommand("copy");
-        document.body.removeChild(textarea);
-      } catch {
-        // Ignore
-      }
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2500);
-    }
+    if (!publicUrl) return;
+    navigator.clipboard.writeText(publicUrl);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2500);
   };
+
+  const handleSelectFeature = useCallback(
+    (feature: FeatureDefinition) => {
+      if (feature.targetModuleKey) {
+        const modKey = feature.targetModuleKey;
+        handleModulesChange((prev) => {
+          const current = prev?.[modKey] || {};
+          return {
+            ...prev,
+            [modKey]: {
+              ...current,
+              enabled: true,
+            },
+          };
+        });
+        setActiveMomentKey(modKey);
+        setFeatureDrawerOpen(false);
+        scrollToSection("moments");
+      } else if (feature.actionType === "open-world-modal") {
+        setWorldModalOpen(true);
+        setFeatureDrawerOpen(false);
+      } else if (feature.targetSection) {
+        setFeatureDrawerOpen(false);
+        scrollToSection(feature.targetSection as any);
+      }
+    },
+    [scrollToSection, handleModulesChange]
+  );
 
   const activeMomentsCount = Object.values(config.modules || {}).filter(
     (m: any) => m && m.enabled
   ).length;
 
   const currentTemplateDef = getTemplateDefinition(templateMeta.id, templateMeta.version);
+
+  // Completion calculation for 7 stages
+  const stageCompletion: Record<StudioStageId, boolean> = {
+    world: Boolean(templateMeta.id),
+    story: Boolean((config as any).narrative?.welcome?.enabled || (config as any).narrative?.pacing),
+    moments: activeMomentsCount > 0,
+    personalize: Boolean(config.partnerName?.trim() && config.senderName?.trim() && config.message?.trim()),
+    mood: Boolean(config.decor?.paper && config.decor?.waxSeal),
+    preview: true,
+    send: Boolean(publicUrl),
+  };
 
   // Auth Error State
   if (authError) {
@@ -528,11 +544,11 @@ function EditExperienceContent() {
   }
 
   return (
-    <div className="min-h-[100dvh] flex flex-col bg-[#0A090C] text-[#FAF8F5] font-ui antialiased">
+    <div className="min-h-[100dvh] flex flex-col bg-[#08070B] text-[#FAF8F5] font-ui antialiased">
       {/* 1. Mandatory Owner Reminder Banner */}
       <div
         data-testid="browser-storage-reminder"
-        className="bg-[#121017] border-b border-white/[0.08] px-4 py-2 text-center text-xs text-white/75 font-ui flex items-center justify-center gap-2"
+        className="bg-[#120F18] border-b border-white/[0.08] px-4 py-2 text-center text-xs text-white/75 font-ui flex items-center justify-center gap-2 select-none"
       >
         <span>💌</span>
         <span>
@@ -540,7 +556,7 @@ function EditExperienceContent() {
         </span>
       </div>
 
-      {/* 2. Neutral Studio Header */}
+      {/* 2. Studio Header */}
       <StudioHeader
         partnerName={config.partnerName}
         templateName={templateMeta.name}
@@ -554,46 +570,24 @@ function EditExperienceContent() {
         onMobileTabChange={setMobileTab}
       />
 
-      {/* 3. Studio Workspace: Split Studio Editor & Live Canvas */}
+      {/* 3. Studio Workspace: Split Creative Workbench & Live Canvas */}
       <div className="flex-1 flex flex-col md:flex-row overflow-hidden relative">
-        {/* Left Pane: Studio Creative Workbench */}
+        {/* Left Pane: Creative Workbench */}
         <div
-          className={`w-full md:w-[500px] lg:w-[560px] flex flex-col border-b md:border-b-0 md:border-r border-white/[0.08] bg-[#0E0C12] overflow-y-auto ${
+          className={`w-full md:w-[520px] lg:w-[580px] flex flex-col border-b md:border-b-0 md:border-r border-white/[0.08] bg-[#0C0A10] overflow-y-auto ${
             mobileTab === "preview" ? "hidden md:flex" : "flex"
           }`}
         >
-          {/* Non-linear Navigation: Creative Stage Tabs */}
-          <div className="sticky top-0 z-10 bg-[#0E0C12]/95 backdrop-blur-md px-6 py-2.5 border-b border-white/[0.08] flex items-center gap-1.5 overflow-x-auto scrollbar-none">
-            {[
-              { id: "world", label: "1. World", icon: "🌐" },
-              { id: "story", label: "2. Story & Media", icon: "✍️" },
-              { id: "moments", label: "3. Moments", icon: "✨" },
-              { id: "mood", label: "4. Mood & Decor", icon: "🎨" },
-              { id: "preview", label: "5. Send & Keepsakes", icon: "🚀" },
-            ].map((stage) => (
-              <button
-                key={stage.id}
-                type="button"
-                onClick={() => {
-                  setActiveSection(stage.id as any);
-                  const el = document.getElementById(`section-${stage.id}`);
-                  if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-                }}
-                className={`px-3 py-1.5 rounded-lg text-xs font-ui whitespace-nowrap transition-all flex items-center gap-1.5 cursor-pointer ${
-                  activeSection === stage.id
-                    ? "bg-white/[0.1] text-white font-medium shadow-xs"
-                    : "text-white/50 hover:text-white/80 hover:bg-white/[0.04]"
-                }`}
-              >
-                <span>{stage.icon}</span>
-                <span>{stage.label}</span>
-              </button>
-            ))}
-          </div>
+          {/* Progressive 7-Stage Creation Stepper */}
+          <StudioStageStepper
+            activeStage={activeSection}
+            onSelectStage={scrollToSection}
+            completedStages={stageCompletion}
+          />
 
           {/* Workbench Body */}
-          <div className="p-6 sm:p-8 space-y-10">
-            {/* Advisory Content Readiness Bar */}
+          <div className="p-5 sm:p-7 space-y-10">
+            {/* Advisory Content Readiness Bar (Top placement) */}
             <ContentReadinessBar
               partnerName={config.partnerName}
               senderName={config.senderName}
@@ -615,7 +609,7 @@ function EditExperienceContent() {
               }
               onAction={(action) => {
                 if (action.type === "scroll") {
-                  scrollToSection(action.target);
+                  scrollToSection(action.target as any);
                 } else if (action.type === "module") {
                   const modKey = action.target as any;
                   handleModulesChange((prev) => ({
@@ -631,62 +625,264 @@ function EditExperienceContent() {
               }}
             />
 
-            {/* STAGE 1: Visual World Card */}
-            <section id="section-world" className="space-y-3.5 scroll-mt-16">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="text-base select-none">🌐</span>
-                  <h2 className="text-base font-display font-medium text-white">Visual World</h2>
+            {/* ------------------------------------------------------------- */}
+            {/* STAGE 01: Visual World                                        */}
+            {/* ------------------------------------------------------------- */}
+            <section id="section-world" className="space-y-4 scroll-mt-20">
+              <div className="flex items-center justify-between border-b border-white/[0.06] pb-3">
+                <div className="flex items-center gap-2.5">
+                  <span className="w-6 h-6 rounded-full bg-rose-500/20 text-rose-300 flex items-center justify-center text-xs font-mono">
+                    01
+                  </span>
+                  <div>
+                    <h2 className="text-base font-display font-medium text-white">Visual World</h2>
+                    <p className="text-[11px] text-white/50 font-ui font-light">
+                      The emotional atmosphere they step inside
+                    </p>
+                  </div>
                 </div>
                 <button
                   type="button"
+                  data-testid="section-change-world-trigger"
                   onClick={() => setWorldModalOpen(true)}
-                  className="text-xs font-ui text-rose-300 hover:text-rose-200 underline cursor-pointer"
+                  className="text-xs font-ui text-rose-300 hover:text-rose-200 underline cursor-pointer shrink-0"
                 >
                   Switch World ⇄
                 </button>
               </div>
 
-              {/* Active World Card */}
-              <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/[0.08] flex items-center justify-between gap-4">
-                <div className="space-y-1 min-w-0">
-                  <div className="flex items-center gap-2">
-                    <span className="font-display font-medium text-sm text-white">
-                      {templateMeta.name}
-                    </span>
-                    <Badge variant="rose" size="sm" className="text-[10px] px-2 py-0.5">
-                      Active Atmosphere
-                    </Badge>
+              {/* Active World Presentation Card */}
+              <div className="p-4 sm:p-5 rounded-2xl bg-white/[0.02] border border-white/[0.08] relative overflow-hidden space-y-3">
+                <div className="flex items-start justify-between gap-3">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className="font-display font-medium text-base text-white">
+                        {templateMeta.name}
+                      </span>
+                      <Badge variant="rose" size="sm" className="text-[10px] px-2 py-0.5">
+                        Active Living World
+                      </Badge>
+                    </div>
+                    <p className="text-xs text-rose-200/90 font-serif italic">
+                      &ldquo;{currentTemplateDef?.tagline || "For the love that feels like starlight"}&rdquo;
+                    </p>
+                    <p className="text-xs text-white/60 font-ui font-light leading-relaxed">
+                      {currentTemplateDef?.atmosphere}
+                    </p>
                   </div>
-                  <p className="text-xs text-white/70 font-romantic leading-snug">
-                    {currentTemplateDef?.tagline || "For the love that feels like starlight"}
-                  </p>
-                  <p className="text-[11px] text-white/45 font-ui">
-                    {currentTemplateDef?.atmosphere}
-                  </p>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setWorldModalOpen(true)}
+                    className="text-xs rounded-full border-white/15 shrink-0"
+                  >
+                    Change World
+                  </Button>
                 </div>
-                <Button
+
+                {/* World Quick Switcher Pills */}
+                <div className="pt-2 border-t border-white/[0.06] flex items-center justify-between text-xs text-white/50">
+                  <span className="text-[11px]">Available Worlds:</span>
+                  <div className="flex gap-1.5">
+                    {getAllTemplates().map((t) => (
+                      <button
+                        key={t.id}
+                        type="button"
+                        onClick={() => handleSelectWorld(t.id, t.version)}
+                        className={`px-2.5 py-1 rounded-lg text-[11px] font-ui transition-all ${
+                          templateMeta.id === t.id
+                            ? "bg-rose-500/20 text-rose-200 border border-rose-400/40"
+                            : "bg-white/[0.04] text-white/60 hover:text-white"
+                        }`}
+                      >
+                        {t.name}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <p className="text-[11px] text-white/40 font-ui italic">
+                  ✦ Switching worlds preserves your words, milestones, and compatible decor.
+                </p>
+              </div>
+
+              {/* Stage Progression Footer */}
+              <div className="pt-1 flex justify-end">
+                <button
                   type="button"
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setWorldModalOpen(true)}
-                  className="text-xs rounded-full border-white/15 shrink-0"
+                  onClick={() => scrollToSection("story")}
+                  className="px-4 py-2 rounded-xl text-xs font-ui font-medium bg-white/[0.05] hover:bg-white/[0.1] text-white transition-colors flex items-center gap-1.5 cursor-pointer"
                 >
-                  Change World
-                </Button>
+                  <span>Continue to Story Chapters</span>
+                  <span>→</span>
+                </button>
               </div>
             </section>
 
-            {/* STAGE 2: Story (The Core Romantic Letter) */}
-            <section id="section-story" className="space-y-5 scroll-mt-16 border-t border-white/[0.08] pt-8">
-              <div className="space-y-1">
-                <div className="flex items-center gap-2">
-                  <span className="text-base select-none">✍️</span>
-                  <h2 className="text-base font-display font-medium text-white">The Love Letter</h2>
+            {/* ------------------------------------------------------------- */}
+            {/* STAGE 02: Story Chapters & Pacing                             */}
+            {/* ------------------------------------------------------------- */}
+            <section id="section-story" className="space-y-4 scroll-mt-20 border-t border-white/[0.08] pt-8">
+              <div className="flex items-center justify-between border-b border-white/[0.06] pb-3">
+                <div className="flex items-center gap-2.5">
+                  <span className="w-6 h-6 rounded-full bg-rose-500/20 text-rose-300 flex items-center justify-center text-xs font-mono">
+                    02
+                  </span>
+                  <div>
+                    <h2 className="text-base font-display font-medium text-white">Story Chapters & Pacing</h2>
+                    <p className="text-[11px] text-white/50 font-ui font-light">
+                      The emotional 7-part narrative journey of your love story
+                    </p>
+                  </div>
                 </div>
-                <p className="text-xs text-white/60 font-ui font-light">
-                  Write freely from the heart. All words persist automatically across all visual worlds.
-                </p>
+              </div>
+
+              <StoryChaptersVisualizer
+                welcomeEnabled={Boolean((config as any).narrative?.welcome?.enabled)}
+                onToggleWelcome={() =>
+                  handleConfigChange((prev: any) => {
+                    const cur = prev.narrative?.welcome || { enabled: false };
+                    return {
+                      ...prev,
+                      narrative: {
+                        ...(prev.narrative || {}),
+                        welcome: {
+                          ...cur,
+                          enabled: !cur.enabled,
+                          recipientName: cur.recipientName || prev.partnerName || "",
+                          greeting: cur.greeting || "Welcome, My Love",
+                          message: cur.message || "A private story made only for you.",
+                        },
+                      },
+                    };
+                  })
+                }
+                welcomeGreeting={(config as any).narrative?.welcome?.greeting || ""}
+                welcomeMessage={(config as any).narrative?.welcome?.message || ""}
+                onWelcomeGreetingChange={(val) =>
+                  handleConfigChange((prev: any) => ({
+                    ...prev,
+                    narrative: {
+                      ...(prev.narrative || {}),
+                      welcome: {
+                        ...(prev.narrative?.welcome || {}),
+                        greeting: val,
+                      },
+                    },
+                  }))
+                }
+                onWelcomeMessageChange={(val) =>
+                  handleConfigChange((prev: any) => ({
+                    ...prev,
+                    narrative: {
+                      ...(prev.narrative || {}),
+                      welcome: {
+                        ...(prev.narrative?.welcome || {}),
+                        message: val,
+                      },
+                    },
+                  }))
+                }
+                pacing={(config as any).narrative?.pacing || "balanced"}
+                onPacingChange={(newPacing) =>
+                  handleConfigChange((prev: any) => ({
+                    ...prev,
+                    narrative: {
+                      ...(prev.narrative || {}),
+                      pacing: newPacing,
+                    },
+                  }))
+                }
+                activeMomentsCount={activeMomentsCount}
+              />
+
+              {/* Stage Progression Footer */}
+              <div className="pt-2 flex justify-between">
+                <button
+                  type="button"
+                  onClick={() => scrollToSection("world")}
+                  className="px-3.5 py-1.5 rounded-xl text-xs font-ui text-white/50 hover:text-white transition-colors cursor-pointer"
+                >
+                  ← Back to World
+                </button>
+                <button
+                  type="button"
+                  onClick={() => scrollToSection("moments")}
+                  className="px-4 py-2 rounded-xl text-xs font-ui font-medium bg-white/[0.05] hover:bg-white/[0.1] text-white transition-colors flex items-center gap-1.5 cursor-pointer"
+                >
+                  <span>Continue to Moments</span>
+                  <span>→</span>
+                </button>
+              </div>
+            </section>
+
+            {/* ------------------------------------------------------------- */}
+            {/* STAGE 03: Moments (Interactive Experience Modules)           */}
+            {/* ------------------------------------------------------------- */}
+            <section id="section-moments" className="space-y-4 scroll-mt-20 border-t border-white/[0.08] pt-8">
+              <div className="flex items-center justify-between border-b border-white/[0.06] pb-3">
+                <div className="flex items-center gap-2.5">
+                  <span className="w-6 h-6 rounded-full bg-rose-500/20 text-rose-300 flex items-center justify-center text-xs font-mono">
+                    03
+                  </span>
+                  <div>
+                    <h2 className="text-base font-display font-medium text-white">Interactive Moments</h2>
+                    <p className="text-[11px] text-white/50 font-ui font-light">
+                      Little surprises, memories, and questions they discover inside your world
+                    </p>
+                  </div>
+                </div>
+                <Badge variant="rose" size="sm" className="text-[10px]">
+                  {activeMomentsCount} Active
+                </Badge>
+              </div>
+
+              <ModuleManager
+                modules={config.modules}
+                hasHeroMedia={Boolean(config.heroMediaId)}
+                onChange={handleModulesChange}
+                onOpenFeatureDrawer={() => setFeatureDrawerOpen(true)}
+                onSelectFeature={handleSelectFeature}
+                externalActiveMoment={activeMomentKey}
+              />
+
+              {/* Stage Progression Footer */}
+              <div className="pt-2 flex justify-between">
+                <button
+                  type="button"
+                  onClick={() => scrollToSection("story")}
+                  className="px-3.5 py-1.5 rounded-xl text-xs font-ui text-white/50 hover:text-white transition-colors cursor-pointer"
+                >
+                  ← Back to Story
+                </button>
+                <button
+                  type="button"
+                  onClick={() => scrollToSection("personalize")}
+                  className="px-4 py-2 rounded-xl text-xs font-ui font-medium bg-white/[0.05] hover:bg-white/[0.1] text-white transition-colors flex items-center gap-1.5 cursor-pointer"
+                >
+                  <span>Continue to Personalize</span>
+                  <span>→</span>
+                </button>
+              </div>
+            </section>
+
+            {/* ------------------------------------------------------------- */}
+            {/* STAGE 04: Personalize (Love Letter, Names & Details)          */}
+            {/* ------------------------------------------------------------- */}
+            <section id="section-personalize" className="space-y-5 scroll-mt-20 border-t border-white/[0.08] pt-8">
+              <div className="flex items-center justify-between border-b border-white/[0.06] pb-3">
+                <div className="flex items-center gap-2.5">
+                  <span className="w-6 h-6 rounded-full bg-rose-500/20 text-rose-300 flex items-center justify-center text-xs font-mono">
+                    04
+                  </span>
+                  <div>
+                    <h2 className="text-base font-display font-medium text-white">Personalize & Love Letter</h2>
+                    <p className="text-[11px] text-white/50 font-ui font-light">
+                      The core words, personal names, and devotion that make this uniquely theirs
+                    </p>
+                  </div>
+                </div>
               </div>
 
               <div className="space-y-5">
@@ -778,22 +974,9 @@ function EditExperienceContent() {
                     }
                     className="w-full px-4 py-3.5 rounded-xl bg-black/40 border border-white/[0.12] text-white placeholder-white/25 focus:outline-none focus:border-rose-400 focus:ring-1 focus:ring-rose-500/40 text-sm leading-relaxed transition-all resize-y font-romantic text-base shadow-inner"
                   />
-                  {/* AI Co-Pilot Extension Seam (No fake AI runtime, clean future affordance) */}
-                  <div className="flex items-center justify-between pt-1 text-[11px] text-white/40 font-ui">
-                    <span>Write freely in your own voice.</span>
-                    <button
-                      type="button"
-                      onClick={() => {}}
-                      className="text-white/40 hover:text-white/70 transition-colors flex items-center gap-1 cursor-default select-none opacity-80"
-                      title="AI Co-Pilot extension seam"
-                    >
-                      <span>💡</span>
-                      <span>Need inspiration? (Co-pilot ready)</span>
-                    </button>
-                  </div>
                 </div>
 
-                {/* Progressive Disclosure: Formal Greeting & Sign-Off */}
+                {/* Progressive Disclosure: Salutation & Sign-Off */}
                 <div className="pt-1">
                   <button
                     type="button"
@@ -806,7 +989,6 @@ function EditExperienceContent() {
 
                   {showAdvancedStory && (
                     <div className="space-y-4 pt-3.5 pl-3 border-l-2 border-white/[0.1] mt-2 animate-fadeIn">
-                      {/* Greeting */}
                       <div className="space-y-1">
                         <label
                           htmlFor="greeting"
@@ -831,7 +1013,6 @@ function EditExperienceContent() {
                         />
                       </div>
 
-                      {/* Sign-off */}
                       <div className="space-y-1">
                         <label
                           htmlFor="signOff"
@@ -859,137 +1040,7 @@ function EditExperienceContent() {
                   )}
                 </div>
 
-                {/* Narrative & Story Chapters Personalization */}
-                <div className="pt-4 border-t border-white/[0.08] space-y-3">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <span className="text-xs uppercase tracking-wider text-rose-300 font-ui font-medium block">
-                        Story Chapters & Pacing
-                      </span>
-                      <span className="text-[11px] text-white/50 font-ui">
-                        Personalize the emotional journey and chapter grouping
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Emotional Pacing Selector */}
-                  <div className="grid grid-cols-3 gap-2">
-                    {[
-                      { id: "calm", label: "Calm", desc: "Gentle & spacious" },
-                      { id: "balanced", label: "Balanced", desc: "Natural flow" },
-                      { id: "cinematic", label: "Cinematic", desc: "Dramatic reveals" },
-                    ].map((p) => {
-                      const currentPacing = (config as any).narrative?.pacing || "balanced";
-                      const isSelected = currentPacing === p.id;
-                      return (
-                        <button
-                          key={p.id}
-                          type="button"
-                          data-testid={`pacing-option-${p.id}`}
-                          onClick={() =>
-                            handleConfigChange((prev: any) => ({
-                              ...prev,
-                              narrative: {
-                                ...(prev.narrative || {}),
-                                pacing: p.id,
-                              },
-                            }))
-                          }
-                          className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer ${
-                            isSelected
-                              ? "border-rose-400 bg-rose-950/60 text-white font-medium shadow-xs"
-                              : "border-white/[0.08] bg-white/[0.03] text-white/70 hover:bg-white/[0.06]"
-                          }`}
-                        >
-                          <div className="text-xs font-medium text-white">{p.label}</div>
-                          <div className="text-[10px] text-white/50">{p.desc}</div>
-                        </button>
-                      );
-                    })}
-                  </div>
-
-                  {/* Personal Welcome Toggle & Message */}
-                  <div className="p-3.5 rounded-xl bg-white/[0.03] border border-white/[0.08] space-y-2.5">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-medium text-white font-ui">
-                        Personal Welcome Greeting
-                      </span>
-                      <button
-                        type="button"
-                        data-testid="toggle-narrative-welcome"
-                        onClick={() =>
-                          handleConfigChange((prev: any) => {
-                            const cur = prev.narrative?.welcome || { enabled: false };
-                            return {
-                              ...prev,
-                              narrative: {
-                                ...(prev.narrative || {}),
-                                welcome: {
-                                  ...cur,
-                                  enabled: !cur.enabled,
-                                  recipientName: cur.recipientName || prev.partnerName || "",
-                                  greeting: cur.greeting || "Welcome, My Love",
-                                  message: cur.message || "A private story made only for you.",
-                                },
-                              },
-                            };
-                          })
-                        }
-                        className={`text-[10px] px-2 py-0.5 rounded-md font-ui cursor-pointer ${
-                          (config as any).narrative?.welcome?.enabled
-                            ? "bg-rose-500/20 text-rose-300 font-medium"
-                            : "bg-white/[0.06] text-white/50"
-                        }`}
-                      >
-                        {(config as any).narrative?.welcome?.enabled ? "✓ Enabled" : "+ Enable"}
-                      </button>
-                    </div>
-
-                    {(config as any).narrative?.welcome?.enabled && (
-                      <div className="space-y-2 pt-1 animate-fadeIn">
-                        <input
-                          type="text"
-                          placeholder="Welcome Greeting"
-                          data-testid="input-welcome-greeting"
-                          value={(config as any).narrative?.welcome?.greeting || ""}
-                          onChange={(e) =>
-                            handleConfigChange((prev: any) => ({
-                              ...prev,
-                              narrative: {
-                                ...(prev.narrative || {}),
-                                welcome: {
-                                  ...(prev.narrative?.welcome || {}),
-                                  greeting: e.target.value,
-                                },
-                              },
-                            }))
-                          }
-                          className="w-full text-xs px-3 py-1.5 rounded-lg bg-black/40 border border-white/[0.1] text-white font-ui"
-                        />
-                        <input
-                          type="text"
-                          placeholder="Personal intro sentence"
-                          data-testid="input-welcome-message"
-                          value={(config as any).narrative?.welcome?.message || ""}
-                          onChange={(e) =>
-                            handleConfigChange((prev: any) => ({
-                              ...prev,
-                              narrative: {
-                                ...(prev.narrative || {}),
-                                welcome: {
-                                  ...(prev.narrative?.welcome || {}),
-                                  message: e.target.value,
-                                },
-                              },
-                            }))
-                          }
-                          className="w-full text-xs px-3 py-1.5 rounded-lg bg-black/40 border border-white/[0.1] text-white font-ui"
-                        />
-                      </div>
-                    )}
-                  </div>
-                </div>
-
+                {/* Multimedia Story Section (Keepsakes) */}
                 <div className="pt-4 border-t border-white/[0.08]">
                   <MultimediaStorySection
                     publicId={publicId}
@@ -998,35 +1049,43 @@ function EditExperienceContent() {
                   />
                 </div>
               </div>
+
+              {/* Stage Progression Footer */}
+              <div className="pt-2 flex justify-between">
+                <button
+                  type="button"
+                  onClick={() => scrollToSection("moments")}
+                  className="px-3.5 py-1.5 rounded-xl text-xs font-ui text-white/50 hover:text-white transition-colors cursor-pointer"
+                >
+                  ← Back to Moments
+                </button>
+                <button
+                  type="button"
+                  onClick={() => scrollToSection("mood")}
+                  className="px-4 py-2 rounded-xl text-xs font-ui font-medium bg-white/[0.05] hover:bg-white/[0.1] text-white transition-colors flex items-center gap-1.5 cursor-pointer"
+                >
+                  <span>Continue to Mood & Decor</span>
+                  <span>→</span>
+                </button>
+              </div>
             </section>
 
-            {/* STAGE 3: Moments (Experience Module Engine) */}
-            <section id="section-moments" className="scroll-mt-16 border-t border-white/[0.08] pt-8">
-              <ModuleManager
-                modules={config.modules}
-                hasHeroMedia={Boolean(config.heroMediaId)}
-                onChange={handleModulesChange}
-                onOpenFeatureDrawer={() => setFeatureDrawerOpen(true)}
-                onSelectFeature={handleSelectFeature}
-                externalActiveMoment={activeMomentKey}
-              />
-            </section>
-
-            {/* STAGE 4: Mood & Decor (Physical Craft & Tactile Details) */}
-            <section id="section-mood" className="space-y-6 scroll-mt-16 border-t border-white/[0.08] pt-8">
-              <div className="space-y-1">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="text-base select-none">🎨</span>
-                    <h2 className="text-base font-display font-medium text-white">
-                      Mood & Physical Styling
-                    </h2>
+            {/* ------------------------------------------------------------- */}
+            {/* STAGE 05: Mood & Decor (Physical Craft & Keepsake Styling)   */}
+            {/* ------------------------------------------------------------- */}
+            <section id="section-mood" className="space-y-6 scroll-mt-20 border-t border-white/[0.08] pt-8">
+              <div className="flex items-center justify-between border-b border-white/[0.06] pb-3">
+                <div className="flex items-center gap-2.5">
+                  <span className="w-6 h-6 rounded-full bg-rose-500/20 text-rose-300 flex items-center justify-center text-xs font-mono">
+                    05
+                  </span>
+                  <div>
+                    <h2 className="text-base font-display font-medium text-white">Mood & Physical Styling</h2>
+                    <p className="text-[11px] text-white/50 font-ui font-light">
+                      Tactile craft: stationery paper, velvet ribbon, wax seal, bouquet, and charms
+                    </p>
                   </div>
-                  <span className="text-[11px] text-white/50 font-ui">Tactile craft</span>
                 </div>
-                <p className="text-xs text-white/60 font-ui font-light">
-                  Tailor the envelope paper, ribbon, digital wax seal, bouquet, and charms.
-                </p>
               </div>
 
               {/* 1-Click Curated Presets */}
@@ -1094,7 +1153,7 @@ function EditExperienceContent() {
                 </div>
               </div>
 
-              {/* Stationery Paper (Untruncated Labels) */}
+              {/* Stationery Paper */}
               <div className="space-y-2">
                 <span className="text-xs text-white/80 font-ui font-medium block">
                   Stationery Paper
@@ -1130,7 +1189,7 @@ function EditExperienceContent() {
                 </div>
               </div>
 
-              {/* Satin Ribbon (Untruncated Labels) */}
+              {/* Silk & Velvet Ribbon */}
               <div className="space-y-2">
                 <span className="text-xs text-white/80 font-ui font-medium block">
                   Silk & Velvet Ribbon
@@ -1166,7 +1225,7 @@ function EditExperienceContent() {
                 </div>
               </div>
 
-              {/* Wax Seal Choice */}
+              {/* Digital Wax Seal */}
               <div className="space-y-2">
                 <span className="text-xs text-white/80 font-ui font-medium block">
                   Digital Wax Seal
@@ -1203,7 +1262,7 @@ function EditExperienceContent() {
                 </div>
               </div>
 
-              {/* Bouquet Blooms (1–4 blooms) */}
+              {/* Bouquet Blooms */}
               <div className="space-y-2">
                 <span className="text-xs text-white/80 font-ui font-medium block">
                   Bouquet Blooms (1–4 flowers)
@@ -1336,10 +1395,124 @@ function EditExperienceContent() {
                   })}
                 </div>
               </div>
+
+              {/* Stage Progression Footer */}
+              <div className="pt-2 flex justify-between">
+                <button
+                  type="button"
+                  onClick={() => scrollToSection("personalize")}
+                  className="px-3.5 py-1.5 rounded-xl text-xs font-ui text-white/50 hover:text-white transition-colors cursor-pointer"
+                >
+                  ← Back to Personalize
+                </button>
+                <button
+                  type="button"
+                  onClick={() => scrollToSection("preview")}
+                  className="px-4 py-2 rounded-xl text-xs font-ui font-medium bg-white/[0.05] hover:bg-white/[0.1] text-white transition-colors flex items-center gap-1.5 cursor-pointer"
+                >
+                  <span>Continue to Preview</span>
+                  <span>→</span>
+                </button>
+              </div>
             </section>
 
-            {/* STAGE 5: Preview, Send & Keepsakes */}
-            <section id="section-preview" className="scroll-mt-16 border-t border-white/[0.08] pt-8">
+            {/* ------------------------------------------------------------- */}
+            {/* STAGE 06: Preview (Recipient Experience Preview)              */}
+            {/* ------------------------------------------------------------- */}
+            <section id="section-preview" className="space-y-4 scroll-mt-20 border-t border-white/[0.08] pt-8">
+              <div className="flex items-center justify-between border-b border-white/[0.06] pb-3">
+                <div className="flex items-center gap-2.5">
+                  <span className="w-6 h-6 rounded-full bg-rose-500/20 text-rose-300 flex items-center justify-center text-xs font-mono">
+                    06
+                  </span>
+                  <div>
+                    <h2 className="text-base font-display font-medium text-white">Recipient Experience Preview</h2>
+                    <p className="text-[11px] text-white/50 font-ui font-light">
+                      See how your creation comes to life in your partner&apos;s eyes
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-4 sm:p-5 rounded-2xl bg-white/[0.02] border border-white/[0.08] space-y-3 text-xs font-ui">
+                <div className="space-y-1">
+                  <span className="font-medium text-white block">Real Recipient Preview</span>
+                  <p className="text-white/60 font-light leading-relaxed">
+                    The live canvas on the right accurately renders your chosen world ({templateMeta.name}),
+                    wax seal, story chapters, and interactive moments in real time.
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-3 gap-2 pt-2 border-t border-white/[0.06]">
+                  <div className="p-2.5 rounded-xl bg-white/[0.03] text-center space-y-1">
+                    <span className="block text-base select-none">💌</span>
+                    <span className="text-[10px] text-white/70 block">Tactile Seal</span>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-white/[0.03] text-center space-y-1">
+                    <span className="block text-base select-none">📜</span>
+                    <span className="text-[10px] text-white/70 block">Unfolded Letter</span>
+                  </div>
+                  <div className="p-2.5 rounded-xl bg-white/[0.03] text-center space-y-1">
+                    <span className="block text-base select-none">✨</span>
+                    <span className="text-[10px] text-white/70 block">Discovered Moments</span>
+                  </div>
+                </div>
+
+                {/* Mobile Preview View Button */}
+                <div className="pt-1 md:hidden">
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    size="md"
+                    onClick={() => setMobileTab("preview")}
+                    className="w-full text-xs rounded-full font-ui"
+                  >
+                    Open Live Canvas Preview →
+                  </Button>
+                </div>
+              </div>
+
+              {/* Stage Progression Footer */}
+              <div className="pt-2 flex justify-between">
+                <button
+                  type="button"
+                  onClick={() => scrollToSection("mood")}
+                  className="px-3.5 py-1.5 rounded-xl text-xs font-ui text-white/50 hover:text-white transition-colors cursor-pointer"
+                >
+                  ← Back to Mood & Decor
+                </button>
+                <button
+                  type="button"
+                  onClick={() => scrollToSection("send")}
+                  className="px-4 py-2 rounded-xl text-xs font-ui font-medium bg-rose-600/30 hover:bg-rose-600/40 text-rose-200 border border-rose-500/30 transition-colors flex items-center gap-1.5 cursor-pointer"
+                >
+                  <span>Ready to Seal & Send</span>
+                  <span>→</span>
+                </button>
+              </div>
+            </section>
+
+            {/* ------------------------------------------------------------- */}
+            {/* STAGE 07: Seal & Send (Delivery, Soundtrack & Completion)    */}
+            {/* ------------------------------------------------------------- */}
+            <section id="section-send" className="space-y-6 scroll-mt-20 border-t border-white/[0.08] pt-8">
+              <div className="flex items-center justify-between border-b border-white/[0.06] pb-3">
+                <div className="flex items-center gap-2.5">
+                  <span className="w-6 h-6 rounded-full bg-rose-500/20 text-rose-300 flex items-center justify-center text-xs font-mono">
+                    07
+                  </span>
+                  <div>
+                    <h2 className="text-base font-display font-medium text-white">Seal & Send Your Valentine</h2>
+                    <p className="text-[11px] text-white/50 font-ui font-light">
+                      Attach soundtrack music, schedule reveal date, and generate your private link
+                    </p>
+                  </div>
+                </div>
+                <Badge variant="rose" size="sm" className="text-[10px]">
+                  Final Step
+                </Badge>
+              </div>
+
               <PreviewAndSendSection
                 publicId={publicId}
                 partnerName={config.partnerName}
@@ -1348,74 +1521,112 @@ function EditExperienceContent() {
                 onSoundtrackChange={(url) => handleConfigChange((prev) => ({ ...prev, soundtrackUrl: url }))}
                 onScheduleChange={(isoDate) => handleConfigChange((prev) => ({ ...prev, scheduledUnlockAt: isoDate }))}
               />
-            </section>
 
-            {/* Validation Errors */}
-            {publishErrors.length > 0 && (
-              <div className="p-4 rounded-xl bg-rose-950/70 border border-rose-800/60 text-xs text-rose-200 space-y-1.5 animate-fadeIn">
-                <span className="font-semibold block text-rose-300 font-ui">
-                  Please complete the following to publish:
-                </span>
-                {publishErrors.map((err, i) => (
-                  <p key={i} className="flex items-center gap-1.5 font-ui">
-                    <span>•</span> {err}
-                  </p>
-                ))}
+              {/* Validation Errors */}
+              {publishErrors.length > 0 && (
+                <div className="p-4 rounded-xl bg-rose-950/70 border border-rose-800/60 text-xs text-rose-200 space-y-1.5 animate-fadeIn">
+                  <span className="font-semibold block text-rose-300 font-ui">
+                    Please complete the following to publish:
+                  </span>
+                  {publishErrors.map((err, i) => (
+                    <p key={i} className="flex items-center gap-1.5 font-ui">
+                      <span>•</span> {err}
+                    </p>
+                  ))}
+                </div>
+              )}
+
+              {/* Form Action Controls */}
+              <div className="pt-4 flex flex-col sm:flex-row gap-3 border-t border-white/[0.08]">
+                <Button
+                  type="button"
+                  data-testid="save-draft-button"
+                  variant="outline"
+                  size="md"
+                  onClick={() => performSave()}
+                  className="flex-1 text-xs border-white/15 text-[#FAF8F5] rounded-full font-ui cursor-pointer"
+                >
+                  Save Draft
+                </Button>
+                <Button
+                  type="button"
+                  data-testid="publish-button"
+                  variant="romantic"
+                  size="md"
+                  disabled={saveStatus === "saving" || isPublishing}
+                  onClick={handlePublish}
+                  className="flex-1 text-xs rounded-full font-ui shadow-lg shadow-rose-950/50 cursor-pointer"
+                >
+                  {isPublishing ? "Publishing…" : "Publish Valentine 💌"}
+                </Button>
               </div>
-            )}
-
-            {/* Form Action Controls */}
-            <div className="pt-4 flex flex-col sm:flex-row gap-3 border-t border-white/[0.08]">
-              <Button
-                type="button"
-                data-testid="save-draft-button"
-                variant="outline"
-                size="md"
-                onClick={() => performSave()}
-                className="flex-1 text-xs border-white/15 text-[#FAF8F5] rounded-full font-ui"
-              >
-                Save Draft
-              </Button>
-              <Button
-                type="button"
-                data-testid="publish-button"
-                variant="romantic"
-                size="md"
-                disabled={saveStatus === "saving" || isPublishing}
-                onClick={handlePublish}
-                className="flex-1 text-xs rounded-full font-ui shadow-lg shadow-rose-950/50"
-              >
-                {isPublishing ? "Publishing…" : "Publish Valentine 💌"}
-              </Button>
-            </div>
-
-            {/* Mobile View Live Preview CTA */}
-            <div className="pt-1 md:hidden">
-              <Button
-                type="button"
-                variant="secondary"
-                size="md"
-                onClick={() => setMobileTab("preview")}
-                className="w-full text-xs rounded-full font-ui"
-              >
-                View Live Preview Canvas →
-              </Button>
-            </div>
+            </section>
           </div>
         </div>
 
-        {/* Right Pane: Expansive Live Canvas Preview */}
+        {/* Right Pane: Live Recipient Canvas Preview */}
         <div
-          className={`flex-1 bg-[#070609] overflow-y-auto flex flex-col items-center justify-center p-4 sm:p-8 relative ${
+          className={`flex-1 bg-[#070609] overflow-y-auto flex flex-col items-center justify-start p-4 sm:p-8 relative ${
             mobileTab === "form" ? "hidden md:flex" : "flex"
           }`}
         >
-          {/* Subtle ambient starlight glow */}
+          {/* Subtle ambient world glow */}
           <div className="pointer-events-none absolute inset-0 bg-radial-gradient from-white/[0.04] via-transparent to-transparent opacity-80 blur-3xl" />
 
-          {/* Device / Canvas Frame: Clean, neutral, unboxed */}
-          <div className="w-full max-w-[420px] sm:max-w-[460px] rounded-[38px] p-2.5 sm:p-3.5 bg-gradient-to-b from-white/[0.12] via-white/[0.05] to-black/80 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.95)] relative z-10 border border-white/[0.1]">
-            <div className="rounded-[30px] overflow-hidden bg-[#0A090C] border border-black/80 flex flex-col min-h-[580px] max-h-[760px] shadow-inner relative">
+          {/* Floating Canvas Top Toolbar (Desktop Device Mode Switcher) */}
+          <div className="hidden md:flex items-center justify-between w-full max-w-[480px] mb-4 px-2 text-xs font-ui">
+            <div className="flex items-center gap-2">
+              <span className="text-white/40 text-[11px]">Preview:</span>
+              <span className="text-white/80 font-medium text-[11px]">{templateMeta.name}</span>
+            </div>
+            <div className="flex items-center gap-1 bg-white/[0.06] p-1 rounded-xl border border-white/[0.08]">
+              <button
+                type="button"
+                onClick={() => setPreviewDeviceMode("phone")}
+                className={`px-2.5 py-0.5 rounded-lg text-[10px] font-ui transition-all ${
+                  previewDeviceMode === "phone"
+                    ? "bg-white text-black font-medium"
+                    : "text-white/60 hover:text-white"
+                }`}
+              >
+                Phone
+              </button>
+              <button
+                type="button"
+                onClick={() => setPreviewDeviceMode("tablet")}
+                className={`px-2.5 py-0.5 rounded-lg text-[10px] font-ui transition-all ${
+                  previewDeviceMode === "tablet"
+                    ? "bg-white text-black font-medium"
+                    : "text-white/60 hover:text-white"
+                }`}
+              >
+                Tablet
+              </button>
+              <button
+                type="button"
+                onClick={() => setPreviewDeviceMode("expanded")}
+                className={`px-2.5 py-0.5 rounded-lg text-[10px] font-ui transition-all ${
+                  previewDeviceMode === "expanded"
+                    ? "bg-white text-black font-medium"
+                    : "text-white/60 hover:text-white"
+                }`}
+              >
+                Expanded
+              </button>
+            </div>
+          </div>
+
+          {/* Device / Canvas Frame */}
+          <div
+            className={`w-full transition-all duration-300 relative z-10 ${
+              previewDeviceMode === "tablet"
+                ? "max-w-[620px]"
+                : previewDeviceMode === "expanded"
+                ? "max-w-[740px]"
+                : "max-w-[420px] sm:max-w-[460px]"
+            } rounded-[38px] p-2.5 sm:p-3.5 bg-gradient-to-b from-white/[0.12] via-white/[0.05] to-black/80 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.95)] border border-white/[0.1]`}
+          >
+            <div className="rounded-[30px] overflow-hidden bg-[#0A090C] border border-black/80 flex flex-col min-h-[580px] max-h-[820px] shadow-inner relative">
               {/* Minimal Device Top Bar */}
               <div className="h-6 w-full bg-black/60 flex items-center justify-between px-6 pt-1 select-none z-30 shrink-0">
                 <span className="text-[10px] text-white/50 font-ui font-medium">9:41</span>
@@ -1426,7 +1637,7 @@ function EditExperienceContent() {
                 </div>
               </div>
 
-              {/* Screen Content: Real ExperienceRenderer with selected world */}
+              {/* Screen Content: Real ExperienceRenderer */}
               <div className="flex-1 overflow-y-auto">
                 <ExperienceRenderer
                   templateId={templateMeta.id}
@@ -1496,7 +1707,7 @@ function EditExperienceContent() {
                 type="button"
                 data-testid="copy-link-button"
                 onClick={handleCopyLink}
-                className="px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-medium tracking-wide transition-colors shrink-0 shadow-md font-ui"
+                className="px-4 py-2 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-medium tracking-wide transition-colors shrink-0 shadow-md font-ui cursor-pointer"
               >
                 {copied ? "Copied! 💌" : "Copy Link"}
               </button>
