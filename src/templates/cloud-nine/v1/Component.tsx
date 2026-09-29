@@ -185,16 +185,14 @@ export const CloudNineComponent: React.FC<ComponentProps> = ({ config, mode, pub
             />
           </div>
 
-          {/* Volumetric cloud mist screen blend */}
-          <div className="absolute top-[25%] sm:top-[20%] inset-x-[-10%] h-[550px] mix-blend-screen opacity-50 filter blur-[2px]">
-            <Image
-              src="/clouds/cloud-puff.jpg"
-              alt="Volumetric Cloud Mist"
-              fill
-              unoptimized
-              className="object-contain object-center"
-            />
-          </div>
+          {/* Volumetric cloud mist luminous layer */}
+          <div
+            className="absolute top-[18%] sm:top-[15%] inset-x-[-10%] h-[550px] pointer-events-none filter blur-[28px] opacity-75"
+            style={{
+              background:
+                "radial-gradient(ellipse 65% 50% at 50% 50%, rgba(255, 255, 255, 0.9) 0%, rgba(254, 215, 226, 0.5) 45%, transparent 75%)",
+            }}
+          />
         </div>
 
         {/* Top Ambient Navigation / Controls Bar */}

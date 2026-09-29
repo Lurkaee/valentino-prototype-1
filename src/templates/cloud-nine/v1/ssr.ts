@@ -137,17 +137,12 @@ export function renderCloudNineSsrHtml(config: CloudNinePublishedConfig, publicI
     }
     .atmosphere-mist {
       position: absolute;
-      top: 25%;
+      top: 15%;
       left: -10%;
       right: -10%;
       height: 550px;
-      background-image: url('/clouds/cloud-puff.jpg');
-      background-size: contain;
-      background-position: center;
-      background-repeat: no-repeat;
-      mix-blend-mode: screen;
-      opacity: 0.5;
-      filter: blur(2px);
+      background: radial-gradient(ellipse 65% 50% at 50% 50%, rgba(255, 255, 255, 0.85) 0%, rgba(254, 215, 226, 0.45) 45%, transparent 75%);
+      filter: blur(28px);
     }
     .foreground-wrap-layer {
       position: fixed;
