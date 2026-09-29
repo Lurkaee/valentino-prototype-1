@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState, useRef, useCallback } from "react";
-import { motion, useReducedMotion, useScroll, useTransform, useSpring } from "motion/react";
-import { triggerCurtainNavigation } from "./PageCurtains";
+import React, { useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useReducedMotion } from "motion/react";
+import { gsap } from "gsap";
 
 interface LoveLetter3DProps {
   className?: string;
@@ -11,36 +12,38 @@ interface LoveLetter3DProps {
 
 /**
  * LoveLetter3D:
- * A handcrafted romantic 3D love letter floating gently in the dreamy clouds.
- * Designed to look and feel like an authentic luxury love letter, not a SaaS card:
- * - Luxury cream paper envelope with deckled letter peeking out
- * - Satin silk ribbon with gold-stitched edges
- * - Hand-poured crimson wax seal with embossed heart
- * - Restrained idle breathing (±6px) and subtle cursor tilt (capped at ±3.5°)
- * - Soft diffused ambient rosy cloud shadow
- * - Subtle scroll-linked scale and depth dampening
+ * Handcrafted romantic 3D love letter floating gently in the dreamy clouds.
+ * Refactored for zero-rerender pointer physics via GSAP quickTo.
  */
 export function LoveLetter3D({ className = "", onOpen }: LoveLetter3DProps) {
+  const router = useRouter();
   const shouldReduceMotion = useReducedMotion();
   const cardRef = useRef<HTMLDivElement>(null);
+  const tiltRef = useRef<HTMLDivElement>(null);
+  const glowRef = useRef<HTMLDivElement>(null);
 
-  // Scroll depth connection
-  const { scrollY } = useScroll();
-  const rawScrollScale = useTransform(scrollY, [0, 500], [1, 0.96]);
-  const rawScrollY = useTransform(scrollY, [0, 500], [0, 16]);
-  const scrollScale = useSpring(rawScrollScale, { damping: 24, stiffness: 140 });
-  const scrollYOffset = useSpring(rawScrollY, { damping: 24, stiffness: 140 });
+  useEffect(() => {
+    if (shouldReduceMotion || !cardRef.current || !tiltRef.current) return;
 
-  // Mouse tilt offsets (strictly capped at ±3.5° on X, ±4.5° on Y)
-  const [rotateX, setRotateX] = useState(0);
-  const [rotateY, setRotateY] = useState(0);
-  const [isHovered, setIsHovered] = useState(false);
+    const tiltEl = tiltRef.current;
+    const cardEl = cardRef.current;
 
-  const handleMouseMove = useCallback(
-    (e: React.MouseEvent<HTMLDivElement>) => {
-      if (shouldReduceMotion || !cardRef.current) return;
+    // Zero-rerender high performance GSAP quickTo setters
+    const setRotateX = gsap.quickTo(tiltEl, "rotateX", { duration: 0.35, ease: "power2.out" });
+    const setRotateY = gsap.quickTo(tiltEl, "rotateY", { duration: 0.35, ease: "power2.out" });
+    const setTranslateZ = gsap.quickTo(tiltEl, "z", { duration: 0.35, ease: "power2.out" });
 
-      const rect = cardRef.current.getBoundingClientRect();
+    // Idle floating breathing animation
+    const idleTween = gsap.to(tiltEl, {
+      y: -6,
+      duration: 2.8,
+      repeat: -1,
+      yoyo: true,
+      ease: "sine.inOut",
+    });
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = cardEl.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2;
       const centerY = rect.top + rect.height / 2;
 
@@ -53,30 +56,47 @@ export function LoveLetter3D({ className = "", onOpen }: LoveLetter3DProps) {
 
       setRotateX(clampedX);
       setRotateY(clampedY);
-    },
-    [shouldReduceMotion]
-  );
+    };
 
-  const handleMouseLeave = useCallback(() => {
-    setIsHovered(false);
-    setRotateX(0);
-    setRotateY(0);
-  }, []);
+    const handleMouseEnter = () => {
+      setTranslateZ(8);
+      if (glowRef.current) {
+        gsap.to(glowRef.current, { opacity: 0.95, scale: 1.05, duration: 0.4 });
+      }
+    };
+
+    const handleMouseLeave = () => {
+      setRotateX(0);
+      setRotateY(0);
+      setTranslateZ(0);
+      if (glowRef.current) {
+        gsap.to(glowRef.current, { opacity: 0.5, scale: 1, duration: 0.4 });
+      }
+    };
+
+    cardEl.addEventListener("mousemove", handleMouseMove);
+    cardEl.addEventListener("mouseenter", handleMouseEnter);
+    cardEl.addEventListener("mouseleave", handleMouseLeave);
+
+    return () => {
+      idleTween.kill();
+      cardEl.removeEventListener("mousemove", handleMouseMove);
+      cardEl.removeEventListener("mouseenter", handleMouseEnter);
+      cardEl.removeEventListener("mouseleave", handleMouseLeave);
+    };
+  }, [shouldReduceMotion]);
 
   const handleClick = () => {
     if (onOpen) {
       onOpen();
     } else {
-      triggerCurtainNavigation("/create");
+      router.push("/create");
     }
   };
 
   return (
     <div
       ref={cardRef}
-      onMouseMove={handleMouseMove}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={handleMouseLeave}
       onClick={handleClick}
       className={`relative cursor-pointer select-none group perspective-[1200px] ${className}`}
       role="button"
@@ -91,47 +111,22 @@ export function LoveLetter3D({ className = "", onOpen }: LoveLetter3DProps) {
     >
       {/* Outer ambient rosy bloom reacting gently to hover */}
       <div
-        className={`absolute -inset-6 rounded-[36px] bg-gradient-to-r from-rose-400/20 via-pink-300/30 to-amber-300/20 blur-2xl transition-opacity duration-700 pointer-events-none ${
-          isHovered ? "opacity-95 scale-105" : "opacity-60"
-        }`}
+        ref={glowRef}
+        className="absolute -inset-6 rounded-[36px] bg-gradient-to-r from-rose-400/20 via-pink-300/30 to-amber-300/20 blur-2xl opacity-50 pointer-events-none transition-transform"
       />
 
-      {/* 3D Transform Root */}
-      <motion.div
-        animate={
-          shouldReduceMotion
-            ? {}
-            : {
-                y: isHovered ? -4 : [0, -6, 0],
-                rotateX,
-                rotateY,
-                translateZ: isHovered ? 8 : 0,
-              }
-        }
-        transition={
-          shouldReduceMotion
-            ? { duration: 0 }
-            : {
-                y: isHovered
-                  ? { duration: 0.35, ease: "easeOut" }
-                  : { duration: 5.4, repeat: Infinity, ease: "easeInOut" },
-                rotateX: { duration: 0.25, ease: "easeOut" },
-                rotateY: { duration: 0.25, ease: "easeOut" },
-                translateZ: { duration: 0.35, ease: "easeOut" },
-              }
-        }
+      {/* 3D Transform Root: zero rerender updates */}
+      <div
+        ref={tiltRef}
         style={{
           transformStyle: "preserve-3d",
-          scale: shouldReduceMotion ? 1 : scrollScale,
         }}
-        className="relative w-full max-w-[340px] sm:max-w-[380px] mx-auto"
+        className="relative w-full max-w-[340px] sm:max-w-[380px] mx-auto will-change-transform"
       >
         {/* Layer 1: Soft Diffused Rosy Cloud Shadow */}
         <div
           style={{ transform: "translateZ(-14px)" }}
-          className={`absolute inset-x-5 -bottom-4 h-10 bg-gradient-to-r from-rose-950/20 via-rose-900/30 to-rose-950/20 rounded-full blur-xl transition-all duration-500 ${
-            isHovered ? "scale-110 opacity-60" : "opacity-40"
-          }`}
+          className="absolute inset-x-5 -bottom-4 h-10 bg-gradient-to-r from-rose-950/20 via-rose-900/30 to-rose-950/20 rounded-full blur-xl opacity-40 transition-all duration-500 group-hover:scale-110 group-hover:opacity-60"
         />
 
         {/* Layer 2: Handcrafted Cream Envelope & Letter Composition */}
@@ -145,11 +140,10 @@ export function LoveLetter3D({ className = "", onOpen }: LoveLetter3DProps) {
             aria-hidden="true"
           />
 
-          {/* Peeking Luxury Letter Card (protruding from inside envelope) */}
+          {/* Peeking Luxury Letter Card */}
           <div className="relative pt-4 px-5 pb-3 bg-gradient-to-b from-[#FFFDF8] to-[#FFF8F0] border-b border-[#EFE2D4] shadow-[0_2px_8px_rgba(0,0,0,0.03)]">
-            {/* Top gold foil accent */}
             <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-[#D4AF37]/60 to-transparent" />
-            
+
             <div className="flex items-center justify-between text-[10px] text-[#9E6476] uppercase tracking-widest font-sans mb-1">
               <span className="flex items-center gap-1.5">
                 <span className="text-rose-400">✦</span>
@@ -170,7 +164,7 @@ export function LoveLetter3D({ className = "", onOpen }: LoveLetter3DProps) {
           <div className="relative p-5 sm:p-6 bg-[#FFFDF9]">
             {/* Triangular Envelope Flap Crease & Shadows */}
             <div className="relative mb-3 flex items-center justify-center">
-              {/* Satin Crimson Ribbon band running across */}
+              {/* Satin Crimson Ribbon band */}
               <div className="absolute inset-x-[-24px] h-7 bg-gradient-to-r from-[#9F1239] via-[#E11D48] to-[#9F1239] shadow-sm flex items-center justify-between px-6">
                 <div className="absolute top-0 inset-x-0 h-[1px] bg-[#FDE68A]/70" />
                 <div className="absolute bottom-0 inset-x-0 h-[1px] bg-[#FDE68A]/70" />
@@ -182,13 +176,17 @@ export function LoveLetter3D({ className = "", onOpen }: LoveLetter3DProps) {
                 </span>
               </div>
 
-              {/* Hand-Poured Crimson Wax Seal with Embossed Heart */}
+              {/* Hand-Poured Crimson Wax Seal with Embossed Heart SVG */}
               <div className="relative z-10 flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-[#E11D48] via-[#BE123C] to-[#6B0C23] border-2 border-[#FCA5A5]/80 shadow-[0_4px_14px_rgba(159,18,57,0.4),inset_0_2px_4px_rgba(255,255,255,0.35)] group-hover:scale-105 transition-transform duration-300">
-                {/* Organic wax lip ripple */}
                 <div className="absolute inset-0.5 rounded-full border border-rose-900/40" />
-                <span className="text-base select-none filter drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)]">
-                  💖
-                </span>
+                <svg
+                  className="w-5 h-5 text-rose-100 filter drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)]"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                </svg>
               </div>
             </div>
 
@@ -204,7 +202,7 @@ export function LoveLetter3D({ className = "", onOpen }: LoveLetter3DProps) {
             </div>
           </div>
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 }

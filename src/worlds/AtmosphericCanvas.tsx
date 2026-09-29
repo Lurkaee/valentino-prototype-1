@@ -75,18 +75,36 @@ export const AtmosphericCanvas: React.FC<AtmosphericCanvasProps> = ({
         x: Math.random() * width,
         y: Math.random() * height,
         vx: (Math.random() - 0.5) * 0.45,
-        vy: theme === "cloud-nine" ? 0.35 + Math.random() * 0.4 : theme === "kage" ? -0.25 - Math.random() * 0.35 : 0.2 + Math.random() * 0.4,
+        vy:
+          theme === "cloud-nine"
+            ? 0.35 + Math.random() * 0.4
+            : theme === "kage"
+            ? -0.25 - Math.random() * 0.35
+            : theme === "apricot-film"
+            ? 0.15 + Math.random() * 0.3
+            : theme === "wildflower-paper"
+            ? 0.3 + Math.random() * 0.45
+            : theme === "ocean-letter"
+            ? -0.2 - Math.random() * 0.3
+            : 0.2 + Math.random() * 0.4,
         size: isMote ? 2 + Math.random() * 2.5 : 5 + Math.random() * 6,
         alpha: Math.random() * 0.7,
         maxAlpha: 0.35 + Math.random() * 0.5,
         rotation: Math.random() * Math.PI * 2,
         rotationSpeed: (Math.random() - 0.5) * 0.02,
         pulsePhase: Math.random() * Math.PI * 2,
-        type: theme === "cloud-nine"
-          ? (isMote ? "mote" : "petal")
-          : theme === "midnight-rose"
-          ? (isMote ? "firefly" : "petal")
-          : (isMote ? "mote" : "ember"),
+        type:
+          theme === "cloud-nine"
+            ? isMote ? "mote" : "petal"
+            : theme === "midnight-rose"
+            ? isMote ? "firefly" : "petal"
+            : theme === "kage"
+            ? isMote ? "mote" : "ember"
+            : theme === "apricot-film"
+            ? isMote ? "mote" : "firefly"
+            : theme === "wildflower-paper"
+            ? isMote ? "mote" : "petal"
+            : isMote ? "firefly" : "mote",
       });
     }
 
@@ -186,10 +204,25 @@ export const AtmosphericCanvas: React.FC<AtmosphericCanvasProps> = ({
             gradient.addColorStop(0.35, `rgba(251, 191, 36, ${alpha * 0.7})`);
             gradient.addColorStop(0.7, `rgba(225, 29, 72, ${alpha * 0.35})`);
             gradient.addColorStop(1, "rgba(225, 29, 72, 0)");
-          } else {
+          } else if (theme === "kage") {
             gradient.addColorStop(0, `rgba(224, 35, 28, ${alpha})`);
             gradient.addColorStop(0.7, `rgba(16, 185, 129, ${alpha * 0.4})`);
             gradient.addColorStop(1, "rgba(0, 0, 0, 0)");
+          } else if (theme === "apricot-film") {
+            gradient.addColorStop(0, `rgba(255, 248, 240, ${alpha * 1.2})`);
+            gradient.addColorStop(0.4, `rgba(244, 162, 97, ${alpha * 0.8})`);
+            gradient.addColorStop(0.8, `rgba(231, 111, 81, ${alpha * 0.3})`);
+            gradient.addColorStop(1, "rgba(231, 111, 81, 0)");
+          } else if (theme === "wildflower-paper") {
+            gradient.addColorStop(0, `rgba(247, 249, 245, ${alpha})`);
+            gradient.addColorStop(0.5, `rgba(192, 132, 252, ${alpha * 0.6})`);
+            gradient.addColorStop(1, "rgba(163, 184, 153, 0)");
+          } else {
+            // ocean-letter
+            gradient.addColorStop(0, `rgba(240, 249, 255, ${alpha * 1.2})`);
+            gradient.addColorStop(0.4, `rgba(56, 189, 248, ${alpha * 0.7})`);
+            gradient.addColorStop(0.8, `rgba(14, 116, 144, ${alpha * 0.3})`);
+            gradient.addColorStop(1, "rgba(3, 10, 18, 0)");
           }
           ctx.fillStyle = gradient;
           ctx.beginPath();
@@ -200,12 +233,14 @@ export const AtmosphericCanvas: React.FC<AtmosphericCanvasProps> = ({
           ctx.fillStyle =
             theme === "cloud-nine"
               ? `rgba(244, 114, 182, ${alpha * 0.7})`
+              : theme === "wildflower-paper"
+              ? `rgba(192, 132, 252, ${alpha * 0.75})`
               : `rgba(225, 29, 72, ${alpha * 0.8})`;
           ctx.beginPath();
           ctx.ellipse(0, 0, p.size, p.size * 0.55, 0, 0, Math.PI * 2);
           ctx.fill();
         } else {
-          // Kyoto ember with soft warm core
+          // Kyoto ember or warm film flare
           const emberGrad = ctx.createRadialGradient(0, 0, 0, 0, 0, p.size * 1.5);
           emberGrad.addColorStop(0, `rgba(255, 120, 80, ${alpha * 1.2})`);
           emberGrad.addColorStop(0.4, `rgba(224, 35, 28, ${alpha * 0.8})`);

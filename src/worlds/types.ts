@@ -1,6 +1,12 @@
 export type DeviceTier = "high" | "mid" | "low";
 
-export type WorldTheme = "cloud-nine" | "midnight-rose" | "kage";
+export type WorldTheme =
+  | "cloud-nine"
+  | "midnight-rose"
+  | "kage"
+  | "apricot-film"
+  | "wildflower-paper"
+  | "ocean-letter";
 
 export type EmotionalScene =
   | "welcome"

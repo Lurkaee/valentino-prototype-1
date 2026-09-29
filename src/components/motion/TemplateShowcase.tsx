@@ -94,6 +94,72 @@ const WORLD_PRESENTATIONS: Record<string, WorldPresentationMeta> = {
       { id: "moonlit-stone", name: "Moonlit Stone", color: "#94a3b8" },
     ],
   },
+  "apricot-film": {
+    id: "apricot-film",
+    name: "Apricot Film",
+    subtitle: "Warm Analog 16mm & Golden Light",
+    badge: "Cinematic World",
+    icon: "🎞️",
+    quote: "“A sun-drenched memory on 16mm film stock. Golden light leaks, warm amber, and intimate nostalgic warmth.”",
+    signature: "Film grain atmosphere · Analog light leaks · Rich tobacco & terracotta · Nostalgic frames",
+    atmosphereTone: "Apricot Sun · Tobacco Amber · Golden Hour · Soft Cream",
+    accentCardBorder: "border-amber-500/30 hover:border-amber-500/50",
+    accentCardBg: "bg-gradient-to-br from-[#1C110A]/90 via-[#140C07]/90 to-[#0A0603]/95",
+    accentGlow: "from-amber-600/20 via-orange-950/40 to-transparent",
+    accentPill: "bg-amber-950/80 border-amber-500/40 text-amber-200",
+    sampleSender: "Yours in 35mm",
+    sampleRecipient: "My Golden Hour",
+    capabilities: ["letter", "timeline", "quiz"],
+    swatches: [
+      { id: "apricot-gold", name: "Warm Apricot", color: "#fb923c" },
+      { id: "tobacco-amber", name: "Tobacco Amber", color: "#b45309" },
+      { id: "vintage-cream", name: "Vintage Cream", color: "#fef3c7" },
+    ],
+  },
+  "wildflower-paper": {
+    id: "wildflower-paper",
+    name: "Wildflower Paper",
+    subtitle: "Botanical Cotton & Pressed Meadow",
+    badge: "Tactile World",
+    icon: "🌿",
+    quote: "“Handmade deckled paper with pressed petals and botanical calm. Tactile, organic, and timelessly gentle.”",
+    signature: "Handmade deckled paper · Floating botanicals · Gentle sage & lilac · Embossed monogram",
+    atmosphereTone: "Sage Mist · Meadow Lilac · Deckled Cotton · Pale Coral",
+    accentCardBorder: "border-emerald-400/30 hover:border-emerald-400/50",
+    accentCardBg: "bg-gradient-to-br from-[#0F1713]/90 via-[#0A100D]/90 to-[#060A08]/95",
+    accentGlow: "from-emerald-600/15 via-teal-950/30 to-transparent",
+    accentPill: "bg-emerald-950/80 border-emerald-400/40 text-emerald-200",
+    sampleSender: "Forever and Always",
+    sampleRecipient: "My Wildflower",
+    capabilities: ["letter", "timeline", "secret"],
+    swatches: [
+      { id: "pressed-sage", name: "Pressed Sage", color: "#34d399" },
+      { id: "meadow-lilac", name: "Meadow Lilac", color: "#c084fc" },
+      { id: "pale-coral", name: "Wild Coral", color: "#f87171" },
+    ],
+  },
+  "ocean-letter": {
+    id: "ocean-letter",
+    name: "Ocean Letter",
+    subtitle: "Drifting Glass Bottle & Abyssal Mist",
+    badge: "Oceanic World",
+    icon: "🌊",
+    quote: "“A letter in a glass bottle washed ashore at dusk. Deep teal swells, coastal breeze, and oceanic tranquility.”",
+    signature: "Drifting sea glass · Ocean tide mist · Deep abyssal teal · Wax-sealed parchment",
+    atmosphereTone: "Abyssal Teal · Fog Blue · Sea Glass · Soft Coral",
+    accentCardBorder: "border-cyan-400/30 hover:border-cyan-400/50",
+    accentCardBg: "bg-gradient-to-br from-[#07151D]/90 via-[#040E14]/90 to-[#02070A]/95",
+    accentGlow: "from-cyan-600/20 via-blue-950/40 to-transparent",
+    accentPill: "bg-cyan-950/80 border-cyan-400/40 text-cyan-200",
+    sampleSender: "Across the Tides",
+    sampleRecipient: "My Safe Harbor",
+    capabilities: ["letter", "timeline", "quiz", "openWhen"],
+    swatches: [
+      { id: "abyssal-teal", name: "Abyssal Teal", color: "#06b6d4" },
+      { id: "coastal-fog", name: "Coastal Fog", color: "#38bdf8" },
+      { id: "tide-coral", name: "Tide Coral", color: "#fb7185" },
+    ],
+  },
 };
 
 export function TemplateShowcase({ className = "" }: { className?: string }) {
@@ -128,7 +194,7 @@ export function TemplateShowcase({ className = "" }: { className?: string }) {
             Three Distinct Visual Worlds
           </h2>
           <p className="text-sm sm:text-base text-white/70 font-light mt-2 max-w-xl">
-            Valentino provides complete, authentic creative worlds — each designed with its own atmosphere, typography, interactions, and emotional signature.
+            Valentino provides complete, authentic creative worlds — from our core three to the full expanded collection — each designed with its own atmosphere, typography, interactions, and emotional signature.
           </p>
         </div>
         <CurtainLink href="/templates">

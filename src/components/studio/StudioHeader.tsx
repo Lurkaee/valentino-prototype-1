@@ -17,6 +17,11 @@ interface StudioHeaderProps {
   onChangeWorldClick: () => void;
   onPublishClick: () => void;
   onMobileTabChange: (tab: "form" | "preview") => void;
+  isFocusMode?: boolean;
+  onToggleFocusMode?: () => void;
+  previewDeviceMode?: "phone" | "tablet" | "expanded";
+  onPreviewDeviceModeChange?: (mode: "phone" | "tablet" | "expanded") => void;
+  onSaveDraftClick?: () => void;
 }
 
 export const StudioHeader: React.FC<StudioHeaderProps> = ({
@@ -30,9 +35,14 @@ export const StudioHeader: React.FC<StudioHeaderProps> = ({
   onChangeWorldClick,
   onPublishClick,
   onMobileTabChange,
+  isFocusMode,
+  onToggleFocusMode,
+  previewDeviceMode = "phone",
+  onPreviewDeviceModeChange,
+  onSaveDraftClick,
 }) => {
   return (
-    <header className="px-3 sm:px-6 py-2.5 sm:py-3 border-b border-white/[0.08] bg-[#0A090C]/95 backdrop-blur-md z-20 sticky top-0">
+    <header className="px-3 sm:px-6 py-2 sm:py-2.5 border-b border-white/[0.08] bg-[#0A090C]/95 backdrop-blur-md z-30 sticky top-0">
       <div className="flex items-center justify-between gap-2 max-w-full">
         {/* Left: Brand Monogram & Active World Trigger */}
         <div className="flex items-center gap-2 sm:gap-3 min-w-0 shrink">
@@ -56,7 +66,7 @@ export const StudioHeader: React.FC<StudioHeaderProps> = ({
             type="button"
             data-testid="change-world-trigger"
             onClick={onChangeWorldClick}
-            className="relative z-10 flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-1 rounded-full text-[10px] sm:text-[11px] font-ui bg-white/[0.05] hover:bg-white/[0.1] text-white/85 hover:text-white border border-white/[0.1] transition-all cursor-pointer shrink-0"
+            className="relative z-10 flex items-center gap-1 sm:gap-1.5 px-2.5 py-1 rounded-full text-[10px] sm:text-[11px] font-ui bg-white/[0.05] hover:bg-white/[0.1] text-white/85 hover:text-white border border-white/[0.1] transition-all cursor-pointer shrink-0"
             title="Switch visual world template"
           >
             <span className="w-1.5 h-1.5 rounded-full bg-rose-400 shrink-0" />
@@ -64,6 +74,63 @@ export const StudioHeader: React.FC<StudioHeaderProps> = ({
             <span className="text-white/40 text-[9px] font-mono hidden sm:inline">({templateVersion})</span>
             <span className="text-white/40 ml-0.5 text-[10px]">⇄</span>
           </button>
+        </div>
+
+        {/* Center: Device Switcher & Focus Mode (Desktop/Tablet) */}
+        <div className="hidden lg:flex items-center gap-3">
+          {onPreviewDeviceModeChange && (
+            <div className="flex items-center gap-1 bg-white/[0.04] p-0.5 rounded-xl border border-white/[0.08] text-xs font-ui">
+              <button
+                type="button"
+                onClick={() => onPreviewDeviceModeChange("phone")}
+                className={`px-2.5 py-1 rounded-lg text-[11px] transition-all ${
+                  previewDeviceMode === "phone"
+                    ? "bg-white text-black font-medium shadow-xs"
+                    : "text-white/60 hover:text-white"
+                }`}
+              >
+                Phone
+              </button>
+              <button
+                type="button"
+                onClick={() => onPreviewDeviceModeChange("tablet")}
+                className={`px-2.5 py-1 rounded-lg text-[11px] transition-all ${
+                  previewDeviceMode === "tablet"
+                    ? "bg-white text-black font-medium shadow-xs"
+                    : "text-white/60 hover:text-white"
+                }`}
+              >
+                Tablet
+              </button>
+              <button
+                type="button"
+                onClick={() => onPreviewDeviceModeChange("expanded")}
+                className={`px-2.5 py-1 rounded-lg text-[11px] transition-all ${
+                  previewDeviceMode === "expanded"
+                    ? "bg-white text-black font-medium shadow-xs"
+                    : "text-white/60 hover:text-white"
+                }`}
+              >
+                Expanded
+              </button>
+            </div>
+          )}
+
+          {onToggleFocusMode && (
+            <button
+              type="button"
+              onClick={onToggleFocusMode}
+              className={`px-2.5 py-1 rounded-xl text-[11px] font-ui border transition-all flex items-center gap-1.5 ${
+                isFocusMode
+                  ? "bg-rose-500/20 border-rose-500/40 text-white"
+                  : "bg-white/[0.04] border-white/[0.08] text-white/70 hover:text-white"
+              }`}
+              title="Toggle unencumbered recipient view"
+            >
+              <span>{isFocusMode ? "Exit Focus" : "Focus Mode"}</span>
+              <span className="text-[10px] opacity-70">⛶</span>
+            </button>
+          )}
         </div>
 
         {/* Center / Right: Save Status & Actions */}

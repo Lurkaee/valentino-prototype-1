@@ -35,6 +35,7 @@ export const viewport: Viewport = {
 };
 
 import { PageCurtains } from "@/components/motion/PageCurtains";
+import { SmoothScrollProvider } from "@/components/motion/SmoothScrollProvider";
 
 export default function RootLayout({
   children,
@@ -44,7 +45,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${playfair.variable} ${plusJakarta.variable}`}>
       <body className="antialiased min-h-[100dvh] flex flex-col font-sans bg-[#0A090C] text-[#FAF8F5]">
-        {children}
+        <SmoothScrollProvider>
+          {children}
+        </SmoothScrollProvider>
         <PageCurtains />
       </body>
     </html>

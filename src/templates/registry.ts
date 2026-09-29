@@ -122,6 +122,123 @@ export const kageV1: TemplateDefinition<
   renderSsrHtml: renderKageSsrHtml,
 };
 
+import {
+  apricotFilmDraftSchema,
+  apricotFilmPublishSchema,
+  ApricotFilmDraftConfig,
+  ApricotFilmPublishedConfig,
+} from "./apricot-film/v1/schema";
+import { normalizeApricotFilmConfig } from "./apricot-film/v1/normalize";
+import { ApricotFilmComponent } from "./apricot-film/v1/Component";
+
+export const apricotFilmV1: TemplateDefinition<
+  ApricotFilmDraftConfig,
+  ApricotFilmPublishedConfig
+> = {
+  id: "apricot-film",
+  version: "v1",
+  name: "Apricot Film",
+  description: "A warm, nostalgic 16mm golden memory reel bathed in golden afternoon sunlight.",
+  tagline: "For the memories that feel like warm analog cinema",
+  atmosphere: "16mm golden memory reel, sunbeams, tobacco amber, warm grain, and nostalgic warmth.",
+  signature: "Analog film slide + golden hour light leak",
+  availability: "available",
+  category: "Analog",
+  supportedModules: ["letter", "memories", "voiceNote", "videoMemory", "timeline", "quiz", "openWhen"],
+  draftSchema: apricotFilmDraftSchema,
+  publishSchema: apricotFilmPublishSchema,
+  defaultConfig: {
+    partnerName: "",
+    senderName: "",
+    greeting: "To my favorite memory",
+    message: "",
+    signOff: "Forever in golden hour",
+    accentTheme: "apricot-amber",
+    heroMediaId: null,
+    decor: DEFAULT_VALENTINE_DECOR,
+  },
+  normalizeConfig: normalizeApricotFilmConfig,
+  Component: ApricotFilmComponent,
+};
+
+import {
+  wildflowerPaperDraftSchema,
+  wildflowerPaperPublishSchema,
+  WildflowerPaperDraftConfig,
+  WildflowerPaperPublishedConfig,
+} from "./wildflower-paper/v1/schema";
+import { normalizeWildflowerPaperConfig } from "./wildflower-paper/v1/normalize";
+import { WildflowerPaperComponent } from "./wildflower-paper/v1/Component";
+
+export const wildflowerPaperV1: TemplateDefinition<
+  WildflowerPaperDraftConfig,
+  WildflowerPaperPublishedConfig
+> = {
+  id: "wildflower-paper",
+  version: "v1",
+  name: "Wildflower Paper",
+  description: "An organic, deckled cotton paper sanctuary adorned with pressed meadow flora and honest words.",
+  tagline: "For a love cultivated slowly with honesty and grace",
+  atmosphere: "Deckled cotton fibers, pressed meadow botanicals, sage, and dried lilac.",
+  signature: "Botanical twine unbind + pressed floral reveal",
+  availability: "available",
+  category: "Botanical",
+  supportedModules: ["letter", "memories", "voiceNote", "videoMemory", "timeline", "secret", "openWhen"],
+  draftSchema: wildflowerPaperDraftSchema,
+  publishSchema: wildflowerPaperPublishSchema,
+  defaultConfig: {
+    partnerName: "",
+    senderName: "",
+    greeting: "To my gentlest blossom",
+    message: "",
+    signOff: "Grown in love",
+    accentTheme: "sage-botanical",
+    heroMediaId: null,
+    decor: DEFAULT_VALENTINE_DECOR,
+  },
+  normalizeConfig: normalizeWildflowerPaperConfig,
+  Component: WildflowerPaperComponent,
+};
+
+import {
+  oceanLetterDraftSchema,
+  oceanLetterPublishSchema,
+  OceanLetterDraftConfig,
+  OceanLetterPublishedConfig,
+} from "./ocean-letter/v1/schema";
+import { normalizeOceanLetterConfig } from "./ocean-letter/v1/normalize";
+import { OceanLetterComponent } from "./ocean-letter/v1/Component";
+
+export const oceanLetterV1: TemplateDefinition<
+  OceanLetterDraftConfig,
+  OceanLetterPublishedConfig
+> = {
+  id: "ocean-letter",
+  version: "v1",
+  name: "Ocean Letter",
+  description: "A tranquil coastal world of frosted sea glass, tidal foam, and enduring oceanic devotion.",
+  tagline: "For devotion as vast and steady as the tides",
+  atmosphere: "Coastal twilight horizon, frosted sea glass, deep oceanic teal, and tidal foam.",
+  signature: "Sea glass message in a bottle + tidal ripple",
+  availability: "available",
+  category: "Oceanic",
+  supportedModules: ["letter", "memories", "voiceNote", "videoMemory", "timeline", "quiz", "secret", "openWhen"],
+  draftSchema: oceanLetterDraftSchema,
+  publishSchema: oceanLetterPublishSchema,
+  defaultConfig: {
+    partnerName: "",
+    senderName: "",
+    greeting: "To my steady anchor",
+    message: "",
+    signOff: "With every tide",
+    accentTheme: "fog-blue",
+    heroMediaId: null,
+    decor: DEFAULT_VALENTINE_DECOR,
+  },
+  normalizeConfig: normalizeOceanLetterConfig,
+  Component: OceanLetterComponent,
+};
+
 export interface RoadmapWorld {
   id: string;
   name: string;
@@ -171,6 +288,9 @@ function getKey(id: string, version: string): string {
 templates.set(getKey(midnightRoseV1.id, midnightRoseV1.version), midnightRoseV1);
 templates.set(getKey(cloudNineV1.id, cloudNineV1.version), cloudNineV1);
 templates.set(getKey(kageV1.id, kageV1.version), kageV1);
+templates.set(getKey(apricotFilmV1.id, apricotFilmV1.version), apricotFilmV1);
+templates.set(getKey(wildflowerPaperV1.id, wildflowerPaperV1.version), wildflowerPaperV1);
+templates.set(getKey(oceanLetterV1.id, oceanLetterV1.version), oceanLetterV1);
 
 export function getTemplateDefinition(
   id: string,

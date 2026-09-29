@@ -96,7 +96,13 @@ export const DimensionalWorld: React.FC<DimensionalWorldProps> = ({
                 ? activeScene === "finale"
                   ? "radial-gradient(ellipse at 50% 20%, #1A0510 0%, #10020A 50%, #060104 100%)"
                   : "radial-gradient(ellipse at 50% 20%, #15030D 0%, #0D0207 60%, #050103 100%)"
-                : "radial-gradient(ellipse at 50% 20%, #0B120E 0%, #070B09 60%, #030504 100%)",
+                : theme === "kage"
+                ? "radial-gradient(ellipse at 50% 20%, #0B120E 0%, #070B09 60%, #030504 100%)"
+                : theme === "apricot-film"
+                ? "radial-gradient(ellipse at 50% 20%, #24140A 0%, #170C05 55%, #0B0603 100%)"
+                : theme === "wildflower-paper"
+                ? "radial-gradient(ellipse at 50% 20%, #16241A 0%, #0F1812 60%, #080D0A 100%)"
+                : "radial-gradient(ellipse at 50% 20%, #092038 0%, #051424 60%, #020810 100%)",
           }}
         />
 
@@ -163,6 +169,45 @@ export const DimensionalWorld: React.FC<DimensionalWorldProps> = ({
               />
             </div>
           )}
+
+          {theme === "apricot-film" && (
+            <div className="relative w-full h-full">
+              {/* Warm 16mm Analog Sunbeam Cone */}
+              <div
+                className="absolute inset-0"
+                style={{
+                  background:
+                    "radial-gradient(ellipse 75% 65% at 50% 5%, rgba(244, 162, 97, 0.18) 0%, rgba(231, 111, 81, 0.1) 40%, transparent 80%)",
+                }}
+              />
+            </div>
+          )}
+
+          {theme === "wildflower-paper" && (
+            <div className="relative w-full h-full">
+              {/* Meadow Garden Sunlit Mist */}
+              <div
+                className="absolute inset-0"
+                style={{
+                  background:
+                    "radial-gradient(ellipse 70% 60% at 50% 8%, rgba(192, 132, 252, 0.12) 0%, rgba(163, 184, 153, 0.1) 45%, transparent 75%)",
+                }}
+              />
+            </div>
+          )}
+
+          {theme === "ocean-letter" && (
+            <div className="relative w-full h-full">
+              {/* Oceanic Horizon Moonbeam Glow */}
+              <div
+                className="absolute inset-0"
+                style={{
+                  background:
+                    "radial-gradient(ellipse 80% 60% at 50% 5%, rgba(56, 189, 248, 0.16) 0%, rgba(14, 116, 144, 0.08) 50%, transparent 80%)",
+                }}
+              />
+            </div>
+          )}
         </motion.div>
 
         {/* =========================================================================
@@ -220,6 +265,45 @@ export const DimensionalWorld: React.FC<DimensionalWorldProps> = ({
               />
               <div className="absolute top-28 -left-16 w-80 h-40 bg-emerald-950/30 rounded-full blur-3xl pointer-events-none" />
               <div className="absolute top-52 -right-16 w-88 h-44 bg-[#0a120e]/40 rounded-full blur-3xl pointer-events-none" />
+            </>
+          )}
+
+          {theme === "apricot-film" && (
+            <>
+              <div
+                className="absolute top-0 left-1/2 -translate-x-1/2 w-[750px] sm:w-[1000px] h-[520px] rounded-full blur-[85px] opacity-50 pointer-events-none"
+                style={{
+                  background:
+                    "radial-gradient(circle at 50% 30%, rgba(244, 162, 97, 0.25) 0%, rgba(231, 111, 81, 0.15) 50%, transparent 75%)",
+                }}
+              />
+              <div className="absolute top-24 -left-12 w-80 h-40 bg-[#3d1f0e]/30 rounded-full blur-3xl" />
+            </>
+          )}
+
+          {theme === "wildflower-paper" && (
+            <>
+              <div
+                className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] sm:w-[950px] h-[500px] rounded-full blur-[85px] opacity-45 pointer-events-none"
+                style={{
+                  background:
+                    "radial-gradient(circle at 50% 30%, rgba(192, 132, 252, 0.18) 0%, rgba(163, 184, 153, 0.18) 50%, transparent 75%)",
+                }}
+              />
+              <div className="absolute top-24 -left-12 w-80 h-40 bg-[#1e2d22]/35 rounded-full blur-3xl" />
+            </>
+          )}
+
+          {theme === "ocean-letter" && (
+            <>
+              <div
+                className="absolute top-0 left-1/2 -translate-x-1/2 w-[750px] sm:w-[1000px] h-[520px] rounded-full blur-[85px] opacity-50 pointer-events-none"
+                style={{
+                  background:
+                    "radial-gradient(circle at 50% 30%, rgba(56, 189, 248, 0.22) 0%, rgba(14, 116, 144, 0.14) 50%, transparent 75%)",
+                }}
+              />
+              <div className="absolute top-24 -right-12 w-88 h-44 bg-[#0a233a]/40 rounded-full blur-3xl" />
             </>
           )}
         </motion.div>
