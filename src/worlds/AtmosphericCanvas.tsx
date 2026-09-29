@@ -133,10 +133,17 @@ export const AtmosphericCanvas: React.FC<AtmosphericCanvasProps> = ({
         const p = particles[i];
 
         // Motion physics
+        if (p.type === "firefly") {
+          p.vx += (Math.random() - 0.5) * 0.04;
+          p.vy += (Math.random() - 0.5) * 0.04;
+          // Dampen maximum velocity to keep flight graceful
+          p.vx = Math.max(-0.4, Math.min(0.4, p.vx));
+          p.vy = Math.max(-0.35, Math.min(0.35, p.vy));
+        }
         p.x += p.vx;
         p.y += p.vy;
         p.rotation += p.rotationSpeed;
-        p.pulsePhase += 0.025;
+        p.pulsePhase += p.type === "firefly" ? 0.035 : 0.025;
 
         // Pointer deflection
         if (pointer.active) {
@@ -169,15 +176,16 @@ export const AtmosphericCanvas: React.FC<AtmosphericCanvasProps> = ({
 
         if (p.type === "mote" || p.type === "firefly") {
           // Luminous celestial mote / firefly
-          const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, p.size * 2);
+          const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, p.size * 2.5);
           if (theme === "cloud-nine") {
             gradient.addColorStop(0, `rgba(255, 240, 245, ${alpha})`);
             gradient.addColorStop(0.5, `rgba(251, 207, 232, ${alpha * 0.6})`);
             gradient.addColorStop(1, "rgba(251, 207, 232, 0)");
           } else if (theme === "midnight-rose") {
-            gradient.addColorStop(0, `rgba(255, 230, 200, ${alpha * 1.2})`);
-            gradient.addColorStop(0.6, `rgba(244, 63, 94, ${alpha * 0.5})`);
-            gradient.addColorStop(1, "rgba(244, 63, 94, 0)");
+            gradient.addColorStop(0, `rgba(255, 250, 220, ${alpha * 1.3})`);
+            gradient.addColorStop(0.35, `rgba(251, 191, 36, ${alpha * 0.7})`);
+            gradient.addColorStop(0.7, `rgba(225, 29, 72, ${alpha * 0.35})`);
+            gradient.addColorStop(1, "rgba(225, 29, 72, 0)");
           } else {
             gradient.addColorStop(0, `rgba(224, 35, 28, ${alpha})`);
             gradient.addColorStop(0.7, `rgba(16, 185, 129, ${alpha * 0.4})`);

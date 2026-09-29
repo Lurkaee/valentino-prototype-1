@@ -123,13 +123,24 @@ export const DimensionalWorld: React.FC<DimensionalWorldProps> = ({
           )}
 
           {theme === "midnight-rose" && (
-            <div
-              className="w-full h-full"
-              style={{
-                background:
-                  "radial-gradient(ellipse 100% 60% at 50% 0%, rgba(244, 63, 94, 0.18) 0%, rgba(136, 19, 55, 0.12) 40%, transparent 80%)",
-              }}
-            />
+            <div className="relative w-full h-full">
+              {/* Moonbeam illumination cone */}
+              <div
+                className="absolute inset-0"
+                style={{
+                  background:
+                    "radial-gradient(ellipse 70% 85% at 50% -5%, rgba(255, 245, 235, 0.12) 0%, rgba(244, 63, 94, 0.08) 45%, transparent 80%)",
+                }}
+              />
+              {/* Distant garden arbor silhouette */}
+              <div
+                className="absolute bottom-0 inset-x-0 h-48 opacity-25 pointer-events-none"
+                style={{
+                  background:
+                    "radial-gradient(ellipse at 50% 100%, rgba(24, 4, 16, 0.9) 0%, rgba(13, 2, 7, 0.7) 60%, transparent 100%)",
+                }}
+              />
+            </div>
           )}
 
           {theme === "kage" && (
