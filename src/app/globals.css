@@ -46,7 +46,7 @@
 .z-system-feedback { z-index: 50; }
 
 html {
-  scroll-behavior: smooth;
+  /* Scroll owned by Lenis on marketing pages and native in studio */
 }
 
 body {

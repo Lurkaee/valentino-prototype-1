@@ -58,7 +58,7 @@ export const WorldSelectorModal: React.FC<WorldSelectorModalProps> = ({
         </div>
 
         {/* Worlds Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
           {availableTemplates.map((template) => {
             const isCurrent = template.id === currentTemplateId;
             const styleAccents: Record<string, { bg: string; border: string; glow: string; icon: string }> = {
@@ -79,6 +79,24 @@ export const WorldSelectorModal: React.FC<WorldSelectorModalProps> = ({
                 border: "border-purple-400/40",
                 glow: "from-purple-500/20",
                 icon: "⛩️",
+              },
+              "apricot-film": {
+                bg: "from-[#2A150A]/90 to-[#140803]/90",
+                border: "border-amber-500/40",
+                glow: "from-amber-500/20",
+                icon: "🎞️",
+              },
+              "wildflower-paper": {
+                bg: "from-[#112217]/90 to-[#07130C]/90",
+                border: "border-emerald-400/40",
+                glow: "from-emerald-500/20",
+                icon: "🌿",
+              },
+              "ocean-letter": {
+                bg: "from-[#081B26]/90 to-[#030D14]/90",
+                border: "border-cyan-400/40",
+                glow: "from-cyan-500/20",
+                icon: "🌊",
               },
             };
 

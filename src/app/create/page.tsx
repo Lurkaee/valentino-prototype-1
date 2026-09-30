@@ -9,30 +9,19 @@ function CreateExperienceContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [error, setError] = useState<string | null>(null);
-  const [statusMessage, setStatusMessage] = useState("Preparing your creative world...");
   const [templateId, setTemplateId] = useState("midnight-rose");
 
   useEffect(() => {
     let isMounted = true;
-    let timer1: NodeJS.Timeout | null = null;
-    let timer2: NodeJS.Timeout | null = null;
 
     async function initExperience() {
       try {
-        timer1 = setTimeout(() => {
-          if (isMounted) setStatusMessage("Configuring experience modules...");
-        }, 400);
-
-        timer2 = setTimeout(() => {
-          if (isMounted) setStatusMessage("Opening Experience Studio...");
-        }, 850);
-
         // Read decor and template from query params or sessionStorage fallback
         let initialDecor = null;
         let selectedTemplateId = "midnight-rose";
         try {
           const tParam = searchParams.get("template") || searchParams.get("templateId");
-          if (tParam && (tParam === "cloud-nine" || tParam === "midnight-rose" || tParam === "kage")) {
+          if (tParam) {
             selectedTemplateId = tParam;
             if (isMounted) setTemplateId(tParam);
           }
@@ -59,6 +48,7 @@ function CreateExperienceContent() {
           payload.initialDecor = initialDecor;
         }
 
+        // POST immediately - no artificial delays or fake staged loaders
         const res = await fetch("/api/experiences", {
           method: "POST",
           headers: {
@@ -66,9 +56,6 @@ function CreateExperienceContent() {
           },
           body: JSON.stringify(payload),
         });
-
-        if (timer1) clearTimeout(timer1);
-        if (timer2) clearTimeout(timer2);
 
         if (!res.ok) {
           const data = await res.json().catch(() => ({}));
@@ -96,8 +83,6 @@ function CreateExperienceContent() {
 
     return () => {
       isMounted = false;
-      if (timer1) clearTimeout(timer1);
-      if (timer2) clearTimeout(timer2);
     };
   }, [router, searchParams]);
 
@@ -131,7 +116,7 @@ function CreateExperienceContent() {
           </div>
         ) : (
           <div className="space-y-5">
-            {/* Elegant Studio Loader */}
+            {/* Elegant Studio Immediate Loader */}
             <div className="relative flex items-center justify-center w-20 h-20 mx-auto">
               <div className="absolute inset-0 rounded-full border border-white/15 animate-ping opacity-30" />
               <div className="w-14 h-14 rounded-2xl bg-[#1A1824] border border-white/20 flex items-center justify-center shadow-xl text-xl select-none text-ivory-100">
@@ -141,14 +126,14 @@ function CreateExperienceContent() {
 
             <div className="space-y-1.5">
               <h2 className="text-xl font-serif font-medium text-white tracking-wide transition-all duration-300">
-                {statusMessage}
+                Entering Studio...
               </h2>
               <p className="text-xs text-ivory-400 font-ui">
                 Setting up your private interactive experience studio
               </p>
             </div>
 
-            {/* Concise World Capability Preview */}
+            {/* Concise World Capability Preview (Preserves E2E test contracts) */}
             <div
               data-testid="world-capability-preview"
               className="pt-3 pb-2 px-4 rounded-2xl bg-white/[0.04] border border-white/[0.08] text-center space-y-1"
@@ -158,6 +143,12 @@ function CreateExperienceContent() {
                   ? "Cloud Nine Sanctuary"
                   : templateId === "kage"
                   ? "Kage Kyoto World"
+                  : templateId === "apricot-film"
+                  ? "Apricot Film World"
+                  : templateId === "wildflower-paper"
+                  ? "Wildflower Paper World"
+                  : templateId === "ocean-letter"
+                  ? "Ocean Letter Sanctuary"
                   : "Midnight Rose"}
               </span>
               <p className="text-xs text-white/70 font-ui font-light">
@@ -165,6 +156,12 @@ function CreateExperienceContent() {
                   ? "A dreamy pastel world with Devotion Letter · Celestial Blessing · Story Chapters"
                   : templateId === "kage"
                   ? "A Kyoto mountain temple with Japanese Mist · Intimate Letter · Secret Note"
+                  : templateId === "apricot-film"
+                  ? "Analog cinematic nostalgia with Warm Letter · Memory Reel · Story Chapters"
+                  : templateId === "wildflower-paper"
+                  ? "Deckled botanical romance with Pressed Florals · Handcrafted Note · Interactive Moments"
+                  : templateId === "ocean-letter"
+                  ? "Coastal twilight tranquility with Message in a Bottle · Oceanic Reflection · Secret Tide"
                   : "A cinematic letter world with Love Letter · Story Timeline · Interactive Moments"}
               </p>
             </div>

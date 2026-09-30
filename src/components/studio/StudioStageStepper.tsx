@@ -83,20 +83,22 @@ interface StudioStageStepperProps {
   activeStage: StudioStageId;
   onSelectStage: (stage: StudioStageId) => void;
   completedStages?: Record<StudioStageId, boolean>;
+  className?: string;
 }
 
 export const StudioStageStepper: React.FC<StudioStageStepperProps> = ({
   activeStage,
   onSelectStage,
   completedStages = {} as Record<StudioStageId, boolean>,
+  className = "",
 }) => {
   return (
     <nav
       data-testid="studio-stage-stepper"
       aria-label="Studio creation stages"
-      className="sticky top-0 z-20 bg-[#0E0C12]/95 backdrop-blur-md px-3 sm:px-6 py-2.5 border-b border-white/[0.08] overflow-x-auto scrollbar-none"
+      className={`bg-[#0A090C] border-white/[0.08] select-none flex flex-row lg:flex-col overflow-x-auto lg:overflow-y-auto scrollbar-none border-b lg:border-b-0 lg:border-r lg:w-[68px] lg:py-3 lg:px-1.5 px-3 py-2 shrink-0 ${className}`}
     >
-      <div className="flex items-center gap-1.5 min-w-max">
+      <div className="flex flex-row lg:flex-col items-center gap-1.5 min-w-max lg:min-w-0 w-full">
         {STUDIO_STAGES.map((stage) => {
           const isActive = activeStage === stage.id;
           const isComplete = completedStages[stage.id];
@@ -107,24 +109,22 @@ export const StudioStageStepper: React.FC<StudioStageStepperProps> = ({
               type="button"
               data-testid={`stage-tab-${stage.id}`}
               onClick={() => onSelectStage(stage.id)}
-              className={`group relative px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-ui transition-all flex items-center gap-1.5 cursor-pointer select-none ${
+              className={`group relative rounded-xl text-xs font-ui transition-all flex flex-row lg:flex-col items-center justify-center gap-1.5 lg:gap-1 cursor-pointer px-2.5 py-1.5 lg:px-1 lg:py-2.5 lg:w-full select-none ${
                 isActive
-                  ? "bg-rose-500/15 border border-rose-500/35 text-white shadow-xs font-medium"
-                  : "text-white/55 hover:text-white/90 hover:bg-white/[0.04] border border-transparent"
+                  ? "bg-rose-500/20 border border-rose-500/40 text-white shadow-xs font-medium"
+                  : "text-white/60 hover:text-white hover:bg-white/[0.06] border border-transparent"
               }`}
+              title={`${stage.stepNumber} · ${stage.label}: ${stage.description}`}
             >
-              <span className="text-sm select-none shrink-0">{stage.icon}</span>
-              <span className="text-[10px] font-mono opacity-50 shrink-0 hidden lg:inline">
-                {stage.stepNumber}
-              </span>
-              <span className="whitespace-nowrap font-medium text-xs">
-                {stage.label}
+              <span className="text-base select-none shrink-0">{stage.icon}</span>
+              <span className="text-[10px] tracking-tight font-medium leading-none whitespace-nowrap">
+                {stage.shortLabel}
               </span>
               {isComplete && !isActive && (
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0" title="Completed" />
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0 lg:absolute lg:top-1.5 lg:right-1.5" title="Completed" />
               )}
               {isActive && (
-                <span className="w-1.5 h-1.5 rounded-full bg-rose-400 shrink-0 animate-pulse" />
+                <span className="w-1.5 h-1.5 lg:w-3 lg:h-0.5 rounded-full bg-rose-400 shrink-0 lg:absolute lg:bottom-1 animate-pulse" />
               )}
             </button>
           );

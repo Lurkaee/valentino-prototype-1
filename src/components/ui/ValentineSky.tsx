@@ -82,7 +82,7 @@ export function ValentineSky({ className = "" }: ValentineSkyProps) {
           alt="Sunset Clouds Atmosphere"
           fill
           priority
-          unoptimized
+          sizes="100vw"
           className="object-cover object-center filter blur-[1px]"
         />
       </motion.div>
@@ -138,7 +138,7 @@ export function ValentineSky({ className = "" }: ValentineSkyProps) {
           src="/clouds/cloud-puff.jpg"
           alt="Volumetric Cloud Mist"
           fill
-          unoptimized
+          sizes="100vw"
           className="object-contain object-center filter blur-[2px]"
         />
       </motion.div>

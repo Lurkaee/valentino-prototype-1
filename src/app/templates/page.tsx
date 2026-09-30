@@ -10,6 +10,7 @@ import { CurtainLink } from "@/components/motion/PageCurtains";
 import { ValentinoMonogram } from "@/components/motion/ValentinoMonogram";
 import { ValentinePlasmaButton, type ValentinePlasmaTheme } from "@/components/ui/ValentinePlasmaButton";
 import { getAllTemplates, ROADMAP_WORLDS, RoadmapWorld } from "@/templates/registry";
+import { CapabilityChip, CapabilityKey } from "@/components/ui/CapabilityChip";
 import { AtmosphericCanvas } from "@/worlds/AtmosphericCanvas";
 import { useDeviceTier } from "@/worlds/useDeviceTier";
 import { WorldTheme } from "@/worlds/types";
@@ -47,6 +48,7 @@ interface WorldProfile {
   previewQuote: string;
   sampleSender: string;
   sampleRecipient: string;
+  capabilities: CapabilityKey[];
   swatches?: { id: string; name: string; color: string; buttonLabel: string }[];
 }
 
@@ -69,6 +71,7 @@ const WORLD_PROFILES: Record<WorldTheme, WorldProfile> = {
     previewQuote: "“Every moment with you feels like floating high above the clouds, gentle and weightless.”",
     sampleSender: "Forever in the Clouds",
     sampleRecipient: "Dearest Angel",
+    capabilities: ["letter", "timeline", "quiz", "openWhen"],
     swatches: [
       { id: "blush-sky", name: "Blush Sky", color: "#f472b6", buttonLabel: "Blush" },
       { id: "sunset-coral", name: "Sunset Coral", color: "#fb7185", buttonLabel: "Coral" },
@@ -93,6 +96,7 @@ const WORLD_PROFILES: Record<WorldTheme, WorldProfile> = {
     previewQuote: "“In a world of noise, you are my quiet starlight. Every single day with you feels like midnight poetry.”",
     sampleSender: "Yours Always",
     sampleRecipient: "Dearest Maya",
+    capabilities: ["letter", "timeline", "quiz", "secret", "openWhen"],
     swatches: [
       { id: "crimson-rose", name: "Crimson Velvet", color: "#e11d48", buttonLabel: "Crimson" },
       { id: "midnight-violet", name: "Midnight Violet", color: "#9333ea", buttonLabel: "Violet" },
@@ -112,16 +116,92 @@ const WORLD_PROFILES: Record<WorldTheme, WorldProfile> = {
     atmosphereTone: "Sacred Emerald · Kyoto Teal · Stone Lanterns · Mountain Mist",
     experienceFlow: "Sacred Torii Gate → Reflective Verses → Sacred Memories → Twilight Constellation",
     accentColor: "#10b981",
-    glowColor: "rgba(16, 185, 129, 0.22)",
+    glowColor: "rgba(163, 184, 153, 0.22)",
     surfaceBg: "bg-gradient-to-br from-[#061410]/95 via-[#030E0B]/95 to-[#020605]/95",
     surfaceBorder: "border-emerald-500/30",
     previewQuote: "“In the quiet shade of the sacred cedar, my thoughts find their home with you.”",
     sampleSender: "With all my heart",
     sampleRecipient: "Aoi",
+    capabilities: ["letter", "secret"],
     swatches: [
       { id: "kyoto-crimson", name: "Kyoto Crimson", color: "#e0231c", buttonLabel: "Crimson" },
       { id: "sanctuary-emerald", name: "Sanctuary Emerald", color: "#10b981", buttonLabel: "Emerald" },
       { id: "moonlit-stone", name: "Moonlit Stone", color: "#94a3b8", buttonLabel: "Stone" },
+    ],
+  },
+  "apricot-film": {
+    id: "apricot-film",
+    name: "Apricot Film",
+    tagline: "For the memories that feel like warm analog cinema",
+    category: "Analog Cinema",
+    identity: "Warm 16mm Memory Reel",
+    feeling: "Nostalgic, golden, cinematic, heartwarming.",
+    bestFor: "Cherished photographic memories, golden hour reflections, and nostalgic romance.",
+    signature: "Analog film slide + golden hour light leak · tobacco amber · 16mm grain",
+    atmosphereTone: "Sunlit Apricot · Tobacco Amber · Golden Motes · Analog Grain",
+    experienceFlow: "Analog Reel Arrival → Cinematic Memories → Sunlit Letter → Golden Hour Vow",
+    accentColor: "#e76f51",
+    glowColor: "rgba(231, 111, 81, 0.28)",
+    surfaceBg: "bg-gradient-to-br from-[#24140A]/95 via-[#1A0D06]/95 to-[#0E0603]/95",
+    surfaceBorder: "border-[#e76f51]/30",
+    previewQuote: "“Every frame with you is steeped in golden afternoon warmth that never fades.”",
+    sampleSender: "Forever in Golden Hour",
+    sampleRecipient: "Dearest Memory",
+    capabilities: ["letter", "timeline", "quiz"],
+    swatches: [
+      { id: "apricot-amber", name: "Apricot Amber", color: "#e76f51", buttonLabel: "Amber" },
+      { id: "terracotta-sun", name: "Terracotta Sun", color: "#f4a261", buttonLabel: "Terracotta" },
+      { id: "tobacco-espresso", name: "Tobacco Espresso", color: "#3d1f0e", buttonLabel: "Espresso" },
+    ],
+  },
+  "wildflower-paper": {
+    id: "wildflower-paper",
+    name: "Wildflower Paper",
+    tagline: "For a love cultivated slowly with honesty and grace",
+    category: "Botanical Craft",
+    identity: "Artisan Meadow Press",
+    feeling: "Organic, gentle, handwritten, pastoral.",
+    bestFor: "Handwritten letters, meadow memories, and honest botanical devotion.",
+    signature: "Botanical twine unbind + pressed floral reveal · deckled cotton fibers · sage mist",
+    atmosphereTone: "Pressed Sage · Dried Lilac · Cotton Fibers · Meadow Dew",
+    experienceFlow: "Deckled Parcel Unfold → Botanical Chapters → Pressed Petal Keepsakes → Pastoral Promise",
+    accentColor: "#c084fc",
+    glowColor: "rgba(163, 184, 153, 0.25)",
+    surfaceBg: "bg-gradient-to-br from-[#1B281F]/95 via-[#121E16]/95 to-[#0A120D]/95",
+    surfaceBorder: "border-[#a3b899]/30",
+    previewQuote: "“Our love is like pressed wildflowers inside an artisan journal — quiet, enduring, and honest.”",
+    sampleSender: "Grown in Love",
+    sampleRecipient: "Gentlest Blossom",
+    capabilities: ["letter", "timeline", "secret"],
+    swatches: [
+      { id: "sage-botanical", name: "Pressed Sage", color: "#a3b899", buttonLabel: "Sage" },
+      { id: "pressed-lilac", name: "Pressed Lilac", color: "#c084fc", buttonLabel: "Lilac" },
+      { id: "meadow-coral", name: "Meadow Coral", color: "#fb7185", buttonLabel: "Coral" },
+    ],
+  },
+  "ocean-letter": {
+    id: "ocean-letter",
+    name: "Ocean Letter",
+    tagline: "For devotion as vast and steady as the tides",
+    category: "Oceanic Tranquility",
+    identity: "Sea Glass Coastal Sanctuary",
+    feeling: "Vast, tranquil, profound, eternal.",
+    bestFor: "Long-distance devotion, enduring promises, and tranquil oceanic depth.",
+    signature: "Sea glass message in a bottle + tidal ripple · fog blue mist · tidal foam",
+    atmosphereTone: "Oceanic Teal · Fog Blue · Sea Glass Foam · Tidal Mist",
+    experienceFlow: "Sea Glass Uncork → Tidal Reflections → Ocean Milestones → Twilight Horizon Vow",
+    accentColor: "#38bdf8",
+    glowColor: "rgba(56, 189, 248, 0.28)",
+    surfaceBg: "bg-gradient-to-br from-[#0B2138]/95 via-[#061526]/95 to-[#020A14]/95",
+    surfaceBorder: "border-[#38bdf8]/30",
+    previewQuote: "“Our devotion is as vast, calm, and enduring as the twilight sea.”",
+    sampleSender: "With Every Tide",
+    sampleRecipient: "Steady Anchor",
+    capabilities: ["letter", "timeline", "quiz", "openWhen"],
+    swatches: [
+      { id: "fog-blue", name: "Fog Blue", color: "#7dd3fc", buttonLabel: "Blue" },
+      { id: "deep-teal", name: "Deep Teal", color: "#0e7490", buttonLabel: "Teal" },
+      { id: "soft-coral", name: "Soft Coral", color: "#fb7185", buttonLabel: "Coral" },
     ],
   },
 };
@@ -136,10 +216,17 @@ export default function TemplatesPage() {
   const [selectedCloudTheme, setSelectedCloudTheme] = useState<string>("blush-sky");
   const [selectedKageTheme, setSelectedKageTheme] = useState<string>("sanctuary-emerald");
 
+  const [selectedApricotTheme, setSelectedApricotTheme] = useState<string>("apricot-amber");
+  const [selectedWildflowerTheme, setSelectedWildflowerTheme] = useState<string>("sage-botanical");
+  const [selectedOceanTheme, setSelectedOceanTheme] = useState<string>("fog-blue");
+
   // Interaction states
   const [surpriseMatch, setSurpriseMatch] = useState<string | null>(null);
   const [activeMidnightSealed, setActiveMidnightSealed] = useState(true);
   const [activeCloudNineSealed, setActiveCloudNineSealed] = useState(true);
+  const [activeApricotRevealed, setActiveApricotRevealed] = useState(false);
+  const [activeWildflowerRevealed, setActiveWildflowerRevealed] = useState(false);
+  const [activeOceanRevealed, setActiveOceanRevealed] = useState(false);
   const [activeKagePreview, setActiveKagePreview] = useState(false);
   const [isFullPreviewOpen, setIsFullPreviewOpen] = useState(false);
 
@@ -190,7 +277,14 @@ export default function TemplatesPage() {
       : "kage";
 
   const handleSurpriseMe = () => {
-    const activeIds: WorldTheme[] = ["midnight-rose", "cloud-nine", "kage"];
+    const activeIds: WorldTheme[] = [
+      "cloud-nine",
+      "midnight-rose",
+      "kage",
+      "apricot-film",
+      "wildflower-paper",
+      "ocean-letter",
+    ];
     const filtered = activeIds.filter((id) => id !== activeWorldId);
     const random = filtered[Math.floor(Math.random() * filtered.length)];
     setSurpriseMatch(random);
@@ -227,7 +321,13 @@ export default function TemplatesPage() {
                 ? "radial-gradient(ellipse 90% 70% at 50% 15%, rgba(244, 114, 182, 0.16) 0%, rgba(251, 146, 60, 0.08) 45%, rgba(10, 7, 11, 0.95) 100%)"
                 : activeWorldId === "midnight-rose"
                 ? "radial-gradient(ellipse 90% 70% at 50% 15%, rgba(225, 29, 72, 0.18) 0%, rgba(147, 51, 234, 0.08) 45%, rgba(10, 7, 11, 0.95) 100%)"
-                : "radial-gradient(ellipse 90% 70% at 50% 15%, rgba(16, 185, 129, 0.16) 0%, rgba(224, 35, 28, 0.08) 45%, rgba(10, 7, 11, 0.95) 100%)",
+                : activeWorldId === "kage"
+                ? "radial-gradient(ellipse 90% 70% at 50% 15%, rgba(16, 185, 129, 0.16) 0%, rgba(224, 35, 28, 0.08) 45%, rgba(10, 7, 11, 0.95) 100%)"
+                : activeWorldId === "apricot-film"
+                ? "radial-gradient(ellipse 90% 70% at 50% 15%, rgba(244, 162, 97, 0.18) 0%, rgba(231, 111, 81, 0.1) 45%, rgba(10, 7, 11, 0.95) 100%)"
+                : activeWorldId === "wildflower-paper"
+                ? "radial-gradient(ellipse 90% 70% at 50% 15%, rgba(192, 132, 252, 0.16) 0%, rgba(163, 184, 153, 0.1) 45%, rgba(10, 7, 11, 0.95) 100%)"
+                : "radial-gradient(ellipse 90% 70% at 50% 15%, rgba(56, 189, 248, 0.18) 0%, rgba(14, 116, 144, 0.08) 45%, rgba(10, 7, 11, 0.95) 100%)",
           }}
         />
       </div>
@@ -310,9 +410,18 @@ export default function TemplatesPage() {
             </Badge>
           </div>
 
-          {/* Dimension Selector Tabs */}
-          <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-white/[0.04] border border-white/[0.08] backdrop-blur-md">
-            {(["cloud-nine", "midnight-rose", "kage"] as WorldTheme[]).map((worldKey) => {
+          {/* Dimension Selector Tabs: All 6 Worlds */}
+          <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-white/[0.04] border border-white/[0.08] backdrop-blur-md overflow-x-auto max-w-full">
+            {(
+              [
+                "cloud-nine",
+                "midnight-rose",
+                "kage",
+                "apricot-film",
+                "wildflower-paper",
+                "ocean-letter",
+              ] as WorldTheme[]
+            ).map((worldKey) => {
               const isActive = activeWorldId === worldKey;
               const profile = WORLD_PROFILES[worldKey];
               return (
@@ -323,7 +432,7 @@ export default function TemplatesPage() {
                     setActiveWorldId(worldKey);
                     setActiveKagePreview(false);
                   }}
-                  className={`px-3.5 py-1.5 rounded-xl text-xs font-medium transition-all duration-300 flex items-center gap-2 cursor-pointer ${
+                  className={`px-3 py-1.5 rounded-xl text-xs font-medium whitespace-nowrap transition-all duration-300 flex items-center gap-2 cursor-pointer ${
                     isActive
                       ? "bg-white/15 text-white shadow-md border border-white/20"
                       : "text-ivory-400 hover:text-white hover:bg-white/5"
@@ -383,6 +492,17 @@ export default function TemplatesPage() {
                     <p className="text-xs sm:text-sm text-ivory-200/85 font-light leading-relaxed">
                       {currentProfile.feeling}
                     </p>
+
+                    {/* Interactive Capabilities Chips */}
+                    <div className="pt-3 flex flex-wrap gap-1.5">
+                      {currentProfile.capabilities.map((cap) => (
+                        <CapabilityChip
+                          key={cap}
+                          capability={cap}
+                          templateId={activeWorldId}
+                        />
+                      ))}
+                    </div>
                   </div>
                 </div>
 
@@ -522,7 +642,7 @@ export default function TemplatesPage() {
                             onClick={() => setActiveKagePreview(false)}
                             className="absolute top-3 right-3 z-30 px-3 py-1 rounded-full bg-black/80 border border-white/20 text-[11px] text-white hover:bg-black transition-colors"
                           >
-                            ✕ Close Scene
+                            ✕ Close
                           </button>
                         </div>
                       ) : (
@@ -543,9 +663,13 @@ export default function TemplatesPage() {
                             >
                               <span className="text-3xl select-none">⛩️</span>
                             </button>
-                            <span className="mt-3 text-xs uppercase tracking-wider text-emerald-300/80 font-medium">
-                              Tap to awaken 3D WebGL scene
-                            </span>
+                            <button
+                              type="button"
+                              onClick={() => setActiveKagePreview(true)}
+                              className="mt-3 px-4 py-1.5 rounded-full bg-emerald-950/80 border border-emerald-400/40 text-xs uppercase tracking-wider text-emerald-300 hover:text-white hover:bg-emerald-900 transition-colors font-medium cursor-pointer"
+                            >
+                              Launch 3D WebGL Preview
+                            </button>
                           </div>
 
                           <div className="pt-2 border-t border-emerald-500/20 flex items-center justify-between text-xs text-emerald-300/70">
@@ -556,6 +680,165 @@ export default function TemplatesPage() {
                       )}
                     </div>
                   )}
+
+                  {/* WORLD 4: APRICOT FILM LIVING ARTIFACT */}
+                  {activeWorldId === "apricot-film" && (
+                        <div className="w-full max-w-sm rounded-2xl bg-[#1A0E08]/90 border border-[#e76f51]/35 p-5 sm:p-7 text-center space-y-5 shadow-2xl backdrop-blur-md text-[#FFF8F0]">
+                          <div className="space-y-1">
+                            <span className="inline-block text-[10px] uppercase tracking-widest px-3 py-0.5 rounded-full border border-[#e76f51]/40 bg-[#28140B]/80 text-[#f4a261]">
+                              16mm Analog Kodak
+                            </span>
+                            <h3 className="text-2xl font-serif font-medium text-white">Golden Hour Reel</h3>
+                          </div>
+
+                          {activeApricotRevealed ? (
+                            <div className="py-3 px-4 rounded-xl bg-[#28140B]/90 border border-[#e76f51]/30 text-left space-y-2 animate-fade-in">
+                              <p className="text-xs text-[#FFF8F0]/90 leading-relaxed font-light font-display italic">
+                                {currentProfile.previewQuote}
+                              </p>
+                              <div className="text-right text-[11px] text-[#f4a261] font-serif">
+                                — {currentProfile.sampleSender}
+                              </div>
+                              <div className="pt-1 text-center">
+                                <button
+                                  type="button"
+                                  onClick={() => setActiveApricotRevealed(false)}
+                                  className="text-[11px] text-[#f4a261] hover:underline"
+                                >
+                                  Rewind Film
+                                </button>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="py-4 flex flex-col items-center justify-center">
+                              <button
+                                type="button"
+                                onClick={() => setActiveApricotRevealed(true)}
+                                className="w-18 h-18 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-[#e76f51] via-[#d45d3e] to-[#28140B] border-2 border-[#f4a261]/60 flex items-center justify-center shadow-lg hover:scale-105 active:scale-95 transition-transform cursor-pointer"
+                                aria-label="Advance film slide"
+                              >
+                                <svg className="w-8 h-8 text-[#FFF8F0]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                                </svg>
+                              </button>
+                              <span className="mt-3 text-xs uppercase tracking-wider text-[#f4a261]/90 font-medium">
+                                Tap slide to advance film frame
+                              </span>
+                            </div>
+                          )}
+
+                          <div className="pt-2 border-t border-[#e76f51]/20 flex items-center justify-between text-xs text-[#D4A373]">
+                            <span>Tobacco Amber Grain</span>
+                            <span>Golden Sunbeams</span>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* WORLD 5: WILDFLOWER PAPER LIVING ARTIFACT */}
+                      {activeWorldId === "wildflower-paper" && (
+                        <div className="w-full max-w-sm rounded-2xl bg-[#131E17]/90 border border-[#a3b899]/35 p-5 sm:p-7 text-center space-y-5 shadow-2xl backdrop-blur-md text-[#F7F9F5]">
+                          <div className="space-y-1">
+                            <span className="inline-block text-[10px] uppercase tracking-widest px-3 py-0.5 rounded-full border border-[#a3b899]/40 bg-[#1A2A20]/80 text-[#a3b899]">
+                              Artisan Cotton Press
+                            </span>
+                            <h3 className="text-2xl font-serif font-medium text-white">Pressed Botanical Note</h3>
+                          </div>
+
+                          {activeWildflowerRevealed ? (
+                            <div className="py-3 px-4 rounded-xl bg-[#1A2A20]/90 border border-[#a3b899]/30 text-left space-y-2 animate-fade-in">
+                              <p className="text-xs text-[#F7F9F5]/90 leading-relaxed font-light font-display italic">
+                                {currentProfile.previewQuote}
+                              </p>
+                              <div className="text-right text-[11px] text-[#c084fc] font-serif">
+                                — {currentProfile.sampleSender}
+                              </div>
+                              <div className="pt-1 text-center">
+                                <button
+                                  type="button"
+                                  onClick={() => setActiveWildflowerRevealed(false)}
+                                  className="text-[11px] text-[#a3b899] hover:underline"
+                                >
+                                  Retie Jute Twine
+                                </button>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="py-4 flex flex-col items-center justify-center">
+                              <button
+                                type="button"
+                                onClick={() => setActiveWildflowerRevealed(true)}
+                                className="w-18 h-18 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-[#2D4536] via-[#1B2B21] to-[#0E1611] border-2 border-[#a3b899]/60 flex items-center justify-center shadow-lg hover:scale-105 active:scale-95 transition-transform cursor-pointer"
+                                aria-label="Untie botanical twine"
+                              >
+                                <svg className="w-8 h-8 text-[#c084fc]" fill="currentColor" viewBox="0 0 24 24">
+                                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                                </svg>
+                              </button>
+                              <span className="mt-3 text-xs uppercase tracking-wider text-[#a3b899]/90 font-medium">
+                                Tap to untie dried botanicals
+                              </span>
+                            </div>
+                          )}
+
+                          <div className="pt-2 border-t border-[#a3b899]/20 flex items-center justify-between text-xs text-[#a3b899]/80">
+                            <span>Pressed Meadow Flora</span>
+                            <span>Handmade Cotton Fiber</span>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* WORLD 6: OCEAN LETTER LIVING ARTIFACT */}
+                      {activeWorldId === "ocean-letter" && (
+                        <div className="w-full max-w-sm rounded-2xl bg-[#071626]/90 border border-[#38bdf8]/35 p-5 sm:p-7 text-center space-y-5 shadow-2xl backdrop-blur-md text-[#F0F9FF]">
+                          <div className="space-y-1">
+                            <span className="inline-block text-[10px] uppercase tracking-widest px-3 py-0.5 rounded-full border border-[#38bdf8]/40 bg-[#0B233C]/80 text-[#7dd3fc]">
+                              Frosted Sea Glass
+                            </span>
+                            <h3 className="text-2xl font-serif font-medium text-white">Tidal Bottle Message</h3>
+                          </div>
+
+                          {activeOceanRevealed ? (
+                            <div className="py-3 px-4 rounded-xl bg-[#0B233C]/90 border border-[#38bdf8]/30 text-left space-y-2 animate-fade-in">
+                              <p className="text-xs text-[#F0F9FF]/90 leading-relaxed font-light font-display italic">
+                                {currentProfile.previewQuote}
+                              </p>
+                              <div className="text-right text-[11px] text-[#38bdf8] font-serif">
+                                — {currentProfile.sampleSender}
+                              </div>
+                              <div className="pt-1 text-center">
+                                <button
+                                  type="button"
+                                  onClick={() => setActiveOceanRevealed(false)}
+                                  className="text-[11px] text-[#7dd3fc] hover:underline"
+                                >
+                                  Cork Bottle
+                                </button>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="py-4 flex flex-col items-center justify-center">
+                              <button
+                                type="button"
+                                onClick={() => setActiveOceanRevealed(true)}
+                                className="w-18 h-18 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-[#0c4a6e] via-[#0369a1] to-[#022c44] border-2 border-[#38bdf8]/60 flex items-center justify-center shadow-lg hover:scale-105 active:scale-95 transition-transform cursor-pointer"
+                                aria-label="Uncork ocean bottle"
+                              >
+                                <svg className="w-8 h-8 text-[#7dd3fc]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                                </svg>
+                              </button>
+                              <span className="mt-3 text-xs uppercase tracking-wider text-[#7dd3fc]/90 font-medium">
+                                Tap to uncork floating bottle
+                              </span>
+                            </div>
+                          )}
+
+                          <div className="pt-2 border-t border-[#38bdf8]/20 flex items-center justify-between text-xs text-[#7dd3fc]/80">
+                            <span>Deep Oceanic Mist</span>
+                            <span>Tidal Parchment</span>
+                          </div>
+                        </div>
+                      )}
                 </div>
 
                 {/* --------------------------------------------------------------- */}
@@ -602,7 +885,13 @@ export default function TemplatesPage() {
                             ? midnightThemeMeta.name
                             : activeWorldId === "cloud-nine"
                             ? selectedCloudTheme
-                            : selectedKageTheme}
+                            : activeWorldId === "kage"
+                            ? selectedKageTheme
+                            : activeWorldId === "apricot-film"
+                            ? selectedApricotTheme
+                            : activeWorldId === "wildflower-paper"
+                            ? selectedWildflowerTheme
+                            : selectedOceanTheme}
                         </strong>
                       </span>
                       <div className="flex flex-wrap gap-2">
@@ -612,7 +901,13 @@ export default function TemplatesPage() {
                               ? selectedMidnightTheme === swatch.id
                               : activeWorldId === "cloud-nine"
                               ? selectedCloudTheme === swatch.id
-                              : selectedKageTheme === swatch.id;
+                              : activeWorldId === "kage"
+                              ? selectedKageTheme === swatch.id
+                              : activeWorldId === "apricot-film"
+                              ? selectedApricotTheme === swatch.id
+                              : activeWorldId === "wildflower-paper"
+                              ? selectedWildflowerTheme === swatch.id
+                              : selectedOceanTheme === swatch.id;
 
                           return (
                             <button
@@ -622,6 +917,9 @@ export default function TemplatesPage() {
                                 if (activeWorldId === "midnight-rose") setSelectedMidnightTheme(swatch.id);
                                 if (activeWorldId === "cloud-nine") setSelectedCloudTheme(swatch.id);
                                 if (activeWorldId === "kage") setSelectedKageTheme(swatch.id);
+                                if (activeWorldId === "apricot-film") setSelectedApricotTheme(swatch.id);
+                                if (activeWorldId === "wildflower-paper") setSelectedWildflowerTheme(swatch.id);
+                                if (activeWorldId === "ocean-letter") setSelectedOceanTheme(swatch.id);
                               }}
                               className={`px-3 py-1 rounded-xl text-xs font-medium border flex items-center gap-2 transition-all cursor-pointer ${
                                 isSelected
@@ -655,7 +953,13 @@ export default function TemplatesPage() {
                             ? "linear-gradient(135deg, #ec4899 0%, #f43f5e 100%)"
                             : activeWorldId === "midnight-rose"
                             ? "linear-gradient(135deg, #be123c 0%, #881337 100%)"
-                            : "linear-gradient(135deg, #059669 0%, #0d9488 100%)",
+                            : activeWorldId === "kage"
+                            ? "linear-gradient(135deg, #059669 0%, #0d9488 100%)"
+                            : activeWorldId === "apricot-film"
+                            ? "linear-gradient(135deg, #e76f51 0%, #f4a261 100%)"
+                            : activeWorldId === "wildflower-paper"
+                            ? "linear-gradient(135deg, #7c3aed 0%, #a855f7 100%)"
+                            : "linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%)",
                       }}
                     >
                       Enter {currentProfile.name}
@@ -668,7 +972,7 @@ export default function TemplatesPage() {
                         variant="romantic"
                         className="w-full sm:w-auto px-6 font-medium border border-white/20"
                       >
-                        Customize {currentProfile.name} {activeWorldId === "cloud-nine" ? "☁️" : activeWorldId === "midnight-rose" ? "🌹" : "⛩️"}
+                        Customize {currentProfile.name}
                       </Button>
                     </CurtainLink>
                   </div>
@@ -690,8 +994,17 @@ export default function TemplatesPage() {
           <span className="text-xs text-ivory-400">Available to craft today</span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {(["cloud-nine", "kage", "midnight-rose"] as WorldTheme[])
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {(
+            [
+              "cloud-nine",
+              "midnight-rose",
+              "kage",
+              "apricot-film",
+              "wildflower-paper",
+              "ocean-letter",
+            ] as WorldTheme[]
+          )
             .filter((id) => id !== activeWorldId)
             .map((worldKey) => {
               const profile = WORLD_PROFILES[worldKey];
@@ -757,10 +1070,16 @@ export default function TemplatesPage() {
                               ? "linear-gradient(135deg, #ec4899 0%, #f43f5e 100%)"
                               : worldKey === "midnight-rose"
                               ? "linear-gradient(135deg, #be123c 0%, #881337 100%)"
-                              : "linear-gradient(135deg, #059669 0%, #0d9488 100%)",
+                              : worldKey === "kage"
+                              ? "linear-gradient(135deg, #059669 0%, #0d9488 100%)"
+                              : worldKey === "apricot-film"
+                              ? "linear-gradient(135deg, #e76f51 0%, #f4a261 100%)"
+                              : worldKey === "wildflower-paper"
+                              ? "linear-gradient(135deg, #7c3aed 0%, #a855f7 100%)"
+                              : "linear-gradient(135deg, #0284c7 0%, #0ea5e9 100%)",
                         }}
                       >
-                        Customize {profile.name} {worldKey === "cloud-nine" ? "☁️" : worldKey === "midnight-rose" ? "🌹" : "⛩️"}
+                        Customize {profile.name}
                       </Button>
                     </CurtainLink>
                   </div>

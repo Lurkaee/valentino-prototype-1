@@ -1,10 +1,9 @@
 "use client";
 
+import React from "react";
+import Link from "next/link";
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
-import { Button } from "@/components/ui/Button";
-import { Badge } from "@/components/ui/Badge";
 import { motionTheme } from "@/lib/motion-theme";
-import { CurtainLink } from "@/components/motion/PageCurtains";
 
 interface HeroEditorialStaggerProps {
   eyebrow?: string;
@@ -17,38 +16,33 @@ interface HeroEditorialStaggerProps {
 }
 
 /**
- * HeroEditorialStagger:
- * Editorial romantic typography and tactile CTAs with soft warm tones.
- * Designed with tight, intentional vertical flow and subtle scroll-linked softening.
+ * HeroEditorialStagger (Phase 6 Renaissance):
+ * Oversized editorial headline, restrained tactile CTAs, zero SaaS-gradient bloat,
+ * and elegant SVG motifs.
  */
 export function HeroEditorialStagger({
-  eyebrow = "A private digital love letter",
+  eyebrow = "The Romantic Experience Platform · A Private Sanctuary",
   headline = "Create something they'll remember.",
-  subtitle = "An intimate, beautifully crafted web experience for someone you cherish. Choose a template, write what's in your heart, and seal it with love.",
-  primaryCtaText = "Create Your Valentine",
+  subtitle = "Valentino is an intimate digital art experience crafted for the person who means everything to you — complete with starlight letters, shared memories, relationship milestones, and dimensional worlds.",
+  primaryCtaText = "Begin Their World",
   primaryCtaHref = "/create",
   secondaryCtaText = "Explore Templates",
   secondaryCtaHref = "/templates",
 }: HeroEditorialStaggerProps) {
   const shouldReduceMotion = useReducedMotion();
 
-  // Subtle scroll-linked exit softening
+  // Gentle scroll exit dampening
   const { scrollY } = useScroll();
-  const heroOpacity = useTransform(scrollY, [0, 500], [1, 0.4]);
-  const heroY = useTransform(scrollY, [0, 500], [0, 24]);
-
-  // Split headline for responsive editorial line reveal
-  const headlineWords = headline.split(" ");
-  const line1 = headlineWords.slice(0, 2).join(" "); // "Create something"
-  const line2 = headlineWords.slice(2).join(" "); // "they'll remember."
+  const heroOpacity = useTransform(scrollY, [0, 500], [1, 0.45]);
+  const heroY = useTransform(scrollY, [0, 500], [0, 20]);
 
   const containerVariants = {
     hidden: { opacity: shouldReduceMotion ? 1 : 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: shouldReduceMotion ? 0 : 0.12,
-        delayChildren: shouldReduceMotion ? 0 : 0.1,
+        staggerChildren: shouldReduceMotion ? 0 : 0.1,
+        delayChildren: shouldReduceMotion ? 0 : 0.05,
       },
     },
   };
@@ -56,26 +50,11 @@ export function HeroEditorialStagger({
   const itemVariants = {
     hidden: {
       opacity: shouldReduceMotion ? 1 : 0,
-      y: shouldReduceMotion ? 0 : 16,
+      y: shouldReduceMotion ? 0 : 14,
     },
     visible: {
       opacity: 1,
       y: 0,
-      transition: {
-        duration: shouldReduceMotion ? 0 : motionTheme.editorial.duration,
-        ease: motionTheme.editorial.ease,
-      },
-    },
-  };
-
-  const maskLineVariants = {
-    hidden: {
-      y: shouldReduceMotion ? "0%" : "105%",
-      opacity: shouldReduceMotion ? 1 : 0,
-    },
-    visible: {
-      y: "0%",
-      opacity: 1,
       transition: {
         duration: shouldReduceMotion ? 0 : motionTheme.editorial.duration,
         ease: motionTheme.editorial.ease,
@@ -92,75 +71,66 @@ export function HeroEditorialStagger({
         opacity: shouldReduceMotion ? 1 : heroOpacity,
         y: shouldReduceMotion ? 0 : heroY,
       }}
-      className="w-full flex flex-col items-center text-center relative z-10"
+      className="w-full flex flex-col items-center text-center relative z-10 max-w-4xl mx-auto"
     >
-      {/* 1. Intimate Eyebrow Pill */}
-      <motion.div variants={itemVariants} className="mb-3.5 sm:mb-4">
-        <Badge
-          variant="rose"
-          size="md"
-          className="tracking-[0.16em] uppercase text-[11px] font-medium px-4 py-1.5 bg-white/75 border border-rose-300/80 text-[#831843] shadow-[0_4px_16px_rgba(230,120,160,0.18)] backdrop-blur-md"
-        >
-          <span>✦</span>
+      {/* 1. Restrained Editorial Eyebrow */}
+      <motion.div variants={itemVariants} className="mb-4">
+        <span className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-white/70 border border-rose-900/10 text-[#6B1D36] text-[11px] uppercase tracking-[0.22em] font-medium backdrop-blur-sm shadow-[0_2px_8px_rgba(0,0,0,0.03)]">
+          <span className="text-[10px] text-rose-500">✦</span>
           <span>{eyebrow}</span>
-          <span>✦</span>
-        </Badge>
+          <span className="text-[10px] text-rose-500">✦</span>
+        </span>
       </motion.div>
 
-      {/* 2. Romantic Headline: Deep warm plum with sunset rose/magenta highlight */}
-      <h1 className="text-3xl sm:text-5xl lg:text-6xl font-serif font-medium text-[#240412] tracking-tight leading-[1.12] max-w-3xl mb-3 sm:mb-4">
-        <span className="block overflow-hidden py-0.5">
-          <motion.span
-            variants={maskLineVariants}
-            className="inline-block will-change-transform"
-          >
-            {line1}{" "}
-          </motion.span>
+      {/* 2. Oversized Editorial Headline */}
+      <motion.h1
+        variants={itemVariants}
+        className="text-4xl sm:text-6xl lg:text-7xl font-serif font-normal text-[#2A0615] tracking-tight leading-[1.08] max-w-3xl mb-4 sm:mb-5"
+      >
+        <span>Create something </span>
+        <span className="italic font-normal bg-gradient-to-r from-[#9F1239] via-[#BE185D] to-[#881337] bg-clip-text text-transparent">
+          they&apos;ll remember.
         </span>
-        <span className="block overflow-hidden py-0.5">
-          <motion.span
-            variants={maskLineVariants}
-            className="inline-block will-change-transform italic font-normal bg-gradient-to-r from-[#9F1239] via-[#C026D3] to-[#E11D48] bg-clip-text text-transparent"
-          >
-            {line2}
-          </motion.span>
-        </span>
-      </h1>
+      </motion.h1>
 
-      {/* 3. Intimate Subtitle Copy */}
+      {/* 3. Editorial Subtitle */}
       <motion.p
         variants={itemVariants}
-        className="text-sm sm:text-base lg:text-lg text-[#3B071A] font-normal leading-relaxed max-w-xl mb-6 sm:mb-7"
+        className="text-sm sm:text-base lg:text-lg text-[#521731]/85 font-light leading-relaxed max-w-xl mb-7 sm:mb-8"
       >
         {subtitle}
       </motion.p>
 
-      {/* 4. Tactile Romantic Primary and Secondary CTAs */}
+      {/* 4. Tactile Editorial CTAs */}
       <motion.div
         variants={itemVariants}
         className="flex flex-col sm:flex-row items-center gap-3.5 w-full sm:w-auto mb-2"
       >
-        <CurtainLink href={primaryCtaHref} className="w-full sm:w-auto">
-          <Button
-            size="lg"
-            variant="primary"
-            className="w-full sm:w-auto px-8 py-3.5 rounded-full font-medium text-white bg-gradient-to-r from-[#E11D48] via-[#F43F5E] to-[#FB7185] shadow-[0_10px_25px_rgba(225,29,72,0.35)] hover:shadow-[0_14px_32px_rgba(225,29,72,0.45)] hover:-translate-y-0.5 active:scale-[0.98] transition-all duration-300 border border-white/30"
+        <Link href={primaryCtaHref} className="w-full sm:w-auto">
+          <button
+            type="button"
+            className="w-full sm:w-auto px-8 py-3.5 rounded-full font-medium text-white bg-[#260514] hover:bg-[#38071E] active:scale-[0.98] transition-all duration-200 border border-white/15 shadow-[0_8px_20px_-6px_rgba(40,5,20,0.35)] flex items-center justify-center gap-2 cursor-pointer group"
           >
-            <span>{primaryCtaText}</span>
-            <span className="text-sm">💌</span>
-          </Button>
-        </CurtainLink>
+            <span className="tracking-wide text-sm">{primaryCtaText}</span>
+            <svg
+              className="w-4 h-4 text-rose-300 transition-transform duration-200 group-hover:translate-x-0.5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+            </svg>
+          </button>
+        </Link>
 
-        <CurtainLink href={secondaryCtaHref} className="w-full sm:w-auto">
-          <Button
-            size="lg"
-            variant="ghost"
-            className="w-full sm:w-auto px-6 py-3.5 rounded-full font-semibold !text-[#4A0E2E] hover:!text-[#881337] bg-white/70 hover:bg-white/95 active:scale-[0.98] transition-all duration-200 border border-rose-300/60 shadow-[0_4px_12px_rgba(200,100,130,0.12)]"
+        <Link href={secondaryCtaHref} className="w-full sm:w-auto">
+          <button
+            type="button"
+            className="w-full sm:w-auto px-7 py-3.5 rounded-full font-medium text-[#4A0E2E] hover:text-[#2A0615] bg-white/70 hover:bg-white/90 active:scale-[0.98] transition-all duration-200 border border-rose-900/10 shadow-[0_2px_8px_rgba(0,0,0,0.03)] flex items-center justify-center gap-2 cursor-pointer text-sm tracking-wide"
           >
             <span>{secondaryCtaText}</span>
-            <span className="text-xs">&rarr;</span>
-          </Button>
-        </CurtainLink>
+          </button>
+        </Link>
       </motion.div>
     </motion.div>
   );

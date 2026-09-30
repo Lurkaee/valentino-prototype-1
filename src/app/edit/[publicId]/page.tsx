@@ -88,6 +88,7 @@ function EditExperienceContent() {
   const [mobileTab, setMobileTab] = useState<"form" | "preview">("form");
   const [activeSection, setActiveSection] = useState<StudioStageId>("world");
   const [previewDeviceMode, setPreviewDeviceMode] = useState<"phone" | "tablet" | "expanded">("phone");
+  const [isFocusMode, setIsFocusMode] = useState(false);
   const [showAdvancedStory, setShowAdvancedStory] = useState(false);
   const searchParams = useSearchParams();
 
@@ -568,32 +569,110 @@ function EditExperienceContent() {
         onChangeWorldClick={() => setWorldModalOpen(true)}
         onPublishClick={handlePublish}
         onMobileTabChange={setMobileTab}
+        isFocusMode={isFocusMode}
+        onToggleFocusMode={() => setIsFocusMode((prev) => !prev)}
+        previewDeviceMode={previewDeviceMode}
+        onPreviewDeviceModeChange={setPreviewDeviceMode}
       />
 
-      {/* 3. Studio Workspace: Split Creative Workbench & Live Canvas */}
-      <div className="flex-1 flex flex-col md:flex-row overflow-hidden relative">
-        {/* Left Pane: Creative Workbench */}
-        <div
-          className={`w-full md:w-[520px] lg:w-[580px] flex flex-col border-b md:border-b-0 md:border-r border-white/[0.08] bg-[#0C0A10] overflow-y-auto ${
-            mobileTab === "preview" ? "hidden md:flex" : "flex"
-          }`}
-        >
-          {/* Progressive 7-Stage Creation Stepper */}
+      {/* World Selector Modal */}
+      <WorldSelectorModal
+        isOpen={worldModalOpen}
+        currentTemplateId={templateMeta.id}
+        onClose={() => setWorldModalOpen(false)}
+        onSelectWorld={handleSelectWorld}
+      />
+
+      {/* 3. Studio Workspace: 3-Column Creative Application Layout */}
+      <div className="flex-1 flex flex-col lg:flex-row overflow-hidden relative">
+        {/* Left Rail: Progressive 7-Stage Creation Stepper */}
+        {!isFocusMode && (
           <StudioStageStepper
             activeStage={activeSection}
             onSelectStage={scrollToSection}
             completedStages={stageCompletion}
+            className={mobileTab === "preview" ? "hidden lg:flex" : "flex"}
           />
+        )}
 
-          {/* Workbench Body */}
-          <div className="p-5 sm:p-7 space-y-10">
-            {/* Advisory Content Readiness Bar (Top placement) */}
-            <ContentReadinessBar
-              partnerName={config.partnerName}
-              senderName={config.senderName}
-              message={config.message}
-              activeMomentsCount={activeMomentsCount}
-            />
+        {/* Center Workspace: Live Recipient Experience Canvas (Visually Dominant!) */}
+        <div
+          className={`flex-1 min-w-0 bg-[#070609] overflow-y-auto flex flex-col items-center justify-start p-4 lg:p-8 relative ${
+            mobileTab === "form" ? "hidden lg:flex" : "flex"
+          }`}
+        >
+          {/* Ambient atmosphere glow */}
+          <div className="pointer-events-none absolute inset-0 bg-radial-gradient from-white/[0.04] via-transparent to-transparent opacity-80 blur-3xl" />
+
+          {/* Floating Canvas Top Toolbar (Desktop Device Mode Switcher) */}
+          <div className="hidden lg:flex items-center justify-between w-full max-w-[480px] mb-4 px-2 text-xs font-ui">
+            <div className="flex items-center gap-2">
+              <span className="text-white/40 text-[11px]">Preview:</span>
+              <span className="text-white/80 font-medium text-[11px]">{templateMeta.name}</span>
+            </div>
+            {isFocusMode && (
+              <button
+                type="button"
+                onClick={() => setIsFocusMode(false)}
+                className="px-3 py-1 rounded-full bg-white/10 hover:bg-white/20 text-white text-xs border border-white/20 transition-all cursor-pointer"
+              >
+                Exit Focus Mode ✕
+              </button>
+            )}
+          </div>
+
+          {/* Device / Canvas Frame */}
+          <div
+            className={`w-full transition-all duration-300 relative z-10 ${
+              previewDeviceMode === "tablet"
+                ? "max-w-[620px]"
+                : previewDeviceMode === "expanded"
+                ? "max-w-[760px]"
+                : "max-w-[400px] sm:max-w-[440px]"
+            } rounded-[38px] p-2.5 sm:p-3.5 bg-gradient-to-b from-white/[0.12] via-white/[0.05] to-black/80 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.95)] border border-white/[0.1]`}
+          >
+            <div className="rounded-[30px] overflow-hidden bg-[#0A090C] border border-black/80 flex flex-col min-h-[580px] max-h-[820px] shadow-inner relative">
+              {/* Minimal Device Top Bar */}
+              <div className="h-6 w-full bg-black/60 flex items-center justify-between px-6 pt-1 select-none z-30 shrink-0">
+                <span className="text-[10px] text-white/50 font-ui font-medium">9:41</span>
+                <div className="w-14 h-3 rounded-full bg-black border border-white/10" />
+                <div className="flex items-center gap-1 text-[10px] text-white/50 font-ui">
+                  <span>5G</span>
+                  <span>100%</span>
+                </div>
+              </div>
+
+              {/* Screen Content: Real ExperienceRenderer */}
+              <div className="flex-1 overflow-y-auto">
+                <ExperienceRenderer
+                  templateId={templateMeta.id}
+                  templateVersion={templateMeta.version}
+                  mode="preview"
+                  rawConfig={config}
+                  publicId={publicId}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Pane: Contextual Creative Inspector */}
+        {!isFocusMode && (
+          <div
+            id="studio-inspector-pane"
+            className={`w-full lg:w-[440px] xl:w-[480px] shrink-0 border-t lg:border-t-0 lg:border-l border-white/[0.08] bg-[#0C0A10] overflow-y-auto ${
+              mobileTab === "preview" ? "hidden lg:flex" : "flex flex-col"
+            }`}
+          >
+            {/* Workbench Body */}
+            <div className="p-5 sm:p-7 space-y-10">
+              {/* Advisory Content Readiness Bar (Top placement) */}
+              <ContentReadinessBar
+                partnerName={config.partnerName}
+                senderName={config.senderName}
+                message={config.message}
+                activeMomentsCount={activeMomentsCount}
+              />
 
             {/* Contextual Discovery Guidance */}
             <ContextualSuggestion
@@ -696,7 +775,7 @@ function EditExperienceContent() {
                             : "bg-white/[0.04] text-white/60 hover:text-white"
                         }`}
                       >
-                        {t.name}
+                        ✦ {t.name}
                       </button>
                     ))}
                   </div>
@@ -1563,102 +1642,8 @@ function EditExperienceContent() {
             </section>
           </div>
         </div>
-
-        {/* Right Pane: Live Recipient Canvas Preview */}
-        <div
-          className={`flex-1 bg-[#070609] overflow-y-auto flex flex-col items-center justify-start p-4 sm:p-8 relative ${
-            mobileTab === "form" ? "hidden md:flex" : "flex"
-          }`}
-        >
-          {/* Subtle ambient world glow */}
-          <div className="pointer-events-none absolute inset-0 bg-radial-gradient from-white/[0.04] via-transparent to-transparent opacity-80 blur-3xl" />
-
-          {/* Floating Canvas Top Toolbar (Desktop Device Mode Switcher) */}
-          <div className="hidden md:flex items-center justify-between w-full max-w-[480px] mb-4 px-2 text-xs font-ui">
-            <div className="flex items-center gap-2">
-              <span className="text-white/40 text-[11px]">Preview:</span>
-              <span className="text-white/80 font-medium text-[11px]">{templateMeta.name}</span>
-            </div>
-            <div className="flex items-center gap-1 bg-white/[0.06] p-1 rounded-xl border border-white/[0.08]">
-              <button
-                type="button"
-                onClick={() => setPreviewDeviceMode("phone")}
-                className={`px-2.5 py-0.5 rounded-lg text-[10px] font-ui transition-all ${
-                  previewDeviceMode === "phone"
-                    ? "bg-white text-black font-medium"
-                    : "text-white/60 hover:text-white"
-                }`}
-              >
-                Phone
-              </button>
-              <button
-                type="button"
-                onClick={() => setPreviewDeviceMode("tablet")}
-                className={`px-2.5 py-0.5 rounded-lg text-[10px] font-ui transition-all ${
-                  previewDeviceMode === "tablet"
-                    ? "bg-white text-black font-medium"
-                    : "text-white/60 hover:text-white"
-                }`}
-              >
-                Tablet
-              </button>
-              <button
-                type="button"
-                onClick={() => setPreviewDeviceMode("expanded")}
-                className={`px-2.5 py-0.5 rounded-lg text-[10px] font-ui transition-all ${
-                  previewDeviceMode === "expanded"
-                    ? "bg-white text-black font-medium"
-                    : "text-white/60 hover:text-white"
-                }`}
-              >
-                Expanded
-              </button>
-            </div>
-          </div>
-
-          {/* Device / Canvas Frame */}
-          <div
-            className={`w-full transition-all duration-300 relative z-10 ${
-              previewDeviceMode === "tablet"
-                ? "max-w-[620px]"
-                : previewDeviceMode === "expanded"
-                ? "max-w-[740px]"
-                : "max-w-[420px] sm:max-w-[460px]"
-            } rounded-[38px] p-2.5 sm:p-3.5 bg-gradient-to-b from-white/[0.12] via-white/[0.05] to-black/80 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.95)] border border-white/[0.1]`}
-          >
-            <div className="rounded-[30px] overflow-hidden bg-[#0A090C] border border-black/80 flex flex-col min-h-[580px] max-h-[820px] shadow-inner relative">
-              {/* Minimal Device Top Bar */}
-              <div className="h-6 w-full bg-black/60 flex items-center justify-between px-6 pt-1 select-none z-30 shrink-0">
-                <span className="text-[10px] text-white/50 font-ui font-medium">9:41</span>
-                <div className="w-14 h-3 rounded-full bg-black border border-white/10" />
-                <div className="flex items-center gap-1 text-[10px] text-white/50 font-ui">
-                  <span>5G</span>
-                  <span>100%</span>
-                </div>
-              </div>
-
-              {/* Screen Content: Real ExperienceRenderer */}
-              <div className="flex-1 overflow-y-auto">
-                <ExperienceRenderer
-                  templateId={templateMeta.id}
-                  templateVersion={templateMeta.version}
-                  mode="preview"
-                  rawConfig={config}
-                  publicId={publicId}
-                />
-              </div>
-            </div>
-          </div>
-        </div>
+        )}
       </div>
-
-      {/* World Selector Modal */}
-      <WorldSelectorModal
-        isOpen={worldModalOpen}
-        currentTemplateId={templateMeta.id}
-        onClose={() => setWorldModalOpen(false)}
-        onSelectWorld={handleSelectWorld}
-      />
 
       {/* Feature Discovery Drawer */}
       <FeatureDiscoveryDrawer
