@@ -23,6 +23,7 @@ import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { AtmosphericGlow } from "@/components/ui/AtmosphericGlow";
+import { ValentinoAtmosphere } from "@/components/ui/ValentinoAtmosphere";
 import { StudioHeader, SaveStatus } from "@/components/studio/StudioHeader";
 import { StudioStageStepper, StudioStageId } from "@/components/studio/StudioStageStepper";
 import { StoryChaptersVisualizer } from "@/components/studio/StoryChaptersVisualizer";
@@ -601,8 +602,14 @@ function EditExperienceContent() {
             mobileTab === "form" ? "hidden lg:flex" : "flex"
           }`}
         >
-          {/* Ambient atmosphere glow */}
-          <div className="pointer-events-none absolute inset-0 bg-radial-gradient from-white/[0.04] via-transparent to-transparent opacity-80 blur-3xl" />
+          {/* Subtle atmosphere behind the studio workspace */}
+          <ValentinoAtmosphere
+            context="studio"
+            world={templateMeta.id}
+            intensity="subtle"
+            scrollReactive={false}
+          />
+          <div className="pointer-events-none absolute inset-0 bg-radial-gradient from-white/[0.02] via-transparent to-transparent opacity-60 blur-3xl" />
 
           {/* Floating Canvas Top Toolbar (Desktop Device Mode Switcher) */}
           <div className="hidden lg:flex items-center justify-between w-full max-w-[480px] mb-4 px-2 text-xs font-ui">

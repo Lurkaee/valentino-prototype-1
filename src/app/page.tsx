@@ -1,9 +1,9 @@
 import { Button } from "@/components/ui/Button";
-import { ValentineSky } from "@/components/ui/ValentineSky";
+import { ValentinoAtmosphere } from "@/components/ui/ValentinoAtmosphere";
 import { FloatingNavbar } from "@/components/ui/FloatingNavbar";
 import { HeroEditorialStagger } from "@/components/motion/HeroEditorialStagger";
 import { LoveLetter3D } from "@/components/motion/LoveLetter3D";
-import { BuildYourValentine } from "@/components/motion/BuildYourValentine";
+import { LittleThingsPinnedScene } from "@/components/motion/LittleThingsPinnedScene";
 import { TemplateShowcase } from "@/components/motion/TemplateShowcase";
 import { CurtainLink } from "@/components/motion/PageCurtains";
 
@@ -20,7 +20,8 @@ export default function HomePage() {
         id="hero"
         className="relative w-full min-h-[100dvh] flex flex-col items-center justify-center overflow-hidden bg-gradient-to-b from-[#FEDEEA] via-[#FDECE8] to-[#FDF8F3]"
       >
-        <ValentineSky />
+        {/* Persistent, High-Fidelity Sunset Cloud Atmosphere */}
+        <ValentinoAtmosphere context="hero" world="cloud-nine" intensity="hero" />
 
         <div className="w-full max-w-6xl mx-auto px-6 pt-28 sm:pt-32 lg:pt-36 pb-16 sm:pb-20 relative z-20 z-content">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
@@ -48,58 +49,69 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Soft Organic Flow into Paper */}
+        {/* Soft Organic Flow into Paper without hard borders */}
         <div
-          className="w-full h-20 sm:h-28 -mb-px pointer-events-none select-none relative z-20"
+          className="w-full h-24 sm:h-32 -mb-px pointer-events-none select-none relative z-20"
           style={{
-            background: "linear-gradient(180deg, transparent 0%, rgba(253,248,243,0.7) 60%, #FDF8F3 100%)",
+            background: "linear-gradient(180deg, transparent 0%, rgba(253,248,243,0.6) 50%, #FDF8F3 100%)",
           }}
           aria-hidden="true"
         />
       </section>
 
       {/* ========================================================================= */}
-      {/* 02 — MAKE IT PERSONAL: WARM STATIONERY PAPER                             */}
+      {/* 02 — LITTLE THINGS: PINNED PHYSICAL ASSEMBLY SCENE                        */}
       {/* ========================================================================= */}
       <section
         id="personalize"
-        className="w-full bg-[#FDF8F3] text-[#240412] relative z-20 z-content py-12 sm:py-20"
+        className="w-full bg-[#FDF8F3] text-[#240412] relative z-20 z-content"
       >
-        <div id="how-it-works" className="max-w-6xl mx-auto px-6">
-          <BuildYourValentine />
+        {/* Preserves both #how-it-works and legacy #build-your-valentine anchors for navigation */}
+        <div id="build-your-valentine" className="w-full">
+          <LittleThingsPinnedScene />
         </div>
 
-        {/* Organic Feathered Bridge into Dark Atmosphere */}
+        {/* Environmental Blending into Living Worlds Atmosphere */}
         <div
-          className="w-full h-24 sm:h-32 -mb-px mt-12 pointer-events-none select-none"
+          className="w-full h-32 sm:h-44 -mb-px -mt-10 pointer-events-none select-none relative z-30"
           style={{
-            background: "linear-gradient(180deg, #FDF8F3 0%, #FAF0E6 40%, #1A0A16 85%, #12040C 100%)",
+            background:
+              "linear-gradient(180deg, transparent 0%, rgba(245,236,227,0.85) 30%, #2A0E20 75%, #12040C 100%)",
           }}
           aria-hidden="true"
         />
       </section>
 
       {/* ========================================================================= */}
-      {/* 03 — ENTER A WORLD: THE LIVING WORLD COLLECTION                          */}
+      {/* 03 — LIVING WORLDS: IMMERSIVE WORLD PORTAL                                */}
       {/* ========================================================================= */}
       <section
         id="worlds-section"
-        className="w-full bg-[#12040C] text-[#FAF8F5] relative z-20 z-content py-12 sm:py-20 border-t border-rose-950/30"
+        className="w-full bg-[#12040C] text-[#FAF8F5] relative z-20 z-content py-12 sm:py-20"
       >
+        {/* Atmospheric Glow Underlay */}
+        <div
+          className="absolute inset-0 pointer-events-none opacity-25"
+          style={{
+            backgroundImage: "radial-gradient(ellipse at 50% 30%, #E11D48 0%, transparent 60%)",
+          }}
+          aria-hidden="true"
+        />
+
         <TemplateShowcase />
 
-        {/* Seamless transition into moments */}
+        {/* Seamless Blending into Moments */}
         <div
-          className="w-full h-20 pointer-events-none select-none -mb-px mt-8 flex items-center justify-center text-center px-4"
+          className="w-full h-24 pointer-events-none select-none -mb-px mt-8"
           style={{
-            background: "linear-gradient(180deg, #12040C 0%, #16030E 60%, #1A0512 100%)",
+            background: "linear-gradient(180deg, #12040C 0%, #170410 50%, #1A0512 100%)",
           }}
           aria-hidden="true"
         />
       </section>
 
       {/* ========================================================================= */}
-      {/* 04 — DISCOVER INTERACTIVE MOMENTS                                         */}
+      {/* 04 — DISCOVER INTERACTIVE MOMENTS (BORDERLESS EDITORIAL OBJECTS)           */}
       {/* ========================================================================= */}
       <section
         id="moments"
@@ -107,28 +119,28 @@ export default function HomePage() {
       >
         <div className="max-w-6xl mx-auto">
           {/* Editorial Section Header */}
-          <div className="text-center max-w-2xl mx-auto mb-16 sm:mb-20">
-            <span className="inline-block text-[11px] font-mono tracking-widest uppercase text-rose-300/80 mb-3 px-3 py-1 rounded-full bg-rose-950/60 border border-rose-500/20">
+          <div className="text-center max-w-2xl mx-auto mb-16 sm:mb-20 space-y-3">
+            <span className="inline-block text-[11px] font-mono tracking-widest uppercase text-rose-300/80 mb-2">
               Interactive Devotion
             </span>
-            <h2 className="text-3xl sm:text-5xl font-serif font-medium text-white tracking-tight mb-4 leading-tight">
+            <h2 className="text-3xl sm:text-5xl font-serif font-normal text-white tracking-tight leading-tight">
               Add little secrets waiting to be discovered.
             </h2>
             <p className="text-sm sm:text-base text-rose-100/70 font-light leading-relaxed">
               Love isn&apos;t just what you say all at once. It is the sealed envelopes opened on quiet mornings, the private memories tucked behind questions, and the surprises waiting for the days ahead.
             </p>
-            <p className="text-sm sm:text-base text-rose-200/90 font-light italic mt-3">
+            <p className="text-sm sm:text-base text-rose-200/90 font-light italic pt-1">
               You don&apos;t just send a page. They enter a world.
             </p>
           </div>
 
-          {/* Interactive Moments Showcase: Subtle Glass, SVG Linework */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+          {/* Borderless Interactive Moments Showcase: Pure material & tonal contrast */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-10">
             {/* Open When Envelopes */}
-            <div className="rounded-2xl p-7 sm:p-8 bg-white/[0.03] border border-white/[0.08] hover:border-rose-400/40 transition-all duration-300 relative group flex flex-col justify-between">
+            <div className="p-8 bg-white/[0.025] hover:bg-white/[0.05] transition-all duration-500 rounded-3xl relative group flex flex-col justify-between">
               <div>
-                <div className="w-10 h-10 rounded-xl bg-white/[0.05] border border-white/10 flex items-center justify-center text-rose-300 mb-5 group-hover:scale-105 transition-transform">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <div className="w-11 h-11 rounded-2xl bg-white/[0.06] flex items-center justify-center text-rose-300 mb-6 group-hover:scale-105 transition-transform">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                     <rect width="20" height="16" x="2" y="4" rx="2" />
                     <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
                   </svg>
@@ -136,23 +148,23 @@ export default function HomePage() {
                 <span className="text-[10px] uppercase font-mono tracking-widest text-rose-300/80 font-medium block mb-2">
                   Open When Envelopes
                 </span>
-                <h3 className="font-serif text-xl font-medium text-white mb-2.5">
+                <h3 className="font-serif text-2xl font-normal text-white mb-3">
                   Notes for future days
                 </h3>
-                <p className="text-xs sm:text-sm text-white/70 leading-relaxed font-light mb-4">
+                <p className="text-xs sm:text-sm text-white/70 leading-relaxed font-light mb-6">
                   Leave sealed letters they can unseal whenever they need you: Open When you miss me, Open When you have had a hard day, or Open when you can&apos;t sleep.
                 </p>
               </div>
-              <div className="pt-4 border-t border-white/[0.06] text-[11px] text-rose-200/70 italic font-serif">
+              <div className="pt-4 text-xs text-rose-200/80 italic font-serif">
                 “Close your eyes. Take a breath. I am right here.”
               </div>
             </div>
 
             {/* Tap-to-Reveal Secret Notes */}
-            <div className="rounded-2xl p-7 sm:p-8 bg-white/[0.03] border border-white/[0.08] hover:border-rose-400/40 transition-all duration-300 relative group flex flex-col justify-between">
+            <div className="p-8 bg-white/[0.025] hover:bg-white/[0.05] transition-all duration-500 rounded-3xl relative group flex flex-col justify-between">
               <div>
-                <div className="w-10 h-10 rounded-xl bg-white/[0.05] border border-white/10 flex items-center justify-center text-rose-300 mb-5 group-hover:scale-105 transition-transform">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <div className="w-11 h-11 rounded-2xl bg-white/[0.06] flex items-center justify-center text-rose-300 mb-6 group-hover:scale-105 transition-transform">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                     <circle cx="8" cy="15" r="4" />
                     <path d="m10.85 12.15 7.65-7.65a2 2 0 1 1 2.83 2.83l-7.65 7.65" />
                     <path d="m15.5 6.5 2 2" />
@@ -161,48 +173,49 @@ export default function HomePage() {
                 <span className="text-[10px] uppercase font-mono tracking-widest text-rose-300/80 font-medium block mb-2">
                   Concealed Letters
                 </span>
-                <h3 className="font-serif text-xl font-medium text-white mb-2.5">
+                <h3 className="font-serif text-2xl font-normal text-white mb-3">
                   Secret whispers
                 </h3>
-                <p className="text-xs sm:text-sm text-white/70 leading-relaxed font-light mb-4">
+                <p className="text-xs sm:text-sm text-white/70 leading-relaxed font-light mb-6">
                   Hide intimate words behind a delicate tap-to-reveal fold or lock them with a question only the two of you know the answer to.
                 </p>
               </div>
-              <div className="pt-4 border-t border-white/[0.06] text-[11px] text-rose-200/70 italic font-serif">
+              <div className="pt-4 text-xs text-rose-200/80 italic font-serif">
                 “Where did we share our very first secret?”
               </div>
             </div>
 
             {/* Playful Moments & Surprises */}
-            <div className="rounded-2xl p-7 sm:p-8 bg-white/[0.03] border border-white/[0.08] hover:border-rose-400/40 transition-all duration-300 relative group flex flex-col justify-between">
+            <div className="p-8 bg-white/[0.025] hover:bg-white/[0.05] transition-all duration-500 rounded-3xl relative group flex flex-col justify-between">
               <div>
-                <div className="w-10 h-10 rounded-xl bg-white/[0.05] border border-white/10 flex items-center justify-center text-rose-300 mb-5 group-hover:scale-105 transition-transform">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <div className="w-11 h-11 rounded-2xl bg-white/[0.06] flex items-center justify-center text-rose-300 mb-6 group-hover:scale-105 transition-transform">
+                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                     <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
                   </svg>
                 </div>
                 <span className="text-[10px] uppercase font-mono tracking-widest text-rose-300/80 font-medium block mb-2">
                   Tactile Surprises
                 </span>
-                <h3 className="font-serif text-xl font-medium text-white mb-2.5">
+                <h3 className="font-serif text-2xl font-normal text-white mb-3">
                   Delight & discovery
                 </h3>
-                <p className="text-xs sm:text-sm text-white/70 leading-relaxed font-light mb-4">
+                <p className="text-xs sm:text-sm text-white/70 leading-relaxed font-light mb-6">
                   Surprise them with tactile scratch cards that reveal sweet compliments, a jar of reasons why you love them, or a playful relationship quiz.
                 </p>
               </div>
-              <div className="pt-4 border-t border-white/[0.06] text-[11px] text-rose-200/70 italic font-serif">
+              <div className="pt-4 text-xs text-rose-200/80 italic font-serif">
                 “Scratch here to reveal something I love about you...”
               </div>
             </div>
           </div>
         </div>
 
-        {/* Transition back to calm cream surface */}
+        {/* Environmental gradient flow back to calm paper */}
         <div
-          className="w-full h-24 sm:h-32 -mb-px mt-16 pointer-events-none select-none"
+          className="w-full h-32 sm:h-44 -mb-px mt-20 pointer-events-none select-none"
           style={{
-            background: "linear-gradient(180deg, #1A0512 0%, #2A0A1E 35%, #F5ECE3 80%, #FDF8F3 100%)",
+            background:
+              "linear-gradient(180deg, #1A0512 0%, #2A091E 30%, #8A2D52 65%, #F4E8DC 90%, #FDF8F3 100%)",
           }}
           aria-hidden="true"
         />
@@ -217,7 +230,7 @@ export default function HomePage() {
       >
         <div className="max-w-3xl mx-auto text-center space-y-7">
           {/* Small tactile wax seal / talisman artifact */}
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-[#E11D48] via-[#BE123C] to-[#6B0C23] border border-rose-300/60 shadow-[0_4px_16px_rgba(159,18,57,0.25)] text-white mx-auto">
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-[#E11D48] via-[#BE123C] to-[#6B0C23] shadow-[0_4px_16px_rgba(159,18,57,0.25)] text-white mx-auto">
             <svg className="w-5 h-5 filter drop-shadow-sm text-rose-100" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
             </svg>
@@ -238,7 +251,7 @@ export default function HomePage() {
               <Button
                 size="lg"
                 variant="primary"
-                className="px-8 py-3.5 rounded-full font-medium text-white bg-[#1A0612] hover:bg-[#2C0A1E] border border-white/15 shadow-[0_8px_20px_-6px_rgba(40,5,20,0.35)] hover:shadow-lg hover:-translate-y-0.5 active:scale-[0.98] transition-all flex items-center gap-2.5 cursor-pointer"
+                className="px-8 py-3.5 rounded-full font-medium text-white bg-[#1A0612] hover:bg-[#2C0A1E] shadow-[0_8px_20px_-6px_rgba(40,5,20,0.35)] hover:shadow-lg hover:-translate-y-0.5 active:scale-[0.98] transition-all flex items-center gap-2.5 cursor-pointer"
               >
                 <span>Begin Their World</span>
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -251,7 +264,7 @@ export default function HomePage() {
             <CurtainLink href="/templates">
               <button
                 type="button"
-                className="px-6 py-3.5 rounded-full text-sm font-medium text-[#240412] hover:text-[#881337] border border-stone-300/90 hover:border-stone-400 bg-white/90 hover:bg-white shadow-[0_1px_4px_rgba(0,0,0,0.04)] transition-all cursor-pointer flex items-center gap-1.5"
+                className="px-6 py-3.5 rounded-full text-sm font-medium text-[#240412] hover:text-[#881337] bg-white/90 hover:bg-white shadow-[0_1px_4px_rgba(0,0,0,0.04)] transition-all cursor-pointer flex items-center gap-1.5"
               >
                 <span>Explore Showroom</span>
                 <span className="text-rose-800">→</span>
@@ -261,7 +274,7 @@ export default function HomePage() {
         </div>
 
         {/* Elegant Editorial Footer */}
-        <footer className="w-full max-w-5xl mx-auto mt-24 pt-8 border-t border-stone-200 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#6B2346] font-sans relative z-10">
+        <footer className="w-full max-w-5xl mx-auto mt-24 pt-8 border-t border-stone-200/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#6B2346] font-sans relative z-10">
           <div className="flex items-center gap-2">
             <span className="text-[#240412] font-serif font-medium">Valentino</span>
             <span className="text-stone-300">·</span>
