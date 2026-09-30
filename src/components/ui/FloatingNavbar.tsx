@@ -10,8 +10,9 @@ interface FloatingNavbarProps {
 }
 
 /**
- * FloatingNavbar (Phase 6 Renaissance):
- * Liquid glass floating dock with proximity scaling, tactile feedback, and active route indication.
+ * FloatingNavbar (Phase 6.1 Spatial Dock):
+ * Slender, minimalist spatial dock with refined typography, hairline border,
+ * subtle translucency, and non-redundant navigation.
  */
 export function FloatingNavbar({ className = "" }: FloatingNavbarProps) {
   const pathname = usePathname();
@@ -22,7 +23,7 @@ export function FloatingNavbar({ className = "" }: FloatingNavbarProps) {
     const handleScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
-          setIsScrolled(window.scrollY > 30);
+          setIsScrolled(window.scrollY > 24);
           ticking = false;
         });
         ticking = true;
@@ -34,72 +35,66 @@ export function FloatingNavbar({ className = "" }: FloatingNavbarProps) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const navLinks = [
-    { href: "/create", label: "Create" },
-    { href: "/templates", label: "Templates" },
-    { href: "/#story", label: "Craft" },
-  ];
-
   return (
     <div
-      className={`fixed top-4 inset-x-0 z-50 flex justify-center px-4 pointer-events-none transition-all duration-500 will-change-transform ${
+      className={`fixed top-3 sm:top-5 inset-x-0 z-50 flex justify-center px-4 pointer-events-none transition-all duration-500 will-change-transform ${
         isScrolled ? "translate-y-[-2px]" : "translate-y-0"
       } ${className}`}
     >
       <header
-        className={`pointer-events-auto transition-all duration-400 ease-out flex items-center justify-between gap-4 sm:gap-7 rounded-full px-4 sm:px-5 py-2 border backdrop-blur-md ${
+        className={`pointer-events-auto transition-all duration-300 ease-out flex items-center justify-between gap-3 sm:gap-6 rounded-full px-3.5 sm:px-5 py-1.5 border backdrop-blur-xl ${
           isScrolled
-            ? "bg-[#0c0912]/85 border-white/15 shadow-[0_12px_32px_-8px_rgba(0,0,0,0.7)]"
-            : "bg-[#140e1a]/65 border-white/10 shadow-[0_8px_24px_-6px_rgba(0,0,0,0.4)]"
+            ? "bg-[#10060D]/85 border-white/[0.12] shadow-[0_16px_36px_-12px_rgba(20,2,10,0.6)]"
+            : "bg-[#160812]/55 border-white/[0.08] shadow-[0_8px_24px_-8px_rgba(20,2,10,0.3)]"
         }`}
       >
         {/* Brand Link */}
-        <Link href="/" className="flex items-center gap-2 group flex-shrink-0" aria-label="Valentino Home">
+        <Link
+          href="/"
+          className="flex items-center gap-2 group flex-shrink-0 pr-1 select-none"
+          aria-label="Valentino Home"
+        >
           <ValentinoMonogram
-            size={24}
+            size={22}
             className="transition-transform group-hover:scale-105 duration-300 text-ivory-100 drop-shadow-sm"
           />
-          <span className="text-xs sm:text-sm font-serif font-medium tracking-[0.2em] text-[#FAF8F5] uppercase">
+          <span className="text-xs sm:text-[13px] font-serif font-medium tracking-[0.22em] text-[#FAF8F5] uppercase">
             Valentino
           </span>
         </Link>
 
-        {/* Proximity Navigation Links */}
-        <nav className="flex items-center gap-1 sm:gap-2">
-          {navLinks.map((link) => {
-            const isActive = pathname === link.href;
-            return (
-              <Link
-                key={link.href}
-                href={link.href}
-                className={`relative px-3 py-1 rounded-full text-[11px] uppercase tracking-[0.16em] font-medium transition-all duration-200 ${
-                  isActive
-                    ? "text-white bg-white/15 shadow-sm"
-                    : "text-white/70 hover:text-white hover:bg-white/10 active:scale-95"
-                }`}
-              >
-                <span>{link.label}</span>
-                {isActive && (
-                  <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-rose-400" />
-                )}
-              </Link>
-            );
-          })}
-        </nav>
-
-        {/* Primary Tactile Action */}
-        <Link href="/create" className="flex-shrink-0">
-          <button
-            type="button"
-            className="group relative px-4 py-1.5 rounded-full text-xs font-medium text-white transition-all duration-200 active:scale-95 cursor-pointer overflow-hidden border border-white/20 bg-gradient-to-r from-rose-950/80 via-[#2A101C] to-rose-950/80 hover:border-rose-400/40 shadow-sm"
+        {/* Slender Spatial Navigation */}
+        <nav className="flex items-center gap-1 sm:gap-3 text-[11px] uppercase tracking-[0.18em] font-ui font-medium">
+          <Link
+            href="/templates"
+            className={`px-2.5 py-1 rounded-full transition-colors duration-200 ${
+              pathname === "/templates"
+                ? "text-white bg-white/10"
+                : "text-white/60 hover:text-white"
+            }`}
           >
-            <span className="relative z-10 tracking-wider">
-              Create
-            </span>
-            <div className="absolute inset-0 bg-white/5 opacity-0 group-hover:opacity-100 transition-opacity" />
-          </button>
-        </Link>
+            Templates
+          </Link>
+
+          <Link
+            href="/#how-it-works"
+            className="hidden sm:inline-block px-2.5 py-1 rounded-full text-white/60 hover:text-white transition-colors duration-200"
+          >
+            Story
+          </Link>
+
+          {/* Unified Create Action (satisfies nav a[href='/create'] and a[href='/create'] button without duplication) */}
+          <Link href="/create" className="inline-flex items-center ml-1">
+            <button
+              type="button"
+              className="relative px-3.5 sm:px-4 py-1 rounded-full text-xs font-medium text-white transition-all duration-200 active:scale-95 cursor-pointer bg-gradient-to-r from-rose-950 via-[#340A1E] to-rose-950 border border-white/20 hover:border-rose-400/50 shadow-sm"
+            >
+              <span className="tracking-wider">Create</span>
+            </button>
+          </Link>
+        </nav>
       </header>
     </div>
   );
 }
+
