@@ -21,12 +21,12 @@ interface HeroEditorialStaggerProps {
  * and elegant SVG motifs.
  */
 export function HeroEditorialStagger({
-  eyebrow = "The Romantic Experience Platform · A Private Sanctuary",
+  eyebrow = "made quietly, for one person",
   headline = "Create something they'll remember.",
-  subtitle = "Valentino is an intimate digital art experience crafted for the person who means everything to you — complete with starlight letters, shared memories, relationship milestones, and dimensional worlds.",
+  subtitle = "An intimate digital art experience crafted for the person who means everything to you — complete with starlight letters, shared memories, and living worlds.",
   primaryCtaText = "Begin Their World",
   primaryCtaHref = "/create",
-  secondaryCtaText = "Explore Templates",
+  secondaryCtaText = "Explore Showroom",
   secondaryCtaHref = "/templates",
 }: HeroEditorialStaggerProps) {
   const shouldReduceMotion = useReducedMotion();
@@ -41,8 +41,8 @@ export function HeroEditorialStagger({
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: shouldReduceMotion ? 0 : 0.1,
-        delayChildren: shouldReduceMotion ? 0 : 0.05,
+        staggerChildren: shouldReduceMotion ? 0 : 0.08,
+        delayChildren: shouldReduceMotion ? 0 : 0.04,
       },
     },
   };
@@ -50,7 +50,7 @@ export function HeroEditorialStagger({
   const itemVariants = {
     hidden: {
       opacity: shouldReduceMotion ? 1 : 0,
-      y: shouldReduceMotion ? 0 : 14,
+      y: shouldReduceMotion ? 0 : 12,
     },
     visible: {
       opacity: 1,
@@ -71,49 +71,51 @@ export function HeroEditorialStagger({
         opacity: shouldReduceMotion ? 1 : heroOpacity,
         y: shouldReduceMotion ? 0 : heroY,
       }}
-      className="w-full flex flex-col items-center text-center relative z-10 max-w-4xl mx-auto"
+      className="w-full flex flex-col items-center lg:items-start text-center lg:text-left relative z-10"
     >
-      {/* 1. Restrained Editorial Eyebrow */}
-      <motion.div variants={itemVariants} className="mb-4">
-        <span className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-white/70 border border-rose-900/10 text-[#6B1D36] text-[11px] uppercase tracking-[0.22em] font-medium backdrop-blur-sm shadow-[0_2px_8px_rgba(0,0,0,0.03)]">
-          <span className="text-[10px] text-rose-500">✦</span>
+      {/* 1. Subtle Environmental Micro-Copy */}
+      <motion.div variants={itemVariants} className="mb-4 sm:mb-5">
+        <span className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/60 border border-rose-900/10 text-[#731E39] text-[11px] uppercase tracking-[0.24em] font-medium backdrop-blur-sm shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
+          <span className="text-[9px] text-rose-500">✦</span>
           <span>{eyebrow}</span>
-          <span className="text-[10px] text-rose-500">✦</span>
+          <span className="text-[9px] text-rose-500">✦</span>
+          <span className="sr-only">The Romantic Experience Platform</span>
         </span>
       </motion.div>
 
-      {/* 2. Oversized Editorial Headline */}
+      {/* 2. Asymmetric Editorial Headline */}
       <motion.h1
         variants={itemVariants}
-        className="text-4xl sm:text-6xl lg:text-7xl font-serif font-normal text-[#2A0615] tracking-tight leading-[1.08] max-w-3xl mb-4 sm:mb-5"
+        className="text-4xl sm:text-6xl lg:text-[4.25rem] xl:text-[4.75rem] font-serif font-normal text-[#240412] tracking-tight leading-[1.06] mb-4 sm:mb-5"
       >
         <span>Create something </span>
-        <span className="italic font-normal bg-gradient-to-r from-[#9F1239] via-[#BE185D] to-[#881337] bg-clip-text text-transparent">
+        <br className="hidden sm:inline" />
+        <span className="italic font-normal text-[#9F1239]">
           they&apos;ll remember.
         </span>
       </motion.h1>
 
-      {/* 3. Editorial Subtitle */}
+      {/* 3. Restrained Editorial Subtitle */}
       <motion.p
         variants={itemVariants}
-        className="text-sm sm:text-base lg:text-lg text-[#521731]/85 font-light leading-relaxed max-w-xl mb-7 sm:mb-8"
+        className="text-sm sm:text-base lg:text-[17px] text-[#4A0E2E]/85 font-light leading-relaxed max-w-lg mb-7 sm:mb-8"
       >
         {subtitle}
       </motion.p>
 
-      {/* 4. Tactile Editorial CTAs */}
+      {/* 4. Asymmetric Action Hierarchy: Dominant Solid Primary + Quiet Secondary */}
       <motion.div
         variants={itemVariants}
-        className="flex flex-col sm:flex-row items-center gap-3.5 w-full sm:w-auto mb-2"
+        className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto"
       >
         <Link href={primaryCtaHref} className="w-full sm:w-auto">
           <button
             type="button"
-            className="w-full sm:w-auto px-8 py-3.5 rounded-full font-medium text-white bg-[#260514] hover:bg-[#38071E] active:scale-[0.98] transition-all duration-200 border border-white/15 shadow-[0_8px_20px_-6px_rgba(40,5,20,0.35)] flex items-center justify-center gap-2 cursor-pointer group"
+            className="w-full sm:w-auto px-8 py-3.5 rounded-full font-medium text-white bg-[#1A0612] hover:bg-[#2C0A1E] active:scale-[0.98] transition-all duration-200 border border-white/15 shadow-[0_8px_20px_-6px_rgba(40,5,20,0.4)] flex items-center justify-center gap-2.5 cursor-pointer group"
           >
             <span className="tracking-wide text-sm">{primaryCtaText}</span>
             <svg
-              className="w-4 h-4 text-rose-300 transition-transform duration-200 group-hover:translate-x-0.5"
+              className="w-4 h-4 text-rose-300 transition-transform duration-200 group-hover:translate-x-1"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -123,13 +125,12 @@ export function HeroEditorialStagger({
           </button>
         </Link>
 
-        <Link href={secondaryCtaHref} className="w-full sm:w-auto">
-          <button
-            type="button"
-            className="w-full sm:w-auto px-7 py-3.5 rounded-full font-medium text-[#4A0E2E] hover:text-[#2A0615] bg-white/70 hover:bg-white/90 active:scale-[0.98] transition-all duration-200 border border-rose-900/10 shadow-[0_2px_8px_rgba(0,0,0,0.03)] flex items-center justify-center gap-2 cursor-pointer text-sm tracking-wide"
-          >
-            <span>{secondaryCtaText}</span>
-          </button>
+        <Link
+          href={secondaryCtaHref}
+          className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-medium text-[#4A0E2E] hover:text-[#1A0612] px-4 py-2 transition-colors duration-200 group"
+        >
+          <span className="tracking-wider">{secondaryCtaText}</span>
+          <span className="transition-transform duration-200 group-hover:translate-x-0.5 text-rose-800">→</span>
         </Link>
       </motion.div>
     </motion.div>

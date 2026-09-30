@@ -50,6 +50,28 @@ test.describe("Phase 6 UI/UX Renaissance Comprehensive Visual QA", () => {
         });
       }
 
+      // Homepage Worlds Section
+      const worldsEl = page.locator("#worlds-section");
+      if (await worldsEl.isVisible()) {
+        await worldsEl.scrollIntoViewIfNeeded();
+        await page.waitForTimeout(400);
+        await page.screenshot({
+          path: path.join(QA_DIR, `02b_homepage_worlds_${vp.name}.png`),
+          fullPage: false,
+        });
+      }
+
+      // Homepage Finale Section
+      const finaleEl = page.locator("#create");
+      if (await finaleEl.isVisible()) {
+        await finaleEl.scrollIntoViewIfNeeded();
+        await page.waitForTimeout(400);
+        await page.screenshot({
+          path: path.join(QA_DIR, `02c_homepage_finale_${vp.name}.png`),
+          fullPage: false,
+        });
+      }
+
       // World Showroom on Templates page
       await page.goto(`${APP_URL}/templates`, { waitUntil: "networkidle" });
       await page.waitForTimeout(600);

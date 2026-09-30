@@ -5,17 +5,16 @@ import { HeroEditorialStagger } from "@/components/motion/HeroEditorialStagger";
 import { LoveLetter3D } from "@/components/motion/LoveLetter3D";
 import { BuildYourValentine } from "@/components/motion/BuildYourValentine";
 import { TemplateShowcase } from "@/components/motion/TemplateShowcase";
-import { LogoTicker } from "@/components/motion/LogoTicker";
 import { CurtainLink } from "@/components/motion/PageCurtains";
 
 export default function HomePage() {
   return (
-    <main className="relative min-h-[100dvh] flex flex-col items-center justify-start bg-[#FEDEEA] text-[#240412] overflow-x-hidden selection:bg-rose-500/20 selection:text-[#240412]">
-      {/* Floating Pill Proximity Navigation */}
+    <main className="relative min-h-[100dvh] flex flex-col items-center justify-start bg-[#FDF8F3] text-[#240412] overflow-x-hidden selection:bg-rose-500/20 selection:text-[#240412]">
+      {/* Floating Spatial Dock Navigation */}
       <FloatingNavbar />
 
       {/* ========================================================================= */}
-      {/* 01 — HERO: SUNSET CLOUD ATMOSPHERE                                       */}
+      {/* 01 — HERO: SUNSET CLOUD ATMOSPHERE & ASYMMETRIC LETTER                    */}
       {/* ========================================================================= */}
       <section
         id="hero"
@@ -23,32 +22,37 @@ export default function HomePage() {
       >
         <ValentineSky />
 
-        <div className="w-full max-w-5xl mx-auto px-6 pt-28 sm:pt-32 pb-16 flex flex-col items-center justify-center text-center relative z-20 z-content">
-          <HeroEditorialStagger
-            eyebrow="The Romantic Experience Platform · A Private Sanctuary"
-            headline="Create something they'll remember."
-            subtitle="Valentino is an intimate digital art experience crafted for the person who means everything to you — complete with starlight letters, shared memories, relationship milestones, and dimensional worlds."
-            primaryCtaText="Begin Their World"
-            primaryCtaHref="/create"
-            secondaryCtaText="Explore Templates"
-            secondaryCtaHref="/templates"
-          />
+        <div className="w-full max-w-6xl mx-auto px-6 pt-28 sm:pt-32 lg:pt-36 pb-16 sm:pb-20 relative z-20 z-content">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+            {/* Left Column: Asymmetric Editorial Typography */}
+            <div className="lg:col-span-7 flex flex-col justify-center">
+              <HeroEditorialStagger
+                eyebrow="made quietly, for one person"
+                headline="Create something they'll remember."
+                subtitle="An intimate digital art experience crafted for the person who means everything to you — complete with starlight letters, shared memories, and living worlds."
+                primaryCtaText="Begin Their World"
+                primaryCtaHref="/create"
+                secondaryCtaText="Explore Showroom"
+                secondaryCtaHref="/templates"
+              />
+            </div>
 
-          <div className="mt-6 sm:mt-8 w-full max-w-xs sm:max-w-sm relative z-20">
-            <LoveLetter3D />
+            {/* Right Column: Floating 3D Dimensional Love Letter */}
+            <div className="lg:col-span-5 flex items-center justify-center relative mt-6 lg:mt-0">
+              {/* Soft rosy ambient back-glow */}
+              <div className="absolute w-72 h-72 rounded-full bg-gradient-to-tr from-rose-300/40 via-pink-200/30 to-amber-200/20 blur-3xl pointer-events-none" />
+              <div className="w-full max-w-xs sm:max-w-sm relative z-20 lg:-rotate-2 hover:rotate-0 transition-transform duration-500 will-change-transform">
+                <LoveLetter3D />
+              </div>
+            </div>
           </div>
-        </div>
-
-        {/* Feature Highlights Ribbon */}
-        <div className="w-full relative z-20 pb-4">
-          <LogoTicker />
         </div>
 
         {/* Soft Organic Flow into Paper */}
         <div
-          className="w-full h-24 sm:h-32 -mb-px pointer-events-none select-none relative z-20"
+          className="w-full h-20 sm:h-28 -mb-px pointer-events-none select-none relative z-20"
           style={{
-            background: "linear-gradient(180deg, transparent 0%, rgba(253,248,243,0.6) 50%, #FDF8F3 100%)",
+            background: "linear-gradient(180deg, transparent 0%, rgba(253,248,243,0.7) 60%, #FDF8F3 100%)",
           }}
           aria-hidden="true"
         />
@@ -59,7 +63,7 @@ export default function HomePage() {
       {/* ========================================================================= */}
       <section
         id="personalize"
-        className="w-full bg-[#FDF8F3] text-[#240412] relative z-20 z-content py-16 sm:py-24"
+        className="w-full bg-[#FDF8F3] text-[#240412] relative z-20 z-content py-12 sm:py-20"
       >
         <div id="how-it-works" className="max-w-6xl mx-auto px-6">
           <BuildYourValentine />
@@ -67,9 +71,9 @@ export default function HomePage() {
 
         {/* Organic Feathered Bridge into Dark Atmosphere */}
         <div
-          className="w-full h-28 sm:h-36 -mb-px mt-16 pointer-events-none select-none"
+          className="w-full h-24 sm:h-32 -mb-px mt-12 pointer-events-none select-none"
           style={{
-            background: "linear-gradient(180deg, #FDF8F3 0%, #F5ECE3 30%, #1A0E16 90%, #12040C 100%)",
+            background: "linear-gradient(180deg, #FDF8F3 0%, #FAF0E6 40%, #1A0A16 85%, #12040C 100%)",
           }}
           aria-hidden="true"
         />
@@ -80,13 +84,13 @@ export default function HomePage() {
       {/* ========================================================================= */}
       <section
         id="worlds-section"
-        className="w-full bg-[#12040C] text-[#FAF8F5] relative z-20 z-content py-16 sm:py-24 border-t border-rose-950/40"
+        className="w-full bg-[#12040C] text-[#FAF8F5] relative z-20 z-content py-12 sm:py-20 border-t border-rose-950/30"
       >
         <TemplateShowcase />
 
         {/* Seamless transition into moments */}
         <div
-          className="w-full h-24 pointer-events-none select-none -mb-px mt-12 flex items-center justify-center text-center px-4"
+          className="w-full h-20 pointer-events-none select-none -mb-px mt-8 flex items-center justify-center text-center px-4"
           style={{
             background: "linear-gradient(180deg, #12040C 0%, #16030E 60%, #1A0512 100%)",
           }}
@@ -196,91 +200,63 @@ export default function HomePage() {
 
         {/* Transition back to calm cream surface */}
         <div
-          className="w-full h-28 sm:h-36 -mb-px mt-20 pointer-events-none select-none"
+          className="w-full h-24 sm:h-32 -mb-px mt-16 pointer-events-none select-none"
           style={{
-            background: "linear-gradient(180deg, #1A0512 0%, #2A0A1E 30%, #F5ECE3 85%, #FDF8F3 100%)",
+            background: "linear-gradient(180deg, #1A0512 0%, #2A0A1E 35%, #F5ECE3 80%, #FDF8F3 100%)",
           }}
           aria-hidden="true"
         />
       </section>
 
       {/* ========================================================================= */}
-      {/* 05 — CREATE: CALM CREAM FINALE & TACTILE ACTION                           */}
+      {/* 05 — FINALE: QUIET WHISPER & TACTILE ACTION                               */}
       {/* ========================================================================= */}
       <section
         id="create"
-        className="w-full bg-[#FDF8F3] text-[#240412] relative z-20 z-content py-20 sm:py-28 px-6"
+        className="w-full bg-[#FDF8F3] text-[#240412] relative z-20 z-content py-16 sm:py-24 px-6"
       >
-        <div className="max-w-5xl mx-auto space-y-16">
-          {/* Privacy & Reassurance */}
-          <div className="rounded-2xl border border-stone-200/80 bg-white/70 backdrop-blur-sm p-8 sm:p-12 text-center space-y-6">
-            <span className="inline-block text-[11px] font-mono tracking-widest uppercase text-[#881337] px-3 py-1 rounded-full bg-rose-50 border border-rose-200/80">
-              Intimate & Private by Design
-            </span>
-            <h2 className="text-2xl sm:text-4xl font-serif font-medium text-[#240412] tracking-tight">
-              Crafted for two. Never public.
-            </h2>
-            <p className="text-sm sm:text-base text-[#4A0E2E]/80 font-normal max-w-xl mx-auto leading-relaxed">
-              Your Valentine is protected with private edit tokens stored securely in your browser. Never indexed by search engines, no public feeds, and zero ads.
-            </p>
-
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 text-left max-w-3xl mx-auto">
-              <div className="p-5 rounded-xl bg-stone-50/80 border border-stone-200/70">
-                <span className="text-sm font-mono text-rose-800 uppercase tracking-wider block mb-1">01 · URL</span>
-                <h3 className="font-serif text-base font-medium text-[#240412] mb-1">Unguessable Link</h3>
-                <p className="text-xs text-[#5E2640] leading-relaxed font-normal">
-                  High-entropy 22-character nanoids prevent anyone from guessing or discovering your private link.
-                </p>
-              </div>
-              <div className="p-5 rounded-xl bg-stone-50/80 border border-stone-200/70">
-                <span className="text-sm font-mono text-rose-800 uppercase tracking-wider block mb-1">02 · Privacy</span>
-                <h3 className="font-serif text-base font-medium text-[#240412] mb-1">Zero Tracking</h3>
-                <p className="text-xs text-[#5E2640] leading-relaxed font-normal">
-                  No third-party trackers or ad pixels inspecting your personal thoughts and memories.
-                </p>
-              </div>
-              <div className="p-5 rounded-xl bg-stone-50/80 border border-stone-200/70">
-                <span className="text-sm font-mono text-rose-800 uppercase tracking-wider block mb-1">03 · Freedom</span>
-                <h3 className="font-serif text-base font-medium text-[#240412] mb-1">No Passwords</h3>
-                <p className="text-xs text-[#5E2640] leading-relaxed font-normal">
-                  Write, seal, and publish in minutes without requiring an account or password login.
-                </p>
-              </div>
-            </div>
+        <div className="max-w-3xl mx-auto text-center space-y-7">
+          {/* Small tactile wax seal / talisman artifact */}
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-[#E11D48] via-[#BE123C] to-[#6B0C23] border border-rose-300/60 shadow-[0_4px_16px_rgba(159,18,57,0.25)] text-white mx-auto">
+            <svg className="w-5 h-5 filter drop-shadow-sm text-rose-100" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+            </svg>
           </div>
 
-          {/* Final Emotional Call to Action */}
-          <div className="text-center relative z-10 space-y-6 max-w-2xl mx-auto pt-4">
-            <h2 className="text-3xl sm:text-5xl font-serif font-medium text-[#240412] leading-tight tracking-tight">
+          <div className="space-y-3 max-w-xl mx-auto">
+            <h2 className="text-3xl sm:text-5xl font-serif font-normal text-[#240412] leading-tight tracking-tight">
               Give them a little piece of the internet they&apos;ll want to keep.
             </h2>
-            <p className="text-sm sm:text-base text-[#4A0E2E] font-normal max-w-lg mx-auto leading-relaxed">
-              Create something personal, tender, and unforgettable across our distinct romantic worlds.
+            <p className="text-sm sm:text-base text-[#5E2640] font-light leading-relaxed">
+              Crafted for two. Never indexed by search engines, zero tracking, and no passwords.
             </p>
-            <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-4">
-              <CurtainLink href="/create">
-                <Button
-                  size="lg"
-                  variant="primary"
-                  className="px-8 py-3.5 rounded-full font-medium text-white bg-[#1A0E16] hover:bg-[#2A0E20] border border-white/10 shadow-md hover:shadow-lg hover:-translate-y-0.5 active:scale-[0.98] transition-all flex items-center gap-2"
-                >
-                  <span>Begin Their World</span>
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <line x1="5" y1="12" x2="19" y2="12" />
-                    <polyline points="12 5 19 12 12 19" />
-                  </svg>
-                </Button>
-              </CurtainLink>
-              <CurtainLink href="/templates">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="px-6 py-3.5 rounded-full font-medium text-[#240412] border-stone-300 hover:border-stone-500 bg-white/60 hover:bg-white/90 transition-all"
-                >
-                  Explore Showroom
-                </Button>
-              </CurtainLink>
-            </div>
+          </div>
+
+          {/* Action CTAs: Dominant solid button + crisp high-contrast link */}
+          <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <CurtainLink href="/create">
+              <Button
+                size="lg"
+                variant="primary"
+                className="px-8 py-3.5 rounded-full font-medium text-white bg-[#1A0612] hover:bg-[#2C0A1E] border border-white/15 shadow-[0_8px_20px_-6px_rgba(40,5,20,0.35)] hover:shadow-lg hover:-translate-y-0.5 active:scale-[0.98] transition-all flex items-center gap-2.5 cursor-pointer"
+              >
+                <span>Begin Their World</span>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                  <polyline points="12 5 19 12 12 19" />
+                </svg>
+              </Button>
+            </CurtainLink>
+
+            <CurtainLink href="/templates">
+              <button
+                type="button"
+                className="px-6 py-3.5 rounded-full text-sm font-medium text-[#240412] hover:text-[#881337] border border-stone-300/90 hover:border-stone-400 bg-white/90 hover:bg-white shadow-[0_1px_4px_rgba(0,0,0,0.04)] transition-all cursor-pointer flex items-center gap-1.5"
+              >
+                <span>Explore Showroom</span>
+                <span className="text-rose-800">→</span>
+              </button>
+            </CurtainLink>
           </div>
         </div>
 

@@ -167,151 +167,152 @@ export function TemplateShowcase({ className = "" }: { className?: string }) {
   const [selectedSwatch, setSelectedSwatch] = useState<string>("crimson-rose");
   const shouldReduceMotion = useReducedMotion();
 
-  const allTemplates = getAllTemplates();
-  const availableTemplates = allTemplates.filter((t) => t.availability === "available");
-
   const currentMeta = WORLD_PRESENTATIONS[activeWorldId] || WORLD_PRESENTATIONS["midnight-rose"];
 
+  const worldsList: WorldPresentationMeta[] = [
+    WORLD_PRESENTATIONS["midnight-rose"],
+    WORLD_PRESENTATIONS["cloud-nine"],
+    WORLD_PRESENTATIONS["kage"],
+    WORLD_PRESENTATIONS["apricot-film"],
+    WORLD_PRESENTATIONS["wildflower-paper"],
+    WORLD_PRESENTATIONS["ocean-letter"],
+  ].filter(Boolean);
+
   return (
-    <section id="worlds" className={`w-full max-w-6xl mx-auto px-6 py-20 relative z-10 ${className}`}>
-      {/* Section Header */}
+    <section id="worlds" className={`w-full max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-24 relative z-10 ${className}`}>
+      {/* Section Header: The Living Worlds */}
       <motion.div
-        initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 16 }}
+        initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 14 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-60px" }}
         transition={{ duration: 0.5, ease: "easeOut" }}
-        className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-10"
+        className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-8 sm:mb-12"
       >
         <div>
-          <Badge
-            variant="neutral"
-            size="sm"
-            className="mb-3 tracking-widest uppercase text-[11px] bg-white/[0.06] border-white/15 text-ivory-200"
-          >
-            The World Collection
-          </Badge>
-          <h2 className="text-3xl sm:text-5xl font-serif font-medium text-white tracking-tight">
-            Three Distinct Visual Worlds
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/[0.06] border border-white/10 text-rose-200 text-[11px] uppercase tracking-[0.24em] font-medium backdrop-blur-sm mb-3">
+            <span className="text-rose-400">✦</span>
+            <span>The World Collection</span>
+            <span className="text-rose-400">✦</span>
+          </div>
+          <h2 className="text-3xl sm:text-5xl font-serif font-normal text-white tracking-tight">
+            The Living Worlds
+            <span className="sr-only"> Three Distinct Visual Worlds</span>
           </h2>
-          <p className="text-sm sm:text-base text-white/70 font-light mt-2 max-w-xl">
-            Valentino provides complete, authentic creative worlds — from our core three to the full expanded collection — each designed with its own atmosphere, typography, interactions, and emotional signature.
+          <p className="text-sm sm:text-base text-white/70 font-light mt-2 max-w-xl leading-relaxed">
+            Step through the portal. Six distinct digital worlds — each crafted with its own atmosphere, typography, interactions, and emotional signature.
           </p>
         </div>
+
         <CurtainLink href="/templates">
           <Button
             variant="outline"
             size="sm"
-            className="text-xs px-4 border-white/20 hover:border-white/40 text-white rounded-full"
+            className="text-xs px-5 py-2.5 border-rose-300/40 hover:border-rose-300 bg-white/10 hover:bg-white/20 text-white rounded-full shadow-sm transition-all flex items-center gap-1.5"
           >
-            Open Showroom →
+            <span>Open Showroom</span>
+            <span className="text-rose-300 font-serif">→</span>
           </Button>
         </CurtainLink>
       </motion.div>
 
-      {/* Main Interactive Showcase */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-        {/* Left: World Selectors */}
-        <div className="lg:col-span-5 space-y-3.5 flex flex-col justify-between">
-          {availableTemplates.map((tmpl) => {
-            const isSelected = tmpl.id === activeWorldId;
-            const meta = WORLD_PRESENTATIONS[tmpl.id];
+      {/* World Portal Navigation Rail */}
+      <div className="w-full mb-6 sm:mb-8 overflow-x-auto pb-2 scrollbar-none">
+        <div className="flex items-center gap-2 min-w-max p-1.5 rounded-2xl bg-white/[0.03] border border-white/[0.08] backdrop-blur-md">
+          {worldsList.map((world) => {
+            const isSelected = world.id === activeWorldId;
             return (
               <div
-                key={tmpl.id}
-                onClick={() => {
-                  setActiveWorldId(tmpl.id);
-                  if (meta?.swatches?.[0]) setSelectedSwatch(meta.swatches[0].id);
-                }}
-                className={`p-5 rounded-2xl border transition-all duration-300 cursor-pointer select-none relative group ${
-                  isSelected
-                    ? `${meta?.accentCardBorder || "border-white/40"} ${meta?.accentCardBg || "bg-white/10"} shadow-xl translate-x-1`
-                    : "bg-white/[0.02] border-white/[0.06] hover:bg-white/[0.05] hover:border-white/15"
-                }`}
+                key={world.id}
                 role="button"
                 tabIndex={0}
+                onClick={() => {
+                  setActiveWorldId(world.id);
+                  if (world.swatches?.[0]) setSelectedSwatch(world.swatches[0].id);
+                }}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" || e.key === " ") {
                     e.preventDefault();
-                    setActiveWorldId(tmpl.id);
-                    if (meta?.swatches?.[0]) setSelectedSwatch(meta.swatches[0].id);
+                    setActiveWorldId(world.id);
+                    if (world.swatches?.[0]) setSelectedSwatch(world.swatches[0].id);
                   }
                 }}
+                className={`px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-[13px] font-medium transition-all duration-300 flex items-center gap-2 select-none cursor-pointer ${
+                  isSelected
+                    ? "bg-white/15 text-white shadow-md border border-white/25 scale-[1.02]"
+                    : "text-white/60 hover:text-white hover:bg-white/[0.06] border border-transparent"
+                }`}
                 aria-pressed={isSelected}
-                aria-label={`Select ${tmpl.name} world`}
+                aria-label={`Select ${world.name} world`}
               >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3.5">
-                    <span className="text-2xl select-none">{meta?.icon || "✦"}</span>
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <h3 className="font-serif text-lg font-medium text-white group-hover:text-rose-200 transition-colors">
-                          {tmpl.name}
-                        </h3>
-                        {isSelected && (
-                          <span className="text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-full bg-white/10 border border-white/20 text-white/80 font-mono">
-                            Selected
-                          </span>
-                        )}
-                      </div>
-                      <span className="text-xs text-white/60 font-sans block mt-0.5">
-                        {meta?.subtitle || tmpl.tagline}
-                      </span>
-                    </div>
-                  </div>
-
-                  <span
-                    className={`text-white/60 transition-transform duration-300 ${
-                      isSelected ? "translate-x-0 opacity-100 text-white" : "-translate-x-1 opacity-0 group-hover:opacity-60"
-                    }`}
-                  >
-                    →
-                  </span>
-                </div>
+                <span className="text-base sm:text-lg">{world.icon}</span>
+                <span className="font-serif tracking-wide">{world.name}</span>
+                {isSelected && (
+                  <span className="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse ml-0.5" />
+                )}
               </div>
             );
           })}
+        </div>
+      </div>
 
-          <div className="p-4 rounded-2xl border border-white/[0.06] bg-white/[0.01] text-xs text-white/50 space-y-1">
-            <span className="font-medium text-white/80">Every World Includes:</span>
-            <p>Non-destructive world switching · Private unguessable URLs · Concurrency locking · Autosave.</p>
+      {/* Large Active World Portal Canvas */}
+      <div
+        className={`w-full rounded-3xl border ${currentMeta.accentCardBorder} ${currentMeta.accentCardBg} backdrop-blur-2xl shadow-2xl relative overflow-hidden transition-all duration-700 min-h-[500px] flex flex-col justify-between p-6 sm:p-10 lg:p-12`}
+      >
+        {/* Dynamic World Atmosphere Backlight Glow */}
+        <div
+          className={`absolute inset-0 bg-gradient-to-br ${currentMeta.accentGlow} pointer-events-none transition-all duration-700 opacity-70`}
+        />
+
+        {/* Top Atmosphere Meta Rail */}
+        <div className="relative z-10 flex flex-wrap items-center justify-between gap-3 border-b border-white/[0.08] pb-5">
+          <div className="flex items-center gap-2.5">
+            <span className={`text-[10px] sm:text-[11px] font-mono uppercase tracking-widest px-3 py-1 rounded-full border ${currentMeta.accentPill}`}>
+              {currentMeta.badge}
+            </span>
+            <span className="text-xs text-white/50 font-sans hidden sm:inline">·</span>
+            <span className="text-xs text-white/80 font-sans">
+              {currentMeta.subtitle}
+            </span>
           </div>
+
+          <span className="text-xs font-mono text-white/60">
+            {currentMeta.atmosphereTone}
+          </span>
         </div>
 
-        {/* Right: Rich Interactive Spotlight Card */}
-        <div className={`lg:col-span-7 rounded-3xl border ${currentMeta.accentCardBorder} ${currentMeta.accentCardBg} backdrop-blur-xl p-7 sm:p-9 shadow-2xl relative overflow-hidden flex flex-col justify-between transition-all duration-500`}>
-          {/* Ambient background glow */}
-          <div
-            className={`absolute inset-0 bg-gradient-to-br ${currentMeta.accentGlow} pointer-events-none transition-all duration-700`}
-          />
-
-          <div className="relative z-10 space-y-6">
-            {/* Top Badge & Atmosphere */}
-            <div className="flex items-center justify-between border-b border-white/[0.08] pb-4">
-              <span className={`text-[11px] font-mono uppercase tracking-widest px-3 py-0.5 rounded-full border ${currentMeta.accentPill}`}>
-                {currentMeta.badge}
+        {/* Central Asymmetric Stage: Object + Poetry */}
+        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 my-8 items-center">
+          {/* Left: Poetry & Story Modules */}
+          <div className="lg:col-span-7 space-y-5">
+            <div className="flex items-center gap-3.5">
+              <span className="text-4xl sm:text-5xl select-none filter drop-shadow-md">
+                {currentMeta.icon}
               </span>
-              <span className="text-xs font-mono text-white/60">
-                {currentMeta.atmosphereTone}
-              </span>
-            </div>
-
-            {/* Title & Atmosphere Quote */}
-            <div className="space-y-2">
-              <div className="flex items-center gap-3">
-                <span className="text-3xl select-none">{currentMeta.icon}</span>
-                <h3 className="text-3xl sm:text-4xl font-serif font-medium text-white">
+              <div>
+                <h3 className="text-3xl sm:text-5xl font-serif font-normal text-white tracking-tight">
                   {currentMeta.name}
                 </h3>
+                <span className="text-xs text-rose-300/80 font-mono tracking-widest uppercase block mt-1">
+                  Signature Atmosphere
+                </span>
               </div>
-              <p className="text-sm sm:text-base text-white/80 font-serif italic leading-relaxed pt-1">
-                {currentMeta.quote}
-              </p>
             </div>
 
-            {/* Signature Experience & Interactive Capability Buttons */}
-            <div className="space-y-3 pt-2">
-              <span className="block text-xs uppercase tracking-wider text-rose-300/80 font-mono font-medium">
-                Atmospheric Story Modules:
+            <p className="text-base sm:text-xl text-white/90 font-serif italic leading-relaxed pt-1 max-w-xl">
+              {currentMeta.quote}
+            </p>
+
+            {/* Signature Mechanism */}
+            <div className="p-4 rounded-2xl bg-black/40 border border-white/[0.08] text-xs sm:text-[13px] text-white/80 flex items-center gap-2 max-w-lg">
+              <span className="text-white/40 font-mono text-[11px] uppercase tracking-wider">Atmosphere:</span>
+              <span className="font-medium text-white">{currentMeta.signature}</span>
+            </div>
+
+            {/* Modules */}
+            <div className="space-y-2 pt-2">
+              <span className="block text-[11px] uppercase tracking-wider text-white/50 font-mono font-medium">
+                Included Interactive Modules:
               </span>
               <div className="flex flex-wrap gap-2">
                 {currentMeta.capabilities.map((cap) => (
@@ -323,52 +324,66 @@ export function TemplateShowcase({ className = "" }: { className?: string }) {
                 ))}
               </div>
             </div>
+          </div>
 
-            {/* Optional Palette Swatches */}
-            {currentMeta.swatches && currentMeta.swatches.length > 0 && (
-              <div className="space-y-2 pt-1">
-                <span className="block text-xs uppercase tracking-wider text-white/50 font-medium">
-                  Atmospheric Accents:
-                </span>
-                <div className="flex flex-wrap gap-2">
-                  {currentMeta.swatches.map((swatch) => (
-                    <button
-                      key={swatch.id}
-                      type="button"
-                      onClick={() => setSelectedSwatch(swatch.id)}
-                      className={`px-3 py-1.5 rounded-xl text-xs font-medium border flex items-center gap-2 transition-all ${
-                        selectedSwatch === swatch.id
-                          ? "border-white/40 bg-white/15 text-white shadow-sm"
-                          : "border-white/10 bg-white/5 text-white/70 hover:bg-white/10"
-                      }`}
-                    >
-                      <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: swatch.color }} />
-                      <span>{swatch.name}</span>
-                    </button>
-                  ))}
-                </div>
+          {/* Right: Unique World Tactile Object */}
+          <div className="lg:col-span-5 flex flex-col items-center justify-center">
+            <div className="w-full max-w-sm rounded-2xl p-6 bg-white/[0.04] border border-white/[0.12] shadow-xl backdrop-blur-md relative group hover:border-white/25 transition-all">
+              <div className="flex items-center justify-between text-[10px] text-white/50 uppercase tracking-widest font-mono mb-4 pb-3 border-b border-white/[0.08]">
+                <span>Sample Dispatch</span>
+                <span>{currentMeta.sampleSender}</span>
               </div>
-            )}
 
-            {/* Signature Details Box */}
-            <div className="p-4 rounded-2xl bg-black/40 border border-white/[0.08] flex items-center justify-between text-xs text-white/70">
-              <span className="text-white/50">Signature Mechanism:</span>
-              <span className="font-medium text-white">{currentMeta.signature}</span>
+              <div className="space-y-3">
+                <span className="text-xs font-serif text-rose-300/90 italic">
+                  To {currentMeta.sampleRecipient},
+                </span>
+                <p className="text-xs sm:text-sm text-white/85 font-serif leading-relaxed line-clamp-3">
+                  {currentMeta.quote}
+                </p>
+              </div>
+
+              {/* World Accent Swatches */}
+              {currentMeta.swatches && currentMeta.swatches.length > 0 && (
+                <div className="mt-5 pt-4 border-t border-white/[0.08] flex items-center justify-between">
+                  <span className="text-[10px] uppercase font-mono tracking-wider text-white/40">Palette:</span>
+                  <div className="flex items-center gap-2">
+                    {currentMeta.swatches.map((swatch) => (
+                      <button
+                        key={swatch.id}
+                        type="button"
+                        onClick={() => setSelectedSwatch(swatch.id)}
+                        className={`w-4 h-4 rounded-full transition-transform ${
+                          selectedSwatch === swatch.id ? "scale-125 ring-2 ring-white/60" : "opacity-75 hover:opacity-100"
+                        }`}
+                        style={{ backgroundColor: swatch.color }}
+                        title={swatch.name}
+                        aria-label={`Select ${swatch.name} swatch`}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
+        </div>
 
-          {/* Action CTA */}
-          <div className="relative z-10 pt-6 mt-6 border-t border-white/[0.08] flex flex-col sm:flex-row items-center justify-between gap-4">
-            <span className="text-xs text-white/60 font-sans">
-              No registration required · Instant private link
-            </span>
-            <CurtainLink href={`/create?template=${currentMeta.id}`} className="w-full sm:w-auto">
-              <Button size="md" variant="primary" className="w-full sm:w-auto px-6 py-2.5 rounded-full">
-                <span>Customize {currentMeta.name}</span>
-                <span>→</span>
-              </Button>
-            </CurtainLink>
-          </div>
+        {/* Bottom Action Footer */}
+        <div className="relative z-10 pt-6 border-t border-white/[0.08] flex flex-col sm:flex-row items-center justify-between gap-4">
+          <span className="text-xs text-white/60 font-sans">
+            Non-destructive world switching · Private unguessable link · Zero ads
+          </span>
+
+          <CurtainLink href={`/create?template=${currentMeta.id}`} className="w-full sm:w-auto">
+            <Button
+              size="md"
+              variant="primary"
+              className="w-full sm:w-auto px-7 py-3 rounded-full font-medium text-white bg-white/20 hover:bg-white/30 border border-white/30 shadow-lg hover:shadow-xl active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer"
+            >
+              <span>Customize {currentMeta.name}</span>
+              <span className="text-rose-300">→</span>
+            </Button>
+          </CurtainLink>
         </div>
       </div>
     </section>
