@@ -3,6 +3,7 @@
 import React, { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/Button";
+import { ValentinoAtmosphere } from "@/components/ui/ValentinoAtmosphere";
 import { decodeDecorParam, normalizeValentineDecor } from "@/types/decor";
 
 function CreateExperienceContent() {
@@ -87,12 +88,16 @@ function CreateExperienceContent() {
   }, [router, searchParams]);
 
   return (
-    <main className="relative min-h-[100dvh] flex flex-col items-center justify-center p-6 text-center bg-[#0A090C] text-[#FAF8F5] overflow-hidden font-ui">
-      {/* Subtle ambient lighting */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#131118]/60 via-[#0A090C] to-[#0A090C] pointer-events-none" />
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[480px] h-[480px] rounded-full bg-white/[0.02] blur-3xl pointer-events-none" />
+    <main className="relative min-h-[100dvh] flex flex-col items-center justify-center p-6 text-center bg-[#0A070B] text-[#FAF8F5] overflow-hidden font-ui">
+      {/* Shared Global Atmosphere in transitional mode */}
+      <ValentinoAtmosphere
+        context="create"
+        world={templateId}
+        intensity="soft"
+        scrollReactive={false}
+      />
 
-      <div className="max-w-md w-full p-8 sm:p-10 rounded-3xl bg-[#13111A]/85 border border-white/10 shadow-2xl backdrop-blur-xl relative z-10 space-y-6">
+      <div className="max-w-md w-full p-8 sm:p-10 rounded-3xl bg-black/40 backdrop-blur-xl relative z-10 space-y-6">
         {error ? (
           <div className="space-y-4">
             <div className="w-14 h-14 mx-auto rounded-full bg-white/[0.05] border border-white/10 flex items-center justify-center text-2xl text-ivory-300">
@@ -115,30 +120,30 @@ function CreateExperienceContent() {
             </div>
           </div>
         ) : (
-          <div className="space-y-5">
-            {/* Elegant Studio Immediate Loader */}
+          <div className="space-y-6">
+            {/* Breathing Valentino Monogram Symbol */}
             <div className="relative flex items-center justify-center w-20 h-20 mx-auto">
-              <div className="absolute inset-0 rounded-full border border-white/15 animate-ping opacity-30" />
-              <div className="w-14 h-14 rounded-2xl bg-[#1A1824] border border-white/20 flex items-center justify-center shadow-xl text-xl select-none text-ivory-100">
+              <div className="absolute inset-0 rounded-full border border-rose-400/20 animate-ping opacity-30" />
+              <div className="w-14 h-14 rounded-full bg-white/[0.07] flex items-center justify-center shadow-2xl text-2xl select-none text-rose-200">
                 ✦
               </div>
             </div>
 
-            <div className="space-y-1.5">
-              <h2 className="text-xl font-serif font-medium text-white tracking-wide transition-all duration-300">
-                Entering Studio...
+            <div className="space-y-2">
+              <h2 className="text-2xl font-serif font-normal text-white tracking-tight">
+                Setting aside a little space for them.
               </h2>
-              <p className="text-xs text-ivory-400 font-ui">
-                Setting up your private interactive experience studio
+              <p className="text-xs text-rose-100/70 font-light font-sans">
+                Preparing their private interactive sanctuary
               </p>
             </div>
 
             {/* Concise World Capability Preview (Preserves E2E test contracts) */}
             <div
               data-testid="world-capability-preview"
-              className="pt-3 pb-2 px-4 rounded-2xl bg-white/[0.04] border border-white/[0.08] text-center space-y-1"
+              className="pt-3 pb-2 px-4 rounded-2xl bg-white/[0.03] text-center space-y-1"
             >
-              <span className="text-[10px] font-mono uppercase tracking-widest text-rose-300">
+              <span className="text-[10px] font-mono uppercase tracking-widest text-rose-300/90">
                 {templateId === "cloud-nine"
                   ? "Cloud Nine Sanctuary"
                   : templateId === "kage"

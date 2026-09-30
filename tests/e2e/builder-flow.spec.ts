@@ -25,65 +25,22 @@ test.describe("Phase 1 Acceptance Gate: Build Your Valentine Customization Engin
     const loveMessage = "Did my heart love till now? Forswear it, sight! For I ne'er saw true beauty till this night.";
 
     // ------------------------------------------------------------------------
-    // Step 1: Landing Page Builder Selection
+    // Step 1: Landing Page Discovery & Enter Create
     // ------------------------------------------------------------------------
     await creatorPage.goto(`${APP_URL}/`);
     await expect(creatorPage.locator("h1")).toContainText(/Create (something they'll remember|a world made for someone you love)/);
 
-    // Scroll to the builder studio
-    const builderSection = creatorPage.locator("#build-your-valentine");
-    await expect(builderSection).toBeVisible();
-    await builderSection.scrollIntoViewIfNeeded();
-
-    // Select blooms: Crimson Rose + Wild Daisy
-    // (Clear default French Tulip if selected, or ensure Crimson Rose and Wild Daisy are selected)
-    const roseOption = creatorPage.locator('[data-testid="builder-option-bloom-crimson-rose"]');
-    const daisyOption = creatorPage.locator('[data-testid="builder-option-bloom-wild-daisy"]');
-    const tulipOption = creatorPage.locator('[data-testid="builder-option-bloom-french-tulip"]');
-
-    await expect(roseOption).toBeVisible();
-    // Toggle tulip off if present, and daisy on
-    await tulipOption.click();
-    await daisyOption.click();
-
-    // Switch to Charms tab
-    await creatorPage.locator('[data-testid="builder-tab-charms"]').click();
-    const sparkleCharm = creatorPage.locator('[data-testid="builder-option-charm-sparkle"]');
-    await expect(sparkleCharm).toBeVisible();
-    // Ensure sparkle is selected
-    const sparkleClass = await sparkleCharm.getAttribute("class");
-    if (!sparkleClass?.includes("bg-rose-50")) {
-      await sparkleCharm.click();
-    }
-
-    // Switch to Paper / Stationery tab
-    await creatorPage.locator('[data-testid="builder-tab-stationery"]').click();
-    const creamPaper = creatorPage.locator('[data-testid="builder-option-paper-handmade-cream"]');
-    const velvetRibbon = creatorPage.locator('[data-testid="builder-option-ribbon-velvet-crimson"]');
-    await expect(creamPaper).toBeVisible();
-    await creamPaper.click();
-    await velvetRibbon.click();
-
-    // Switch to Seal tab
-    await creatorPage.locator('[data-testid="builder-tab-seal"]').click();
-    const goldSeal = creatorPage.locator('[data-testid="builder-option-seal-champagne-gold"]');
-    await expect(goldSeal).toBeVisible();
-    await goldSeal.click();
-
-    // Verify Builder Canvas contains the semantic identifiers
-    await expect(builderSection.locator('[data-decor-bloom="crimson-rose"]')).toBeVisible();
-    await expect(builderSection.locator('[data-decor-bloom="wild-daisy"]')).toBeVisible();
-    await expect(builderSection.locator('[data-decor-charm="sparkle"]')).toBeVisible();
-    await expect(builderSection.locator('[data-decor-paper="handmade-cream"]')).toBeVisible();
-    await expect(builderSection.locator('[data-decor-ribbon="velvet-crimson"]')).toBeVisible();
-    await expect(builderSection.locator('[data-decor-seal="champagne-gold"]')).toBeVisible();
+    // Scroll to the Little Things editorial craft scene
+    const littleThingsSection = creatorPage.locator("#how-it-works");
+    await expect(littleThingsSection).toBeVisible();
+    await littleThingsSection.scrollIntoViewIfNeeded();
 
     // ------------------------------------------------------------------------
     // Step 2: Create Valentine & Transition to Editor
     // ------------------------------------------------------------------------
-    const createBtn = creatorPage.locator('[data-testid="create-valentine-btn"]');
-    await expect(createBtn).toBeVisible();
-    await createBtn.click();
+    const makeYoursBtn = littleThingsSection.locator('a[href="/create"]');
+    await expect(makeYoursBtn).toBeVisible();
+    await makeYoursBtn.click();
 
     // Creator travels through /create and lands in /edit/[publicId]
     await creatorPage.waitForURL(/\/edit\/[a-zA-Z0-9_-]{22}/);
@@ -95,6 +52,43 @@ test.describe("Phase 1 Acceptance Gate: Build Your Valentine Customization Engin
     const mobilePreviewBtn = creatorPage.locator('[data-testid="mobile-tab-preview"]');
     const mobileEditBtn = creatorPage.locator('[data-testid="mobile-tab-edit"]');
 
+    // On mobile, ensure form tab is active to configure decor
+    if (await mobileEditBtn.isVisible()) {
+      await mobileEditBtn.click();
+    }
+
+    // Scroll to Stage 05 (Craft & Physical Styling)
+    const moodSection = creatorPage.locator("#section-mood");
+    await moodSection.scrollIntoViewIfNeeded();
+
+    // Select blooms: Crimson Rose + Wild Daisy
+    const roseOption = creatorPage.locator('[data-testid="decor-option-bloom-crimson-rose"]');
+    const daisyOption = creatorPage.locator('[data-testid="decor-option-bloom-wild-daisy"]');
+    const tulipOption = creatorPage.locator('[data-testid="decor-option-bloom-french-tulip"]');
+
+    await expect(roseOption).toBeVisible();
+    await tulipOption.click();
+    await daisyOption.click();
+
+    // Ensure charm 'sparkle' is selected (if not already in default)
+    const sparkleCharm = creatorPage.locator('[data-testid="decor-option-charm-sparkle"]');
+    await expect(sparkleCharm).toBeVisible();
+    const isSelected = (await sparkleCharm.getAttribute("class"))?.includes("border-rose-400");
+    if (!isSelected) {
+      await sparkleCharm.click();
+    }
+
+    // Select Paper: Handmade Cream & Ribbon: Velvet Crimson
+    const creamPaper = creatorPage.locator('[data-testid="decor-option-paper-handmade-cream"]');
+    const velvetRibbon = creatorPage.locator('[data-testid="decor-option-ribbon-velvet-crimson"]');
+    await expect(creamPaper).toBeVisible();
+    await creamPaper.click();
+    await velvetRibbon.click();
+
+    // Select Seal: Champagne Gold
+    const goldSeal = creatorPage.locator('[data-testid="decor-option-seal-champagne-gold"]');
+    await expect(goldSeal).toBeVisible();
+    await goldSeal.click();
 
     // On mobile, toggle to preview to verify initial state
     if (await mobilePreviewBtn.isVisible()) {

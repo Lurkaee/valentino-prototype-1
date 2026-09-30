@@ -12,6 +12,7 @@ import { ValentinePlasmaButton, type ValentinePlasmaTheme } from "@/components/u
 import { getAllTemplates, ROADMAP_WORLDS, RoadmapWorld } from "@/templates/registry";
 import { CapabilityChip, CapabilityKey } from "@/components/ui/CapabilityChip";
 import { AtmosphericCanvas } from "@/worlds/AtmosphericCanvas";
+import { ValentinoAtmosphere } from "@/components/ui/ValentinoAtmosphere";
 import { useDeviceTier } from "@/worlds/useDeviceTier";
 import { WorldTheme } from "@/worlds/types";
 
@@ -311,24 +312,13 @@ export default function TemplatesPage() {
       {/* ========================================================================= */}
       {/* 0. DYNAMIC ENVIRONMENTAL ATMOSPHERE (Smooth World Dimension Crossfade)   */}
       {/* ========================================================================= */}
-      <div className="fixed inset-0 pointer-events-none z-world-bg transition-opacity duration-1000 overflow-hidden">
-        {/* Environmental Horizon Radial Glow */}
-        <div
-          className="absolute inset-0 transition-all duration-1000"
-          style={{
-            background:
-              activeWorldId === "cloud-nine"
-                ? "radial-gradient(ellipse 90% 70% at 50% 15%, rgba(244, 114, 182, 0.16) 0%, rgba(251, 146, 60, 0.08) 45%, rgba(10, 7, 11, 0.95) 100%)"
-                : activeWorldId === "midnight-rose"
-                ? "radial-gradient(ellipse 90% 70% at 50% 15%, rgba(225, 29, 72, 0.18) 0%, rgba(147, 51, 234, 0.08) 45%, rgba(10, 7, 11, 0.95) 100%)"
-                : activeWorldId === "kage"
-                ? "radial-gradient(ellipse 90% 70% at 50% 15%, rgba(16, 185, 129, 0.16) 0%, rgba(224, 35, 28, 0.08) 45%, rgba(10, 7, 11, 0.95) 100%)"
-                : activeWorldId === "apricot-film"
-                ? "radial-gradient(ellipse 90% 70% at 50% 15%, rgba(244, 162, 97, 0.18) 0%, rgba(231, 111, 81, 0.1) 45%, rgba(10, 7, 11, 0.95) 100%)"
-                : activeWorldId === "wildflower-paper"
-                ? "radial-gradient(ellipse 90% 70% at 50% 15%, rgba(192, 132, 252, 0.16) 0%, rgba(163, 184, 153, 0.1) 45%, rgba(10, 7, 11, 0.95) 100%)"
-                : "radial-gradient(ellipse 90% 70% at 50% 15%, rgba(56, 189, 248, 0.18) 0%, rgba(14, 116, 144, 0.08) 45%, rgba(10, 7, 11, 0.95) 100%)",
-          }}
+      <div className="fixed inset-0 pointer-events-none z-world-bg overflow-hidden">
+        <ValentinoAtmosphere
+          key={activeWorldId}
+          context="world"
+          world={activeWorldId}
+          intensity="cinema"
+          scrollReactive={true}
         />
       </div>
 
@@ -339,7 +329,7 @@ export default function TemplatesPage() {
           theme={activeWorldId}
           tier={tier}
           isReducedMotion={Boolean(isReducedMotion || shouldReduceMotion)}
-          className="opacity-70"
+          className="opacity-60"
         />
       </div>
 
