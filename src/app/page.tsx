@@ -9,20 +9,27 @@ import { CurtainLink } from "@/components/motion/PageCurtains";
 
 export default function HomePage() {
   return (
-    <main className="relative min-h-[100dvh] flex flex-col items-center justify-start bg-[#FDF8F3] text-[#240412] overflow-x-hidden selection:bg-rose-500/20 selection:text-[#240412]">
+    <main className="relative min-h-[100dvh] flex flex-col items-center justify-start bg-transparent text-[#240412] overflow-x-hidden selection:bg-rose-500/20 selection:text-[#240412]">
       {/* Floating Spatial Dock Navigation */}
       <FloatingNavbar />
+
+      {/* Persistent cloud atmosphere — stays alive across the entire landing journey */}
+      <ValentinoAtmosphere
+        context="hero"
+        world="cloud-nine"
+        intensity="hero"
+        scrollReactive
+        position="fixed"
+        className="z-0"
+      />
 
       {/* ========================================================================= */}
       {/* 01 — HERO: SUNSET CLOUD ATMOSPHERE & ASYMMETRIC LETTER                    */}
       {/* ========================================================================= */}
       <section
         id="hero"
-        className="relative w-full min-h-[100dvh] flex flex-col items-center justify-center overflow-hidden bg-gradient-to-b from-[#FEDEEA] via-[#FDECE8] to-[#FDF8F3]"
+        className="relative w-full min-h-[100dvh] flex flex-col items-center justify-center overflow-hidden bg-[#FEDEEA]/55 backdrop-blur-[1px]"
       >
-        {/* Persistent, High-Fidelity Sunset Cloud Atmosphere */}
-        <ValentinoAtmosphere context="hero" world="cloud-nine" intensity="hero" />
-
         <div className="w-full max-w-6xl mx-auto px-6 pt-28 sm:pt-32 lg:pt-36 pb-16 sm:pb-20 relative z-20 z-content">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
             {/* Left Column: Asymmetric Editorial Typography */}
@@ -64,7 +71,7 @@ export default function HomePage() {
       {/* ========================================================================= */}
       <section
         id="personalize"
-        className="w-full bg-[#FDF8F3] text-[#240412] relative z-20 z-content"
+        className="w-full bg-[#FDF8F3]/88 text-[#240412] relative z-20 z-content backdrop-blur-[1px]"
       >
         {/* Preserves both #how-it-works and legacy #build-your-valentine anchors for navigation */}
         <div id="build-your-valentine" className="w-full">
@@ -87,7 +94,7 @@ export default function HomePage() {
       {/* ========================================================================= */}
       <section
         id="worlds-section"
-        className="w-full bg-[#12040C] text-[#FAF8F5] relative z-20 z-content py-12 sm:py-20"
+        className="w-full bg-[#12040C]/94 text-[#FAF8F5] relative z-20 z-content py-12 sm:py-20 backdrop-blur-[1px]"
       >
         {/* Atmospheric Glow Underlay */}
         <div
@@ -115,7 +122,7 @@ export default function HomePage() {
       {/* ========================================================================= */}
       <section
         id="moments"
-        className="w-full bg-[#1A0512] text-[#FAF8F5] relative z-20 z-content py-24 sm:py-32 px-6"
+        className="w-full bg-[#1A0512]/94 text-[#FAF8F5] relative z-20 z-content py-24 sm:py-32 px-6 backdrop-blur-[1px]"
       >
         <div className="max-w-6xl mx-auto">
           {/* Editorial Section Header */}
@@ -226,7 +233,7 @@ export default function HomePage() {
       {/* ========================================================================= */}
       <section
         id="create"
-        className="w-full bg-[#FDF8F3] text-[#240412] relative z-20 z-content py-16 sm:py-24 px-6"
+        className="w-full bg-[#FDF8F3]/88 text-[#240412] relative z-20 z-content py-16 sm:py-24 px-6 backdrop-blur-[1px]"
       >
         <div className="max-w-3xl mx-auto text-center space-y-7">
           {/* Small tactile wax seal / talisman artifact */}
@@ -274,7 +281,7 @@ export default function HomePage() {
         </div>
 
         {/* Elegant Editorial Footer */}
-        <footer className="w-full max-w-5xl mx-auto mt-24 pt-8 border-t border-stone-200/80 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#6B2346] font-sans relative z-10">
+        <footer className="w-full max-w-5xl mx-auto mt-24 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#6B2346] font-sans relative z-10">
           <div className="flex items-center gap-2">
             <span className="text-[#240412] font-serif font-medium">Valentino</span>
             <span className="text-stone-300">·</span>
