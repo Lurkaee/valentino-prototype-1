@@ -275,6 +275,12 @@ export default function TemplatesPage() {
       ? "midnightRose"
       : activeWorldId === "cloud-nine"
       ? "cloudNine"
+      : activeWorldId === "apricot-film"
+      ? "apricotFilm"
+      : activeWorldId === "wildflower-paper"
+      ? "wildflowerPaper"
+      : activeWorldId === "ocean-letter"
+      ? "oceanLetter"
       : "kage";
 
   const handleSurpriseMe = () => {

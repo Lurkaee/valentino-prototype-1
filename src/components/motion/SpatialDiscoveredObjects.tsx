@@ -66,16 +66,16 @@ export function SpatialDiscoveredObjects() {
     >
       {/* Editorial Header floating lightly in space */}
       <div className="text-center max-w-2xl mx-auto mb-16 sm:mb-24 space-y-3 relative z-10">
-        <span className="inline-block text-[11px] font-mono tracking-widest uppercase text-rose-200 font-semibold drop-shadow-[0_1px_4px_rgba(10,2,7,0.7)]">
+        <span className="inline-block text-[11px] font-mono tracking-widest uppercase text-[#FDA4AF] font-semibold drop-shadow-[0_1px_4px_rgba(10,2,7,0.8)]">
           Interactive Devotion
         </span>
-        <h2 className="text-3xl sm:text-5xl font-serif font-normal text-white text-shadow-story-dark tracking-tight leading-tight">
+        <h2 className="text-3xl sm:text-5xl font-serif font-normal text-[#FAF8F5] tracking-tight leading-tight drop-shadow-[0_2px_14px_rgba(10,2,7,0.85)]">
           Add little secrets waiting to be discovered.
         </h2>
-        <p className="text-sm sm:text-base text-rose-100/90 font-normal leading-relaxed drop-shadow-[0_1px_6px_rgba(10,2,7,0.7)]">
+        <p className="text-sm sm:text-base text-[#FCE7E1]/95 font-normal leading-relaxed drop-shadow-[0_1px_6px_rgba(10,2,7,0.8)]">
           Love isn&apos;t just what you say all at once. It is the sealed envelopes opened on quiet mornings, the private memories tucked behind questions, and the surprises waiting for the days ahead.
         </p>
-        <p className="text-xs sm:text-sm text-amber-200 font-serif italic pt-1 drop-shadow-[0_1px_4px_rgba(10,2,7,0.7)]">
+        <p className="text-xs sm:text-sm text-[#FDE68A] font-serif italic pt-1 drop-shadow-[0_1px_4px_rgba(10,2,7,0.8)] font-medium">
           Tap an artifact to reveal what is hidden inside.
         </p>
       </div>

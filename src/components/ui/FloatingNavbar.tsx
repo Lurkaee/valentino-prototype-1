@@ -44,8 +44,8 @@ export function FloatingNavbar({ className = "" }: FloatingNavbarProps) {
       <header
         className={`pointer-events-auto transition-all duration-300 ease-out flex items-center justify-between gap-3 sm:gap-6 rounded-full px-3.5 sm:px-5 py-1.5 border backdrop-blur-xl ${
           isScrolled
-            ? "bg-[#10060D]/85 border-white/[0.12] shadow-[0_16px_36px_-12px_rgba(20,2,10,0.6)]"
-            : "bg-[#160812]/55 border-white/[0.08] shadow-[0_8px_24px_-8px_rgba(20,2,10,0.3)]"
+            ? "bg-[#0D030A]/90 border-white/[0.18] shadow-[0_16px_36px_-10px_rgba(20,2,10,0.7)]"
+            : "bg-[#12040E]/80 border-white/[0.14] shadow-[0_8px_28px_-6px_rgba(20,2,10,0.45)]"
         }`}
       >
         {/* Brand Link */}
@@ -69,8 +69,8 @@ export function FloatingNavbar({ className = "" }: FloatingNavbarProps) {
             href="/templates"
             className={`px-2.5 py-1 rounded-full transition-colors duration-200 ${
               pathname === "/templates"
-                ? "text-white bg-white/15"
-                : "text-[#FAF8F5]/85 hover:text-white"
+                ? "text-white bg-white/20"
+                : "text-[#FAF8F5]/90 hover:text-white"
             }`}
           >
             Templates
@@ -78,16 +78,16 @@ export function FloatingNavbar({ className = "" }: FloatingNavbarProps) {
 
           <Link
             href="/#how-it-works"
-            className="hidden sm:inline-block px-2.5 py-1 rounded-full text-[#FAF8F5]/85 hover:text-white transition-colors duration-200"
+            className="hidden sm:inline-block px-2.5 py-1 rounded-full text-[#FAF8F5]/90 hover:text-white transition-colors duration-200"
           >
             Story
           </Link>
 
-          {/* Unified Create Action (satisfies nav a[href='/create'] and a[href='/create'] button without duplication) */}
+          {/* Unified Create Action */}
           <Link href="/create" className="inline-flex items-center ml-1">
             <button
               type="button"
-              className="relative px-3.5 sm:px-4 py-1 rounded-full text-xs font-medium text-white transition-all duration-200 active:scale-95 cursor-pointer bg-gradient-to-r from-rose-950 via-[#340A1E] to-rose-950 border border-white/20 hover:border-rose-400/50 shadow-sm"
+              className="relative px-3.5 sm:px-4 py-1 rounded-full text-xs font-semibold text-white transition-all duration-200 active:scale-95 cursor-pointer bg-gradient-to-r from-[#9F1239] via-[#881337] to-[#9F1239] hover:from-[#BE123C] hover:to-[#BE123C] border border-rose-300/40 shadow-[0_2px_10px_rgba(159,18,57,0.4)]"
             >
               <span className="tracking-wider">Create</span>
             </button>

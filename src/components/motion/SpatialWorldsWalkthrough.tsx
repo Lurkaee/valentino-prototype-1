@@ -9,6 +9,8 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
 }
 
+import { AtmosphericButton } from "@/components/ui/AtmosphericButton";
+
 interface WorldWalkthroughItem {
   id: string;
   name: string;
@@ -19,7 +21,7 @@ interface WorldWalkthroughItem {
   titleClass: string;
   taglineClass: string;
   badgeClass: string;
-  buttonClass: string;
+  buttonClass?: string;
   renderArtifact: () => React.ReactNode;
 }
 
@@ -30,9 +32,9 @@ const WORLDS: WorldWalkthroughItem[] = [
     tagline: "For the person who makes everything lighter.",
     glowGradient: "from-pink-400/25 via-purple-900/20 to-transparent",
     accentColor: "#f472b6",
-    titleClass: "text-[#FFF5F8] drop-shadow-[0_2px_14px_rgba(40,5,20,0.75)]",
-    taglineClass: "text-[#FCE7F0] drop-shadow-[0_1px_8px_rgba(40,5,20,0.7)]",
-    badgeClass: "text-pink-200 font-semibold drop-shadow-[0_1px_6px_rgba(40,5,20,0.7)]",
+    titleClass: "text-[#1A0311] drop-shadow-[0_1px_12px_rgba(255,245,248,0.5)]",
+    taglineClass: "text-[#36091E] font-normal drop-shadow-[0_1px_6px_rgba(255,245,248,0.6)]",
+    badgeClass: "text-[#7A1D45] font-semibold tracking-widest drop-shadow-[0_1px_4px_rgba(255,245,248,0.5)]",
     buttonClass: "bg-pink-500/25 hover:bg-pink-500/40 text-white border border-pink-200/60 shadow-[0_4px_20px_rgba(244,114,182,0.4)] backdrop-blur-md",
     renderArtifact: () => (
       <div className="relative w-48 h-48 sm:w-56 sm:h-56 flex items-center justify-center">
@@ -157,9 +159,9 @@ const WORLDS: WorldWalkthroughItem[] = [
     tagline: "For the love built by hand, petal by petal.",
     glowGradient: "from-yellow-600/20 via-rose-950/20 to-transparent",
     accentColor: "#eab308",
-    titleClass: "text-[#FFFDF7] drop-shadow-[0_2px_16px_rgba(25,18,5,0.85)]",
-    taglineClass: "text-[#FEF08A] drop-shadow-[0_1px_8px_rgba(25,18,5,0.8)]",
-    badgeClass: "text-amber-100 font-semibold drop-shadow-[0_1px_6px_rgba(25,18,5,0.8)]",
+    titleClass: "text-[#1A0311] drop-shadow-[0_1px_12px_rgba(255,248,240,0.5)]",
+    taglineClass: "text-[#361A09] font-normal drop-shadow-[0_1px_6px_rgba(255,248,240,0.6)]",
+    badgeClass: "text-[#78350F] font-semibold tracking-widest drop-shadow-[0_1px_4px_rgba(255,248,240,0.5)]",
     buttonClass: "bg-amber-600/30 hover:bg-amber-600/45 text-white border border-amber-200/60 shadow-[0_4px_20px_rgba(234,179,8,0.35)] backdrop-blur-md",
     renderArtifact: () => (
       <div className="relative w-48 h-48 sm:w-56 sm:h-56 flex items-center justify-center">
@@ -261,15 +263,15 @@ export function SpatialWorldsWalkthrough() {
       ref={containerRef}
       className="relative w-full bg-transparent text-[#FAF8F5] overflow-hidden"
     >
-      {/* Walkthrough Atmospheric Header */}
+      {/* Walkthrough Atmospheric Header (High-contrast environment-aware typography on pale cloud atmosphere) */}
       <div className="max-w-4xl mx-auto text-center px-6 pt-20 pb-12 sm:pt-28 sm:pb-16 space-y-3 relative z-10">
-        <span className="inline-block text-[11px] font-mono tracking-widest uppercase text-rose-200 font-semibold drop-shadow-[0_1px_4px_rgba(10,2,7,0.7)]">
+        <span className="inline-block text-[11px] font-mono tracking-widest uppercase text-[#7A1D45] font-semibold drop-shadow-[0_1px_4px_rgba(255,245,248,0.6)]">
           The World Collection
         </span>
-        <h2 className="text-3xl sm:text-5xl lg:text-6xl font-serif font-normal text-white text-shadow-story-dark tracking-tight leading-tight">
+        <h2 className="text-3xl sm:text-5xl lg:text-6xl font-serif font-normal text-[#1A0311] tracking-tight leading-tight drop-shadow-[0_1px_12px_rgba(255,245,248,0.5)]">
           Step into their atmosphere.
         </h2>
-        <p className="text-sm sm:text-base text-rose-100/90 max-w-lg mx-auto font-normal leading-relaxed drop-shadow-[0_1px_6px_rgba(10,2,7,0.7)]">
+        <p className="text-sm sm:text-base text-[#36091E] max-w-lg mx-auto font-normal leading-relaxed drop-shadow-[0_1px_6px_rgba(255,245,248,0.6)]">
           Six distinct digital sanctuaries — each with its own light, memory, and emotional signature.
         </p>
       </div>
@@ -309,17 +311,13 @@ export function SpatialWorldsWalkthrough() {
                 </p>
               </div>
 
-              {/* Direct Poetic Invitation Link */}
+              {/* Direct Poetic Invitation Link (Tactile Atmospheric Portal) */}
               <div className="world-vista-reveal pt-2">
-                <Link
+                <AtmosphericButton
                   href={`/create?template=${world.id}`}
-                  className={`group inline-flex items-center gap-2.5 px-7 py-3 rounded-full text-sm font-semibold backdrop-blur-md transition-all duration-300 ${world.buttonClass}`}
-                >
-                  <span>Enter {world.name}</span>
-                  <span className="inline-block transition-transform duration-300 group-hover:translate-x-1">
-                    →
-                  </span>
-                </Link>
+                  worldId={world.id}
+                  worldName={world.name}
+                />
               </div>
             </div>
           </div>
@@ -330,10 +328,12 @@ export function SpatialWorldsWalkthrough() {
       <div className="text-center py-16 px-6 relative z-10">
         <Link
           href="/templates"
-          className="inline-flex items-center gap-2 text-xs sm:text-sm font-mono uppercase tracking-widest text-rose-200 hover:text-white font-medium drop-shadow-[0_1px_6px_rgba(10,2,7,0.8)] transition-colors"
+          className="group inline-flex items-center gap-2.5 px-6 py-2.5 rounded-full text-xs sm:text-sm font-mono uppercase tracking-widest bg-rose-950/40 hover:bg-rose-900/60 border border-rose-400/40 text-rose-100 hover:text-white font-medium shadow-[0_4px_16px_rgba(0,0,0,0.4)] backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5"
         >
           <span>Explore all six atmospheres with interactive plasma spark</span>
-          <span>→</span>
+          <span className="inline-block transition-transform duration-300 group-hover:translate-x-1.5">
+            →
+          </span>
         </Link>
       </div>
     </div>

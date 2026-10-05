@@ -93,6 +93,14 @@ describe("ThreeUI Plasma Button Source Integrity & Color Configuration", () => {
       "kage",
       "goldenHour",
       "stardust",
+      "apricotFilm",
+      "wildflowerPaper",
+      "oceanLetter",
+      "cloud-nine",
+      "midnight-rose",
+      "apricot-film",
+      "wildflower-paper",
+      "ocean-letter",
     ];
 
     for (const key of themeKeys) {
