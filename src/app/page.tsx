@@ -1,12 +1,23 @@
+import Link from "next/link";
 import { Button } from "@/components/ui/Button";
 import { ValentinoAtmosphere } from "@/components/ui/ValentinoAtmosphere";
 import { FloatingNavbar } from "@/components/ui/FloatingNavbar";
 import { HeroEditorialStagger } from "@/components/motion/HeroEditorialStagger";
 import { LoveLetter3D } from "@/components/motion/LoveLetter3D";
-import { LittleThingsPinnedScene } from "@/components/motion/LittleThingsPinnedScene";
-import { TemplateShowcase } from "@/components/motion/TemplateShowcase";
-import { CurtainLink } from "@/components/motion/PageCurtains";
+import { SpatialStationeryUnfold } from "@/components/motion/SpatialStationeryUnfold";
+import { SpatialWorldsWalkthrough } from "@/components/motion/SpatialWorldsWalkthrough";
+import { SpatialDiscoveredObjects } from "@/components/motion/SpatialDiscoveredObjects";
 
+/**
+ * HomePage — Phase 6.4: Scroll Story & Spatial Composition
+ *
+ * Sequence Narrative:
+ * 01 HERO: Untouched sunset sky, floating 3D love letter, asymmetric typography.
+ * 02 UNSEAL & DISPERSAL: The love letter unseals, vellum and petals disperse into space, transforms into a milestone timeline.
+ * 03 LIVING WORLDS: Full-viewport vistas for each of the six worlds without tabs, capability chips, or palette swatches.
+ * 04 DISCOVERED OBJECTS: Suspended interactive keepsakes floating directly in starlight without card boxes.
+ * 05 RESOLUTION: Dispersed elements collapse into one glowing talisman and quiet invitation.
+ */
 export default function HomePage() {
   return (
     <main className="relative min-h-[100dvh] flex flex-col items-center justify-start bg-transparent text-[#240412] overflow-x-hidden selection:bg-rose-500/20 selection:text-[#240412]">
@@ -27,7 +38,7 @@ export default function HomePage() {
 
       {/* ========================================================================= */}
       {/* 01 — HERO: SUNSET CLOUD ATMOSPHERE & ASYMMETRIC LETTER                    */}
-      {/* HERO KEPT INTACT: Same typography, floating 3D love letter, and skyline    */}
+      {/* HERO KEPT SACRED & UNTOUCHED: Same typography, floating 3D letter, sky    */}
       {/* ========================================================================= */}
       <section
         id="hero"
@@ -61,142 +72,51 @@ export default function HomePage() {
       </section>
 
       {/* ========================================================================= */}
-      {/* 02 — LITTLE THINGS: PINNED PHYSICAL ASSEMBLY SCENE                        */}
-      {/* Physical stationery appearing in the air over soft drifting clouds         */}
+      {/* 02 — THE UNSEAL & DISPERSAL: SPATIAL STATIONERY UNFOLD                    */}
+      {/* Physical stationery handoff from hero, dispersing freely in the clouds     */}
       {/* ========================================================================= */}
       <section
         id="personalize"
         className="w-full bg-transparent text-[#240412] relative z-20 z-content"
       >
-        {/* Preserves both #how-it-works and legacy #build-your-valentine anchors */}
         <div id="build-your-valentine" className="w-full">
-          <LittleThingsPinnedScene />
+          <SpatialStationeryUnfold />
         </div>
       </section>
 
       {/* ========================================================================= */}
-      {/* 03 — LIVING WORLDS: IMMERSIVE WORLD PORTAL                                */}
-      {/* Dimensional editorial rooms morphing out of the atmosphere                 */}
+      {/* 03 — LIVING WORLDS: FULL-VIEWPORT EDITORIAL VISTAS                         */}
+      {/* No tabs, no capability chips, no swatches — pure atmospheric vistas        */}
       {/* ========================================================================= */}
       <section
         id="worlds-section"
-        className="w-full bg-transparent text-[#FAF8F5] relative z-20 z-content py-16 sm:py-24"
+        data-testid="world-showroom-scene"
+        className="w-full bg-transparent text-[#FAF8F5] relative z-20 z-content"
       >
-        <TemplateShowcase />
+        <SpatialWorldsWalkthrough />
       </section>
 
       {/* ========================================================================= */}
-      {/* 04 — DISCOVER INTERACTIVE MOMENTS (BORDERLESS EDITORIAL OBJECTS)           */}
-      {/* Deep romantic starlight atmosphere with translucent keepsakes              */}
+      {/* 04 — DISCOVERED OBJECTS: SPATIAL KEEPSAKES IN STARLIGHT                    */}
+      {/* No card boxes — tactile, dimensional keepsakes floating in the atmosphere */}
       {/* ========================================================================= */}
       <section
         id="moments"
-        className="w-full bg-transparent text-[#FAF8F5] relative z-20 z-content py-24 sm:py-32 px-6"
+        className="w-full bg-transparent text-[#FAF8F5] relative z-20 z-content"
       >
-        <div className="max-w-6xl mx-auto">
-          {/* Editorial Section Header */}
-          <div className="text-center max-w-2xl mx-auto mb-16 sm:mb-20 space-y-3">
-            <span className="inline-block text-[11px] font-mono tracking-widest uppercase text-rose-300/80 mb-2">
-              Interactive Devotion
-            </span>
-            <h2 className="text-3xl sm:text-5xl font-serif font-normal text-white tracking-tight leading-tight">
-              Add little secrets waiting to be discovered.
-            </h2>
-            <p className="text-sm sm:text-base text-rose-100/70 font-light leading-relaxed">
-              Love isn&apos;t just what you say all at once. It is the sealed envelopes opened on quiet mornings, the private memories tucked behind questions, and the surprises waiting for the days ahead.
-            </p>
-            <p className="text-sm sm:text-base text-rose-200/90 font-light italic pt-1">
-              You don&apos;t just send a page. They enter a world.
-            </p>
-          </div>
-
-          {/* Borderless Interactive Moments Showcase: Translucent glass and luminous contrast */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-10">
-            {/* Open When Envelopes */}
-            <div className="p-8 bg-white/[0.035] hover:bg-white/[0.06] backdrop-blur-md border border-white/[0.07] hover:border-white/[0.14] transition-all duration-500 rounded-3xl relative group flex flex-col justify-between shadow-xl">
-              <div>
-                <div className="w-11 h-11 rounded-2xl bg-white/[0.07] flex items-center justify-center text-rose-300 mb-6 group-hover:scale-105 transition-transform shadow-inner">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                    <rect width="20" height="16" x="2" y="4" rx="2" />
-                    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-                  </svg>
-                </div>
-                <span className="text-[10px] uppercase font-mono tracking-widest text-rose-300/80 font-medium block mb-2">
-                  Open When Envelopes
-                </span>
-                <h3 className="font-serif text-2xl font-normal text-white mb-3">
-                  Notes for future days
-                </h3>
-                <p className="text-xs sm:text-sm text-white/70 leading-relaxed font-light mb-6">
-                  Leave sealed letters they can unseal whenever they need you: Open When you miss me, Open When you have had a hard day, or Open when you can&apos;t sleep.
-                </p>
-              </div>
-              <div className="pt-4 text-xs text-rose-200/80 italic font-serif border-t border-white/[0.06]">
-                “Close your eyes. Take a breath. I am right here.”
-              </div>
-            </div>
-
-            {/* Tap-to-Reveal Secret Notes */}
-            <div className="p-8 bg-white/[0.035] hover:bg-white/[0.06] backdrop-blur-md border border-white/[0.07] hover:border-white/[0.14] transition-all duration-500 rounded-3xl relative group flex flex-col justify-between shadow-xl">
-              <div>
-                <div className="w-11 h-11 rounded-2xl bg-white/[0.07] flex items-center justify-center text-rose-300 mb-6 group-hover:scale-105 transition-transform shadow-inner">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="8" cy="15" r="4" />
-                    <path d="m10.85 12.15 7.65-7.65a2 2 0 1 1 2.83 2.83l-7.65 7.65" />
-                    <path d="m15.5 6.5 2 2" />
-                  </svg>
-                </div>
-                <span className="text-[10px] uppercase font-mono tracking-widest text-rose-300/80 font-medium block mb-2">
-                  Concealed Letters
-                </span>
-                <h3 className="font-serif text-2xl font-normal text-white mb-3">
-                  Secret whispers
-                </h3>
-                <p className="text-xs sm:text-sm text-white/70 leading-relaxed font-light mb-6">
-                  Hide intimate words behind a delicate tap-to-reveal fold or lock them with a question only the two of you know the answer to.
-                </p>
-              </div>
-              <div className="pt-4 text-xs text-rose-200/80 italic font-serif border-t border-white/[0.06]">
-                “Where did we share our very first secret?”
-              </div>
-            </div>
-
-            {/* Playful Moments & Surprises */}
-            <div className="p-8 bg-white/[0.035] hover:bg-white/[0.06] backdrop-blur-md border border-white/[0.07] hover:border-white/[0.14] transition-all duration-500 rounded-3xl relative group flex flex-col justify-between shadow-xl">
-              <div>
-                <div className="w-11 h-11 rounded-2xl bg-white/[0.07] flex items-center justify-center text-rose-300 mb-6 group-hover:scale-105 transition-transform shadow-inner">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-                  </svg>
-                </div>
-                <span className="text-[10px] uppercase font-mono tracking-widest text-rose-300/80 font-medium block mb-2">
-                  Tactile Surprises
-                </span>
-                <h3 className="font-serif text-2xl font-normal text-white mb-3">
-                  Delight & discovery
-                </h3>
-                <p className="text-xs sm:text-sm text-white/70 leading-relaxed font-light mb-6">
-                  Surprise them with tactile scratch cards that reveal sweet compliments, a jar of reasons why you love them, or a playful relationship quiz.
-                </p>
-              </div>
-              <div className="pt-4 text-xs text-rose-200/80 italic font-serif border-t border-white/[0.06]">
-                “Scratch here to reveal something I love about you...”
-              </div>
-            </div>
-          </div>
-        </div>
+        <SpatialDiscoveredObjects />
       </section>
 
       {/* ========================================================================= */}
-      {/* 05 — FINALE: QUIET WHISPER & TACTILE ACTION                               */}
-      {/* Warm paper & sunset finale atmosphere gently welcoming the user            */}
+      {/* 05 — THE RESOLUTION: QUIET WHISPER & INTIMATE ACTION                      */}
+      {/* Everything collapses back into one glowing talisman in warm twilight       */}
       {/* ========================================================================= */}
       <section
         id="create"
-        className="w-full bg-transparent text-[#240412] relative z-20 z-content py-20 sm:py-28 px-6"
+        className="w-full bg-transparent text-[#240412] relative z-20 z-content py-20 sm:py-32 px-6"
       >
         <div className="max-w-3xl mx-auto text-center space-y-7">
-          {/* Small tactile wax seal / talisman artifact */}
+          {/* Luminous wax seal talisman artifact */}
           <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-[#E11D48] via-[#BE123C] to-[#6B0C23] shadow-[0_6px_20px_rgba(159,18,57,0.35)] text-white mx-auto">
             <svg className="w-5 h-5 filter drop-shadow-sm text-rose-100" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
@@ -212,9 +132,9 @@ export default function HomePage() {
             </p>
           </div>
 
-          {/* Action CTAs: Dominant solid button + crisp high-contrast link */}
+          {/* Action CTAs: Dominant solid button + understated link */}
           <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <CurtainLink href="/create">
+            <Link href="/create">
               <Button
                 size="lg"
                 variant="primary"
@@ -226,9 +146,9 @@ export default function HomePage() {
                   <polyline points="12 5 19 12 12 19" />
                 </svg>
               </Button>
-            </CurtainLink>
+            </Link>
 
-            <CurtainLink href="/templates">
+            <Link href="/templates">
               <button
                 type="button"
                 className="px-6 py-3.5 rounded-full text-sm font-medium text-[#240412] hover:text-[#881337] bg-white/80 hover:bg-white shadow-[0_2px_8px_rgba(0,0,0,0.06)] border border-rose-900/10 transition-all cursor-pointer flex items-center gap-1.5"
@@ -236,7 +156,7 @@ export default function HomePage() {
                 <span>Explore Showroom</span>
                 <span className="text-rose-800">→</span>
               </button>
-            </CurtainLink>
+            </Link>
           </div>
         </div>
 
@@ -248,12 +168,12 @@ export default function HomePage() {
             <span>Interactive Romantic Storytelling Platform</span>
           </div>
           <div className="flex items-center gap-6 font-medium">
-            <CurtainLink href="/templates" className="hover:text-[#881337] transition-colors">
+            <Link href="/templates" className="hover:text-[#881337] transition-colors">
               World Showroom
-            </CurtainLink>
-            <CurtainLink href="/create" className="hover:text-[#881337] transition-colors">
+            </Link>
+            <Link href="/create" className="hover:text-[#881337] transition-colors">
               Experience Studio
-            </CurtainLink>
+            </Link>
             <a
               href="https://github.com/Lurkaee/valentino-prototype-1"
               target="_blank"
