@@ -20,7 +20,7 @@ import { SpatialDiscoveredObjects } from "@/components/motion/SpatialDiscoveredO
  */
 export default function HomePage() {
   return (
-    <main className="relative min-h-[100dvh] flex flex-col items-center justify-start bg-transparent text-[#240412] overflow-x-hidden selection:bg-rose-500/20 selection:text-[#240412]">
+    <main className="relative min-h-[100dvh] flex flex-col items-center justify-start bg-transparent text-[#1A0311] overflow-x-hidden selection:bg-rose-500/20 selection:text-[#1A0311]">
       {/* ========================================================================= */}
       {/* 00 — CANONICAL GLOBAL PERSISTENT ATMOSPHERE                               */}
       {/* Pinned behind the entire public experience; morphs continuously as user    */}
@@ -124,10 +124,10 @@ export default function HomePage() {
           </div>
 
           <div className="space-y-3 max-w-xl mx-auto">
-            <h2 className="text-3xl sm:text-5xl font-serif font-normal text-[#240412] leading-tight tracking-tight">
+            <h2 className="text-3xl sm:text-5xl font-serif font-normal text-[#1A0311] leading-tight tracking-tight drop-shadow-[0_1px_12px_rgba(255,245,248,0.5)]">
               Give them a little piece of the internet they&apos;ll want to keep.
             </h2>
-            <p className="text-sm sm:text-base text-[#5E2640] font-light leading-relaxed">
+            <p className="text-sm sm:text-base text-[#36091E] font-normal leading-relaxed drop-shadow-[0_1px_6px_rgba(255,245,248,0.6)]">
               Crafted for two. Never indexed by search engines, zero tracking, and no passwords.
             </p>
           </div>
@@ -151,7 +151,7 @@ export default function HomePage() {
             <Link href="/templates">
               <button
                 type="button"
-                className="px-6 py-3.5 rounded-full text-sm font-medium text-[#240412] hover:text-[#881337] bg-white/80 hover:bg-white shadow-[0_2px_8px_rgba(0,0,0,0.06)] border border-rose-900/10 transition-all cursor-pointer flex items-center gap-1.5"
+                className="px-6 py-3.5 rounded-full text-sm font-semibold text-[#1A0311] hover:text-[#881337] bg-white/95 hover:bg-white shadow-[0_2px_12px_rgba(0,0,0,0.08)] border border-rose-900/15 transition-all cursor-pointer flex items-center gap-1.5"
               >
                 <span>Explore Showroom</span>
                 <span className="text-rose-800">→</span>
@@ -161,24 +161,24 @@ export default function HomePage() {
         </div>
 
         {/* Elegant Editorial Footer */}
-        <footer className="w-full max-w-5xl mx-auto mt-24 pt-8 border-t border-rose-900/10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#6B2346] font-sans relative z-10">
+        <footer className="w-full max-w-5xl mx-auto mt-24 pt-8 border-t border-rose-900/15 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-sans relative z-10">
           <div className="flex items-center gap-2">
-            <span className="text-[#240412] font-serif font-medium">Valentino</span>
-            <span className="text-rose-300">·</span>
-            <span>Interactive Romantic Storytelling Platform</span>
+            <span className="text-[#1A0311] font-serif font-semibold">Valentino</span>
+            <span className="text-rose-400">·</span>
+            <span className="text-[#36091E] font-medium">Interactive Romantic Storytelling Platform</span>
           </div>
-          <div className="flex items-center gap-6 font-medium">
-            <Link href="/templates" className="hover:text-[#881337] transition-colors">
+          <div className="flex items-center gap-6 font-semibold text-[#45102A]">
+            <Link href="/templates" className="hover:text-[#1A0311] transition-colors">
               World Showroom
             </Link>
-            <Link href="/create" className="hover:text-[#881337] transition-colors">
+            <Link href="/create" className="hover:text-[#1A0311] transition-colors">
               Experience Studio
             </Link>
             <a
               href="https://github.com/Lurkaee/valentino-prototype-1"
               target="_blank"
               rel="noreferrer"
-              className="hover:text-[#881337] transition-colors"
+              className="hover:text-[#1A0311] transition-colors"
             >
               GitHub
             </a>
