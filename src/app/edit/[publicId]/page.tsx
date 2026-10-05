@@ -546,7 +546,15 @@ function EditExperienceContent() {
   }
 
   return (
-    <div className="min-h-[100dvh] flex flex-col bg-[#08070B] text-[#FAF8F5] font-ui antialiased">
+    <div className="min-h-[100dvh] flex flex-col bg-[#08070B] text-[#FAF8F5] font-ui antialiased relative overflow-hidden">
+      <ValentinoAtmosphere
+        context="marketing"
+        world="cloud-nine"
+        intensity="subtle"
+        scrollReactive
+        position="fixed"
+        className="opacity-45"
+      />
       {/* 1. Mandatory Owner Reminder Banner */}
       <div
         data-testid="browser-storage-reminder"
@@ -607,7 +615,7 @@ function EditExperienceContent() {
             context="studio"
             world={templateMeta.id}
             intensity="subtle"
-            scrollReactive={false}
+            scrollReactive
           />
           <div className="pointer-events-none absolute inset-0 bg-radial-gradient from-white/[0.02] via-transparent to-transparent opacity-60 blur-3xl" />
 
