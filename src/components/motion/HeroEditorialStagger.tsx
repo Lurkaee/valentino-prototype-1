@@ -75,7 +75,7 @@ export function HeroEditorialStagger({
     >
       {/* 1. Subtle Environmental Micro-Copy */}
       <motion.div variants={itemVariants} className="mb-4 sm:mb-5">
-        <span className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/60 border border-rose-900/10 text-[#731E39] text-[11px] uppercase tracking-[0.24em] font-medium backdrop-blur-sm shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
+        <span className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/75 border border-rose-950/15 text-[#5A142D] text-[11px] uppercase tracking-[0.24em] font-semibold backdrop-blur-sm shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
           <span className="text-[9px] text-rose-500">✦</span>
           <span>{eyebrow}</span>
           <span className="text-[9px] text-rose-500">✦</span>
@@ -86,11 +86,11 @@ export function HeroEditorialStagger({
       {/* 2. Asymmetric Editorial Headline */}
       <motion.h1
         variants={itemVariants}
-        className="text-4xl sm:text-6xl lg:text-[4.25rem] xl:text-[4.75rem] font-serif font-normal text-[#240412] tracking-tight leading-[1.06] mb-4 sm:mb-5"
+        className="text-4xl sm:text-6xl lg:text-[4.25rem] xl:text-[4.75rem] font-serif font-normal text-[#1A0311] tracking-tight leading-[1.06] mb-4 sm:mb-5 drop-shadow-[0_1px_12px_rgba(255,245,248,0.5)]"
       >
         <span>Create something </span>
         <br className="hidden sm:inline" />
-        <span className="italic font-normal text-[#9F1239]">
+        <span className="italic font-normal text-[#9F1239] drop-shadow-[0_1px_8px_rgba(255,245,248,0.4)]">
           they&apos;ll remember.
         </span>
       </motion.h1>
@@ -98,7 +98,7 @@ export function HeroEditorialStagger({
       {/* 3. Restrained Editorial Subtitle */}
       <motion.p
         variants={itemVariants}
-        className="text-sm sm:text-base lg:text-[17px] text-[#4A0E2E]/85 font-light leading-relaxed max-w-lg mb-7 sm:mb-8"
+        className="text-sm sm:text-base lg:text-[17px] text-[#36091E] font-normal leading-relaxed max-w-lg mb-7 sm:mb-8 drop-shadow-[0_1px_8px_rgba(255,245,248,0.55)]"
       >
         {subtitle}
       </motion.p>
@@ -127,7 +127,7 @@ export function HeroEditorialStagger({
 
         <Link
           href={secondaryCtaHref}
-          className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-medium text-[#4A0E2E] hover:text-[#1A0612] px-4 py-2 transition-colors duration-200 group"
+          className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold text-[#36091E] hover:text-[#1A0311] px-4 py-2 transition-colors duration-200 group"
         >
           <span className="tracking-wider">{secondaryCtaText}</span>
           <span className="transition-transform duration-200 group-hover:translate-x-0.5 text-rose-800">→</span>

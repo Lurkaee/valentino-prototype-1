@@ -191,15 +191,15 @@ export function SpatialStationeryUnfold() {
       className="relative w-full min-h-[100dvh] flex flex-col items-center justify-center bg-transparent text-[#240412] px-4 sm:px-6 py-6 sm:py-10 overflow-hidden"
     >
       <div ref={stageRef} className="w-full max-w-4xl mx-auto flex flex-col items-center text-center relative z-10">
-        {/* Subtle Spatial Narrative Eyebrow & Headline */}
-        <div className="mb-3 sm:mb-5 space-y-1 sm:space-y-2 max-w-xl mx-auto">
-          <p className="text-[10px] sm:text-[11px] font-mono tracking-widest uppercase text-[#9C3862]">
+        {/* Subtle Spatial Narrative Eyebrow & Headline with subtle atmospheric text protection */}
+        <div className="mb-3 sm:mb-5 space-y-1 sm:space-y-2 max-w-xl mx-auto relative">
+          <p className="text-[10px] sm:text-[11px] font-mono tracking-widest uppercase text-[#7A1D45] font-semibold drop-shadow-[0_1px_4px_rgba(255,245,248,0.4)]">
             The Unsealing · Physical Keepsakes
           </p>
-          <h2 className="text-2xl sm:text-4xl lg:text-5xl font-serif font-normal text-[#240412] tracking-tight leading-tight">
+          <h2 className="text-2xl sm:text-4xl lg:text-5xl font-serif font-normal text-[#1A0311] tracking-tight leading-tight drop-shadow-[0_1px_10px_rgba(255,245,248,0.5)]">
             Made from little things.
           </h2>
-          <p className="text-xs sm:text-base text-[#5E2640] font-light leading-relaxed">
+          <p className="text-xs sm:text-base text-[#36091E] font-normal leading-relaxed drop-shadow-[0_1px_8px_rgba(255,245,248,0.5)]">
             A pressed petal, a fold of deckled cotton, a ticket kept from a rainy Tuesday. Love is built from details only they would notice.
           </p>
         </div>
@@ -209,14 +209,14 @@ export function SpatialStationeryUnfold() {
           {/* Envelope Body (Shadowed vellum vessel in space) */}
           <div
             ref={envelopeBackRef}
-            className="absolute inset-x-2 sm:inset-x-6 inset-y-2 sm:inset-y-4 rounded-3xl bg-gradient-to-b from-[#FFFDF9]/95 to-[#FAF5EE]/90 shadow-[0_32px_80px_-24px_rgba(70,15,35,0.18)] border border-rose-950/[0.06] flex flex-col justify-between p-5 sm:p-7 overflow-hidden will-change-transform"
+            className="absolute inset-x-2 sm:inset-x-6 inset-y-2 sm:inset-y-4 rounded-3xl bg-gradient-to-b from-[#FFFDF9]/95 to-[#FAF5EE]/90 shadow-[0_32px_80px_-24px_rgba(70,15,35,0.18)] border border-rose-950/[0.08] flex flex-col justify-between p-5 sm:p-7 overflow-hidden will-change-transform"
             style={{
               backgroundImage:
                 "radial-gradient(ellipse at 50% 30%, rgba(254, 243, 199, 0.28) 0%, transparent 80%)",
             }}
           >
             {/* Atelier Deckled Heading */}
-            <div className="flex items-center justify-between text-[10px] font-mono text-stone-400 tracking-wider">
+            <div className="flex items-center justify-between text-[10px] font-mono text-[#6B2B47] font-semibold tracking-wider">
               <span>VALENTINO ATELIER</span>
               <span>KEEPSAKE NO. 0214</span>
             </div>
@@ -224,12 +224,12 @@ export function SpatialStationeryUnfold() {
             {/* Inner handwritten letter fragment */}
             <div
               ref={letterRef}
-              className="my-auto px-4 py-3 sm:px-5 sm:py-4 bg-[#FAF6F0]/95 backdrop-blur-sm rounded-2xl border border-rose-950/[0.06] shadow-sm text-left max-w-sm mx-auto will-change-transform"
+              className="my-auto px-4 py-3 sm:px-5 sm:py-4 bg-[#FAF6F0]/95 backdrop-blur-sm rounded-2xl border border-rose-950/[0.08] shadow-sm text-left max-w-sm mx-auto will-change-transform"
             >
-              <p className="text-xs sm:text-sm font-serif italic text-[#3B0E23] leading-relaxed">
+              <p className="text-xs sm:text-sm font-serif italic text-[#1E0412] leading-relaxed">
                 “I kept the ticket from that rainy afternoon. Some moments don&apos;t ask for grand announcements — they just quietly stay forever.”
               </p>
-              <p className="text-[10px] font-mono text-[#8C3A62] mt-2 text-right">
+              <p className="text-[10px] font-mono text-[#6B2044] font-medium mt-2 text-right">
                 — for you, always
               </p>
             </div>
@@ -237,21 +237,21 @@ export function SpatialStationeryUnfold() {
             {/* Embedded Emotional Timeline Ribbon (Paper becomes timeline) */}
             <div
               ref={timelineMilestonesRef}
-              className="mt-2 pt-2 sm:pt-3 border-t border-rose-950/[0.08] flex items-center justify-around text-left gap-1 sm:gap-2 text-[10px] font-mono text-[#5E2640]/90 will-change-transform"
+              className="mt-2 pt-2 sm:pt-3 border-t border-rose-950/[0.1] flex items-center justify-around text-left gap-1 sm:gap-2 text-[10px] font-mono will-change-transform"
             >
               <div className="flex flex-col">
-                <span className="text-[8px] sm:text-[9px] uppercase tracking-wider text-[#9C3862] font-semibold">10.14</span>
-                <span className="font-serif italic text-[#3B0E23] text-[10px] sm:text-[11px]">First Coffee</span>
+                <span className="text-[8px] sm:text-[9px] uppercase tracking-wider text-[#7A1D45] font-bold">10.14</span>
+                <span className="font-serif italic text-[#1E0412] font-semibold text-[10px] sm:text-[11px]">First Coffee</span>
               </div>
-              <div className="w-1.5 h-1.5 rounded-full bg-rose-400/80" />
+              <div className="w-1.5 h-1.5 rounded-full bg-rose-500/90" />
               <div className="flex flex-col">
-                <span className="text-[8px] sm:text-[9px] uppercase tracking-wider text-[#9C3862] font-semibold">12.24</span>
-                <span className="font-serif italic text-[#3B0E23] text-[10px] sm:text-[11px]">Midnight Rain</span>
+                <span className="text-[8px] sm:text-[9px] uppercase tracking-wider text-[#7A1D45] font-bold">12.24</span>
+                <span className="font-serif italic text-[#1E0412] font-semibold text-[10px] sm:text-[11px]">Midnight Rain</span>
               </div>
-              <div className="w-1.5 h-1.5 rounded-full bg-rose-400/80" />
+              <div className="w-1.5 h-1.5 rounded-full bg-rose-500/90" />
               <div className="flex flex-col">
-                <span className="text-[8px] sm:text-[9px] uppercase tracking-wider text-[#9C3862] font-semibold">02.14</span>
-                <span className="font-serif italic text-[#3B0E23] text-[10px] sm:text-[11px]">The Vow</span>
+                <span className="text-[8px] sm:text-[9px] uppercase tracking-wider text-[#7A1D45] font-bold">02.14</span>
+                <span className="font-serif italic text-[#1E0412] font-semibold text-[10px] sm:text-[11px]">The Vow</span>
               </div>
             </div>
           </div>
@@ -310,16 +310,16 @@ export function SpatialStationeryUnfold() {
         <div ref={ctaRef} className="mt-4 flex flex-col items-center gap-1.5 will-change-transform">
           <Link
             href="/create"
-            className="group inline-flex items-center gap-2 text-base sm:text-lg font-serif font-medium text-[#240412] hover:text-[#9F1239] transition-colors"
+            className="group inline-flex items-center gap-2 text-base sm:text-lg font-serif font-medium text-[#1A0311] hover:text-[#9F1239] transition-colors drop-shadow-[0_1px_6px_rgba(255,245,248,0.4)]"
           >
-            <span className="underline decoration-rose-400 underline-offset-6 group-hover:decoration-rose-600 transition-all">
+            <span className="underline decoration-rose-500 underline-offset-6 group-hover:decoration-rose-700 transition-all font-semibold">
               Make yours
             </span>
             <span className="inline-block transition-transform duration-300 group-hover:translate-x-1.5 font-sans">
               →
             </span>
           </Link>
-          <p className="text-xs text-[#5E2640]/80 font-light">
+          <p className="text-xs text-[#36091E] font-medium drop-shadow-[0_1px_8px_rgba(255,245,248,0.75)]">
             No design experience required. Takes about five minutes.
           </p>
         </div>

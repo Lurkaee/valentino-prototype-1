@@ -35,6 +35,23 @@
   --shadow-public-soft: 0 16px 36px -12px rgba(136, 19, 55, 0.08);
   --shadow-public-lift: 0 24px 48px -14px rgba(136, 19, 55, 0.12);
   --shadow-public-glow: 0 0 40px -10px rgba(225, 29, 72, 0.25);
+
+  /* Phase 6.4.1 Atmospheric Story Typography & Environment-Aware Contrast Tokens */
+  --story-light-primary: #1A0311;       /* Deepest espresso-berry: maximum display contrast on light sky */
+  --story-light-secondary: #36091E;     /* Rich dark berry: high legibility body */
+  --story-light-muted: #5A1434;         /* Deep plum for supporting editorial text */
+  --story-light-hint: #7A1D45;          /* Crisp berry for eyebrows & milestone markers */
+  --story-light-shadow: 0 1px 12px rgba(255, 245, 248, 0.45), 0 1px 2px rgba(0, 0, 0, 0.04);
+
+  --story-dark-primary: #FAF8F5;        /* Warm luminous ivory: pristine contrast on dark vellum/velvet */
+  --story-dark-secondary: #FCE7E1;      /* Soft peach ivory: effortless reading */
+  --story-dark-muted: #FBCFE8;          /* Warm rose mist: luminous without glare */
+  --story-dark-hint: #FDA4AF;           /* Glowing rose accent for tags & badges */
+  --story-dark-shadow: 0 2px 14px rgba(10, 2, 7, 0.75), 0 1px 3px rgba(0, 0, 0, 0.9);
+
+  --story-ui-dark: #12030A;
+  --story-ui-light: #FAF8F5;
+  --story-ui-accent: #E11D48;
 }
 
 /* Phase 5F Standardized 5-Tier Layer Hierarchy */
@@ -77,6 +94,48 @@ body {
 .font-romantic {
   font-family: var(--font-serif), Georgia, Cambria, "Times New Roman", serif;
   font-style: italic;
+}
+
+/* Phase 6.4.1 Environment-Aware Typography Utilities */
+.text-story-light-primary {
+  color: var(--story-light-primary);
+  text-shadow: var(--story-light-shadow);
+}
+.text-story-light-secondary {
+  color: var(--story-light-secondary);
+  text-shadow: 0 1px 8px rgba(255, 245, 248, 0.4);
+}
+.text-story-light-muted {
+  color: var(--story-light-muted);
+}
+.text-story-light-hint {
+  color: var(--story-light-hint);
+}
+
+.text-story-dark-primary {
+  color: var(--story-dark-primary);
+  text-shadow: var(--story-dark-shadow);
+}
+.text-story-dark-secondary {
+  color: var(--story-dark-secondary);
+  text-shadow: 0 1px 8px rgba(10, 2, 7, 0.7);
+}
+.text-story-dark-muted {
+  color: var(--story-dark-muted);
+  text-shadow: 0 1px 6px rgba(10, 2, 7, 0.6);
+}
+.text-story-dark-hint {
+  color: var(--story-dark-hint);
+  text-shadow: 0 1px 4px rgba(10, 2, 7, 0.55);
+}
+
+/* Atmospheric text protection halos (seamless feathered radial vignette, zero boxy seams) */
+.halo-text-light {
+  background: radial-gradient(ellipse at center, rgba(255, 248, 245, 0.5) 0%, rgba(255, 248, 245, 0) 72%);
+}
+
+.halo-text-dark {
+  background: radial-gradient(ellipse at center, rgba(16, 2, 10, 0.5) 0%, rgba(16, 2, 10, 0) 72%);
 }
 
 /* Custom subtle scrollbar */

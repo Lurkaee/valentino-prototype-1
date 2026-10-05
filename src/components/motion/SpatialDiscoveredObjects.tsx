@@ -49,9 +49,8 @@ export function SpatialDiscoveredObjects() {
           stagger: 0.2,
           scrollTrigger: {
             trigger: containerRef.current,
-            start: "top 70%",
-            end: "bottom 40%",
-            toggleActions: "play none none reverse",
+            start: "top 75%",
+            once: true,
           },
         }
       );
@@ -67,16 +66,16 @@ export function SpatialDiscoveredObjects() {
     >
       {/* Editorial Header floating lightly in space */}
       <div className="text-center max-w-2xl mx-auto mb-16 sm:mb-24 space-y-3 relative z-10">
-        <span className="inline-block text-[11px] font-mono tracking-widest uppercase text-rose-300/80">
+        <span className="inline-block text-[11px] font-mono tracking-widest uppercase text-rose-200 font-semibold drop-shadow-[0_1px_4px_rgba(10,2,7,0.7)]">
           Interactive Devotion
         </span>
-        <h2 className="text-3xl sm:text-5xl font-serif font-normal text-white tracking-tight leading-tight">
+        <h2 className="text-3xl sm:text-5xl font-serif font-normal text-white text-shadow-story-dark tracking-tight leading-tight">
           Add little secrets waiting to be discovered.
         </h2>
-        <p className="text-sm sm:text-base text-rose-100/70 font-light leading-relaxed">
+        <p className="text-sm sm:text-base text-rose-100/90 font-normal leading-relaxed drop-shadow-[0_1px_6px_rgba(10,2,7,0.7)]">
           Love isn&apos;t just what you say all at once. It is the sealed envelopes opened on quiet mornings, the private memories tucked behind questions, and the surprises waiting for the days ahead.
         </p>
-        <p className="text-xs sm:text-sm text-rose-200/80 font-serif italic pt-1">
+        <p className="text-xs sm:text-sm text-amber-200 font-serif italic pt-1 drop-shadow-[0_1px_4px_rgba(10,2,7,0.7)]">
           Tap an artifact to reveal what is hidden inside.
         </p>
       </div>
@@ -94,11 +93,11 @@ export function SpatialDiscoveredObjects() {
             aria-expanded={openEnvelope}
           >
             {/* Suspended 3D Envelope */}
-            <div className="relative w-full h-56 rounded-3xl bg-gradient-to-b from-[#2E0719]/90 to-[#16020C]/95 border border-rose-500/25 p-5 shadow-[0_20px_50px_-10px_rgba(225,29,72,0.35)] flex flex-col justify-between rotate-[-2deg] group-hover:rotate-0 transition-all duration-500 will-change-transform">
+            <div className="relative w-full h-56 rounded-3xl bg-gradient-to-b from-[#2E0719]/90 to-[#16020C]/95 border border-rose-500/30 p-5 shadow-[0_20px_50px_-10px_rgba(225,29,72,0.35)] flex flex-col justify-between rotate-[-2deg] group-hover:rotate-0 transition-all duration-500 will-change-transform">
               {/* Soft ambient back-glow */}
               <div className="absolute inset-0 rounded-3xl bg-rose-500/10 blur-xl pointer-events-none" />
 
-              <div className="flex items-center justify-between text-[9px] font-mono text-rose-300/80 tracking-wider">
+              <div className="flex items-center justify-between text-[9px] font-mono text-rose-200 font-semibold tracking-wider">
                 <span>SEALED DISPATCH</span>
                 <span>OPEN WHEN</span>
               </div>
@@ -108,19 +107,19 @@ export function SpatialDiscoveredObjects() {
                 <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#E11D48] via-[#BE123C] to-[#881337] border border-amber-200/80 shadow-[0_4px_16px_rgba(225,29,72,0.4)] mx-auto flex items-center justify-center text-amber-100 text-sm font-serif">
                   ✉
                 </div>
-                <h3 className="font-serif text-xl sm:text-2xl text-white">
+                <h3 className="font-serif text-xl sm:text-2xl text-white drop-shadow-[0_1px_8px_rgba(10,2,7,0.8)]">
                   Open when you miss me
                 </h3>
               </div>
 
               {/* Reveal peek or tap hint */}
-              <div className="pt-2 border-t border-rose-500/20 text-[11px] font-serif italic text-rose-200/80">
+              <div className="pt-2 border-t border-rose-500/25 text-[11px] font-serif italic text-rose-100 font-medium">
                 {openEnvelope ? (
-                  <span className="text-amber-200 font-medium">
+                  <span className="text-amber-200 font-semibold">
                     “Close your eyes. Take a breath. I am right here.”
                   </span>
                 ) : (
-                  <span className="group-hover:text-rose-100 transition-colors">
+                  <span className="group-hover:text-white transition-colors">
                     Tap to unseal note →
                   </span>
                 )}
@@ -129,8 +128,8 @@ export function SpatialDiscoveredObjects() {
           </button>
 
           <div className="mt-5 space-y-1 max-w-xs">
-            <h4 className="text-base font-serif text-white">Open When Letters</h4>
-            <p className="text-xs text-white/60 font-light leading-relaxed">
+            <h4 className="text-base font-serif text-white drop-shadow-[0_1px_6px_rgba(10,2,7,0.7)]">Open When Letters</h4>
+            <p className="text-xs text-rose-100/85 font-normal leading-relaxed drop-shadow-[0_1px_4px_rgba(10,2,7,0.6)]">
               Envelopes sealed for future days — when they have had a hard day, miss you, or can&apos;t sleep.
             </p>
           </div>
@@ -148,7 +147,7 @@ export function SpatialDiscoveredObjects() {
           >
             {/* Suspended 3D Folded Vellum Note */}
             <div className="relative w-full h-56 rounded-3xl bg-gradient-to-b from-[#FFFDF9]/95 to-[#FAF5EE]/90 text-[#3B0E23] p-5 shadow-[0_20px_50px_-10px_rgba(70,15,35,0.2)] border border-rose-950/[0.08] flex flex-col justify-between rotate-[1.5deg] group-hover:rotate-0 transition-all duration-500 will-change-transform">
-              <div className="flex items-center justify-between text-[9px] font-mono text-stone-400 tracking-wider">
+              <div className="flex items-center justify-between text-[9px] font-mono text-[#6B2346] font-semibold tracking-wider">
                 <span>CONCEALED NOTE</span>
                 <span>QUESTION LOCK</span>
               </div>
@@ -158,19 +157,19 @@ export function SpatialDiscoveredObjects() {
                 <div className="w-9 h-9 rounded-full bg-rose-100 text-[#9F1239] flex items-center justify-center mx-auto text-sm">
                   🗝️
                 </div>
-                <h3 className="font-serif text-xl sm:text-2xl text-[#240412]">
+                <h3 className="font-serif text-xl sm:text-2xl text-[#1A0311] font-normal">
                   A secret whisper
                 </h3>
               </div>
 
               {/* Reveal peek or tap hint */}
-              <div className="pt-2 border-t border-rose-950/[0.08] text-[11px] font-serif italic text-[#8C3A62]">
+              <div className="pt-2 border-t border-rose-950/[0.1] text-[11px] font-serif italic text-[#6B173E] font-medium">
                 {openWhisper ? (
-                  <span className="text-[#9F1239] font-medium">
+                  <span className="text-[#9F1239] font-bold">
                     “Where did we share our very first secret?”
                   </span>
                 ) : (
-                  <span className="group-hover:text-[#5E2640] transition-colors">
+                  <span className="group-hover:text-[#3B0E23] transition-colors">
                     Tap to unlock whisper →
                   </span>
                 )}
@@ -179,8 +178,8 @@ export function SpatialDiscoveredObjects() {
           </button>
 
           <div className="mt-5 space-y-1 max-w-xs">
-            <h4 className="text-base font-serif text-white">Secret Whispers</h4>
-            <p className="text-xs text-white/60 font-light leading-relaxed">
+            <h4 className="text-base font-serif text-white drop-shadow-[0_1px_6px_rgba(10,2,7,0.7)]">Secret Whispers</h4>
+            <p className="text-xs text-rose-100/85 font-normal leading-relaxed drop-shadow-[0_1px_4px_rgba(10,2,7,0.6)]">
               Hide intimate words behind a delicate tap-to-reveal fold or lock them with a question only you two know.
             </p>
           </div>
@@ -197,11 +196,11 @@ export function SpatialDiscoveredObjects() {
             aria-expanded={openKeepsake}
           >
             {/* Suspended 3D Foil Shimmer Keepsake */}
-            <div className="relative w-full h-56 rounded-3xl bg-gradient-to-b from-[#200A18]/90 to-[#10030C]/95 border border-amber-300/30 p-5 shadow-[0_20px_50px_-10px_rgba(217,119,6,0.35)] flex flex-col justify-between rotate-[-1.5deg] group-hover:rotate-0 transition-all duration-500 will-change-transform">
+            <div className="relative w-full h-56 rounded-3xl bg-gradient-to-b from-[#200A18]/90 to-[#10030C]/95 border border-amber-300/35 p-5 shadow-[0_20px_50px_-10px_rgba(217,119,6,0.35)] flex flex-col justify-between rotate-[-1.5deg] group-hover:rotate-0 transition-all duration-500 will-change-transform">
               {/* Soft gold aura */}
               <div className="absolute inset-0 rounded-3xl bg-amber-400/10 blur-xl pointer-events-none" />
 
-              <div className="flex items-center justify-between text-[9px] font-mono text-amber-200/80 tracking-wider">
+              <div className="flex items-center justify-between text-[9px] font-mono text-amber-200 font-semibold tracking-wider">
                 <span>TACTILE SURPRISE</span>
                 <span>GOLD FOIL</span>
               </div>
@@ -211,15 +210,15 @@ export function SpatialDiscoveredObjects() {
                 <div className="w-10 h-10 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 border border-amber-200/80 shadow-[0_4px_16px_rgba(217,119,6,0.5)] mx-auto flex items-center justify-center text-amber-950 font-serif text-sm">
                   ✦
                 </div>
-                <h3 className="font-serif text-xl sm:text-2xl text-amber-100">
+                <h3 className="font-serif text-xl sm:text-2xl text-amber-100 drop-shadow-[0_1px_8px_rgba(30,10,0,0.8)]">
                   Delight & discovery
                 </h3>
               </div>
 
               {/* Reveal peek or tap hint */}
-              <div className="pt-2 border-t border-amber-400/20 text-[11px] font-serif italic text-amber-200/90">
+              <div className="pt-2 border-t border-amber-400/25 text-[11px] font-serif italic text-amber-200 font-medium">
                 {openKeepsake ? (
-                  <span className="text-amber-100 font-medium">
+                  <span className="text-amber-100 font-bold">
                     “Every morning with you is my favorite thing on earth.”
                   </span>
                 ) : (
@@ -232,8 +231,8 @@ export function SpatialDiscoveredObjects() {
           </button>
 
           <div className="mt-5 space-y-1 max-w-xs">
-            <h4 className="text-base font-serif text-white">Playful Keepsakes</h4>
-            <p className="text-xs text-white/60 font-light leading-relaxed">
+            <h4 className="text-base font-serif text-white drop-shadow-[0_1px_6px_rgba(10,2,7,0.7)]">Playful Keepsakes</h4>
+            <p className="text-xs text-amber-100/85 font-normal leading-relaxed drop-shadow-[0_1px_4px_rgba(10,2,7,0.6)]">
               Tactile scratch cards that reveal sweet compliments, a jar of reasons, or an intimate relationship quiz.
             </p>
           </div>

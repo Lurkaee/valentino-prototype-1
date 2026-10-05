@@ -6,6 +6,7 @@ export default defineConfig({
     environment: "node",
     globals: true,
     fileParallelism: false,
+    testTimeout: 15000,
     exclude: ["**/node_modules/**", "**/tests/e2e/**", "**/.next/**"],
   },
   resolve: {

@@ -69,8 +69,8 @@ export function FloatingNavbar({ className = "" }: FloatingNavbarProps) {
             href="/templates"
             className={`px-2.5 py-1 rounded-full transition-colors duration-200 ${
               pathname === "/templates"
-                ? "text-white bg-white/10"
-                : "text-white/60 hover:text-white"
+                ? "text-white bg-white/15"
+                : "text-[#FAF8F5]/85 hover:text-white"
             }`}
           >
             Templates
@@ -78,7 +78,7 @@ export function FloatingNavbar({ className = "" }: FloatingNavbarProps) {
 
           <Link
             href="/#how-it-works"
-            className="hidden sm:inline-block px-2.5 py-1 rounded-full text-white/60 hover:text-white transition-colors duration-200"
+            className="hidden sm:inline-block px-2.5 py-1 rounded-full text-[#FAF8F5]/85 hover:text-white transition-colors duration-200"
           >
             Story
           </Link>
