@@ -9,7 +9,15 @@ export type ValentinePlasmaTheme =
   | "cloudNine"
   | "kage"
   | "goldenHour"
-  | "stardust";
+  | "stardust"
+  | "apricotFilm"
+  | "wildflowerPaper"
+  | "oceanLetter"
+  | "cloud-nine"
+  | "midnight-rose"
+  | "apricot-film"
+  | "wildflower-paper"
+  | "ocean-letter";
 
 export interface ValentinePlasmaThemeConfig {
   hue: number;
@@ -19,6 +27,9 @@ export interface ValentinePlasmaThemeConfig {
   glowColor: string;
   borderColor: string;
   textColor: string;
+  pillBg?: string;
+  subtextColor?: string;
+  accentGlow?: string;
 }
 
 export const VALENTINE_PLASMA_THEMES: Record<
@@ -31,39 +42,151 @@ export const VALENTINE_PLASMA_THEMES: Record<
     saturation: 1.05,
     brightness: 1.08,
     mode: "dark",
-    glowColor: "rgba(255, 110, 180, 0.35)",
-    borderColor: "rgba(255, 182, 217, 0.3)",
+    glowColor: "rgba(255, 110, 180, 0.4)",
+    borderColor: "rgba(255, 182, 217, 0.4)",
     textColor: "#FFF0F6",
+    pillBg: "rgba(25, 4, 15, 0.86)",
+    subtextColor: "#FBCFE8",
+    accentGlow: "rgba(255, 110, 180, 0.7)",
   },
-  // Deep Rose + Crimson + Violet
+  // Deep Rose + Crimson + Wine + Velvet
   midnightRose: {
     hue: 132,
     saturation: 1.25,
     brightness: 0.96,
     mode: "dark",
-    glowColor: "rgba(225, 29, 72, 0.4)",
-    borderColor: "rgba(244, 63, 94, 0.35)",
+    glowColor: "rgba(225, 29, 72, 0.45)",
+    borderColor: "rgba(244, 63, 94, 0.4)",
     textColor: "#FFE4E6",
+    pillBg: "rgba(28, 4, 14, 0.88)",
+    subtextColor: "#FECDD3",
+    accentGlow: "rgba(225, 29, 72, 0.8)",
   },
-  // Baby Pink + Lavender + Pearl
+  // Baby Pink + Rose Champagne + Lavender + Pearl
   cloudNine: {
     hue: 102,
     saturation: 0.95,
     brightness: 1.15,
     mode: "dark",
-    glowColor: "rgba(216, 194, 255, 0.38)",
-    borderColor: "rgba(220, 200, 255, 0.35)",
+    glowColor: "rgba(216, 194, 255, 0.4)",
+    borderColor: "rgba(220, 200, 255, 0.4)",
     textColor: "#FAF5FF",
+    pillBg: "rgba(24, 8, 22, 0.86)",
+    subtextColor: "#E9D5FF",
+    accentGlow: "rgba(244, 114, 182, 0.7)",
   },
-  // Kyoto Twilight: Emerald + Teal + Stone + Soft Green
+  // Kyoto Twilight: Ink + Muted Moss + Amber Lantern + Forest Mist
   kage: {
     hue: -60,
     saturation: 1.2,
     brightness: 1.05,
     mode: "dark",
     glowColor: "rgba(16, 185, 129, 0.4)",
-    borderColor: "rgba(52, 211, 153, 0.35)",
+    borderColor: "rgba(52, 211, 153, 0.4)",
     textColor: "#ECFDF5",
+    pillBg: "rgba(6, 20, 16, 0.88)",
+    subtextColor: "#A7F3D0",
+    accentGlow: "rgba(16, 185, 129, 0.7)",
+  },
+  // Burnt Apricot + Terracotta + Golden Hour Flare + Amber
+  apricotFilm: {
+    hue: -170,
+    saturation: 1.2,
+    brightness: 1.08,
+    mode: "dark",
+    glowColor: "rgba(245, 158, 11, 0.45)",
+    borderColor: "rgba(253, 186, 116, 0.45)",
+    textColor: "#FFFBEB",
+    pillBg: "rgba(28, 12, 4, 0.88)",
+    subtextColor: "#FDE68A",
+    accentGlow: "rgba(245, 158, 11, 0.75)",
+  },
+  // Butter Yellow + Dusty Rose + Botanical Green + Warm Paper Ivory
+  wildflowerPaper: {
+    hue: -135,
+    saturation: 1.18,
+    brightness: 1.1,
+    mode: "dark",
+    glowColor: "rgba(234, 179, 8, 0.45)",
+    borderColor: "rgba(254, 240, 138, 0.45)",
+    textColor: "#FEFCE8",
+    pillBg: "rgba(26, 18, 6, 0.88)",
+    subtextColor: "#FEF08A",
+    accentGlow: "rgba(234, 179, 8, 0.7)",
+  },
+  // Ocean Blue + Sea-Glass + Lavender Mist + Pearl
+  oceanLetter: {
+    hue: -15,
+    saturation: 1.15,
+    brightness: 1.1,
+    mode: "dark",
+    glowColor: "rgba(59, 130, 246, 0.45)",
+    borderColor: "rgba(147, 197, 253, 0.45)",
+    textColor: "#F0F9FF",
+    pillBg: "rgba(4, 18, 32, 0.88)",
+    subtextColor: "#BAE6FD",
+    accentGlow: "rgba(59, 130, 246, 0.75)",
+  },
+  // Direct kebab-case world slug aliases
+  "cloud-nine": {
+    hue: 102,
+    saturation: 0.95,
+    brightness: 1.15,
+    mode: "dark",
+    glowColor: "rgba(216, 194, 255, 0.4)",
+    borderColor: "rgba(220, 200, 255, 0.4)",
+    textColor: "#FAF5FF",
+    pillBg: "rgba(24, 8, 22, 0.86)",
+    subtextColor: "#E9D5FF",
+    accentGlow: "rgba(244, 114, 182, 0.7)",
+  },
+  "midnight-rose": {
+    hue: 132,
+    saturation: 1.25,
+    brightness: 0.96,
+    mode: "dark",
+    glowColor: "rgba(225, 29, 72, 0.45)",
+    borderColor: "rgba(244, 63, 94, 0.4)",
+    textColor: "#FFE4E6",
+    pillBg: "rgba(28, 4, 14, 0.88)",
+    subtextColor: "#FECDD3",
+    accentGlow: "rgba(225, 29, 72, 0.8)",
+  },
+  "apricot-film": {
+    hue: -170,
+    saturation: 1.2,
+    brightness: 1.08,
+    mode: "dark",
+    glowColor: "rgba(245, 158, 11, 0.45)",
+    borderColor: "rgba(253, 186, 116, 0.45)",
+    textColor: "#FFFBEB",
+    pillBg: "rgba(28, 12, 4, 0.88)",
+    subtextColor: "#FDE68A",
+    accentGlow: "rgba(245, 158, 11, 0.75)",
+  },
+  "wildflower-paper": {
+    hue: -135,
+    saturation: 1.18,
+    brightness: 1.1,
+    mode: "dark",
+    glowColor: "rgba(234, 179, 8, 0.45)",
+    borderColor: "rgba(254, 240, 138, 0.45)",
+    textColor: "#FEFCE8",
+    pillBg: "rgba(26, 18, 6, 0.88)",
+    subtextColor: "#FEF08A",
+    accentGlow: "rgba(234, 179, 8, 0.7)",
+  },
+  "ocean-letter": {
+    hue: -15,
+    saturation: 1.15,
+    brightness: 1.1,
+    mode: "dark",
+    glowColor: "rgba(59, 130, 246, 0.45)",
+    borderColor: "rgba(147, 197, 253, 0.45)",
+    textColor: "#F0F9FF",
+    pillBg: "rgba(4, 18, 32, 0.88)",
+    subtextColor: "#BAE6FD",
+    accentGlow: "rgba(59, 130, 246, 0.75)",
   },
   // Peach + Coral + Champagne
   goldenHour: {
@@ -74,6 +197,9 @@ export const VALENTINE_PLASMA_THEMES: Record<
     glowColor: "rgba(251, 146, 60, 0.35)",
     borderColor: "rgba(253, 186, 116, 0.35)",
     textColor: "#FFF7ED",
+    pillBg: "rgba(28, 12, 4, 0.88)",
+    subtextColor: "#FED7AA",
+    accentGlow: "rgba(251, 146, 60, 0.7)",
   },
   // Violet + Orchid + Pink
   stardust: {
@@ -84,6 +210,9 @@ export const VALENTINE_PLASMA_THEMES: Record<
     glowColor: "rgba(185, 149, 232, 0.4)",
     borderColor: "rgba(192, 132, 252, 0.35)",
     textColor: "#F3E8FF",
+    pillBg: "rgba(22, 8, 28, 0.88)",
+    subtextColor: "#E9D5FF",
+    accentGlow: "rgba(185, 149, 232, 0.7)",
   },
 };
 
@@ -265,37 +394,37 @@ export const ValentinePlasmaButton: React.FC<ValentinePlasmaButtonProps> = ({
           </div>
         </div>
 
-        {/* 4. Semantic Surface Typography Overlay */}
+        {/* 4. Semantic Surface Typography Overlay (Tactile Keepsake Artifact) */}
         <div
           aria-hidden="true"
           className="absolute inset-0 z-10 flex flex-col items-center justify-center pointer-events-none px-4 text-center"
         >
           <div
-            className="px-4 py-1 rounded-full flex flex-col items-center justify-center transition-all duration-300"
+            className="px-4 py-1.5 rounded-full flex flex-col items-center justify-center transition-all duration-500 ease-out"
             style={{
-              background: "rgba(12, 2, 8, 0.82)",
-              backdropFilter: "blur(6px)",
+              background: config.pillBg || "rgba(12, 2, 8, 0.85)",
+              backdropFilter: "blur(8px)",
               border: `1px solid ${config.borderColor}`,
               boxShadow: isHovered
-                ? `0 4px 16px rgba(0, 0, 0, 0.7), 0 0 12px ${config.glowColor}`
+                ? `0 4px 18px rgba(0, 0, 0, 0.75), 0 0 14px ${config.glowColor}`
                 : "0 2px 10px rgba(0, 0, 0, 0.6)",
             }}
           >
             <span
-              className={`font-semibold tracking-[0.22em] indent-[0.22em] uppercase transition-all duration-300 ${sizeStyles.fontSize}`}
+              className={`font-semibold tracking-[0.24em] indent-[0.24em] uppercase transition-all duration-300 ${sizeStyles.fontSize}`}
               style={{
                 color: config.textColor,
                 textShadow: isHovered
-                  ? "0 0 12px rgba(255, 180, 215, 0.9)"
-                  : "0 0 8px rgba(255, 150, 195, 0.6)",
+                  ? `0 0 12px ${config.textColor}, 0 0 18px ${config.glowColor}`
+                  : `0 0 8px ${config.glowColor}`,
               }}
             >
               {label}
             </span>
             {sublabel && (
               <span
-                className="text-[9px] tracking-wider uppercase opacity-80"
-                style={{ color: config.textColor }}
+                className="text-[9px] tracking-widest uppercase font-medium mt-0.5 transition-colors duration-300"
+                style={{ color: config.subtextColor || config.textColor }}
               >
                 {sublabel}
               </span>
