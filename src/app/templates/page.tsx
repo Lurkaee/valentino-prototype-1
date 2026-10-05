@@ -12,6 +12,7 @@ import { ValentinePlasmaButton, type ValentinePlasmaTheme } from "@/components/u
 import { getAllTemplates, ROADMAP_WORLDS, RoadmapWorld } from "@/templates/registry";
 import { CapabilityChip, CapabilityKey } from "@/components/ui/CapabilityChip";
 import { AtmosphericCanvas } from "@/worlds/AtmosphericCanvas";
+import { ValentinoAtmosphere } from "@/components/ui/ValentinoAtmosphere";
 import { useDeviceTier } from "@/worlds/useDeviceTier";
 import { WorldTheme } from "@/worlds/types";
 
@@ -307,28 +308,17 @@ export default function TemplatesPage() {
   }, [handleKeyDown]);
 
   return (
-    <main className="relative min-h-[100dvh] flex flex-col items-center justify-start bg-[#0A070B] text-[#FAF8F5] overflow-x-hidden selection:bg-rose-500/25 font-ui">
+    <main className="relative min-h-[100dvh] flex flex-col items-center justify-start bg-transparent text-[#FAF8F5] overflow-x-hidden selection:bg-rose-500/25 font-ui">
       {/* ========================================================================= */}
       {/* 0. DYNAMIC ENVIRONMENTAL ATMOSPHERE (Smooth World Dimension Crossfade)   */}
       {/* ========================================================================= */}
-      <div className="fixed inset-0 pointer-events-none z-world-bg transition-opacity duration-1000 overflow-hidden">
-        {/* Environmental Horizon Radial Glow */}
-        <div
-          className="absolute inset-0 transition-all duration-1000"
-          style={{
-            background:
-              activeWorldId === "cloud-nine"
-                ? "radial-gradient(ellipse 90% 70% at 50% 15%, rgba(244, 114, 182, 0.16) 0%, rgba(251, 146, 60, 0.08) 45%, rgba(10, 7, 11, 0.95) 100%)"
-                : activeWorldId === "midnight-rose"
-                ? "radial-gradient(ellipse 90% 70% at 50% 15%, rgba(225, 29, 72, 0.18) 0%, rgba(147, 51, 234, 0.08) 45%, rgba(10, 7, 11, 0.95) 100%)"
-                : activeWorldId === "kage"
-                ? "radial-gradient(ellipse 90% 70% at 50% 15%, rgba(16, 185, 129, 0.16) 0%, rgba(224, 35, 28, 0.08) 45%, rgba(10, 7, 11, 0.95) 100%)"
-                : activeWorldId === "apricot-film"
-                ? "radial-gradient(ellipse 90% 70% at 50% 15%, rgba(244, 162, 97, 0.18) 0%, rgba(231, 111, 81, 0.1) 45%, rgba(10, 7, 11, 0.95) 100%)"
-                : activeWorldId === "wildflower-paper"
-                ? "radial-gradient(ellipse 90% 70% at 50% 15%, rgba(192, 132, 252, 0.16) 0%, rgba(163, 184, 153, 0.1) 45%, rgba(10, 7, 11, 0.95) 100%)"
-                : "radial-gradient(ellipse 90% 70% at 50% 15%, rgba(56, 189, 248, 0.18) 0%, rgba(14, 116, 144, 0.08) 45%, rgba(10, 7, 11, 0.95) 100%)",
-          }}
+      <div className="fixed inset-0 pointer-events-none z-world-bg overflow-hidden">
+        <ValentinoAtmosphere
+          key={activeWorldId}
+          context="world"
+          world={activeWorldId}
+          intensity="cinema"
+          scrollReactive={true}
         />
       </div>
 
@@ -339,14 +329,14 @@ export default function TemplatesPage() {
           theme={activeWorldId}
           tier={tier}
           isReducedMotion={Boolean(isReducedMotion || shouldReduceMotion)}
-          className="opacity-70"
+          className="opacity-60"
         />
       </div>
 
       {/* ========================================================================= */}
       {/* 1. Header (Valentino Luxury Monogram Shell)                               */}
       {/* ========================================================================= */}
-      <header className="w-full max-w-6xl mx-auto px-4 sm:px-6 py-5 flex items-center justify-between relative z-floating-ui">
+      <header className="w-full max-w-6xl mx-auto px-4 sm:px-6 py-4 sm:py-5 flex items-center justify-between relative z-floating-ui">
         <CurtainLink href="/" className="flex items-center gap-2 group">
           <ValentinoMonogram size={30} className="transition-transform group-hover:scale-105 duration-300 text-ivory-100" />
           <span className="text-base sm:text-lg font-serif font-medium tracking-wider text-white">
@@ -361,46 +351,45 @@ export default function TemplatesPage() {
       </header>
 
       {/* ========================================================================= */}
-      {/* 2. Showroom Hero & Human Atmosphere Framing                               */}
+      {/* 2. SHOWROOM STAGE: BEGINS NATURALLY BENEATH NAVIGATION                    */}
+      {/* Seamless flow without empty bands, black bands, or accidental seams       */}
       {/* ========================================================================= */}
-      <section className="w-full max-w-5xl mx-auto px-4 sm:px-6 pt-2 sm:pt-6 pb-6 sm:pb-8 text-center relative z-content">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/[0.03] mb-3">
-          <span className="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse" />
-          <span className="text-[11px] uppercase tracking-widest text-ivory-300 font-medium">
-            The Collection · Visual Worlds
-          </span>
+      <section id="showroom-stage" className="w-full max-w-5xl mx-auto px-4 sm:px-6 pt-2 pb-14 relative z-content">
+        {/* Editorial Introduction */}
+        <div className="text-center mb-6 space-y-2">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/[0.04] backdrop-blur-sm mb-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-rose-400 animate-pulse" />
+            <span className="text-[11px] uppercase tracking-widest text-ivory-200 font-medium">
+              The Collection · Six Living Worlds
+            </span>
+          </div>
+
+          <h1 className="text-3xl sm:text-5xl font-serif font-normal text-white tracking-tight">
+            Choose Your Atmosphere
+          </h1>
+          <p className="text-xs sm:text-base text-ivory-200/80 font-light max-w-xl mx-auto leading-relaxed">
+            Every love story lives in its own climate. Step inside living worlds of mood, atmosphere, and intimate depth before you compose a single word.
+          </p>
+
+          {/* Curator Plasma Feature */}
+          <div className="pt-2 flex flex-col items-center justify-center">
+            <ValentinePlasmaButton
+              theme={currentPlasmaTheme}
+              label="SURPRISE ME"
+              sublabel="Spark a Match"
+              size="sm"
+              onClick={handleSurpriseMe}
+            />
+            {surpriseMatch && (
+              <p className="mt-2 text-xs font-mono text-rose-300 animate-fade-in bg-rose-950/40 border border-rose-500/30 px-3 py-1 rounded-full">
+                Matched with {WORLD_PROFILES[surpriseMatch as WorldTheme]?.name} ✨
+              </p>
+            )}
+          </div>
         </div>
 
-        <h1 className="text-3xl sm:text-5xl font-serif font-normal text-white mb-2 tracking-tight">
-          Choose Your Atmosphere
-        </h1>
-        <p className="text-xs sm:text-base text-ivory-300/85 font-light max-w-xl mx-auto leading-relaxed">
-          Every love story lives in its own climate. Step inside living worlds of mood, atmosphere, and intimate depth before you compose a single word.
-        </p>
-
-        {/* Curator Plasma Feature */}
-        <div className="pt-4 sm:pt-5 flex flex-col items-center justify-center">
-          <ValentinePlasmaButton
-            theme={currentPlasmaTheme}
-            label="SURPRISE ME"
-            sublabel="Spark a Match"
-            size="md"
-            onClick={handleSurpriseMe}
-          />
-          {surpriseMatch && (
-            <p className="mt-2.5 text-xs font-mono text-rose-300 animate-fade-in bg-rose-950/40 border border-rose-500/30 px-3 py-1 rounded-full">
-              Matched with {WORLD_PROFILES[surpriseMatch as WorldTheme]?.name} ✨
-            </p>
-          )}
-        </div>
-      </section>
-
-      {/* ========================================================================= */}
-      {/* 3. SHOWROOM STAGE: ONE WORLD VISUALLY DOMINATES (Living Dynamic Scene)    */}
-      {/* ========================================================================= */}
-      <section id="showroom-stage" className="w-full max-w-5xl mx-auto px-4 sm:px-6 pb-14 relative z-content">
         {/* World Switching Navigation Bar */}
-        <div className="mb-5 flex flex-col sm:flex-row items-center justify-between gap-3 border-b border-white/[0.08] pb-3">
+        <div className="mb-5 flex flex-col sm:flex-row items-center justify-between gap-3 border-b border-white/[0.06] pb-3">
           <div className="flex items-center gap-3">
             <span className="text-xs uppercase tracking-[0.2em] text-ivory-400 font-medium">
               World Showroom
@@ -411,7 +400,7 @@ export default function TemplatesPage() {
           </div>
 
           {/* Dimension Selector Tabs: All 6 Worlds */}
-          <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-white/[0.04] border border-white/[0.08] backdrop-blur-md overflow-x-auto max-w-full">
+          <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-white/[0.03] border border-white/[0.08] backdrop-blur-md overflow-x-auto max-w-full">
             {(
               [
                 "cloud-nine",

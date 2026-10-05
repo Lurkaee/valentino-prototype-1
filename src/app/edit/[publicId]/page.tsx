@@ -23,6 +23,7 @@ import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import { Badge } from "@/components/ui/Badge";
 import { AtmosphericGlow } from "@/components/ui/AtmosphericGlow";
+import { ValentinoAtmosphere } from "@/components/ui/ValentinoAtmosphere";
 import { StudioHeader, SaveStatus } from "@/components/studio/StudioHeader";
 import { StudioStageStepper, StudioStageId } from "@/components/studio/StudioStageStepper";
 import { StoryChaptersVisualizer } from "@/components/studio/StoryChaptersVisualizer";
@@ -545,11 +546,11 @@ function EditExperienceContent() {
   }
 
   return (
-    <div className="min-h-[100dvh] flex flex-col bg-[#08070B] text-[#FAF8F5] font-ui antialiased">
+    <div className="min-h-[100dvh] flex flex-col bg-[#08060B] text-[#FAF8F5] font-ui antialiased">
       {/* 1. Mandatory Owner Reminder Banner */}
       <div
         data-testid="browser-storage-reminder"
-        className="bg-[#120F18] border-b border-white/[0.08] px-4 py-2 text-center text-xs text-white/75 font-ui flex items-center justify-center gap-2 select-none"
+        className="bg-rose-950/20 backdrop-blur-md border-b border-rose-500/10 px-4 py-2 text-center text-xs text-rose-200/80 font-ui flex items-center justify-center gap-2 select-none"
       >
         <span>💌</span>
         <span>
@@ -597,12 +598,18 @@ function EditExperienceContent() {
 
         {/* Center Workspace: Live Recipient Experience Canvas (Visually Dominant!) */}
         <div
-          className={`flex-1 min-w-0 bg-[#070609] overflow-y-auto flex flex-col items-center justify-start p-4 lg:p-8 relative ${
+          className={`flex-1 min-w-0 bg-[#060509]/80 backdrop-blur-md overflow-y-auto flex flex-col items-center justify-start p-4 lg:p-8 relative ${
             mobileTab === "form" ? "hidden lg:flex" : "flex"
           }`}
         >
-          {/* Ambient atmosphere glow */}
-          <div className="pointer-events-none absolute inset-0 bg-radial-gradient from-white/[0.04] via-transparent to-transparent opacity-80 blur-3xl" />
+          {/* Subtle atmosphere behind the studio workspace */}
+          <ValentinoAtmosphere
+            context="studio"
+            world={templateMeta.id}
+            intensity="subtle"
+            scrollReactive={true}
+          />
+          <div className="pointer-events-none absolute inset-0 bg-radial-gradient from-rose-500/[0.03] via-transparent to-transparent opacity-60 blur-3xl" />
 
           {/* Floating Canvas Top Toolbar (Desktop Device Mode Switcher) */}
           <div className="hidden lg:flex items-center justify-between w-full max-w-[480px] mb-4 px-2 text-xs font-ui">
@@ -629,7 +636,7 @@ function EditExperienceContent() {
                 : previewDeviceMode === "expanded"
                 ? "max-w-[760px]"
                 : "max-w-[400px] sm:max-w-[440px]"
-            } rounded-[38px] p-2.5 sm:p-3.5 bg-gradient-to-b from-white/[0.12] via-white/[0.05] to-black/80 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.95)] border border-white/[0.1]`}
+            } rounded-[38px] p-2.5 sm:p-3.5 bg-gradient-to-b from-white/[0.08] via-white/[0.03] to-black/90 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.95)] border border-white/[0.07]`}
           >
             <div className="rounded-[30px] overflow-hidden bg-[#0A090C] border border-black/80 flex flex-col min-h-[580px] max-h-[820px] shadow-inner relative">
               {/* Minimal Device Top Bar */}
@@ -660,7 +667,7 @@ function EditExperienceContent() {
         {!isFocusMode && (
           <div
             id="studio-inspector-pane"
-            className={`w-full lg:w-[440px] xl:w-[480px] shrink-0 border-t lg:border-t-0 lg:border-l border-white/[0.08] bg-[#0C0A10] overflow-y-auto ${
+            className={`w-full lg:w-[440px] xl:w-[480px] shrink-0 border-t lg:border-t-0 lg:border-l border-white/[0.06] bg-[#0A080E]/95 backdrop-blur-xl overflow-y-auto ${
               mobileTab === "preview" ? "hidden lg:flex" : "flex flex-col"
             }`}
           >

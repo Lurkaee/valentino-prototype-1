@@ -3,7 +3,7 @@ import path from "path";
 import fs from "fs";
 
 const APP_URL = process.env.APP_URL || "http://localhost:3000";
-const QA_DIR = "C:/Users/AYUSH/.gemini/antigravity-ide/brain/f19e21a1-b911-490d-bfe6-c2b8a1fe3235/visual_qa";
+const QA_DIR = "C:/Users/AYUSH/.gemini/antigravity-ide/brain/8ae042ef-4859-4868-a996-26a0d835f39d/visual_qa";
 
 test.describe("Phase 6 UI/UX Renaissance Comprehensive Visual QA", () => {
   test.beforeAll(async () => {
@@ -39,11 +39,12 @@ test.describe("Phase 6 UI/UX Renaissance Comprehensive Visual QA", () => {
         fullPage: false,
       });
 
-      // Homepage Mid-Scroll (Personalize / Story & Moments)
+      // Homepage Mid-Scroll (Personalize / Little Things assembly scene)
       const midEl = page.locator("#personalize");
       if (await midEl.isVisible()) {
         await midEl.scrollIntoViewIfNeeded();
-        await page.waitForTimeout(500);
+        await page.evaluate(() => window.scrollBy(0, 350));
+        await page.waitForTimeout(600);
         await page.screenshot({
           path: path.join(QA_DIR, `02_homepage_mid_scroll_${vp.name}.png`),
           fullPage: false,
