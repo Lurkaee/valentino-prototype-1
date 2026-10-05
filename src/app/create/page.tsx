@@ -94,7 +94,8 @@ function CreateExperienceContent() {
         context="create"
         world={templateId}
         intensity="soft"
-        scrollReactive={false}
+        scrollReactive
+        position="fixed"
       />
 
       <div className="max-w-md w-full p-8 sm:p-10 rounded-3xl bg-black/40 backdrop-blur-xl relative z-10 space-y-6">
