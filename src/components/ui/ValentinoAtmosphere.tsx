@@ -14,6 +14,7 @@ export interface ValentinoAtmosphereProps {
   world?: WorldTheme | string;
   intensity?: AtmosphereIntensity;
   scrollReactive?: boolean;
+  position?: "absolute" | "fixed";
 }
 
 interface WorldAtmosphereConfig {
@@ -157,6 +158,7 @@ const WORLD_CONFIGS: Record<string, WorldAtmosphereConfig> = {
  * - Visibility & reduced-motion aware
  * - Zero duplicated rAF loops (connects to central Motion / GSAP springs)
  * - Pure pointer-events: none layer
+ * - Optional fixed positioning keeps the atmosphere alive while the page scrolls
  */
 export function ValentinoAtmosphere({
   className = "",
@@ -164,6 +166,7 @@ export function ValentinoAtmosphere({
   world = "cloud-nine",
   intensity,
   scrollReactive = true,
+  position = "absolute",
 }: ValentinoAtmosphereProps) {
   const shouldReduceMotion = useReducedMotion();
   const id = useId();
@@ -227,7 +230,7 @@ export function ValentinoAtmosphere({
       data-context={context}
       data-world={world}
       data-intensity={resolvedIntensity}
-      className={`absolute inset-0 overflow-hidden pointer-events-none select-none z-0 ${className}`}
+      className={`${position} inset-0 overflow-hidden pointer-events-none select-none z-0 ${className}`}
       aria-hidden="true"
     >
       {/* LAYER 0: Base Radiant Sky Wash */}
