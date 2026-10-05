@@ -313,6 +313,15 @@ export default function TemplatesPage() {
       {/* 0. DYNAMIC ENVIRONMENTAL ATMOSPHERE (Smooth World Dimension Crossfade)   */}
       {/* ========================================================================= */}
       <div className="fixed inset-0 pointer-events-none z-world-bg overflow-hidden">
+        {/* A faint shared cloud memory keeps every world connected to Valentino's core sky. */}
+        <ValentinoAtmosphere
+          context="marketing"
+          world="cloud-nine"
+          intensity="subtle"
+          scrollReactive
+          position="fixed"
+          className="opacity-70"
+        />
         <ValentinoAtmosphere
           key={activeWorldId}
           context="world"
@@ -390,7 +399,7 @@ export default function TemplatesPage() {
       {/* ========================================================================= */}
       <section id="showroom-stage" className="w-full max-w-5xl mx-auto px-4 sm:px-6 pb-14 relative z-content">
         {/* World Switching Navigation Bar */}
-        <div className="mb-5 flex flex-col sm:flex-row items-center justify-between gap-3 border-b border-white/[0.08] pb-3">
+        <div className="mb-5 flex flex-col sm:flex-row items-center justify-between gap-3 pb-3">
           <div className="flex items-center gap-3">
             <span className="text-xs uppercase tracking-[0.2em] text-ivory-400 font-medium">
               World Showroom
@@ -448,7 +457,7 @@ export default function TemplatesPage() {
             <Card
               id={`template-${activeWorldId}`}
               variant="glass"
-              className={`p-5 sm:p-9 ${currentProfile.surfaceBorder} shadow-2xl relative overflow-hidden transition-all duration-700 ${currentProfile.surfaceBg}`}
+              className={`p-5 sm:p-9 border-0 shadow-2xl relative overflow-hidden transition-all duration-700 ${currentProfile.surfaceBg}`}
             >
               {/* Dynamic Atmospheric Radiance Blur */}
               <div
