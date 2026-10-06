@@ -37,7 +37,19 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
   externalActiveMoment,
 }) => {
   const [activeMoment, setActiveMoment] = useState<ActiveMoment>(null);
-  const [isLibraryOpen, setIsLibraryOpen] = useState(true);
+  const [isLibraryOpen, setIsLibraryOpen] = useState(false);
+
+  // Keyboard accessibility: Escape key to close moment library drawer
+  useEffect(() => {
+    if (!isLibraryOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setIsLibraryOpen(false);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isLibraryOpen]);
 
   useEffect(() => {
     if (externalActiveMoment) {
@@ -119,6 +131,7 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
     } else if (activeMoment === key) {
       setActiveMoment(null);
     }
+    setIsLibraryOpen(false);
   };
 
   return (
@@ -156,26 +169,36 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
         </div>
       </div>
 
-      {/* Editorial Empty State (Inviting, warm, non-broken) */}
+      {/* Primary Empty State */}
       {!anyEnabled && (
-        <div className="p-6 rounded-2xl bg-white/[0.02] border border-dashed border-white/[0.12] text-center space-y-3">
-          <div className="w-10 h-10 mx-auto rounded-full bg-white/[0.05] border border-white/[0.1] flex items-center justify-center text-lg select-none">
-            📖
+        <div className="space-y-2 py-1">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-serif uppercase tracking-wider text-white/70">
+              Your Moments
+            </span>
+            <span className="text-[10px] font-mono text-white/40">
+              0 Active
+            </span>
           </div>
-          <div className="space-y-1">
-            <h3 className="text-sm font-display font-medium text-white">
-              Your story is still blank.
-            </h3>
-            <p className="text-xs text-white/60 font-ui font-light max-w-sm mx-auto">
-              Add the first little moment to make this an unforgettable interactive experience.
-            </p>
+          <p className="text-xs font-serif italic text-white/40">
+            No moments yet
+          </p>
+          <div className="pt-1">
+            <button
+              type="button"
+              data-testid="add-moment-trigger"
+              onClick={() => setIsLibraryOpen(true)}
+              className="text-xs font-serif italic text-white/80 hover:text-white flex items-center gap-1.5 transition-colors cursor-pointer py-1"
+            >
+              <span>+ Add a moment</span>
+            </button>
           </div>
         </div>
       )}
 
       {/* Selected Moments: Progressive Disclosure */}
       {anyEnabled && (
-        <div className="space-y-2">
+        <div className="space-y-2 py-1">
           <div className="flex items-center justify-between">
             <span className="text-xs font-serif uppercase tracking-wider text-white/70">
               Your Moments
@@ -219,38 +242,58 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
             ))}
           </div>
 
-          <div className="pt-1 flex items-center justify-between">
+          <div className="pt-1">
             <button
               type="button"
               data-testid="add-moment-trigger"
-              onClick={() => setIsLibraryOpen(!isLibraryOpen)}
-              className="text-xs font-serif italic text-white/70 hover:text-white flex items-center gap-1.5 transition-colors cursor-pointer py-1"
+              onClick={() => setIsLibraryOpen(true)}
+              className="text-xs font-serif italic text-white/80 hover:text-white flex items-center gap-1.5 transition-colors cursor-pointer py-1"
             >
-              <span>{isLibraryOpen ? "▾ Hide Moment Library" : "+ Add a moment to your story"}</span>
+              <span>+ Add a moment</span>
             </button>
           </div>
         </div>
       )}
 
-      {/* Available Moment Library Grid */}
-      {(!anyEnabled || isLibraryOpen || Boolean(externalActiveMoment)) && (
-        <div className="space-y-2.5 pt-1 animate-fadeIn p-3 rounded-2xl bg-white/[0.02] border border-white/[0.06]">
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-mono uppercase tracking-wider text-white/50">
-              {anyEnabled ? "Browse Available Moments" : "Choose a Moment to Add"}
-            </span>
-            {anyEnabled && (
+      {/* On-Demand Available Moment Library Overlay / Drawer */}
+      {isLibraryOpen && (
+        <div
+          data-testid="moment-library-overlay"
+          className="fixed inset-0 z-50 flex justify-end bg-black/80 backdrop-blur-sm animate-fadeIn"
+          role="dialog"
+          aria-modal="true"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setIsLibraryOpen(false);
+          }}
+        >
+          <div className="w-full sm:max-w-xl md:max-w-2xl h-full bg-[#0E0C12] border-l border-white/10 shadow-2xl flex flex-col text-white overflow-hidden animate-slideLeft">
+            {/* Drawer Header */}
+            <div className="px-5 sm:px-7 py-5 border-b border-white/10 flex items-center justify-between shrink-0 bg-[#131118]">
+              <div className="space-y-1 min-w-0">
+                <div className="flex items-center gap-2">
+                  <span className="text-base select-none">✨</span>
+                  <h2 className="text-base sm:text-lg font-serif font-medium text-white tracking-wide">
+                    Add a Moment
+                  </h2>
+                </div>
+                <p className="text-xs text-white/60 font-ui font-light">
+                  Choose an interactive keepsake to compose into your story.
+                </p>
+              </div>
               <button
                 type="button"
+                data-testid="close-moment-library"
                 onClick={() => setIsLibraryOpen(false)}
-                className="text-[10px] font-mono text-white/40 hover:text-white cursor-pointer"
+                className="w-9 h-9 rounded-full bg-white/[0.05] hover:bg-white/[0.12] border border-white/10 flex items-center justify-center text-white/70 hover:text-white transition-colors text-sm shrink-0 cursor-pointer"
+                aria-label="Close moment library"
               >
-                Done ✕
+                ✕
               </button>
-            )}
-          </div>
+            </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+            {/* Scrollable Content Body */}
+            <div className="flex-1 overflow-y-auto px-5 sm:px-7 py-6 space-y-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           {/* 1. Timeline */}
           <button
             type="button"
@@ -854,7 +897,23 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
               <span className="text-[10px] text-white/50 font-ui truncate block">Grand declaration</span>
             </div>
           </button>
-        </div>
+              </div>
+            </div>
+
+            {/* Drawer Footer */}
+            <div className="px-5 sm:px-7 py-4 border-t border-white/10 bg-[#110F16] flex items-center justify-between shrink-0">
+              <span className="text-xs text-white/40 font-mono">
+                {activeCount} active moment{activeCount === 1 ? "" : "s"}
+              </span>
+              <button
+                type="button"
+                onClick={() => setIsLibraryOpen(false)}
+                className="px-5 py-2 rounded-full text-xs font-serif italic bg-white text-black hover:bg-white/90 transition-colors cursor-pointer"
+              >
+                Done
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
