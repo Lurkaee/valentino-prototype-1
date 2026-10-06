@@ -88,7 +88,11 @@ test.describe("Gate 4C: Experience Studio 2.0 (Creative Builder Renaissance)", (
     const moduleManager = page.locator('[data-testid="experience-module-manager"]');
     await expect(moduleManager).toBeVisible();
 
-    // Enable Timeline moment
+    // Enable Timeline moment via On-Demand Library
+    const addMomentBtn = page.locator('[data-testid="add-moment-trigger"]');
+    if (await addMomentBtn.isVisible()) {
+      await addMomentBtn.click();
+    }
     const timelineBtn = page.locator('[data-testid="toggle-module-timeline"]');
     await timelineBtn.click();
     const timelineEditor = page.locator('[data-testid="timeline-module-editor"]');
@@ -98,7 +102,10 @@ test.describe("Gate 4C: Experience Studio 2.0 (Creative Builder Renaissance)", (
     await timelineTitleInput.fill("Our Sacred Milestones");
     await timelineTitleInput.blur();
 
-    // Enable Secret Note moment
+    // Enable Secret Note moment via On-Demand Library
+    if (await addMomentBtn.isVisible()) {
+      await addMomentBtn.click();
+    }
     const secretBtn = page.locator('[data-testid="toggle-module-secret"]');
     await secretBtn.click();
     const secretEditor = page.locator('[data-testid="secret-module-editor"]');

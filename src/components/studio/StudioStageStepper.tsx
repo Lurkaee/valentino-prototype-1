@@ -8,8 +8,7 @@ export type StudioStageId =
   | "moments"
   | "personalize"
   | "mood"
-  | "preview"
-  | "send";
+  | "preview";
 
 export interface StudioStage {
   id: StudioStageId;
@@ -24,58 +23,50 @@ export const STUDIO_STAGES: StudioStage[] = [
   {
     id: "world",
     stepNumber: "01",
-    label: "World",
-    shortLabel: "World",
+    label: "Visual World",
+    shortLabel: "WORLD",
     icon: "🌐",
-    description: "Choose visual world",
+    description: "Atmosphere they step into",
   },
   {
     id: "story",
     stepNumber: "02",
-    label: "Story",
-    shortLabel: "Story",
+    label: "Story Chapters",
+    shortLabel: "STORY",
     icon: "📖",
-    description: "7-Chapter narrative",
+    description: "Narrative journey & pacing",
   },
   {
     id: "moments",
     stepNumber: "03",
-    label: "Moments",
-    shortLabel: "Moments",
+    label: "Interactive Moments",
+    shortLabel: "MOMENTS",
     icon: "✨",
-    description: "Interactive moments",
+    description: "Discovered surprises",
   },
   {
     id: "personalize",
     stepNumber: "04",
-    label: "Personalize",
-    shortLabel: "Personal",
+    label: "Personalize & Love Letter",
+    shortLabel: "LETTER",
     icon: "💌",
-    description: "Letter & names",
+    description: "Core words & dedication",
   },
   {
     id: "mood",
     stepNumber: "05",
-    label: "Mood & Decor",
-    shortLabel: "Decor",
+    label: "Mood & Physical Styling",
+    shortLabel: "STYLE",
     icon: "🎨",
-    description: "Physical styling",
+    description: "Stationery, seals & blooms",
   },
   {
     id: "preview",
     stepNumber: "06",
-    label: "Preview",
-    shortLabel: "Preview",
-    icon: "👁️",
-    description: "Recipient canvas",
-  },
-  {
-    id: "send",
-    stepNumber: "07",
-    label: "Seal & Send",
-    shortLabel: "Send",
-    icon: "🚀",
-    description: "Ready to gift",
+    label: "Preview & Send",
+    shortLabel: "PREVIEW",
+    icon: "💌",
+    description: "Experience verification & delivery",
   },
 ];
 
@@ -83,6 +74,7 @@ interface StudioStageStepperProps {
   activeStage: StudioStageId;
   onSelectStage: (stage: StudioStageId) => void;
   completedStages?: Record<StudioStageId, boolean>;
+  worldId?: string;
   className?: string;
 }
 
@@ -90,15 +82,61 @@ export const StudioStageStepper: React.FC<StudioStageStepperProps> = ({
   activeStage,
   onSelectStage,
   completedStages = {} as Record<StudioStageId, boolean>,
+  worldId = "midnight-rose",
   className = "",
 }) => {
+  // World-derived accent lighting tokens
+  const getAccentTokens = (id: string) => {
+    switch (id) {
+      case "cloud-nine":
+        return {
+          text: "text-amber-200",
+          bar: "bg-amber-300",
+          glow: "shadow-[0_0_8px_rgba(252,211,77,0.4)]",
+        };
+      case "kage":
+        return {
+          text: "text-purple-300",
+          bar: "bg-purple-400",
+          glow: "shadow-[0_0_8px_rgba(167,139,250,0.4)]",
+        };
+      case "apricot-film":
+        return {
+          text: "text-amber-300",
+          bar: "bg-amber-500",
+          glow: "shadow-[0_0_8px_rgba(245,158,11,0.4)]",
+        };
+      case "wildflower-paper":
+        return {
+          text: "text-emerald-300",
+          bar: "bg-emerald-400",
+          glow: "shadow-[0_0_8px_rgba(52,211,153,0.4)]",
+        };
+      case "ocean-letter":
+        return {
+          text: "text-sky-300",
+          bar: "bg-sky-400",
+          glow: "shadow-[0_0_8px_rgba(56,189,248,0.4)]",
+        };
+      case "midnight-rose":
+      default:
+        return {
+          text: "text-rose-300",
+          bar: "bg-rose-500",
+          glow: "shadow-[0_0_8px_rgba(244,63,94,0.4)]",
+        };
+    }
+  };
+
+  const accents = getAccentTokens(worldId);
+
   return (
     <nav
       data-testid="studio-stage-stepper"
       aria-label="Studio creation stages"
-      className={`bg-[#0A090C] border-white/[0.08] select-none flex flex-row lg:flex-col overflow-x-auto lg:overflow-y-auto scrollbar-none border-b lg:border-b-0 lg:border-r lg:w-[68px] lg:py-3 lg:px-1.5 px-3 py-2 shrink-0 ${className}`}
+      className={`border-b border-white/[0.04] bg-[#0E0C12]/95 backdrop-blur-md select-none px-4 sm:px-6 py-2 overflow-x-auto scrollbar-none shrink-0 ${className}`}
     >
-      <div className="flex flex-row lg:flex-col items-center gap-1.5 min-w-max lg:min-w-0 w-full">
+      <div className="flex items-center justify-between gap-3 sm:gap-5 min-w-max mx-auto max-w-xl">
         {STUDIO_STAGES.map((stage) => {
           const isActive = activeStage === stage.id;
           const isComplete = completedStages[stage.id];
@@ -109,22 +147,35 @@ export const StudioStageStepper: React.FC<StudioStageStepperProps> = ({
               type="button"
               data-testid={`stage-tab-${stage.id}`}
               onClick={() => onSelectStage(stage.id)}
-              className={`group relative rounded-xl text-xs font-ui transition-all flex flex-row lg:flex-col items-center justify-center gap-1.5 lg:gap-1 cursor-pointer px-2.5 py-1.5 lg:px-1 lg:py-2.5 lg:w-full select-none ${
-                isActive
-                  ? "bg-rose-500/20 border border-rose-500/40 text-white shadow-xs font-medium"
-                  : "text-white/60 hover:text-white hover:bg-white/[0.06] border border-transparent"
+              className={`group relative py-1.5 px-1.5 sm:px-2 flex items-center gap-1.5 transition-all cursor-pointer select-none ${
+                isActive ? "text-white" : "text-white/35 hover:text-white/70"
               }`}
               title={`${stage.stepNumber} · ${stage.label}: ${stage.description}`}
             >
-              <span className="text-base select-none shrink-0">{stage.icon}</span>
-              <span className="text-[10px] tracking-tight font-medium leading-none whitespace-nowrap">
+              <span
+                className={`text-[10px] font-mono tracking-wider transition-colors ${
+                  isActive ? accents.text : "text-white/25 group-hover:text-white/45"
+                }`}
+              >
+                {stage.stepNumber}
+              </span>
+              <span
+                className={`text-[11px] font-serif tracking-widest uppercase transition-colors ${
+                  isActive
+                    ? "text-white font-medium drop-shadow-[0_0_10px_rgba(255,255,255,0.25)]"
+                    : "font-normal"
+                }`}
+              >
                 {stage.shortLabel}
               </span>
               {isComplete && !isActive && (
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0 lg:absolute lg:top-1.5 lg:right-1.5" title="Completed" />
+                <span className="w-1 h-1 rounded-full bg-emerald-400/60 shrink-0" title="Completed" />
               )}
+              {/* Active stage micro accent line */}
               {isActive && (
-                <span className="w-1.5 h-1.5 lg:w-3 lg:h-0.5 rounded-full bg-rose-400 shrink-0 lg:absolute lg:bottom-1 animate-pulse" />
+                <span
+                  className={`absolute -bottom-2 left-1.5 right-1.5 h-[1.5px] rounded-full ${accents.bar} ${accents.glow} transition-all duration-300`}
+                />
               )}
             </button>
           );
