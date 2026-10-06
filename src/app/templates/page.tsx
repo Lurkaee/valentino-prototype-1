@@ -393,20 +393,20 @@ export default function TemplatesPage() {
         </div>
 
         {/* ======================================================================= */}
-        {/* 3. TACTILE KEEPSAKE CONSTELLATION NAVIGATION (Zero SaaS Tabs)            */}
+        {/* 3. TACTILE KEEPSAKE CONSTELLATION NAVIGATION (Zero Enclosing Box)        */}
         {/* ======================================================================= */}
-        <div className="w-full max-w-4xl mx-auto mb-12">
-          <div className="text-center mb-3">
+        <div className="w-full max-w-5xl mx-auto mb-12">
+          <div className="text-center mb-4">
             <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-rose-200/80 font-medium">
-              World Showroom · Select a Living Atmosphere
+              World Showroom · Six Living Atmospheres
             </span>
           </div>
 
-          {/* Scattered Keepsake Tokens */}
+          {/* Freely Breathing Keepsake Tokens (Spatial Constellation) */}
           <div
             role="tablist"
             aria-label="Living Worlds Selection"
-            className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 p-2 sm:p-3 rounded-3xl bg-black/20 border border-white/[0.08] backdrop-blur-md shadow-2xl"
+            className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 py-2"
           >
             {ORDERED_WORLD_KEYS.map((worldKey) => {
               const isActive = activeWorldId === worldKey;
@@ -423,10 +423,10 @@ export default function TemplatesPage() {
                     setActiveWorldId(worldKey);
                     setActiveKagePreview(false);
                   }}
-                  className={`group relative flex flex-col items-center justify-between p-3.5 rounded-2xl transition-all duration-300 cursor-pointer text-center focus:outline-none focus:ring-2 focus:ring-rose-400/50 ${
+                  className={`group relative flex flex-col items-center justify-between p-3.5 sm:p-4 rounded-2xl transition-all duration-300 cursor-pointer text-center focus:outline-none focus:ring-2 focus:ring-rose-400/50 ${
                     isActive
-                      ? "bg-white/[0.14] border border-white/35 shadow-[0_8px_24px_-4px_rgba(0,0,0,0.5)] -translate-y-1 scale-[1.02]"
-                      : "bg-white/[0.03] border border-white/[0.08] hover:bg-white/[0.08] hover:border-white/20 hover:-translate-y-0.5"
+                      ? "bg-white/[0.14] backdrop-blur-md border border-white/40 shadow-[0_12px_32px_-4px_rgba(0,0,0,0.6)] -translate-y-1.5 scale-[1.03]"
+                      : "bg-white/[0.04] backdrop-blur-sm border border-white/[0.08] hover:bg-white/[0.09] hover:border-white/25 hover:-translate-y-1 hover:shadow-lg"
                   }`}
                 >
                   {/* Subtle active glow halo */}
@@ -437,7 +437,7 @@ export default function TemplatesPage() {
                     />
                   )}
 
-                  <span className="text-2xl select-none mb-1 transition-transform group-hover:scale-110 duration-300">
+                  <span className="text-2xl select-none mb-1.5 transition-transform group-hover:scale-110 duration-300">
                     {profile.artifactIcon}
                   </span>
                   <span
@@ -971,56 +971,58 @@ export default function TemplatesPage() {
       </section>
 
       {/* ========================================================================= */}
-      {/* 5. ORGANIC GALLERY: DISCOVER COMPLEMENTARY ATMOSPHERES                     */}
+      {/* 5. CONTINUOUS CONSTELLATION: COMPLEMENTARY ATMOSPHERES                     */}
       {/* ========================================================================= */}
-      <section className="w-full max-w-6xl mx-auto px-4 sm:px-8 pb-20 relative z-content space-y-8">
-        <div className="border-b border-white/10 pb-4 flex items-center justify-between">
+      <section className="w-full max-w-5xl mx-auto px-4 sm:px-8 pb-16 relative z-content">
+        <div className="border-t border-white/10 pt-8 pb-6 flex flex-col sm:flex-row sm:items-baseline justify-between gap-2">
           <div>
             <h2 className="text-xs uppercase font-mono tracking-[0.25em] text-rose-200/80 font-medium">
-              Explore All Atmospheres
+              The Constellation Index
             </h2>
-            <p className="text-xs text-rose-100/60 font-sans mt-0.5">
-              Available to craft today
+            <p className="text-xs text-rose-100/60 font-serif italic mt-0.5">
+              Six living atmospheres crafted for intimate storytelling
             </p>
           </div>
+          <span className="text-[10px] font-mono text-rose-300/70 uppercase tracking-widest">
+            Ready to Compose
+          </span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Spatial Ribbon Flow (Unboxed, Continuous Constellation) */}
+        <div className="divide-y divide-white/[0.08]">
           {ORDERED_WORLD_KEYS.filter((id) => id !== activeWorldId).map((worldKey) => {
             const profile = WORLD_PROFILES[worldKey];
 
             return (
               <div
                 key={worldKey}
-                className="relative group p-6 sm:p-7 rounded-3xl bg-black/30 border border-white/10 backdrop-blur-md shadow-xl hover:border-white/25 transition-all duration-300 flex flex-col justify-between"
+                className="group py-5 sm:py-6 flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all duration-300 hover:pl-2"
               >
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-mono uppercase tracking-wider text-rose-300 px-2.5 py-0.5 rounded-full bg-rose-950/60 border border-rose-400/20">
-                      {profile.category}
-                    </span>
-                    <span className="text-xs select-none">{profile.artifactIcon}</span>
-                  </div>
-
-                  <h3 className="text-2xl font-serif font-medium text-white flex items-center gap-2">
-                    <span>{profile.name}</span>
-                    {profile.jpName && (
-                      <span className="text-base text-emerald-300/70 font-light font-serif">
-                        {profile.jpName}
+                <div className="flex items-start sm:items-center gap-4">
+                  <span className="text-xl sm:text-2xl select-none transition-transform group-hover:scale-110 duration-300">
+                    {profile.artifactIcon}
+                  </span>
+                  <div className="space-y-0.5">
+                    <div className="flex items-center gap-2.5">
+                      <h3 className="text-xl sm:text-2xl font-serif font-normal text-white flex items-baseline gap-2">
+                        <span>{profile.name}</span>
+                        {profile.jpName && (
+                          <span className="text-base text-emerald-300/70 font-light font-serif">
+                            {profile.jpName}
+                          </span>
+                        )}
+                      </h3>
+                      <span className="text-[9px] font-mono uppercase tracking-wider text-rose-300/80 px-2 py-0.5 rounded-full bg-white/[0.06] border border-white/10">
+                        {profile.category}
                       </span>
-                    )}
-                  </h3>
-
-                  <p className="text-xs font-serif italic text-rose-200/90">
-                    &ldquo;{profile.tagline}&rdquo;
-                  </p>
-
-                  <p className="text-xs text-rose-100/80 leading-relaxed font-light">
-                    {profile.bestFor}
-                  </p>
+                    </div>
+                    <p className="text-xs font-serif italic text-rose-200/80">
+                      &ldquo;{profile.tagline}&rdquo; · <span className="font-sans not-italic text-rose-100/70">{profile.bestFor}</span>
+                    </p>
+                  </div>
                 </div>
 
-                <div className="pt-5 border-t border-white/10 flex items-center justify-between gap-3 mt-4">
+                <div className="flex items-center gap-4 self-end md:self-center shrink-0">
                   <button
                     type="button"
                     onClick={() => {
@@ -1028,14 +1030,14 @@ export default function TemplatesPage() {
                       setActiveKagePreview(false);
                       document.getElementById("showroom-stage")?.scrollIntoView({ behavior: "smooth" });
                     }}
-                    className="text-xs font-medium text-rose-200 hover:text-white underline underline-offset-4 cursor-pointer transition-colors"
+                    className="text-xs font-mono uppercase tracking-wider text-rose-200/80 hover:text-white underline underline-offset-4 cursor-pointer transition-colors"
                   >
                     View Atmosphere
                   </button>
 
                   <Link
                     href={`/create?template=${worldKey}`}
-                    className="px-3.5 py-1.5 rounded-full text-xs font-semibold text-white bg-white/15 hover:bg-white/25 border border-white/20 transition-all"
+                    className="px-4 py-1.5 rounded-full text-xs font-mono tracking-wider uppercase text-white bg-white/10 hover:bg-white/20 border border-white/20 hover:border-white/40 transition-all shadow-sm"
                   >
                     Customize {profile.name}
                   </Link>
@@ -1047,42 +1049,42 @@ export default function TemplatesPage() {
       </section>
 
       {/* ========================================================================= */}
-      {/* 6. IN THE STUDIO · FUTURE ROADMAP WORLDS                                   */}
+      {/* 6. IN THE STUDIO · POETIC FUTURE HORIZON                                  */}
       {/* ========================================================================= */}
-      <section className="w-full max-w-6xl mx-auto px-4 sm:px-8 pb-24 relative z-content space-y-6">
-        <div className="border-b border-white/10 pb-4 flex items-center justify-between">
-          <h2 className="text-xs uppercase font-mono tracking-[0.25em] text-rose-200/80 font-medium">
-            In The Studio · Coming Soon
-          </h2>
-          <span className="text-xs text-rose-100/60 font-sans">Design Pipeline</span>
+      <section className="w-full max-w-5xl mx-auto px-4 sm:px-8 pb-24 relative z-content">
+        <div className="border-t border-white/10 pt-8 pb-6 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <h2 className="text-xs uppercase font-mono tracking-[0.25em] text-rose-200/80 font-medium">
+              In The Studio
+            </h2>
+            <span className="text-[10px] font-mono uppercase tracking-wider text-amber-300 px-2 py-0.5 rounded-full bg-amber-950/40 border border-amber-400/20">
+              Future Worlds · Coming Soon
+            </span>
+          </div>
+          <span className="text-xs text-rose-200/60 font-serif italic hidden sm:inline">
+            Quietly taking form in our atelier
+          </span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Quiet Editorial Horizon Columns (Unboxed, Pure Typography) */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 py-2">
           {ROADMAP_WORLDS.map((world: RoadmapWorld) => (
-            <div
-              key={world.id}
-              className="p-6 rounded-3xl bg-black/20 border border-white/[0.08] backdrop-blur-sm opacity-85 hover:opacity-100 transition-opacity flex flex-col justify-between space-y-4"
-            >
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-mono uppercase tracking-wider text-amber-300 px-2.5 py-0.5 rounded-full bg-amber-950/60 border border-amber-400/30">
-                    Coming Soon
-                  </span>
-                  <span className="text-[11px] text-rose-200/70 font-mono">{world.category}</span>
-                </div>
-
-                <h3 className="text-2xl font-serif font-medium text-white">{world.name}</h3>
-                <p className="text-xs font-serif italic text-amber-200/80">
-                  &ldquo;{world.tagline}&rdquo;
-                </p>
-                <p className="text-xs text-rose-100/70 font-light leading-relaxed">
-                  {world.atmosphere}
-                </p>
+            <div key={world.id} className="space-y-2 border-l border-white/10 pl-4">
+              <div className="flex items-center justify-between gap-2">
+                <h3 className="text-xl font-serif font-medium text-white/95">{world.name}</h3>
+                <span className="text-[9px] font-mono uppercase tracking-wider text-amber-300/80 bg-amber-950/40 border border-amber-400/20 px-2 py-0.5 rounded-full">
+                  Coming Soon
+                </span>
               </div>
-
-              <div className="pt-3 border-t border-white/[0.08] flex items-center justify-between text-xs text-rose-200/60 font-mono">
+              <p className="text-xs font-serif italic text-amber-200/80">
+                &ldquo;{world.tagline}&rdquo;
+              </p>
+              <p className="text-xs text-rose-100/70 font-light leading-relaxed">
+                {world.atmosphere}
+              </p>
+              <div className="pt-2 text-[10px] text-rose-200/50 font-mono flex items-center justify-between">
                 <span>{world.signature}</span>
-                <span className="italic">In Design</span>
+                <span className="italic">In Atelier</span>
               </div>
             </div>
           ))}
@@ -1090,59 +1092,85 @@ export default function TemplatesPage() {
       </section>
 
       {/* ========================================================================= */}
-      {/* 7. IMMERSIVE FULL-STAGE SANCTUARY MODAL                                   */}
+      {/* 7. IMMERSIVE LIVING SANCTUARY ENVIRONMENT (Zero Modal Box)                 */}
       {/* ========================================================================= */}
       <AnimatePresence>
         {isFullPreviewOpen && (
-          <div className="fixed inset-0 z-modal flex items-center justify-center p-4 sm:p-6 bg-black/90 backdrop-blur-2xl animate-fade-in">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              transition={{ duration: 0.3 }}
-              className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-3xl border border-white/20 bg-[#0A070E]/95 p-6 sm:p-10 shadow-[0_0_100px_rgba(0,0,0,0.95)]"
-            >
+          <div className="fixed inset-0 z-modal overflow-hidden bg-black/95 backdrop-blur-3xl animate-fade-in flex flex-col justify-between">
+            {/* World Atmospheric Bloom filling the entire screen */}
+            <div
+              className="absolute inset-0 pointer-events-none opacity-40 transition-colors duration-1000 blur-3xl scale-125"
+              style={{ background: currentProfile.glowColor }}
+            />
+            {/* Ambient vignette */}
+            <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(ellipse_at_center,transparent_0%,rgba(0,0,0,0.85)_100%)]" />
+
+            {/* Top Bar: Floating directly on atmosphere */}
+            <header className="relative z-10 w-full max-w-7xl mx-auto px-6 sm:px-10 py-6 flex items-center justify-between">
+              <div className="space-y-0.5">
+                <span className="text-[10px] font-mono uppercase tracking-[0.3em] text-rose-300/80 block">
+                  Immersive Sanctuary Preview
+                </span>
+                <span className="text-xs font-serif italic text-rose-200/60">
+                  Living Atmospheric Environment
+                </span>
+              </div>
+
               <button
                 type="button"
                 onClick={() => setIsFullPreviewOpen(false)}
-                className="absolute top-5 right-5 z-20 px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 text-xs text-white transition-colors cursor-pointer"
+                className="px-4 py-1.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/25 text-xs font-mono uppercase tracking-wider text-white transition-all cursor-pointer shadow-lg hover:scale-105"
                 aria-label="Close sanctuary"
               >
-                ✕ Close Sanctuary
+                ✕ Return to Gallery
               </button>
+            </header>
 
-              <div className="space-y-6">
-                <div className="space-y-2">
-                  <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-rose-300">
-                    Immersive Sanctuary Preview
-                  </span>
-                  <h3 className="text-3xl sm:text-4xl font-serif font-medium text-white">
-                    {currentProfile.name}
-                  </h3>
-                  <p className="text-sm font-serif italic text-rose-200">
-                    &ldquo;{currentProfile.tagline}&rdquo;
+            {/* Center Stage: The World's Voice Living in Deep Space */}
+            <main className="relative z-10 w-full max-w-4xl mx-auto px-6 sm:px-12 my-auto text-center space-y-8 animate-fade-in">
+              <div className="space-y-3">
+                <span className="text-4xl select-none block mb-2">{currentProfile.artifactIcon}</span>
+                <h3 className="text-4xl sm:text-6xl md:text-7xl font-serif font-normal text-white tracking-tight drop-shadow-[0_4px_24px_rgba(0,0,0,0.8)]">
+                  {currentProfile.name}
+                </h3>
+                {currentProfile.jpName && (
+                  <p className="text-2xl text-emerald-300/80 font-serif font-light">
+                    {currentProfile.jpName}
                   </p>
-                </div>
-
-                <div className="p-6 rounded-2xl bg-white/[0.04] border border-white/10 space-y-4">
-                  <p className="text-sm text-rose-100 font-light leading-relaxed">
-                    {currentProfile.previewQuote}
-                  </p>
-                  <p className="text-xs text-rose-300 font-mono text-right">
-                    — {currentProfile.sampleSender}
-                  </p>
-                </div>
-
-                <div className="flex items-center justify-end gap-3 pt-4 border-t border-white/10">
-                  <Link
-                    href={`/create?template=${activeWorldId}`}
-                    className="px-6 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider text-white bg-gradient-to-r from-rose-700 to-rose-900 border border-rose-400/40 shadow-lg hover:brightness-110 transition-all"
-                  >
-                    Start Creating in {currentProfile.name} →
-                  </Link>
-                </div>
+                )}
+                <p className="text-base sm:text-xl font-serif italic text-rose-200/90 max-w-xl mx-auto">
+                  &ldquo;{currentProfile.tagline}&rdquo;
+                </p>
               </div>
-            </motion.div>
+
+              {/* The Environmental Quote (Floating free in space, no interior box) */}
+              <div className="max-w-2xl mx-auto py-6 sm:py-8 border-y border-white/15">
+                <p className="text-lg sm:text-2xl md:text-3xl font-serif text-rose-100 font-light leading-relaxed drop-shadow-md">
+                  &ldquo;{currentProfile.previewQuote}&rdquo;
+                </p>
+                <p className="mt-4 text-xs sm:text-sm text-rose-300 font-mono tracking-wider uppercase">
+                  — {currentProfile.sampleSender}
+                </p>
+              </div>
+
+              <p className="text-xs font-mono uppercase tracking-[0.25em] text-rose-200/50">
+                {currentProfile.feeling}
+              </p>
+            </main>
+
+            {/* Bottom Bar: Action Floating over Atmosphere */}
+            <footer className="relative z-10 w-full max-w-7xl mx-auto px-6 sm:px-10 py-6 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-white/10">
+              <div className="text-xs text-rose-200/60 font-mono">
+                Press <kbd className="px-2 py-0.5 rounded bg-white/10 text-white font-mono text-[10px]">ESC</kbd> to return
+              </div>
+
+              <AtmosphericButton
+                href={`/create?template=${activeWorldId}`}
+                worldId={activeWorldId}
+                worldName={currentProfile.name}
+                label={`Start Creating in ${currentProfile.name} →`}
+              />
+            </footer>
           </div>
         )}
       </AnimatePresence>
