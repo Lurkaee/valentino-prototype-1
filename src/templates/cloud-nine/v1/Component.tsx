@@ -59,6 +59,33 @@ export const CloudNineComponent: React.FC<ComponentProps> = ({ config, mode, pub
   const oscillatorNodesRef = useRef<OscillatorNode[]>([]);
   const gainNodeRef = useRef<GainNode | null>(null);
 
+  // Live Preview Responsiveness: instantly unveil or fold the envelope based on what is being crafted
+  const lastWaxSealRef = useRef(config.decor?.waxSeal);
+  const lastRibbonRef = useRef(config.decor?.ribbon);
+  const lastPaperRef = useRef(config.decor?.paper);
+  const lastMessageRef = useRef(config.message);
+
+  useEffect(() => {
+    if (mode !== "preview") return;
+
+    if (
+      (config.decor?.waxSeal && config.decor.waxSeal !== lastWaxSealRef.current) ||
+      (config.decor?.ribbon && config.decor.ribbon !== lastRibbonRef.current)
+    ) {
+      setIsSealed(true);
+    } else if (
+      (config.decor?.paper && config.decor.paper !== lastPaperRef.current) ||
+      (config.message && config.message !== lastMessageRef.current)
+    ) {
+      setIsSealed(false);
+    }
+
+    lastWaxSealRef.current = config.decor?.waxSeal;
+    lastRibbonRef.current = config.decor?.ribbon;
+    lastPaperRef.current = config.decor?.paper;
+    lastMessageRef.current = config.message;
+  }, [config.decor?.waxSeal, config.decor?.ribbon, config.decor?.paper, config.message, mode]);
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -198,8 +225,20 @@ export const CloudNineComponent: React.FC<ComponentProps> = ({ config, mode, pub
         {/* Top Ambient Navigation / Controls Bar */}
         <div className="relative z-30 w-full max-w-2xl mx-auto flex items-center justify-between py-2 mb-4">
           {mode === "preview" ? (
-            <div className="px-3.5 py-1 rounded-full text-[10px] tracking-widest uppercase bg-pink-100/90 text-pink-900 border border-pink-300/50 backdrop-blur-md shadow-sm">
-              Live Preview · Cloud Nine
+            <div className="flex items-center gap-2">
+              <div className="px-3.5 py-1 rounded-full text-[10px] tracking-widest uppercase bg-pink-100/90 text-pink-900 border border-pink-300/50 backdrop-blur-md shadow-sm">
+                Live Preview · Cloud Nine
+              </div>
+              <button
+                type="button"
+                data-testid="preview-toggle-seal"
+                onClick={() => setIsSealed((prev) => !prev)}
+                className="flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] tracking-wider uppercase font-sans border backdrop-blur-md transition-all cursor-pointer bg-white/60 hover:bg-white text-pink-950 border-pink-300/60 shadow-sm"
+                title="Toggle between sealed envelope and unfolded letter"
+              >
+                <span>{isSealed ? "✉ Sealed" : "📄 Letter"}</span>
+                <span className="text-[9px] opacity-60">⇄</span>
+              </button>
             </div>
           ) : (
             <div className="text-[10px] tracking-[0.25em] uppercase text-pink-800/60 font-sans">
@@ -288,6 +327,7 @@ export const CloudNineComponent: React.FC<ComponentProps> = ({ config, mode, pub
             <Envelope3D
               isSealed={isSealed}
               onUnseal={() => setIsSealed(false)}
+              onReseal={mode === "preview" ? () => setIsSealed(true) : undefined}
               sealEmblem={waxSeal.emblem || "☁️"}
               sealGradientClass="from-pink-200 via-rose-300 to-pink-400"
               sealBorderClass="border-pink-300/90"

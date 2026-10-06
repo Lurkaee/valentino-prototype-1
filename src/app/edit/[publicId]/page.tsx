@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef, useCallback, Suspense } from "react";
 import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
+import { motion, AnimatePresence } from "motion/react";
 import { ExperienceRenderer } from "@/templates/ExperienceRenderer";
 import {
   MidnightRoseDraftConfig,
@@ -764,11 +765,18 @@ function EditExperienceContent() {
             mobileTab === "form" ? "hidden lg:flex" : "flex"
           }`}
         >
-          {/* World-specific ambient lighting */}
-          <div
-            className="pointer-events-none absolute inset-0 transition-opacity duration-700 opacity-80"
-            style={{ background: ambience.bgGradient }}
-          />
+          {/* World-specific ambient lighting with seamless crossfade */}
+          <AnimatePresence mode="popLayout">
+            <motion.div
+              key={`ambience-${templateMeta.id}`}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.85 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.7, ease: "easeInOut" }}
+              className="pointer-events-none absolute inset-0"
+              style={{ background: ambience.bgGradient }}
+            />
+          </AnimatePresence>
 
           {/* Canonical Global Atmosphere in serene studio mode */}
           <ValentinoAtmosphere
@@ -814,15 +822,26 @@ function EditExperienceContent() {
                   </div>
                 </div>
 
-                {/* Screen Content: Real ExperienceRenderer */}
-                <div className="flex-1 overflow-y-auto">
-                  <ExperienceRenderer
-                    templateId={templateMeta.id}
-                    templateVersion={templateMeta.version}
-                    mode="preview"
-                    rawConfig={config}
-                    publicId={publicId}
-                  />
+                {/* Screen Content: Real ExperienceRenderer with cinematic crossfade */}
+                <div className="flex-1 overflow-y-auto relative">
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={`renderer-${templateMeta.id}`}
+                      initial={{ opacity: 0.85 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0.85 }}
+                      transition={{ duration: 0.35, ease: "easeOut" }}
+                      className="min-h-full"
+                    >
+                      <ExperienceRenderer
+                        templateId={templateMeta.id}
+                        templateVersion={templateMeta.version}
+                        mode="preview"
+                        rawConfig={config}
+                        publicId={publicId}
+                      />
+                    </motion.div>
+                  </AnimatePresence>
                 </div>
               </div>
             </div>
