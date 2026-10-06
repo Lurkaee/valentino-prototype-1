@@ -37,6 +37,7 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
   externalActiveMoment,
 }) => {
   const [activeMoment, setActiveMoment] = useState<ActiveMoment>(null);
+  const [isLibraryOpen, setIsLibraryOpen] = useState(true);
 
   useEffect(() => {
     if (externalActiveMoment) {
@@ -56,6 +57,21 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
   const futureAdventuresEnabled = Boolean(modules?.futureAdventures?.enabled);
   const adventureSpinnerEnabled = Boolean(modules?.adventureSpinner?.enabled);
   const finaleEnabled = Boolean(modules?.finale?.enabled);
+
+  const activeMomentList = [
+    timelineEnabled && { key: "timeline", name: "Our Story", icon: "⏳", desc: "Chronological journey" },
+    quizEnabled && { key: "quiz", name: "Love Quiz", icon: "💘", desc: "Playful trivia" },
+    secretEnabled && { key: "secret", name: "Secret Note", icon: "💌", desc: "Hidden confession" },
+    openWhenEnabled && { key: "openWhen", name: "Open When", icon: "✉️", desc: "Sealed messages" },
+    reasonsEnabled && { key: "reasons", name: "Reasons I Love You", icon: "❤️", desc: "Infinite reasons" },
+    complimentsEnabled && { key: "compliments", name: "Compliment Machine", icon: "✨", desc: "Daily love generator" },
+    fortuneCookieEnabled && { key: "fortuneCookie", name: "Fortune Cookie", icon: "🥠", desc: "Crisp romantic destiny" },
+    scratchCardEnabled && { key: "scratchCard", name: "Scratch Card", icon: "🎟️", desc: "Gold foil mystery" },
+    promisesEnabled && { key: "promises", name: "Promise Wall", icon: "💍", desc: "Lifelong vows" },
+    futureAdventuresEnabled && { key: "futureAdventures", name: "Future Adventures", icon: "🗺️", desc: "Shared bucket list" },
+    adventureSpinnerEnabled && { key: "adventureSpinner", name: "Adventure Spinner", icon: "🎡", desc: "Date night roulette" },
+    finaleEnabled && { key: "finale", name: "Emotional Finale", icon: "🌹", desc: "Grand declaration" },
+  ].filter(Boolean) as { key: string; name: string; icon: string; desc: string }[];
 
   const anyEnabled =
     timelineEnabled ||
@@ -157,15 +173,71 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
         </div>
       )}
 
-      {/* Add a Moment: Tactile Creator Buttons */}
-      <div className="space-y-2.5">
-        <div className="flex items-center justify-between">
-          <span className="text-[11px] font-ui font-medium uppercase tracking-wider text-rose-300/80">
-            {anyEnabled ? `Add Another Moment (${activeCount}/4 active)` : "+ Add a Moment to Your Story"}
-          </span>
-        </div>
+      {/* Selected Moments: Progressive Disclosure */}
+      {anyEnabled && (
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-serif uppercase tracking-wider text-white/70">
+              Selected Moments ({activeCount})
+            </span>
+          </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+          <div className="divide-y divide-white/[0.04] border-y border-white/[0.04]">
+            {activeMomentList.map((m) => (
+              <div
+                key={m.key}
+                className="py-2 px-1 flex items-center justify-between gap-3 text-xs group hover:bg-white/[0.02] transition-colors"
+              >
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <span className="text-base select-none">{m.icon}</span>
+                  <div className="min-w-0">
+                    <span className="font-serif text-white block text-sm truncate">{m.name}</span>
+                    <span className="text-[10px] text-white/40 truncate block">{m.desc}</span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => setActiveMoment(activeMoment === m.key ? null : (m.key as ActiveMoment))}
+                    className="text-xs font-mono uppercase tracking-wider text-rose-300 hover:text-white cursor-pointer transition-colors"
+                  >
+                    {activeMoment === m.key ? "Editing ▾" : "Edit ✎"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => toggleModule(m.key, {})}
+                    className="text-xs text-white/40 hover:text-rose-400 p-1 cursor-pointer transition-colors"
+                    title="Remove moment"
+                  >
+                    ✕
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="pt-1 flex items-center justify-between">
+            <button
+              type="button"
+              onClick={() => setIsLibraryOpen(!isLibraryOpen)}
+              className="text-xs font-serif italic text-rose-300/90 hover:text-white flex items-center gap-1.5 transition-colors cursor-pointer"
+            >
+              <span>{isLibraryOpen ? "▾ Hide Moment Library" : "+ Add Another Moment to Your Story"}</span>
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Available Moment Library Grid */}
+      {(!anyEnabled || isLibraryOpen || Boolean(externalActiveMoment)) && (
+        <div className="space-y-2.5 pt-1 animate-fadeIn">
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-mono uppercase tracking-wider text-white/50">
+              {anyEnabled ? "Browse Available Moments" : "Choose a Moment to Add"}
+            </span>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
           {/* 1. Timeline */}
           <button
             type="button"
@@ -770,6 +842,8 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
             </div>
           </button>
         </div>
+        </div>
+      )}
 
         {/* Feature Discovery Action Row: Explore More & Surprise Me */}
         <div className="pt-2 flex flex-wrap items-center justify-between gap-3 border-t border-white/[0.06]">
@@ -872,7 +946,6 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
             }}
           />
         </div>
-      </div>
 
       {/* Progressive Disclosure Moment Editors */}
 

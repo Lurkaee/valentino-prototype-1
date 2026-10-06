@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import { Badge } from "@/components/ui/Badge";
 
 export interface StoryChaptersVisualizerProps {
@@ -26,24 +26,19 @@ export const StoryChaptersVisualizer: React.FC<StoryChaptersVisualizerProps> = (
   onPacingChange,
   activeMomentsCount,
 }) => {
-  const [expandedChapter, setExpandedChapter] = useState<string | null>(null);
-
   const chapters = [
     {
       id: "welcome",
       order: "01",
       name: "Welcome Greeting",
       status: welcomeEnabled ? "Customized" : "Default Entrance",
-      desc: "The quiet threshold where they first see your dedication.",
       badge: "Atmospheric",
-      interactive: true,
     },
     {
       id: "story",
       order: "02",
       name: "The Core Love Letter",
       status: "Personal Message",
-      desc: "Your words unfold in romantic calligraphy and tactile vellum.",
       badge: "Heart of World",
     },
     {
@@ -51,7 +46,6 @@ export const StoryChaptersVisualizer: React.FC<StoryChaptersVisualizerProps> = (
       order: "03",
       name: "Shared Milestones",
       status: "Timeline & Photographs",
-      desc: "The dates and memories that shaped your path together.",
       badge: "Milestones",
     },
     {
@@ -59,15 +53,13 @@ export const StoryChaptersVisualizer: React.FC<StoryChaptersVisualizerProps> = (
       order: "04",
       name: "Interactive Moments",
       status: activeMomentsCount > 0 ? `${activeMomentsCount} Active` : "Optional Keepsakes",
-      desc: "Playful quizzes, hidden secret notes, and open-when letters.",
       badge: "Discovered",
     },
     {
       id: "promises",
       order: "05",
       name: "Sacred Promises",
-      status: "Devotion",
-      desc: "Tender vows and quiet promises sealed in your private world.",
+      status: "Quiet Devotion",
       badge: "Vows",
     },
     {
@@ -75,42 +67,35 @@ export const StoryChaptersVisualizer: React.FC<StoryChaptersVisualizerProps> = (
       order: "06",
       name: "Future Adventures",
       status: "The Unwritten Story",
-      desc: "Adventures, bucket list dreams, and journeys yet to come.",
       badge: "Tomorrow",
     },
     {
       id: "finale",
       order: "07",
       name: "Starlight Finale",
-      status: "Culmination",
-      desc: "A breathtaking romantic finale celebrating your love story.",
-      badge: "Culmination",
+      status: "Emotional Culmination",
+      badge: "Finale",
     },
   ];
 
   return (
     <div data-testid="story-chapters-visualizer" className="space-y-6">
-      {/* Emotional Pacing Selector */}
-      <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/[0.08] space-y-3">
+      {/* 1. Narrative Pacing (Top Placement) */}
+      <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <div>
-            <span className="text-xs font-display font-medium text-white block">
-              Emotional Narrative Pacing
-            </span>
-            <span className="text-[11px] text-white/50 font-ui">
-              Controls scroll rhythm, atmosphere reveals, and cinematic pauses
-            </span>
-          </div>
-          <Badge variant="rose" size="sm" className="text-[10px]">
-            {pacing === "cinematic" ? "Dramatic" : pacing === "calm" ? "Spacious" : "Natural"}
-          </Badge>
+          <span className="text-xs font-serif uppercase tracking-wider text-white/70">
+            Narrative Pacing
+          </span>
+          <span className="text-[10px] font-mono text-white/40">
+            {pacing === "cinematic" ? "Theatrical pauses" : pacing === "calm" ? "Gentle rhythm" : "Natural flow"}
+          </span>
         </div>
 
         <div className="grid grid-cols-3 gap-2">
           {[
-            { id: "calm", label: "Calm", desc: "Gentle & spacious pauses" },
-            { id: "balanced", label: "Balanced", desc: "Natural romantic flow" },
-            { id: "cinematic", label: "Cinematic", desc: "Dramatic, theatrical reveals" },
+            { id: "calm", label: "Calm", desc: "Gentle & spacious" },
+            { id: "balanced", label: "Balanced", desc: "Natural flow" },
+            { id: "cinematic", label: "Cinematic", desc: "Dramatic pauses" },
           ].map((p) => {
             const isSelected = pacing === p.id;
             return (
@@ -119,33 +104,30 @@ export const StoryChaptersVisualizer: React.FC<StoryChaptersVisualizerProps> = (
                 type="button"
                 data-testid={`pacing-option-${p.id}`}
                 onClick={() => onPacingChange(p.id as any)}
-                className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer ${
+                className={`py-2 px-2.5 rounded-lg border text-left transition-all cursor-pointer ${
                   isSelected
-                    ? "border-rose-400 bg-rose-950/60 text-white font-medium shadow-xs"
-                    : "border-white/[0.08] bg-white/[0.03] text-white/70 hover:bg-white/[0.06]"
+                    ? "border-rose-400/60 bg-rose-950/40 text-white shadow-xs"
+                    : "border-white/[0.06] bg-white/[0.02] text-white/60 hover:text-white hover:bg-white/[0.04]"
                 }`}
               >
                 <div className="text-xs font-medium text-white">{p.label}</div>
-                <div className="text-[10px] text-white/50">{p.desc}</div>
+                <div className="text-[10px] text-white/40 truncate">{p.desc}</div>
               </button>
             );
           })}
         </div>
       </div>
 
-      {/* Chapter 1: Personal Welcome Customizer */}
-      <div className="p-4 rounded-2xl bg-white/[0.03] border border-white/[0.08] space-y-3">
+      {/* 2. Welcome Chapter Customization */}
+      <div className="pt-2 border-t border-white/[0.06] space-y-3">
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="text-base select-none">✨</span>
-            <div>
-              <span className="text-xs font-display font-medium text-white block">
-                Chapter 1 · Welcome Threshold
-              </span>
-              <span className="text-[11px] text-white/50 font-ui">
-                Personalized entrance before the envelope opens
-              </span>
-            </div>
+          <div>
+            <span className="text-xs font-serif text-white block">
+              Chapter 01 · Welcome Greeting
+            </span>
+            <span className="text-[11px] text-white/45 font-light">
+              Personalized entrance threshold before envelope unfolds
+            </span>
           </div>
           <button
             type="button"
@@ -157,16 +139,16 @@ export const StoryChaptersVisualizer: React.FC<StoryChaptersVisualizerProps> = (
                 : "bg-white/[0.04] border-white/10 text-white/60 hover:text-white"
             }`}
           >
-            {welcomeEnabled ? "✓ Customized" : "+ Customize Welcome"}
+            {welcomeEnabled ? "✓ Customized" : "+ Customize"}
           </button>
         </div>
 
         {welcomeEnabled && (
-          <div className="space-y-2.5 pt-2 animate-fadeIn border-t border-white/[0.06]">
+          <div className="space-y-2.5 pt-2 animate-fadeIn pl-2 border-l border-rose-500/30">
             <div>
               <label
                 htmlFor="welcome-greeting"
-                className="block text-[11px] uppercase tracking-wider text-white/60 font-ui mb-1"
+                className="block text-[11px] uppercase tracking-wider text-white/50 font-mono mb-1"
               >
                 Entrance Greeting
               </label>
@@ -177,13 +159,13 @@ export const StoryChaptersVisualizer: React.FC<StoryChaptersVisualizerProps> = (
                 data-testid="input-welcome-greeting"
                 value={welcomeGreeting}
                 onChange={(e) => onWelcomeGreetingChange(e.target.value)}
-                className="w-full text-xs px-3.5 py-2.5 rounded-xl bg-black/40 border border-white/[0.1] text-white font-ui placeholder-white/25 focus:outline-none focus:border-rose-400"
+                className="w-full text-xs px-3 py-2 rounded-lg bg-black/40 border border-white/[0.1] text-white placeholder-white/25 focus:outline-none focus:border-rose-400"
               />
             </div>
             <div>
               <label
                 htmlFor="welcome-message"
-                className="block text-[11px] uppercase tracking-wider text-white/60 font-ui mb-1"
+                className="block text-[11px] uppercase tracking-wider text-white/50 font-mono mb-1"
               >
                 Personal Invitation Line
               </label>
@@ -194,46 +176,45 @@ export const StoryChaptersVisualizer: React.FC<StoryChaptersVisualizerProps> = (
                 data-testid="input-welcome-message"
                 value={welcomeMessage}
                 onChange={(e) => onWelcomeMessageChange(e.target.value)}
-                className="w-full text-xs px-3.5 py-2.5 rounded-xl bg-black/40 border border-white/[0.1] text-white font-ui placeholder-white/25 focus:outline-none focus:border-rose-400"
+                className="w-full text-xs px-3 py-2 rounded-lg bg-black/40 border border-white/[0.1] text-white placeholder-white/25 focus:outline-none focus:border-rose-400"
               />
             </div>
           </div>
         )}
       </div>
 
-      {/* 7-Chapter Roadmap */}
-      <div className="space-y-2.5">
-        <div className="flex items-center justify-between px-1">
-          <span className="text-xs uppercase tracking-wider text-white/60 font-ui font-medium">
-            Story Chapter Architecture
+      {/* 3. Compact Chapter Architecture (Editorial Rows, NOT Large Cards) */}
+      <div className="pt-2 border-t border-white/[0.06] space-y-2">
+        <div className="flex items-center justify-between">
+          <span className="text-xs font-serif uppercase tracking-wider text-white/70">
+            Chapter Architecture
           </span>
-          <span className="text-[11px] text-white/40 font-mono">7 Chapters</span>
+          <span className="text-[10px] font-mono text-white/40">7 Chapters</span>
         </div>
 
-        <div className="space-y-2">
-          {chapters.map((ch, idx) => (
+        <div className="divide-y divide-white/[0.04] border-y border-white/[0.04]">
+          {chapters.map((ch) => (
             <div
               key={ch.id}
               data-testid={`chapter-step-${ch.id}`}
-              className="p-3 sm:p-3.5 rounded-xl bg-white/[0.02] hover:bg-white/[0.04] border border-white/[0.06] transition-colors flex items-center justify-between gap-3 text-xs font-ui"
+              className="py-2.5 px-1 flex items-center justify-between gap-3 text-xs group hover:bg-white/[0.02] transition-colors"
             >
               <div className="flex items-center gap-3 min-w-0">
                 <span className="text-[10px] font-mono text-rose-300/70 w-5 shrink-0">
                   {ch.order}
                 </span>
-                <div className="min-w-0">
-                  <div className="flex items-center gap-2">
-                    <span className="font-medium text-white truncate">{ch.name}</span>
-                    <span className="text-[10px] text-white/35 hidden sm:inline">
-                      • {ch.status}
-                    </span>
-                  </div>
-                  <p className="text-[11px] text-white/50 truncate font-light">
-                    {ch.desc}
-                  </p>
+                <div className="min-w-0 flex items-baseline gap-2">
+                  <span className="font-serif text-white truncate text-sm">{ch.name}</span>
+                  <span className="text-[11px] text-white/40 truncate font-light hidden sm:inline">
+                    · {ch.status}
+                  </span>
                 </div>
               </div>
-              <Badge variant="rose" size="sm" className="text-[9px] px-2 py-0.5 shrink-0 bg-white/[0.03] border-white/10 text-white/60">
+              <Badge
+                variant="rose"
+                size="sm"
+                className="text-[9px] px-2 py-0.5 shrink-0 bg-white/[0.03] border-white/10 text-white/60 font-mono"
+              >
                 {ch.badge}
               </Badge>
             </div>
