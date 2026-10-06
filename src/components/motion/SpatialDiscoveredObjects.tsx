@@ -66,16 +66,16 @@ export function SpatialDiscoveredObjects() {
     >
       {/* Editorial Header floating lightly in space */}
       <div className="text-center max-w-2xl mx-auto mb-16 sm:mb-24 space-y-3 relative z-10">
-        <span className="inline-block text-[11px] font-mono tracking-widest uppercase text-[#FDA4AF] font-semibold drop-shadow-[0_1px_4px_rgba(10,2,7,0.8)]">
+        <span className="inline-block text-[11px] font-mono tracking-widest uppercase text-[#7A1D45] font-semibold drop-shadow-[0_1px_8px_rgba(255,245,248,0.7)]">
           Interactive Devotion
         </span>
-        <h2 className="text-3xl sm:text-5xl font-serif font-normal text-[#FAF8F5] tracking-tight leading-tight drop-shadow-[0_2px_14px_rgba(10,2,7,0.85)]">
+        <h2 className="text-3xl sm:text-5xl font-serif font-normal text-[#1A0311] tracking-tight leading-tight drop-shadow-[0_1px_14px_rgba(255,245,248,0.6)]">
           Add little secrets waiting to be discovered.
         </h2>
-        <p className="text-sm sm:text-base text-[#FCE7E1]/95 font-normal leading-relaxed drop-shadow-[0_1px_6px_rgba(10,2,7,0.8)]">
+        <p className="text-sm sm:text-base text-[#36091E] font-normal leading-relaxed drop-shadow-[0_1px_6px_rgba(255,245,248,0.5)]">
           Love isn&apos;t just what you say all at once. It is the sealed envelopes opened on quiet mornings, the private memories tucked behind questions, and the surprises waiting for the days ahead.
         </p>
-        <p className="text-xs sm:text-sm text-[#FDE68A] font-serif italic pt-1 drop-shadow-[0_1px_4px_rgba(10,2,7,0.8)] font-medium">
+        <p className="text-xs sm:text-sm text-[#831843] font-serif italic pt-1 drop-shadow-[0_1px_4px_rgba(255,245,248,0.5)] font-medium">
           Tap an artifact to reveal what is hidden inside.
         </p>
       </div>
@@ -128,8 +128,10 @@ export function SpatialDiscoveredObjects() {
           </button>
 
           <div className="mt-5 space-y-1 max-w-xs">
-            <h4 className="text-base font-serif text-white drop-shadow-[0_1px_6px_rgba(10,2,7,0.7)]">Open When Letters</h4>
-            <p className="text-xs text-rose-100/85 font-normal leading-relaxed drop-shadow-[0_1px_4px_rgba(10,2,7,0.6)]">
+            <h4 className="text-base font-serif text-[#1A0311] font-medium drop-shadow-[0_1px_8px_rgba(255,245,248,0.7)]">
+              Open When Letters
+            </h4>
+            <p className="text-xs text-[#36091E] font-normal leading-relaxed drop-shadow-[0_1px_4px_rgba(255,245,248,0.6)]">
               Envelopes sealed for future days — when they have had a hard day, miss you, or can&apos;t sleep.
             </p>
           </div>
@@ -178,8 +180,10 @@ export function SpatialDiscoveredObjects() {
           </button>
 
           <div className="mt-5 space-y-1 max-w-xs">
-            <h4 className="text-base font-serif text-white drop-shadow-[0_1px_6px_rgba(10,2,7,0.7)]">Secret Whispers</h4>
-            <p className="text-xs text-rose-100/85 font-normal leading-relaxed drop-shadow-[0_1px_4px_rgba(10,2,7,0.6)]">
+            <h4 className="text-base font-serif text-[#1A0311] font-medium drop-shadow-[0_1px_8px_rgba(255,245,248,0.7)]">
+              Secret Whispers
+            </h4>
+            <p className="text-xs text-[#36091E] font-normal leading-relaxed drop-shadow-[0_1px_4px_rgba(255,245,248,0.6)]">
               Hide intimate words behind a delicate tap-to-reveal fold or lock them with a question only you two know.
             </p>
           </div>
@@ -231,8 +235,10 @@ export function SpatialDiscoveredObjects() {
           </button>
 
           <div className="mt-5 space-y-1 max-w-xs">
-            <h4 className="text-base font-serif text-white drop-shadow-[0_1px_6px_rgba(10,2,7,0.7)]">Playful Keepsakes</h4>
-            <p className="text-xs text-amber-100/85 font-normal leading-relaxed drop-shadow-[0_1px_4px_rgba(10,2,7,0.6)]">
+            <h4 className="text-base font-serif text-[#1A0311] font-medium drop-shadow-[0_1px_8px_rgba(255,245,248,0.7)]">
+              Playful Keepsakes
+            </h4>
+            <p className="text-xs text-[#36091E] font-normal leading-relaxed drop-shadow-[0_1px_4px_rgba(255,245,248,0.6)]">
               Tactile scratch cards that reveal sweet compliments, a jar of reasons, or an intimate relationship quiz.
             </p>
           </div>

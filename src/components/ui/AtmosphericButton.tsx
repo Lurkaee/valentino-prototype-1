@@ -66,6 +66,7 @@ export interface AtmosphericButtonProps {
   href: string;
   worldId: string;
   worldName: string;
+  label?: string;
   className?: string;
   ariaLabel?: string;
 }
@@ -90,6 +91,7 @@ export const AtmosphericButton: React.FC<AtmosphericButtonProps> = ({
   href,
   worldId,
   worldName,
+  label,
   className = "",
   ariaLabel,
 }) => {
@@ -99,7 +101,7 @@ export const AtmosphericButton: React.FC<AtmosphericButtonProps> = ({
   return (
     <Link
       href={href}
-      aria-label={ariaLabel || `Enter ${worldName} atmosphere`}
+      aria-label={ariaLabel || label || `Enter ${worldName} atmosphere`}
       className={`group relative inline-flex items-center gap-2.5 px-6 py-2.5 sm:px-7 sm:py-3 rounded-full text-sm font-semibold tracking-wide backdrop-blur-md transition-all duration-300 ease-out hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] ${theme.container} ${className}`}
       style={{
         boxShadow:
@@ -109,7 +111,7 @@ export const AtmosphericButton: React.FC<AtmosphericButtonProps> = ({
       }}
     >
       <span className={`transition-colors duration-300 ${theme.text}`}>
-        Enter {worldName}
+        {label || `Enter ${worldName}`}
       </span>
       <span
         aria-hidden="true"

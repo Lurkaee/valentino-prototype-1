@@ -62,6 +62,17 @@ test.describe("Phase 6 UI/UX Renaissance Comprehensive Visual QA", () => {
         });
       }
 
+      // Homepage Discovered Moments Section (SpatialDiscoveredObjects)
+      const momentsEl = page.locator("#moments");
+      if (await momentsEl.isVisible()) {
+        await momentsEl.scrollIntoViewIfNeeded();
+        await page.waitForTimeout(400);
+        await page.screenshot({
+          path: path.join(QA_DIR, `02b2_homepage_moments_${vp.name}.png`),
+          fullPage: false,
+        });
+      }
+
       // Homepage Finale Section
       const finaleEl = page.locator("#create");
       if (await finaleEl.isVisible()) {
