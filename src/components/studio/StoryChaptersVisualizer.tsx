@@ -79,21 +79,21 @@ export const StoryChaptersVisualizer: React.FC<StoryChaptersVisualizerProps> = (
   ];
 
   return (
-    <div data-testid="story-chapters-visualizer" className="space-y-6">
-      {/* 1. Narrative Pacing (Top Placement) */}
+    <div data-testid="story-chapters-visualizer" className="space-y-5">
+      {/* 1. Narrative Pacing: Typographic, Lightweight Controls */}
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <span className="text-xs font-serif uppercase tracking-wider text-white/70">
             Narrative Pacing
           </span>
           <span className="text-[10px] font-mono text-white/40">
-            {pacing === "cinematic" ? "Theatrical pauses" : pacing === "calm" ? "Gentle rhythm" : "Natural flow"}
+            {pacing === "cinematic" ? "Dramatic pauses" : pacing === "calm" ? "Gentle rhythm" : "Natural flow"}
           </span>
         </div>
 
-        <div className="grid grid-cols-3 gap-2">
+        <div className="flex items-center gap-2">
           {[
-            { id: "calm", label: "Calm", desc: "Gentle & spacious" },
+            { id: "calm", label: "Calm", desc: "Gentle rhythm" },
             { id: "balanced", label: "Balanced", desc: "Natural flow" },
             { id: "cinematic", label: "Cinematic", desc: "Dramatic pauses" },
           ].map((p) => {
@@ -104,14 +104,13 @@ export const StoryChaptersVisualizer: React.FC<StoryChaptersVisualizerProps> = (
                 type="button"
                 data-testid={`pacing-option-${p.id}`}
                 onClick={() => onPacingChange(p.id as any)}
-                className={`py-2 px-2.5 rounded-lg border text-left transition-all cursor-pointer ${
+                className={`py-1.5 px-3 rounded-full border text-xs transition-all cursor-pointer flex-1 text-center font-serif ${
                   isSelected
-                    ? "border-rose-400/60 bg-rose-950/40 text-white shadow-xs"
-                    : "border-white/[0.06] bg-white/[0.02] text-white/60 hover:text-white hover:bg-white/[0.04]"
+                    ? "border-white/30 bg-white/[0.08] text-white font-medium italic"
+                    : "border-white/[0.05] bg-transparent text-white/50 hover:text-white/80 hover:bg-white/[0.03]"
                 }`}
               >
-                <div className="text-xs font-medium text-white">{p.label}</div>
-                <div className="text-[10px] text-white/40 truncate">{p.desc}</div>
+                <span>{p.label}</span>
               </button>
             );
           })}
@@ -119,7 +118,7 @@ export const StoryChaptersVisualizer: React.FC<StoryChaptersVisualizerProps> = (
       </div>
 
       {/* 2. Welcome Chapter Customization */}
-      <div className="pt-2 border-t border-white/[0.06] space-y-3">
+      <div className="pt-2 border-t border-white/[0.04] space-y-2.5">
         <div className="flex items-center justify-between">
           <div>
             <span className="text-xs font-serif text-white block">
@@ -133,10 +132,10 @@ export const StoryChaptersVisualizer: React.FC<StoryChaptersVisualizerProps> = (
             type="button"
             data-testid="toggle-narrative-welcome"
             onClick={onToggleWelcome}
-            className={`text-[11px] px-3 py-1 rounded-full font-ui cursor-pointer border transition-colors ${
+            className={`text-[11px] px-3 py-1 rounded-full font-serif italic cursor-pointer border transition-colors ${
               welcomeEnabled
-                ? "bg-rose-500/20 border-rose-400/40 text-rose-200 font-medium"
-                : "bg-white/[0.04] border-white/10 text-white/60 hover:text-white"
+                ? "bg-white/[0.08] border-white/20 text-white font-medium"
+                : "bg-transparent border-white/10 text-white/50 hover:text-white"
             }`}
           >
             {welcomeEnabled ? "✓ Customized" : "+ Customize"}
@@ -144,11 +143,11 @@ export const StoryChaptersVisualizer: React.FC<StoryChaptersVisualizerProps> = (
         </div>
 
         {welcomeEnabled && (
-          <div className="space-y-2.5 pt-2 animate-fadeIn pl-2 border-l border-rose-500/30">
+          <div className="space-y-2.5 pt-2 animate-fadeIn pl-2 border-l border-white/15">
             <div>
               <label
                 htmlFor="welcome-greeting"
-                className="block text-[11px] uppercase tracking-wider text-white/50 font-mono mb-1"
+                className="block text-[10px] uppercase tracking-wider text-white/50 font-mono mb-1"
               >
                 Entrance Greeting
               </label>
@@ -159,13 +158,13 @@ export const StoryChaptersVisualizer: React.FC<StoryChaptersVisualizerProps> = (
                 data-testid="input-welcome-greeting"
                 value={welcomeGreeting}
                 onChange={(e) => onWelcomeGreetingChange(e.target.value)}
-                className="w-full text-xs px-3 py-2 rounded-lg bg-black/40 border border-white/[0.1] text-white placeholder-white/25 focus:outline-none focus:border-rose-400"
+                className="w-full text-xs px-3 py-2 rounded-lg bg-black/40 border border-white/[0.1] text-white placeholder-white/25 focus:outline-none focus:border-white/40 font-serif"
               />
             </div>
             <div>
               <label
                 htmlFor="welcome-message"
-                className="block text-[11px] uppercase tracking-wider text-white/50 font-mono mb-1"
+                className="block text-[10px] uppercase tracking-wider text-white/50 font-mono mb-1"
               >
                 Personal Invitation Line
               </label>
@@ -176,15 +175,15 @@ export const StoryChaptersVisualizer: React.FC<StoryChaptersVisualizerProps> = (
                 data-testid="input-welcome-message"
                 value={welcomeMessage}
                 onChange={(e) => onWelcomeMessageChange(e.target.value)}
-                className="w-full text-xs px-3 py-2 rounded-lg bg-black/40 border border-white/[0.1] text-white placeholder-white/25 focus:outline-none focus:border-rose-400"
+                className="w-full text-xs px-3 py-2 rounded-lg bg-black/40 border border-white/[0.1] text-white placeholder-white/25 focus:outline-none focus:border-white/40 font-serif italic"
               />
             </div>
           </div>
         )}
       </div>
 
-      {/* 3. Compact Chapter Architecture (Editorial Rows, NOT Large Cards) */}
-      <div className="pt-2 border-t border-white/[0.06] space-y-2">
+      {/* 3. Compact Chapter Architecture (Editorial Manuscript Index) */}
+      <div className="pt-2 border-t border-white/[0.04] space-y-2">
         <div className="flex items-center justify-between">
           <span className="text-xs font-serif uppercase tracking-wider text-white/70">
             Chapter Architecture
@@ -200,7 +199,7 @@ export const StoryChaptersVisualizer: React.FC<StoryChaptersVisualizerProps> = (
               className="py-2.5 px-1 flex items-center justify-between gap-3 text-xs group hover:bg-white/[0.02] transition-colors"
             >
               <div className="flex items-center gap-3 min-w-0">
-                <span className="text-[10px] font-mono text-rose-300/70 w-5 shrink-0">
+                <span className="text-[10px] font-mono text-white/40 w-5 shrink-0">
                   {ch.order}
                 </span>
                 <div className="min-w-0 flex items-baseline gap-2">
@@ -211,7 +210,7 @@ export const StoryChaptersVisualizer: React.FC<StoryChaptersVisualizerProps> = (
                 </div>
               </div>
               <Badge
-                variant="rose"
+                variant="neutral"
                 size="sm"
                 className="text-[9px] px-2 py-0.5 shrink-0 bg-white/[0.03] border-white/10 text-white/60 font-mono"
               >

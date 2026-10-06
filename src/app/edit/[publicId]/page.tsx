@@ -43,7 +43,6 @@ const STAGE_ORDER: StudioStageId[] = [
   "personalize",
   "mood",
   "preview",
-  "send",
 ];
 
 const STAGE_NEXT_LABELS: Record<StudioStageId, string> = {
@@ -51,9 +50,77 @@ const STAGE_NEXT_LABELS: Record<StudioStageId, string> = {
   story: "Continue to Moments",
   moments: "Continue to Letter",
   personalize: "Continue to Mood & Styling",
-  mood: "Continue to Preview",
-  preview: "Continue to Seal & Send",
-  send: "Publish Valentine 💌",
+  mood: "Continue to Preview & Send",
+  preview: "Publish Valentine 💌",
+};
+
+// World-derived subtle accent tokens for inspector controls
+const WORLD_ACCENT_TOKENS: Record<
+  string,
+  {
+    text: string;
+    border: string;
+    bgSubtle: string;
+    glow: string;
+    dot: string;
+    bar: string;
+    ring: string;
+  }
+> = {
+  "cloud-nine": {
+    text: "text-amber-200",
+    border: "border-amber-300/40",
+    bgSubtle: "bg-amber-400/10",
+    glow: "shadow-[0_0_12px_rgba(252,211,77,0.35)]",
+    dot: "bg-amber-300",
+    bar: "bg-amber-300",
+    ring: "focus:border-amber-300/60 focus:ring-amber-300/20",
+  },
+  "midnight-rose": {
+    text: "text-rose-300",
+    border: "border-rose-400/40",
+    bgSubtle: "bg-rose-500/10",
+    glow: "shadow-[0_0_12px_rgba(244,63,94,0.35)]",
+    dot: "bg-rose-400",
+    bar: "bg-rose-400",
+    ring: "focus:border-rose-400/60 focus:ring-rose-400/20",
+  },
+  kage: {
+    text: "text-purple-300",
+    border: "border-purple-400/40",
+    bgSubtle: "bg-purple-500/10",
+    glow: "shadow-[0_0_12px_rgba(167,139,250,0.35)]",
+    dot: "bg-purple-300",
+    bar: "bg-purple-300",
+    ring: "focus:border-purple-400/60 focus:ring-purple-400/20",
+  },
+  "apricot-film": {
+    text: "text-amber-300",
+    border: "border-amber-400/40",
+    bgSubtle: "bg-amber-500/10",
+    glow: "shadow-[0_0_12px_rgba(245,158,11,0.35)]",
+    dot: "bg-amber-400",
+    bar: "bg-amber-400",
+    ring: "focus:border-amber-400/60 focus:ring-amber-400/20",
+  },
+  "wildflower-paper": {
+    text: "text-emerald-300",
+    border: "border-emerald-400/40",
+    bgSubtle: "bg-emerald-500/10",
+    glow: "shadow-[0_0_12px_rgba(52,211,153,0.35)]",
+    dot: "bg-emerald-400",
+    bar: "bg-emerald-400",
+    ring: "focus:border-emerald-400/60 focus:ring-emerald-400/20",
+  },
+  "ocean-letter": {
+    text: "text-sky-300",
+    border: "border-sky-400/40",
+    bgSubtle: "bg-sky-500/10",
+    glow: "shadow-[0_0_12px_rgba(56,189,248,0.35)]",
+    dot: "bg-sky-400",
+    bar: "bg-sky-400",
+    ring: "focus:border-sky-400/60 focus:ring-sky-400/20",
+  },
 };
 
 // Subtle atmospheric canvas environments per living world
@@ -222,8 +289,8 @@ function EditExperienceContent() {
       setActiveSection("preview");
       scrollToSection("preview");
     } else if (focus === "send") {
-      setActiveSection("send");
-      scrollToSection("send");
+      setActiveSection("preview");
+      scrollToSection("preview");
     }
   }, [searchParams, scrollToSection]);
 
@@ -597,15 +664,14 @@ function EditExperienceContent() {
 
   const currentTemplateDef = getTemplateDefinition(templateMeta.id, templateMeta.version);
 
-  // Completion calculation for 7 stages
+  // Completion calculation for 6 stages
   const stageCompletion: Record<StudioStageId, boolean> = {
     world: Boolean(templateMeta.id),
     story: Boolean((config as any).narrative?.welcome?.enabled || (config as any).narrative?.pacing),
     moments: activeMomentsCount > 0,
     personalize: Boolean(config.partnerName?.trim() && config.senderName?.trim() && config.message?.trim()),
     mood: Boolean(config.decor?.paper && config.decor?.waxSeal),
-    preview: true,
-    send: Boolean(publicUrl),
+    preview: Boolean(config.partnerName?.trim() && config.message?.trim()),
   };
 
   const currentStageIndex = STAGE_ORDER.indexOf(activeSection);
@@ -618,7 +684,7 @@ function EditExperienceContent() {
   };
 
   const goToNextStage = () => {
-    if (activeSection === "send") {
+    if (activeSection === "preview") {
       handlePublish();
     } else if (currentStageIndex < STAGE_ORDER.length - 1) {
       scrollToSection(STAGE_ORDER[currentStageIndex + 1]);
@@ -626,6 +692,7 @@ function EditExperienceContent() {
   };
 
   const ambience = WORLD_AMBIENCE[templateMeta.id] || WORLD_AMBIENCE["midnight-rose"];
+  const accents = WORLD_ACCENT_TOKENS[templateMeta.id] || WORLD_ACCENT_TOKENS["midnight-rose"];
 
   // Auth Error State
   if (authError) {
@@ -826,13 +893,13 @@ function EditExperienceContent() {
               />
 
               {/* ------------------------------------------------------------- */}
-              {/* STAGE 01: Visual World (Unboxed Editorial Presentation)       */}
+              {/* STAGE 01: Visual World (Tactile Material Rail)                */}
               {/* ------------------------------------------------------------- */}
               <section id="section-world" className="space-y-4 scroll-mt-20">
                 <div className="space-y-1">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <span className="text-xs font-mono text-rose-300">01</span>
+                      <span className={`text-xs font-mono ${accents.text}`}>01</span>
                       <h2 className="text-sm font-serif uppercase tracking-widest text-white">Visual World</h2>
                     </div>
                     <button
@@ -855,7 +922,7 @@ function EditExperienceContent() {
                     <span className="text-xs font-mono uppercase tracking-wider text-white/40">Active:</span>
                     <span className="text-lg font-serif text-white font-normal">{templateMeta.name}</span>
                   </div>
-                  <p className="text-xs font-serif italic text-rose-200/80">
+                  <p className="text-xs font-serif italic text-white/70">
                     &ldquo;{currentTemplateDef?.tagline || "For the love that feels like starlight"}&rdquo;
                   </p>
                   <p className="text-xs text-white/50 font-light leading-relaxed">
@@ -863,12 +930,12 @@ function EditExperienceContent() {
                   </p>
                 </div>
 
-                {/* Tactile World Sample Selector */}
+                {/* Tactile World Material Rail */}
                 <div className="space-y-2">
                   <span className="text-[10px] font-mono uppercase tracking-wider text-white/40 block">
-                    Available Atmospheres
+                    Living Atmospheres
                   </span>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                  <div className="flex flex-wrap gap-2 py-1">
                     {[
                       { id: "cloud-nine", icon: "☁️", name: "Cloud Nine", sample: "Sky Aerogramme" },
                       { id: "midnight-rose", icon: "🌹", name: "Midnight Rose", sample: "Velvet Seal" },
@@ -884,18 +951,15 @@ function EditExperienceContent() {
                           type="button"
                           data-testid={`world-sample-${w.id}`}
                           onClick={() => handleSelectWorld(w.id, "v1")}
-                          className={`py-2 px-2.5 rounded-xl border text-left transition-all cursor-pointer group flex items-center gap-2.5 ${
+                          className={`py-1.5 px-3 rounded-full border text-xs flex items-center gap-2 transition-all cursor-pointer group select-none ${
                             isSelected
-                              ? "border-rose-400/60 bg-white/[0.06] text-white shadow-xs font-medium"
-                              : "border-white/[0.06] bg-white/[0.02] text-white/60 hover:text-white hover:bg-white/[0.04]"
+                              ? `${accents.border} bg-white/[0.08] text-white font-medium shadow-xs`
+                              : "border-white/[0.06] bg-transparent text-white/60 hover:text-white hover:border-white/15"
                           }`}
                         >
-                          <span className="text-base select-none group-hover:scale-110 transition-transform">{w.icon}</span>
-                          <div className="min-w-0">
-                            <div className="text-xs font-serif text-white truncate">{w.name}</div>
-                            <div className="text-[9px] font-mono text-white/40 truncate">{w.sample}</div>
-                          </div>
-                          {isSelected && <span className="ml-auto w-1.5 h-1.5 rounded-full bg-rose-400 shrink-0" />}
+                          <span className="text-sm select-none">{w.icon}</span>
+                          <span className="font-serif tracking-wide">{w.name}</span>
+                          {isSelected && <span className={`w-1.5 h-1.5 rounded-full ${accents.dot} shrink-0`} />}
                         </button>
                       );
                     })}
@@ -909,7 +973,7 @@ function EditExperienceContent() {
               <section id="section-story" className="space-y-4 scroll-mt-20 border-t border-white/[0.06] pt-8">
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-mono text-rose-300">02</span>
+                    <span className={`text-xs font-mono ${accents.text}`}>02</span>
                     <h2 className="text-sm font-serif uppercase tracking-widest text-white">Story Chapters & Pacing</h2>
                   </div>
                   <p className="text-xs font-serif italic text-white/50">
@@ -1206,7 +1270,7 @@ function EditExperienceContent() {
               <section id="section-mood" className="space-y-5 scroll-mt-20 border-t border-white/[0.06] pt-8">
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-mono text-rose-300">05</span>
+                    <span className={`text-xs font-mono ${accents.text}`}>05</span>
                     <h2 className="text-sm font-serif uppercase tracking-widest text-white">Mood & Physical Styling</h2>
                   </div>
                   <p className="text-xs font-serif italic text-white/50">
@@ -1279,12 +1343,12 @@ function EditExperienceContent() {
                   </div>
                 </div>
 
-                {/* Stationery Paper */}
+                {/* Stationery Paper: Compact Material Row */}
                 <div className="space-y-2">
-                  <span className="text-[11px] font-mono uppercase tracking-wider text-white/50 block">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-white/40 block">
                     Stationery Paper
                   </span>
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="flex flex-wrap gap-2 py-1">
                     {CURATED_PAPERS.map((paper) => {
                       const isSelected = normalizeValentineDecor(config.decor).paper === paper.id;
                       return (
@@ -1298,29 +1362,30 @@ function EditExperienceContent() {
                               decor: { ...normalizeValentineDecor(prev.decor), paper: paper.id },
                             }))
                           }
-                          className={`p-2 rounded-xl border text-xs flex items-center gap-2 transition-all cursor-pointer ${
+                          className={`py-1.5 px-3 rounded-full border text-xs flex items-center gap-2 transition-all cursor-pointer font-serif ${
                             isSelected
-                              ? "border-white bg-white text-black font-medium shadow-sm"
-                              : "border-white/[0.06] bg-white/[0.02] text-white/70 hover:bg-white/[0.05]"
+                              ? `${accents.border} bg-white/[0.08] text-white font-medium`
+                              : "border-white/[0.06] bg-transparent text-white/60 hover:text-white hover:border-white/15"
                           }`}
                         >
                           <span
-                            className="w-3.5 h-3.5 rounded-full border border-black/20 shrink-0"
+                            className="w-3 h-3 rounded-full border border-white/20 shrink-0"
                             style={{ backgroundColor: paper.previewColor }}
                           />
-                          <span className="font-serif truncate">{paper.name}</span>
+                          <span>{paper.name}</span>
+                          {isSelected && <span className={`w-1 h-1 rounded-full ${accents.dot}`} />}
                         </button>
                       );
                     })}
                   </div>
                 </div>
 
-                {/* Silk & Velvet Ribbon */}
+                {/* Silk & Velvet Ribbon: Compact Material Row */}
                 <div className="space-y-2">
-                  <span className="text-[11px] font-mono uppercase tracking-wider text-white/50 block">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-white/40 block">
                     Silk & Velvet Ribbon
                   </span>
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="flex flex-wrap gap-2 py-1">
                     {CURATED_RIBBONS.map((ribbon) => {
                       const isSelected = normalizeValentineDecor(config.decor).ribbon === ribbon.id;
                       return (
@@ -1334,29 +1399,30 @@ function EditExperienceContent() {
                               decor: { ...normalizeValentineDecor(prev.decor), ribbon: ribbon.id },
                             }))
                           }
-                          className={`p-2 rounded-xl border text-xs flex items-center gap-2 transition-all cursor-pointer ${
+                          className={`py-1.5 px-3 rounded-full border text-xs flex items-center gap-2 transition-all cursor-pointer font-serif ${
                             isSelected
-                              ? "border-white bg-white text-black font-medium shadow-sm"
-                              : "border-white/[0.06] bg-white/[0.02] text-white/70 hover:bg-white/[0.05]"
+                              ? `${accents.border} bg-white/[0.08] text-white font-medium`
+                              : "border-white/[0.06] bg-transparent text-white/60 hover:text-white hover:border-white/15"
                           }`}
                         >
                           <span
-                            className="w-3.5 h-3.5 rounded-full border border-black/20 shrink-0"
+                            className="w-3 h-3 rounded-full border border-white/20 shrink-0"
                             style={{ backgroundColor: ribbon.previewColor }}
                           />
-                          <span className="font-serif truncate">{ribbon.name}</span>
+                          <span>{ribbon.name}</span>
+                          {isSelected && <span className={`w-1 h-1 rounded-full ${accents.dot}`} />}
                         </button>
                       );
                     })}
                   </div>
                 </div>
 
-                {/* Digital Wax Seal */}
+                {/* Digital Wax Seal: Compact Tactile Row */}
                 <div className="space-y-2">
-                  <span className="text-[11px] font-mono uppercase tracking-wider text-white/50 block">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-white/40 block">
                     Digital Wax Seal
                   </span>
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="flex flex-wrap gap-2 py-1">
                     {CURATED_SEALS.map((seal) => {
                       const isSelected = normalizeValentineDecor(config.decor).waxSeal === seal.id;
                       return (
@@ -1374,26 +1440,32 @@ function EditExperienceContent() {
                               },
                             }))
                           }
-                          className={`p-2 rounded-xl border text-xs flex items-center gap-2 transition-all cursor-pointer ${
+                          className={`py-1.5 px-3 rounded-full border text-xs flex items-center gap-2 transition-all cursor-pointer font-serif ${
                             isSelected
-                              ? "border-white bg-white text-black font-medium shadow-sm"
-                              : "border-white/[0.06] bg-white/[0.02] text-white/70 hover:bg-white/[0.05]"
+                              ? `${accents.border} bg-white/[0.08] text-white font-medium`
+                              : "border-white/[0.06] bg-transparent text-white/60 hover:text-white hover:border-white/15"
                           }`}
                         >
                           <span className="text-sm select-none">{seal.emblem}</span>
-                          <span className="font-serif truncate">{seal.name}</span>
+                          <span>{seal.name}</span>
+                          {isSelected && <span className={`w-1 h-1 rounded-full ${accents.dot}`} />}
                         </button>
                       );
                     })}
                   </div>
                 </div>
 
-                {/* Bouquet Blooms */}
+                {/* Bouquet Blooms: Horizontal Scrolling Mini Collection */}
                 <div className="space-y-2">
-                  <span className="text-[11px] font-mono uppercase tracking-wider text-white/50 block">
-                    Bouquet Blooms (1–4)
-                  </span>
-                  <div className="grid grid-cols-3 sm:grid-cols-6 gap-1.5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-mono uppercase tracking-wider text-white/40 block">
+                      Bouquet Blooms (1–4)
+                    </span>
+                    <span className="text-[10px] font-mono text-white/40">
+                      {normalizeValentineDecor(config.decor).blooms.length} selected
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2 overflow-x-auto scrollbar-none py-1">
                     {CURATED_FLOWERS.map((flower) => {
                       const isSelected = normalizeValentineDecor(config.decor).blooms.includes(flower.id);
                       return (
@@ -1423,26 +1495,32 @@ function EditExperienceContent() {
                               };
                             })
                           }
-                          className={`p-2 rounded-lg border text-center transition-all cursor-pointer ${
+                          className={`py-1.5 px-3 rounded-full border text-xs flex items-center gap-2 transition-all cursor-pointer shrink-0 font-serif ${
                             isSelected
-                              ? "border-rose-400 bg-rose-950/60 text-white font-medium"
-                              : "border-white/[0.06] bg-white/[0.02] text-white/70 hover:bg-white/[0.05]"
+                              ? `${accents.border} bg-white/[0.08] text-white font-medium`
+                              : "border-white/[0.06] bg-transparent text-white/60 hover:text-white hover:border-white/15"
                           }`}
                         >
-                          <div className="text-lg mb-0.5 select-none">{flower.emoji}</div>
-                          <div className="text-[9px] truncate font-serif">{flower.name}</div>
+                          <span className="text-sm select-none">{flower.emoji}</span>
+                          <span>{flower.name}</span>
+                          {isSelected && <span className={`w-1 h-1 rounded-full ${accents.dot}`} />}
                         </button>
                       );
                     })}
                   </div>
                 </div>
 
-                {/* Orbiting Charms */}
+                {/* Orbiting Charms: Horizontal Scrolling Mini Collection */}
                 <div className="space-y-2">
-                  <span className="text-[11px] font-mono uppercase tracking-wider text-white/50 block">
-                    Orbiting Charms (1–3)
-                  </span>
-                  <div className="grid grid-cols-5 gap-1.5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-mono uppercase tracking-wider text-white/40 block">
+                      Orbiting Charms (1–3)
+                    </span>
+                    <span className="text-[10px] font-mono text-white/40">
+                      {normalizeValentineDecor(config.decor).charms.length} selected
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2 overflow-x-auto scrollbar-none py-1">
                     {CURATED_CHARMS.map((charm) => {
                       const isSelected = normalizeValentineDecor(config.decor).charms.includes(charm.id);
                       return (
@@ -1469,14 +1547,15 @@ function EditExperienceContent() {
                               };
                             })
                           }
-                          className={`p-2 rounded-lg border text-center transition-all cursor-pointer ${
+                          className={`py-1.5 px-3 rounded-full border text-xs flex items-center gap-2 transition-all cursor-pointer shrink-0 font-serif ${
                             isSelected
-                              ? "border-rose-400 bg-rose-950/60 text-white font-medium"
-                              : "border-white/[0.06] bg-white/[0.02] text-white/70 hover:bg-white/[0.05]"
+                              ? `${accents.border} bg-white/[0.08] text-white font-medium`
+                              : "border-white/[0.06] bg-transparent text-white/60 hover:text-white hover:border-white/15"
                           }`}
                         >
-                          <div className="text-lg mb-0.5 select-none">{charm.emoji}</div>
-                          <div className="text-[9px] truncate font-serif">{charm.name}</div>
+                          <span className="text-sm select-none">{charm.emoji}</span>
+                          <span>{charm.name}</span>
+                          {isSelected && <span className={`w-1 h-1 rounded-full ${accents.dot}`} />}
                         </button>
                       );
                     })}
@@ -1485,10 +1564,10 @@ function EditExperienceContent() {
 
                 {/* Atmospheric Mood Accent */}
                 <div className="space-y-2 pt-1">
-                  <span className="text-[11px] font-mono uppercase tracking-wider text-white/50 block">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-white/40 block">
                     Atmospheric Mood Accent
                   </span>
-                  <div className="grid grid-cols-3 gap-2">
+                  <div className="flex flex-wrap gap-2 py-1">
                     {ACCENT_THEMES.map((theme) => {
                       const isSelected = (config.accentTheme || "crimson-rose") === theme;
                       const meta = {
@@ -1508,14 +1587,15 @@ function EditExperienceContent() {
                               accentTheme: theme as AccentTheme,
                             }))
                           }
-                          className={`px-3 py-2 rounded-xl text-xs font-serif border flex items-center justify-center gap-2 transition-all cursor-pointer ${
+                          className={`px-3 py-1.5 rounded-full text-xs font-serif border flex items-center gap-2 transition-all cursor-pointer ${
                             isSelected
-                              ? "border-white bg-white text-black font-medium shadow-xs"
-                              : "border-white/[0.06] bg-white/[0.02] text-white/70 hover:bg-white/[0.05]"
+                              ? `${accents.border} bg-white/[0.08] text-white font-medium`
+                              : "border-white/[0.06] bg-transparent text-white/60 hover:text-white hover:border-white/15"
                           }`}
                         >
                           <span className={`w-2 h-2 rounded-full ${meta.color}`} />
                           <span>{meta.label}</span>
+                          {isSelected && <span className={`w-1 h-1 rounded-full ${accents.dot}`} />}
                         </button>
                       );
                     })}
@@ -1524,76 +1604,57 @@ function EditExperienceContent() {
               </section>
 
               {/* ------------------------------------------------------------- */}
-              {/* STAGE 06: Recipient Experience Preview                        */}
+              {/* STAGE 06: Preview & Send (Final Review & Seal)                */}
               {/* ------------------------------------------------------------- */}
-              <section id="section-preview" className="space-y-4 scroll-mt-20 border-t border-white/[0.06] pt-8">
+              <section id="section-preview" className="space-y-6 scroll-mt-20 border-t border-white/[0.06] pt-8 pb-10">
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-mono text-rose-300">06</span>
-                    <h2 className="text-sm font-serif uppercase tracking-widest text-white">Recipient Experience Preview</h2>
+                    <span className={`text-xs font-mono ${accents.text}`}>06</span>
+                    <h2 className="text-sm font-serif uppercase tracking-widest text-white">Preview & Send</h2>
                   </div>
                   <p className="text-xs font-serif italic text-white/50">
-                    &ldquo;See how your creation comes to life in their eyes&rdquo;
+                    &ldquo;Your Valentine is ready to become a private world&rdquo;
                   </p>
                 </div>
 
+                {/* Editorial Keepsake Summary */}
                 <div className="p-4 rounded-2xl bg-white/[0.02] border border-white/[0.06] space-y-3 text-xs">
-                  <div className="space-y-1">
-                    <span className="font-serif text-white text-sm block">Keepsake Architecture Summary</span>
-                    <p className="text-white/60 font-light leading-relaxed">
-                      Your chosen world ({templateMeta.name}), wax seal, story chapters, and interactive moments render live on the persistent canvas to your left.
-                    </p>
-                  </div>
-
-                  <div className="grid grid-cols-3 gap-2 pt-2 border-t border-white/[0.04] text-center">
-                    <div className="p-2 rounded-lg bg-white/[0.02]">
-                      <span className="block text-sm mb-0.5">💌</span>
-                      <span className="text-[10px] text-white/60 font-mono">Tactile Seal</span>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-left">
+                    <div>
+                      <span className="text-[10px] font-mono text-white/40 uppercase tracking-wider block">World</span>
+                      <span className="font-serif text-white text-sm">{templateMeta.name}</span>
                     </div>
-                    <div className="p-2 rounded-lg bg-white/[0.02]">
-                      <span className="block text-sm mb-0.5">📜</span>
-                      <span className="text-[10px] text-white/60 font-mono">Unfolded Letter</span>
+                    <div>
+                      <span className="text-[10px] font-mono text-white/40 uppercase tracking-wider block">Love Letter</span>
+                      <span className="font-serif text-white text-sm">
+                        {config.partnerName?.trim() && config.message?.trim() ? "Inscribed" : "Incomplete"}
+                      </span>
                     </div>
-                    <div className="p-2 rounded-lg bg-white/[0.02]">
-                      <span className="block text-sm mb-0.5">✨</span>
-                      <span className="text-[10px] text-white/60 font-mono">{activeMomentsCount} Moments</span>
+                    <div>
+                      <span className="text-[10px] font-mono text-white/40 uppercase tracking-wider block">Moments</span>
+                      <span className="font-serif text-white text-sm">{activeMomentsCount} Active</span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] font-mono text-white/40 uppercase tracking-wider block">Style</span>
+                      <span className="font-serif text-white text-sm">Bespoke</span>
                     </div>
                   </div>
 
                   {/* Mobile Preview View Button */}
-                  <div className="pt-1 lg:hidden">
+                  <div className="pt-2 border-t border-white/[0.04] lg:hidden">
                     <Button
                       type="button"
                       variant="secondary"
                       size="md"
                       onClick={() => setMobileTab("preview")}
-                      className="w-full text-xs rounded-full font-ui"
+                      className="w-full text-xs rounded-full font-serif"
                     >
                       Open Live Canvas Preview →
                     </Button>
                   </div>
                 </div>
-              </section>
 
-              {/* ------------------------------------------------------------- */}
-              {/* STAGE 07: Seal & Send                                         */}
-              {/* ------------------------------------------------------------- */}
-              <section id="section-send" className="space-y-6 scroll-mt-20 border-t border-white/[0.06] pt-8 pb-10">
-                <div className="flex items-center justify-between">
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs font-mono text-rose-300">07</span>
-                      <h2 className="text-sm font-serif uppercase tracking-widest text-white">Seal & Send Your Valentine</h2>
-                    </div>
-                    <p className="text-xs font-serif italic text-white/50">
-                      &ldquo;Attach soundtrack music, schedule reveal date, and generate private link&rdquo;
-                    </p>
-                  </div>
-                  <Badge variant="rose" size="sm" className="text-[10px] font-mono">
-                    Final Step
-                  </Badge>
-                </div>
-
+                {/* Soundtrack & Delivery Schedule */}
                 <PreviewAndSendSection
                   publicId={publicId}
                   partnerName={config.partnerName}
@@ -1625,7 +1686,7 @@ function EditExperienceContent() {
                     variant="outline"
                     size="md"
                     onClick={() => performSave()}
-                    className="flex-1 text-xs border-white/15 text-[#FAF8F5] rounded-full font-ui cursor-pointer"
+                    className="flex-1 text-xs border-white/15 text-[#FAF8F5] rounded-full font-serif cursor-pointer hover:bg-white/[0.05]"
                   >
                     Save Draft
                   </Button>
@@ -1636,7 +1697,7 @@ function EditExperienceContent() {
                     size="md"
                     disabled={saveStatus === "saving" || isPublishing}
                     onClick={handlePublish}
-                    className="flex-1 text-xs rounded-full font-ui shadow-lg shadow-rose-950/50 cursor-pointer"
+                    className="flex-1 text-xs rounded-full font-serif shadow-lg shadow-rose-950/50 cursor-pointer"
                   >
                     {isPublishing ? "Publishing…" : "Publish Valentine 💌"}
                   </Button>
@@ -1659,10 +1720,15 @@ function EditExperienceContent() {
               <button
                 type="button"
                 onClick={goToNextStage}
-                className="px-5 py-2 rounded-full text-xs font-ui font-medium bg-rose-600/80 hover:bg-rose-500 text-white border border-rose-400/30 transition-all flex items-center gap-1.5 cursor-pointer shadow-md shadow-rose-950/40"
+                disabled={activeSection === "preview" && (saveStatus === "saving" || isPublishing)}
+                className={`px-5 py-2 rounded-full text-xs font-serif italic transition-all flex items-center gap-1.5 cursor-pointer border ${
+                  activeSection === "preview"
+                    ? "bg-rose-600/80 hover:bg-rose-500 text-white border-rose-400/40 shadow-md shadow-rose-950/40"
+                    : "bg-white/[0.06] hover:bg-white/[0.1] text-white border-white/10"
+                }`}
               >
                 <span>{nextStageLabel}</span>
-                <span>→</span>
+                {activeSection !== "preview" && <span>→</span>}
               </button>
             </div>
           </div>

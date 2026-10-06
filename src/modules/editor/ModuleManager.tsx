@@ -178,7 +178,10 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
         <div className="space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-xs font-serif uppercase tracking-wider text-white/70">
-              Selected Moments ({activeCount})
+              Your Moments
+            </span>
+            <span className="text-[10px] font-mono text-white/40">
+              {activeCount} Active
             </span>
           </div>
 
@@ -199,7 +202,7 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
                   <button
                     type="button"
                     onClick={() => setActiveMoment(activeMoment === m.key ? null : (m.key as ActiveMoment))}
-                    className="text-xs font-mono uppercase tracking-wider text-rose-300 hover:text-white cursor-pointer transition-colors"
+                    className="text-xs font-mono uppercase tracking-wider text-white/70 hover:text-white cursor-pointer transition-colors"
                   >
                     {activeMoment === m.key ? "Editing ▾" : "Edit ✎"}
                   </button>
@@ -219,10 +222,11 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
           <div className="pt-1 flex items-center justify-between">
             <button
               type="button"
+              data-testid="add-moment-trigger"
               onClick={() => setIsLibraryOpen(!isLibraryOpen)}
-              className="text-xs font-serif italic text-rose-300/90 hover:text-white flex items-center gap-1.5 transition-colors cursor-pointer"
+              className="text-xs font-serif italic text-white/70 hover:text-white flex items-center gap-1.5 transition-colors cursor-pointer py-1"
             >
-              <span>{isLibraryOpen ? "▾ Hide Moment Library" : "+ Add Another Moment to Your Story"}</span>
+              <span>{isLibraryOpen ? "▾ Hide Moment Library" : "+ Add a moment to your story"}</span>
             </button>
           </div>
         </div>
@@ -230,11 +234,20 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
 
       {/* Available Moment Library Grid */}
       {(!anyEnabled || isLibraryOpen || Boolean(externalActiveMoment)) && (
-        <div className="space-y-2.5 pt-1 animate-fadeIn">
+        <div className="space-y-2.5 pt-1 animate-fadeIn p-3 rounded-2xl bg-white/[0.02] border border-white/[0.06]">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-mono uppercase tracking-wider text-white/50">
               {anyEnabled ? "Browse Available Moments" : "Choose a Moment to Add"}
             </span>
+            {anyEnabled && (
+              <button
+                type="button"
+                onClick={() => setIsLibraryOpen(false)}
+                className="text-[10px] font-mono text-white/40 hover:text-white cursor-pointer"
+              >
+                Done ✕
+              </button>
+            )}
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">

@@ -8,8 +8,7 @@ export type StudioStageId =
   | "moments"
   | "personalize"
   | "mood"
-  | "preview"
-  | "send";
+  | "preview";
 
 export interface StudioStage {
   id: StudioStageId;
@@ -25,7 +24,7 @@ export const STUDIO_STAGES: StudioStage[] = [
     id: "world",
     stepNumber: "01",
     label: "Visual World",
-    shortLabel: "World",
+    shortLabel: "WORLD",
     icon: "🌐",
     description: "Atmosphere they step into",
   },
@@ -33,7 +32,7 @@ export const STUDIO_STAGES: StudioStage[] = [
     id: "story",
     stepNumber: "02",
     label: "Story Chapters",
-    shortLabel: "Story",
+    shortLabel: "STORY",
     icon: "📖",
     description: "Narrative journey & pacing",
   },
@@ -41,7 +40,7 @@ export const STUDIO_STAGES: StudioStage[] = [
     id: "moments",
     stepNumber: "03",
     label: "Interactive Moments",
-    shortLabel: "Moments",
+    shortLabel: "MOMENTS",
     icon: "✨",
     description: "Discovered surprises",
   },
@@ -49,7 +48,7 @@ export const STUDIO_STAGES: StudioStage[] = [
     id: "personalize",
     stepNumber: "04",
     label: "Personalize & Love Letter",
-    shortLabel: "Letter",
+    shortLabel: "LETTER",
     icon: "💌",
     description: "Core words & dedication",
   },
@@ -57,25 +56,17 @@ export const STUDIO_STAGES: StudioStage[] = [
     id: "mood",
     stepNumber: "05",
     label: "Mood & Physical Styling",
-    shortLabel: "Style",
+    shortLabel: "STYLE",
     icon: "🎨",
     description: "Stationery, seals & blooms",
   },
   {
     id: "preview",
     stepNumber: "06",
-    label: "Recipient Experience",
-    shortLabel: "Preview",
-    icon: "👁️",
-    description: "Experience verification",
-  },
-  {
-    id: "send",
-    stepNumber: "07",
-    label: "Seal & Send",
-    shortLabel: "Send",
-    icon: "🚀",
-    description: "Soundtrack & private link",
+    label: "Preview & Send",
+    shortLabel: "PREVIEW",
+    icon: "💌",
+    description: "Experience verification & delivery",
   },
 ];
 
@@ -101,38 +92,38 @@ export const StudioStageStepper: React.FC<StudioStageStepperProps> = ({
         return {
           text: "text-amber-200",
           bar: "bg-amber-300",
-          glow: "shadow-[0_0_10px_rgba(252,211,77,0.5)]",
+          glow: "shadow-[0_0_8px_rgba(252,211,77,0.4)]",
         };
       case "kage":
         return {
           text: "text-purple-300",
           bar: "bg-purple-400",
-          glow: "shadow-[0_0_10px_rgba(167,139,250,0.5)]",
+          glow: "shadow-[0_0_8px_rgba(167,139,250,0.4)]",
         };
       case "apricot-film":
         return {
           text: "text-amber-300",
           bar: "bg-amber-500",
-          glow: "shadow-[0_0_10px_rgba(245,158,11,0.5)]",
+          glow: "shadow-[0_0_8px_rgba(245,158,11,0.4)]",
         };
       case "wildflower-paper":
         return {
           text: "text-emerald-300",
           bar: "bg-emerald-400",
-          glow: "shadow-[0_0_10px_rgba(52,211,153,0.5)]",
+          glow: "shadow-[0_0_8px_rgba(52,211,153,0.4)]",
         };
       case "ocean-letter":
         return {
           text: "text-sky-300",
           bar: "bg-sky-400",
-          glow: "shadow-[0_0_10px_rgba(56,189,248,0.5)]",
+          glow: "shadow-[0_0_8px_rgba(56,189,248,0.4)]",
         };
       case "midnight-rose":
       default:
         return {
           text: "text-rose-300",
           bar: "bg-rose-500",
-          glow: "shadow-[0_0_10px_rgba(244,63,94,0.5)]",
+          glow: "shadow-[0_0_8px_rgba(244,63,94,0.4)]",
         };
     }
   };
@@ -143,9 +134,9 @@ export const StudioStageStepper: React.FC<StudioStageStepperProps> = ({
     <nav
       data-testid="studio-stage-stepper"
       aria-label="Studio creation stages"
-      className={`border-b border-white/[0.06] bg-[#0E0C12]/95 backdrop-blur-md select-none px-3 sm:px-6 py-2.5 overflow-x-auto scrollbar-none shrink-0 ${className}`}
+      className={`border-b border-white/[0.04] bg-[#0E0C12]/95 backdrop-blur-md select-none px-4 sm:px-6 py-2 overflow-x-auto scrollbar-none shrink-0 ${className}`}
     >
-      <div className="flex items-center justify-between gap-1 sm:gap-2 min-w-max mx-auto max-w-2xl">
+      <div className="flex items-center justify-between gap-3 sm:gap-5 min-w-max mx-auto max-w-xl">
         {STUDIO_STAGES.map((stage) => {
           const isActive = activeStage === stage.id;
           const isComplete = completedStages[stage.id];
@@ -156,32 +147,34 @@ export const StudioStageStepper: React.FC<StudioStageStepperProps> = ({
               type="button"
               data-testid={`stage-tab-${stage.id}`}
               onClick={() => onSelectStage(stage.id)}
-              className={`group relative py-1.5 px-2 sm:px-3 flex items-center gap-1.5 transition-all cursor-pointer select-none rounded-md ${
-                isActive ? "text-white" : "text-white/40 hover:text-white/80"
+              className={`group relative py-1.5 px-1.5 sm:px-2 flex items-center gap-1.5 transition-all cursor-pointer select-none ${
+                isActive ? "text-white" : "text-white/35 hover:text-white/70"
               }`}
               title={`${stage.stepNumber} · ${stage.label}: ${stage.description}`}
             >
               <span
-                className={`text-[10px] font-mono transition-colors ${
-                  isActive ? accents.text : "text-white/30 group-hover:text-white/50"
+                className={`text-[10px] font-mono tracking-wider transition-colors ${
+                  isActive ? accents.text : "text-white/25 group-hover:text-white/45"
                 }`}
               >
                 {stage.stepNumber}
               </span>
               <span
-                className={`text-xs font-serif uppercase tracking-wider transition-colors ${
-                  isActive ? "text-white font-medium" : "font-normal"
+                className={`text-[11px] font-serif tracking-widest uppercase transition-colors ${
+                  isActive
+                    ? "text-white font-medium drop-shadow-[0_0_10px_rgba(255,255,255,0.25)]"
+                    : "font-normal"
                 }`}
               >
                 {stage.shortLabel}
               </span>
               {isComplete && !isActive && (
-                <span className="w-1 h-1 rounded-full bg-emerald-400/80 shrink-0" title="Completed" />
+                <span className="w-1 h-1 rounded-full bg-emerald-400/60 shrink-0" title="Completed" />
               )}
               {/* Active stage micro accent line */}
               {isActive && (
                 <span
-                  className={`absolute -bottom-2.5 left-2 right-2 h-0.5 rounded-full ${accents.bar} ${accents.glow} transition-all duration-300`}
+                  className={`absolute -bottom-2 left-1.5 right-1.5 h-[1.5px] rounded-full ${accents.bar} ${accents.glow} transition-all duration-300`}
                 />
               )}
             </button>

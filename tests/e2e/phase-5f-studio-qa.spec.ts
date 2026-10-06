@@ -11,7 +11,7 @@ test.describe("Phase 5F Step 5: Creator Studio Renaissance Visual QA & UX Archit
       fs.mkdirSync(QA_DIR, { recursive: true });
     }
   });
-  test("Desktop (1440x900): 7-Stage Creation Journey, Stage Stepper, Canvas, & QA Screenshots", async ({
+  test("Desktop (1440x900): 6-Stage Creation Journey, Stage Stepper, Canvas, & QA Screenshots", async ({
     page,
     context,
     request,
@@ -41,7 +41,6 @@ test.describe("Phase 5F Step 5: Creator Studio Renaissance Visual QA & UX Archit
     await expect(page.locator('[data-testid="stage-tab-personalize"]')).toBeVisible();
     await expect(page.locator('[data-testid="stage-tab-mood"]')).toBeVisible();
     await expect(page.locator('[data-testid="stage-tab-preview"]')).toBeVisible();
-    await expect(page.locator('[data-testid="stage-tab-send"]')).toBeVisible();
 
     // Verify Save Status Pill
     const savePill = page.locator('[data-testid="save-status-pill"]');
@@ -101,14 +100,10 @@ test.describe("Phase 5F Step 5: Creator Studio Renaissance Visual QA & UX Archit
       fullPage: false,
     });
 
-    // Stage 06: Preview Experience
+    // Stage 06: Preview Experience & Send
     await page.locator('[data-testid="stage-tab-preview"]').click();
     await expect(page.locator("#section-preview")).toBeVisible();
     await expect(page.locator('[data-testid="experience-container"]')).toBeVisible();
-
-    // Stage 07: Seal & Send
-    await page.locator('[data-testid="stage-tab-send"]').click();
-    await expect(page.locator("#section-send")).toBeVisible();
     await expect(page.locator('[data-testid="publish-button"]')).toBeVisible();
     await expect(page.locator('[data-testid="save-draft-button"]')).toBeVisible();
 
