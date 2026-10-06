@@ -402,10 +402,10 @@ export default function TemplatesPage() {
             </span>
           </div>
 
-          {/* Freely Breathing Keepsake Tokens (Spatial Constellation) */}
+          {/* Freely Breathing Keepsake Tokens (Spatial Constellation - World Selection) */}
           <div
-            role="tablist"
-            aria-label="Living Worlds Selection"
+            role="radiogroup"
+            aria-label="Living atmosphere selection"
             className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 py-2"
           >
             {ORDERED_WORLD_KEYS.map((worldKey) => {
@@ -416,8 +416,8 @@ export default function TemplatesPage() {
                 <button
                   key={worldKey}
                   type="button"
-                  role="tab"
-                  aria-selected={isActive}
+                  role="radio"
+                  aria-checked={isActive}
                   aria-label={`Select ${profile.name} atmosphere`}
                   onClick={() => {
                     setActiveWorldId(worldKey);
@@ -637,14 +637,30 @@ export default function TemplatesPage() {
               {/* COLUMN B: Floating Interactive Keepsake Artifact                  */}
               {/* ----------------------------------------------------------------- */}
               <div className="w-full lg:col-span-6 flex items-center justify-center py-6 sm:py-10">
-                {/* ARTIFACT 1: CLOUD NINE FLOATING ENVELOPE */}
+                {/* ARTIFACT 1: CLOUD NINE DIMENSIONAL SKY AEROGRAMME (Physical Object) */}
                 {activeWorldId === "cloud-nine" && (
-                  <div className="w-full max-w-sm rounded-3xl bg-[#FFF8F3]/95 border border-pink-900/15 p-6 sm:p-8 text-center space-y-6 shadow-[0_24px_60px_-12px_rgba(244,114,182,0.35)] text-pink-950 transition-all duration-500 backdrop-blur-md rotate-[-1deg] hover:rotate-0">
-                    <div className="space-y-1">
-                      <span className="inline-block text-[10px] font-mono uppercase tracking-widest px-3 py-0.5 rounded-full border border-pink-300 bg-pink-100/60 text-pink-900">
-                        To My Sweetest Soul
-                      </span>
-                      <h3 className="text-2xl font-serif font-medium text-pink-950">Dearest Angel</h3>
+                  <div className="relative w-full max-w-sm p-6 sm:p-8 text-center space-y-5 bg-[#FFFDF9] text-pink-950 rounded-2xl shadow-[0_28px_65px_-10px_rgba(244,114,182,0.4),0_2px_8px_rgba(0,0,0,0.08)] border-2 border-dashed border-pink-300/70 rotate-[-1.5deg] hover:rotate-0 transition-transform duration-500">
+                    {/* Airmail Chevron Trim Indicator & Cancellation Stamp */}
+                    <div className="flex items-center justify-between border-b border-pink-200/80 pb-3">
+                      <div className="text-left">
+                        <span className="inline-block text-[9px] font-mono tracking-[0.2em] uppercase px-2 py-0.5 rounded bg-pink-100 text-pink-900 font-semibold border border-pink-200">
+                          PAR AVION · AIRMAIL
+                        </span>
+                        <span className="block text-[10px] font-mono text-pink-800/70 mt-0.5">
+                          TO MY SWEETEST SOUL
+                        </span>
+                      </div>
+                      {/* Vintage Cancellation Postal Stamp */}
+                      <div className="w-11 h-11 rounded-full border-2 border-dashed border-pink-400/80 flex flex-col items-center justify-center text-[7px] font-mono text-pink-700 leading-none rotate-12 select-none">
+                        <span>CLOUD 9</span>
+                        <span className="font-bold my-0.5">14.02</span>
+                        <span>POST</span>
+                      </div>
+                    </div>
+
+                    <div className="space-y-0.5 pt-1">
+                      <h3 className="text-3xl font-serif font-medium text-pink-950 tracking-wide">Dearest Angel</h3>
+                      <p className="text-xs font-serif italic text-pink-800/80">Skyway Express · Delivery by Dusk</p>
                     </div>
 
                     {activeCloudNineSealed ? (
@@ -652,17 +668,17 @@ export default function TemplatesPage() {
                         <button
                           type="button"
                           onClick={() => setActiveCloudNineSealed(false)}
-                          className="w-20 h-20 rounded-full bg-gradient-to-br from-pink-200 via-rose-200 to-pink-300 border-2 border-pink-300 flex items-center justify-center shadow-lg hover:scale-105 active:scale-95 transition-transform cursor-pointer"
+                          className="w-20 h-20 rounded-full bg-gradient-to-br from-pink-200 via-rose-100 to-pink-300 border-2 border-pink-300/90 flex items-center justify-center shadow-[0_8px_20px_rgba(244,114,182,0.4)] hover:scale-105 active:scale-95 transition-transform cursor-pointer"
                           aria-label="Open cloud envelope"
                         >
-                          <span className="text-4xl select-none">☁️</span>
+                          <span className="text-4xl select-none drop-shadow-sm">☁️</span>
                         </button>
                         <span className="mt-3 text-xs uppercase tracking-wider text-pink-800 font-medium font-mono">
                           Tap cloud to unfold letter
                         </span>
                       </div>
                     ) : (
-                      <div className="py-4 px-5 rounded-2xl bg-pink-50 border border-pink-200 text-left space-y-2.5 animate-fade-in">
+                      <div className="py-4 px-5 rounded-xl bg-pink-50/80 border border-pink-200 text-left space-y-2.5 animate-fade-in shadow-inner">
                         <p className="text-xs text-pink-950 leading-relaxed font-serif italic">
                           {currentProfile.previewQuote}
                         </p>
@@ -681,21 +697,24 @@ export default function TemplatesPage() {
                       </div>
                     )}
 
-                    <div className="pt-2 border-t border-pink-200/60 flex items-center justify-between text-xs text-pink-800/80 font-mono">
+                    <div className="pt-3 border-t border-dashed border-pink-200/80 flex items-center justify-between text-xs text-pink-800/80 font-mono">
                       <span>Luminous Sky Atmosphere</span>
                       <span>Soft Cream Paper</span>
                     </div>
                   </div>
                 )}
 
-                {/* ARTIFACT 2: MIDNIGHT ROSE FLOATING WAX-SEALED ENVELOPE */}
+                {/* ARTIFACT 2: MIDNIGHT ROSE DIMENSIONAL VELVET WAX-SEALED ENVELOPE (Physical Object) */}
                 {activeWorldId === "midnight-rose" && (
-                  <div className="w-full max-w-sm rounded-3xl bg-gradient-to-b from-[#250414]/95 via-[#18030D]/95 to-[#0A0105]/98 border border-rose-500/30 p-6 sm:p-8 text-center space-y-6 shadow-[0_24px_60px_-12px_rgba(225,29,72,0.45)] transition-all duration-500 backdrop-blur-xl rotate-[1deg] hover:rotate-0">
+                  <div className="relative w-full max-w-sm text-center space-y-5 bg-gradient-to-b from-[#220313] via-[#16020C] to-[#0A0105] rounded-2xl shadow-[0_28px_70px_-10px_rgba(225,29,72,0.5),0_4px_20px_rgba(0,0,0,0.8)] border border-rose-400/40 p-6 sm:p-8 rotate-[1deg] hover:rotate-0 transition-transform duration-500">
+                    {/* Envelope Flap Accent Line */}
+                    <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-transparent via-rose-400/50 to-transparent" />
+
                     <div className="space-y-1">
-                      <span className="inline-block text-[10px] font-mono uppercase tracking-widest px-3 py-0.5 rounded-full border border-rose-400/40 bg-rose-950/70 text-rose-200">
+                      <span className="inline-block text-[10px] font-mono uppercase tracking-[0.2em] px-3 py-0.5 rounded-full border border-rose-400/40 bg-rose-950/80 text-rose-200">
                         To My Favorite Person
                       </span>
-                      <h3 className="text-2xl font-serif font-medium text-white drop-shadow-sm">Dearest Maya</h3>
+                      <h3 className="text-3xl font-serif font-medium text-white drop-shadow-md">Dearest Maya</h3>
                     </div>
 
                     {activeMidnightSealed ? (
@@ -703,17 +722,17 @@ export default function TemplatesPage() {
                         <button
                           type="button"
                           onClick={() => setActiveMidnightSealed(false)}
-                          className={`w-20 h-20 rounded-full ${midnightThemeMeta.sealBg} border-2 ${midnightThemeMeta.sealBorder} flex items-center justify-center shadow-xl cursor-pointer hover:scale-105 active:scale-95 transition-transform duration-300`}
+                          className={`w-20 h-20 rounded-full ${midnightThemeMeta.sealBg} border-2 ${midnightThemeMeta.sealBorder} flex items-center justify-center shadow-[0_8px_25px_rgba(225,29,72,0.6)] cursor-pointer hover:scale-105 active:scale-95 transition-transform duration-300`}
                           aria-label="Break seal"
                         >
-                          <span className="text-4xl select-none">💌</span>
+                          <span className="text-4xl select-none drop-shadow-md">💌</span>
                         </button>
                         <span className="mt-3 text-xs uppercase tracking-wider text-rose-200/90 font-medium font-mono">
                           Tap wax seal to break & unfold
                         </span>
                       </div>
                     ) : (
-                      <div className="py-4 px-5 rounded-2xl bg-white/[0.06] border border-white/10 text-left space-y-2.5 animate-fade-in">
+                      <div className="py-4 px-5 rounded-xl bg-white/[0.08] border border-rose-400/30 text-left space-y-2.5 animate-fade-in shadow-inner">
                         <p className="text-xs text-rose-100 leading-relaxed font-serif italic">
                           {currentProfile.previewQuote}
                         </p>
@@ -732,18 +751,18 @@ export default function TemplatesPage() {
                       </div>
                     )}
 
-                    <div className="pt-2 border-t border-white/10 flex items-center justify-between text-xs text-rose-200/70 font-mono">
+                    <div className="pt-3 border-t border-rose-400/20 flex items-center justify-between text-xs text-rose-200/70 font-mono">
                       <span>Starlight Atmosphere</span>
                       <span className={midnightThemeMeta.accentText}>{midnightThemeMeta.name}</span>
                     </div>
                   </div>
                 )}
 
-                {/* ARTIFACT 3: KAGE SACRED SANCTUARY WASHI FRAGMENT */}
+                {/* ARTIFACT 3: KAGE HANGING KYOTO WASHI SCROLL (Physical Object) */}
                 {activeWorldId === "kage" && (
                   <div className="w-full flex items-center justify-center">
                     {activeKagePreview ? (
-                      <div className="w-full h-[360px] rounded-3xl overflow-hidden border border-emerald-400/40 shadow-2xl relative">
+                      <div className="w-full h-[360px] rounded-2xl overflow-hidden border border-emerald-400/40 shadow-2xl relative">
                         <KageComponentLazy
                           mode="preview"
                           config={{
@@ -771,106 +790,151 @@ export default function TemplatesPage() {
                         </button>
                       </div>
                     ) : (
-                      <div className="w-full max-w-sm rounded-3xl bg-gradient-to-b from-[#091512]/95 via-[#050D0B]/95 to-[#020605]/98 border border-emerald-400/35 p-6 sm:p-8 text-center space-y-6 shadow-[0_24px_60px_-12px_rgba(16,185,129,0.35)] backdrop-blur-md text-emerald-100">
-                        <div className="space-y-1">
-                          <span className="inline-block text-[10px] font-mono uppercase tracking-widest px-3 py-0.5 rounded-full border border-emerald-400/40 bg-emerald-950/70 text-emerald-300">
-                            Kyoto Mountain Pathway
-                          </span>
-                          <h3 className="text-2xl font-serif font-medium text-white">Twilight Sanctuary</h3>
+                      <div className="relative w-full max-w-xs flex flex-col items-center">
+                        {/* Top Scroll Dowel Rod */}
+                        <div className="w-full h-3 rounded-full bg-[#1e130c] border border-amber-900/60 shadow-md flex items-center justify-center">
+                          <div className="w-16 h-0.5 bg-amber-400/40" />
                         </div>
 
-                        <div className="py-4 flex flex-col items-center justify-center">
-                          <button
-                            type="button"
-                            onClick={() => setActiveKagePreview(true)}
-                            className="w-20 h-20 rounded-full bg-gradient-to-br from-emerald-900 via-teal-950 to-black border-2 border-emerald-400/50 flex items-center justify-center shadow-lg shadow-emerald-950/90 hover:scale-105 active:scale-95 transition-transform cursor-pointer"
-                            aria-label="Launch 3D WebGL preview"
-                          >
-                            <span className="text-4xl select-none">⛩️</span>
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => setActiveKagePreview(true)}
-                            className="mt-3 px-4 py-1.5 rounded-full bg-emerald-950/80 border border-emerald-400/40 text-xs uppercase tracking-wider text-emerald-300 hover:text-white hover:bg-emerald-900 transition-colors font-medium font-mono cursor-pointer"
-                          >
-                            Launch 3D WebGL Preview
-                          </button>
+                        {/* Mulberry Washi Scroll Body */}
+                        <div className="w-[92%] bg-gradient-to-b from-[#0b1714] via-[#06100d] to-[#030907] border-x border-emerald-500/30 p-6 text-center space-y-5 shadow-[0_24px_60px_-10px_rgba(16,185,129,0.35)] text-emerald-100">
+                          <div className="flex items-center justify-between border-b border-emerald-500/20 pb-2">
+                            <span className="text-[9px] font-mono uppercase tracking-[0.25em] text-emerald-300/80">
+                              KYOTO WASHI · 影
+                            </span>
+                            <span className="px-1.5 py-0.5 rounded text-[10px] font-serif bg-rose-950/80 border border-rose-500/40 text-rose-300 font-bold">
+                              印
+                            </span>
+                          </div>
+
+                          <div className="space-y-0.5">
+                            <h3 className="text-2xl font-serif font-medium text-white tracking-wide">Twilight Sanctuary</h3>
+                            <p className="text-xs font-serif italic text-emerald-300/70">Sacred Pathway to Stillness</p>
+                          </div>
+
+                          <div className="py-3 flex flex-col items-center justify-center">
+                            <button
+                              type="button"
+                              onClick={() => setActiveKagePreview(true)}
+                              className="w-18 h-18 rounded-full bg-gradient-to-br from-emerald-900 via-teal-950 to-black border-2 border-emerald-400/60 flex items-center justify-center shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:scale-105 active:scale-95 transition-transform cursor-pointer"
+                              aria-label="Launch 3D WebGL preview"
+                            >
+                              <span className="text-3xl select-none">⛩️</span>
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() => setActiveKagePreview(true)}
+                              className="mt-3 px-3.5 py-1.5 rounded-full bg-emerald-950/90 border border-emerald-400/40 text-[11px] uppercase tracking-wider text-emerald-300 hover:text-white hover:bg-emerald-900 transition-colors font-medium font-mono cursor-pointer"
+                            >
+                              Launch 3D WebGL Preview
+                            </button>
+                          </div>
+
+                          <div className="pt-2 border-t border-emerald-500/20 flex items-center justify-between text-[11px] text-emerald-300/70 font-mono">
+                            <span>Sacred Twilight Mist</span>
+                            <span>Interactive Sanctuary</span>
+                          </div>
                         </div>
 
-                        <div className="pt-2 border-t border-emerald-500/20 flex items-center justify-between text-xs text-emerald-300/70 font-mono">
-                          <span>Sacred Twilight Mist</span>
-                          <span>Interactive Sanctuary</span>
+                        {/* Bottom Weighted Scroll Roller */}
+                        <div className="w-full h-4 rounded-full bg-[#1e130c] border border-amber-900/60 shadow-lg flex items-center justify-between px-2">
+                          <div className="w-2 h-2 rounded-full bg-amber-600/60" />
+                          <div className="w-2 h-2 rounded-full bg-amber-600/60" />
                         </div>
                       </div>
                     )}
                   </div>
                 )}
 
-                {/* ARTIFACT 4: APRICOT FILM 16MM ANALOG SLIDE */}
+                {/* ARTIFACT 4: APRICOT FILM 16MM CELLULOID SLIDE (Physical Object) */}
                 {activeWorldId === "apricot-film" && (
-                  <div className="w-full max-w-sm rounded-3xl bg-gradient-to-b from-[#200F05]/95 via-[#150A03]/95 to-[#0A0501]/98 border border-amber-400/40 p-6 sm:p-8 text-center space-y-6 shadow-[0_24px_60px_-12px_rgba(245,158,11,0.35)] backdrop-blur-md text-[#FFF8F0] rotate-[-1deg] hover:rotate-0 transition-transform">
-                    <div className="space-y-1">
-                      <span className="inline-block text-[10px] font-mono uppercase tracking-widest px-3 py-0.5 rounded-full border border-amber-400/40 bg-amber-950/70 text-amber-300">
-                        16mm Analog Kodak
-                      </span>
-                      <h3 className="text-2xl font-serif font-medium text-white">Golden Hour Reel</h3>
+                  <div className="relative w-full max-w-sm bg-[#120703] border-2 border-amber-500/40 rounded-xl p-5 sm:p-7 text-center space-y-5 shadow-[0_28px_65px_-10px_rgba(245,158,11,0.4),0_4px_16px_rgba(0,0,0,0.8)] text-[#FFF8F0] rotate-[-1deg] hover:rotate-0 transition-transform duration-500">
+                    {/* Sprocket Holes on Left and Right Sides */}
+                    <div className="absolute left-2 top-6 bottom-6 flex flex-col justify-between pointer-events-none">
+                      {[...Array(5)].map((_, i) => (
+                        <div key={i} className="w-2 h-3.5 rounded-sm bg-black border border-amber-900/50 shadow-inner" />
+                      ))}
+                    </div>
+                    <div className="absolute right-2 top-6 bottom-6 flex flex-col justify-between pointer-events-none">
+                      {[...Array(5)].map((_, i) => (
+                        <div key={i} className="w-2 h-3.5 rounded-sm bg-black border border-amber-900/50 shadow-inner" />
+                      ))}
                     </div>
 
-                    {activeApricotRevealed ? (
-                      <div className="py-4 px-5 rounded-2xl bg-[#28140B]/90 border border-amber-500/30 text-left space-y-2.5 animate-fade-in">
-                        <p className="text-xs text-[#FFF8F0]/90 leading-relaxed font-serif italic">
-                          {currentProfile.previewQuote}
-                        </p>
-                        <div className="text-right text-[11px] text-amber-300 font-serif">
-                          — {currentProfile.sampleSender}
+                    <div className="px-4 space-y-1">
+                      <div className="flex items-center justify-between text-[9px] font-mono text-amber-400/80 tracking-widest border-b border-amber-500/20 pb-2">
+                        <span>KODAK VISION3</span>
+                        <span>16MM · FRAME #14</span>
+                      </div>
+                      <h3 className="text-2xl font-serif font-medium text-white pt-1">Golden Hour Reel</h3>
+                    </div>
+
+                    <div className="px-4">
+                      {activeApricotRevealed ? (
+                        <div className="py-4 px-5 rounded-xl bg-[#28140B]/90 border border-amber-500/40 text-left space-y-2.5 animate-fade-in shadow-inner">
+                          <p className="text-xs text-[#FFF8F0]/90 leading-relaxed font-serif italic">
+                            {currentProfile.previewQuote}
+                          </p>
+                          <div className="text-right text-[11px] text-amber-300 font-serif">
+                            — {currentProfile.sampleSender}
+                          </div>
+                          <div className="pt-1 text-center">
+                            <button
+                              type="button"
+                              onClick={() => setActiveApricotRevealed(false)}
+                              className="text-[11px] text-amber-300 hover:underline"
+                            >
+                              Rewind Film
+                            </button>
+                          </div>
                         </div>
-                        <div className="pt-1 text-center">
+                      ) : (
+                        <div className="py-3 flex flex-col items-center justify-center">
                           <button
                             type="button"
-                            onClick={() => setActiveApricotRevealed(false)}
-                            className="text-[11px] text-amber-300 hover:underline"
+                            onClick={() => setActiveApricotRevealed(true)}
+                            className="w-18 h-18 rounded-full bg-gradient-to-br from-[#e76f51] via-[#d45d3e] to-[#28140B] border-2 border-amber-400/70 flex items-center justify-center shadow-[0_6px_20px_rgba(245,158,11,0.4)] hover:scale-105 active:scale-95 transition-transform cursor-pointer"
+                            aria-label="Advance film slide"
                           >
-                            Rewind Film
+                            <svg className="w-8 h-8 text-[#FFF8F0]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                            </svg>
                           </button>
+                          <span className="mt-3 text-xs uppercase tracking-wider text-amber-200/90 font-medium font-mono">
+                            Tap slide to advance film frame
+                          </span>
                         </div>
-                      </div>
-                    ) : (
-                      <div className="py-4 flex flex-col items-center justify-center">
-                        <button
-                          type="button"
-                          onClick={() => setActiveApricotRevealed(true)}
-                          className="w-20 h-20 rounded-full bg-gradient-to-br from-[#e76f51] via-[#d45d3e] to-[#28140B] border-2 border-amber-400/60 flex items-center justify-center shadow-lg hover:scale-105 active:scale-95 transition-transform cursor-pointer"
-                          aria-label="Advance film slide"
-                        >
-                          <svg className="w-9 h-9 text-[#FFF8F0]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                          </svg>
-                        </button>
-                        <span className="mt-3 text-xs uppercase tracking-wider text-amber-200/90 font-medium font-mono">
-                          Tap slide to advance film frame
-                        </span>
-                      </div>
-                    )}
+                      )}
+                    </div>
 
-                    <div className="pt-2 border-t border-amber-500/20 flex items-center justify-between text-xs text-amber-300/80 font-mono">
+                    <div className="px-4 pt-2 border-t border-amber-500/20 flex items-center justify-between text-xs text-amber-300/80 font-mono">
                       <span>Tobacco Amber Grain</span>
                       <span>Golden Sunbeams</span>
                     </div>
                   </div>
                 )}
 
-                {/* ARTIFACT 5: WILDFLOWER PAPER BOTANICAL TAG */}
+                {/* ARTIFACT 5: WILDFLOWER PAPER HANDMADE DECKLED NOTE (Physical Object) */}
                 {activeWorldId === "wildflower-paper" && (
-                  <div className="w-full max-w-sm rounded-3xl bg-[#FAF6EE]/95 border border-amber-900/15 p-6 sm:p-8 text-center space-y-6 shadow-[0_24px_60px_-12px_rgba(180,120,50,0.3)] backdrop-blur-md text-[#1A0311] rotate-[1deg] hover:rotate-0 transition-transform">
-                    <div className="space-y-1">
-                      <span className="inline-block text-[10px] font-mono uppercase tracking-widest px-3 py-0.5 rounded-full border border-emerald-900/20 bg-emerald-100/60 text-emerald-900">
-                        Artisan Cotton Press
-                      </span>
-                      <h3 className="text-2xl font-serif font-medium text-[#1A0311]">Pressed Botanical Note</h3>
+                  <div className="relative w-full max-w-sm bg-[#FAF7F0] text-[#1A0311] rounded-2xl border border-amber-800/20 p-6 sm:p-8 text-center space-y-5 shadow-[0_28px_65px_-10px_rgba(180,120,50,0.35),0_2px_10px_rgba(0,0,0,0.1)] rotate-[1.5deg] hover:rotate-0 transition-transform duration-500">
+                    {/* Botanical Brass Clip Indicator */}
+                    <div className="flex items-center justify-between border-b border-amber-900/15 pb-2.5">
+                      <div className="flex items-center gap-1.5">
+                        <span className="w-2.5 h-2.5 rounded-full bg-amber-700/60" />
+                        <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-amber-900/80 font-semibold">
+                          300GSM COTTON PRESS
+                        </span>
+                      </div>
+                      <span className="text-base select-none">🌿</span>
+                    </div>
+
+                    <div className="space-y-0.5">
+                      <h3 className="text-3xl font-serif font-medium text-[#1A0311]">Pressed Botanical Note</h3>
+                      <p className="text-xs font-serif italic text-amber-900/70">Meadow Florals & Deckled Linen</p>
                     </div>
 
                     {activeWildflowerRevealed ? (
-                      <div className="py-4 px-5 rounded-2xl bg-white border border-amber-900/15 text-left space-y-2.5 animate-fade-in">
+                      <div className="py-4 px-5 rounded-xl bg-white/90 border border-amber-900/20 text-left space-y-2.5 animate-fade-in shadow-inner">
                         <p className="text-xs text-[#1A0311] leading-relaxed font-serif italic">
                           {currentProfile.previewQuote}
                         </p>
@@ -888,14 +952,14 @@ export default function TemplatesPage() {
                         </div>
                       </div>
                     ) : (
-                      <div className="py-4 flex flex-col items-center justify-center">
+                      <div className="py-3 flex flex-col items-center justify-center">
                         <button
                           type="button"
                           onClick={() => setActiveWildflowerRevealed(true)}
-                          className="w-20 h-20 rounded-full bg-gradient-to-br from-[#3D5A46] via-[#2A3E31] to-[#17221A] border-2 border-emerald-400/50 flex items-center justify-center shadow-lg hover:scale-105 active:scale-95 transition-transform cursor-pointer"
+                          className="w-18 h-18 rounded-full bg-gradient-to-br from-[#3D5A46] via-[#2A3E31] to-[#17221A] border-2 border-emerald-400/60 flex items-center justify-center shadow-[0_6px_20px_rgba(42,62,49,0.4)] hover:scale-105 active:scale-95 transition-transform cursor-pointer"
                           aria-label="Untie botanical twine"
                         >
-                          <svg className="w-9 h-9 text-rose-200" fill="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-8 h-8 text-rose-200" fill="currentColor" viewBox="0 0 24 24">
                             <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
                           </svg>
                         </button>
@@ -905,62 +969,75 @@ export default function TemplatesPage() {
                       </div>
                     )}
 
-                    <div className="pt-2 border-t border-amber-900/10 flex items-center justify-between text-xs text-amber-950/70 font-mono">
+                    <div className="pt-3 border-t border-amber-900/15 flex items-center justify-between text-xs text-amber-950/70 font-mono">
                       <span>Pressed Meadow Flora</span>
                       <span>Handmade Cotton Fiber</span>
                     </div>
                   </div>
                 )}
 
-                {/* ARTIFACT 6: OCEAN LETTER FROSTED SEA GLASS BOTTLE */}
+                {/* ARTIFACT 6: OCEAN LETTER SEA GLASS BOTTLE SILHOUETTE (Physical Object) */}
                 {activeWorldId === "ocean-letter" && (
-                  <div className="w-full max-w-sm rounded-3xl bg-gradient-to-b from-[#06182B]/95 via-[#03101E]/95 to-[#01070D]/98 border border-blue-400/40 p-6 sm:p-8 text-center space-y-6 shadow-[0_24px_60px_-12px_rgba(59,130,246,0.35)] backdrop-blur-md text-[#F0F9FF] rotate-[-1deg] hover:rotate-0 transition-transform">
-                    <div className="space-y-1">
-                      <span className="inline-block text-[10px] font-mono uppercase tracking-widest px-3 py-0.5 rounded-full border border-sky-400/40 bg-sky-950/70 text-sky-300">
-                        Frosted Sea Glass
-                      </span>
-                      <h3 className="text-2xl font-serif font-medium text-white">Tidal Bottle Message</h3>
+                  <div className="relative w-full max-w-sm flex flex-col items-center rotate-[-1deg] hover:rotate-0 transition-transform duration-500">
+                    {/* Bottle Neck with Natural Cork */}
+                    <div className="w-16 h-6 rounded-t-lg bg-[#b08968] border border-amber-800/60 shadow-md flex items-center justify-center">
+                      <span className="text-[8px] font-mono uppercase tracking-wider text-amber-950 font-bold">CORK</span>
                     </div>
 
-                    {activeOceanRevealed ? (
-                      <div className="py-4 px-5 rounded-2xl bg-[#092238]/90 border border-sky-400/30 text-left space-y-2.5 animate-fade-in">
-                        <p className="text-xs text-sky-100 leading-relaxed font-serif italic">
-                          {currentProfile.previewQuote}
-                        </p>
-                        <div className="text-right text-[11px] text-sky-300 font-serif">
-                          — {currentProfile.sampleSender}
+                    {/* Bottle Body in Sea Glass Cyan */}
+                    <div className="w-full bg-gradient-to-b from-[#062038]/95 via-[#031322]/95 to-[#010912]/98 border-2 border-sky-400/40 rounded-3xl p-6 sm:p-8 text-center space-y-5 shadow-[0_28px_65px_-10px_rgba(59,130,246,0.4),0_4px_20px_rgba(0,0,0,0.8)] text-[#F0F9FF]">
+                      <div className="flex items-center justify-between border-b border-sky-400/20 pb-2">
+                        <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-sky-300">
+                          FROSTED SEA GLASS
+                        </span>
+                        <span className="text-base select-none">🌊</span>
+                      </div>
+
+                      <div className="space-y-0.5">
+                        <h3 className="text-3xl font-serif font-medium text-white">Tidal Bottle Message</h3>
+                        <p className="text-xs font-serif italic text-sky-200/70">Drifting Across Deep Ocean Waters</p>
+                      </div>
+
+                      {activeOceanRevealed ? (
+                        <div className="py-4 px-5 rounded-xl bg-[#092238]/90 border border-sky-400/40 text-left space-y-2.5 animate-fade-in shadow-inner">
+                          <p className="text-xs text-sky-100 leading-relaxed font-serif italic">
+                            {currentProfile.previewQuote}
+                          </p>
+                          <div className="text-right text-[11px] text-sky-300 font-serif">
+                            — {currentProfile.sampleSender}
+                          </div>
+                          <div className="pt-1 text-center">
+                            <button
+                              type="button"
+                              onClick={() => setActiveOceanRevealed(false)}
+                              className="text-[11px] text-sky-300 hover:underline"
+                            >
+                              Cork Bottle
+                            </button>
+                          </div>
                         </div>
-                        <div className="pt-1 text-center">
+                      ) : (
+                        <div className="py-3 flex flex-col items-center justify-center">
                           <button
                             type="button"
-                            onClick={() => setActiveOceanRevealed(false)}
-                            className="text-[11px] text-sky-300 hover:underline"
+                            onClick={() => setActiveOceanRevealed(true)}
+                            className="w-18 h-18 rounded-full bg-gradient-to-br from-[#0c4a6e] via-[#0369a1] to-[#022c44] border-2 border-sky-400/70 flex items-center justify-center shadow-[0_6px_20px_rgba(59,130,246,0.4)] hover:scale-105 active:scale-95 transition-transform cursor-pointer"
+                            aria-label="Uncork ocean bottle"
                           >
-                            Cork Bottle
+                            <svg className="w-8 h-8 text-sky-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                            </svg>
                           </button>
+                          <span className="mt-3 text-xs uppercase tracking-wider text-sky-200/90 font-medium font-mono">
+                            Tap to uncork floating bottle
+                          </span>
                         </div>
-                      </div>
-                    ) : (
-                      <div className="py-4 flex flex-col items-center justify-center">
-                        <button
-                          type="button"
-                          onClick={() => setActiveOceanRevealed(true)}
-                          className="w-20 h-20 rounded-full bg-gradient-to-br from-[#0c4a6e] via-[#0369a1] to-[#022c44] border-2 border-sky-400/60 flex items-center justify-center shadow-lg hover:scale-105 active:scale-95 transition-transform cursor-pointer"
-                          aria-label="Uncork ocean bottle"
-                        >
-                          <svg className="w-9 h-9 text-sky-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-                          </svg>
-                        </button>
-                        <span className="mt-3 text-xs uppercase tracking-wider text-sky-200/90 font-medium font-mono">
-                          Tap to uncork floating bottle
-                        </span>
-                      </div>
-                    )}
+                      )}
 
-                    <div className="pt-2 border-t border-sky-400/20 flex items-center justify-between text-xs text-sky-300/80 font-mono">
-                      <span>Deep Oceanic Mist</span>
-                      <span>Tidal Parchment</span>
+                      <div className="pt-2 border-t border-sky-400/20 flex items-center justify-between text-xs text-sky-300/80 font-mono">
+                        <span>Deep Oceanic Mist</span>
+                        <span>Tidal Parchment</span>
+                      </div>
                     </div>
                   </div>
                 )}
@@ -988,7 +1065,7 @@ export default function TemplatesPage() {
           </span>
         </div>
 
-        {/* Spatial Ribbon Flow (Unboxed, Continuous Constellation) */}
+        {/* Editorial Directory of Worlds (Pure Typography, Zero Badges or Clunky Buttons) */}
         <div className="divide-y divide-white/[0.08]">
           {ORDERED_WORLD_KEYS.filter((id) => id !== activeWorldId).map((worldKey) => {
             const profile = WORLD_PROFILES[worldKey];
@@ -996,33 +1073,28 @@ export default function TemplatesPage() {
             return (
               <div
                 key={worldKey}
-                className="group py-5 sm:py-6 flex flex-col md:flex-row md:items-center justify-between gap-4 transition-all duration-300 hover:pl-2"
+                className="group py-4 sm:py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition-colors hover:pl-2"
               >
-                <div className="flex items-start sm:items-center gap-4">
-                  <span className="text-xl sm:text-2xl select-none transition-transform group-hover:scale-110 duration-300">
+                <div className="flex items-center gap-3.5">
+                  <span className="text-xl select-none transition-transform group-hover:scale-110 duration-300">
                     {profile.artifactIcon}
                   </span>
-                  <div className="space-y-0.5">
-                    <div className="flex items-center gap-2.5">
-                      <h3 className="text-xl sm:text-2xl font-serif font-normal text-white flex items-baseline gap-2">
-                        <span>{profile.name}</span>
-                        {profile.jpName && (
-                          <span className="text-base text-emerald-300/70 font-light font-serif">
-                            {profile.jpName}
-                          </span>
-                        )}
-                      </h3>
-                      <span className="text-[9px] font-mono uppercase tracking-wider text-rose-300/80 px-2 py-0.5 rounded-full bg-white/[0.06] border border-white/10">
-                        {profile.category}
-                      </span>
-                    </div>
-                    <p className="text-xs font-serif italic text-rose-200/80">
-                      &ldquo;{profile.tagline}&rdquo; · <span className="font-sans not-italic text-rose-100/70">{profile.bestFor}</span>
+                  <div>
+                    <h3 className="text-xl font-serif font-normal text-white flex items-baseline gap-2">
+                      <span>{profile.name}</span>
+                      {profile.jpName && (
+                        <span className="text-base text-emerald-300/70 font-light font-serif">
+                          {profile.jpName}
+                        </span>
+                      )}
+                    </h3>
+                    <p className="text-xs font-serif italic text-rose-200/70">
+                      &ldquo;{profile.tagline}&rdquo;
                     </p>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-4 self-end md:self-center shrink-0">
+                <div className="flex items-center gap-5 self-end sm:self-center shrink-0">
                   <button
                     type="button"
                     onClick={() => {
@@ -1030,16 +1102,16 @@ export default function TemplatesPage() {
                       setActiveKagePreview(false);
                       document.getElementById("showroom-stage")?.scrollIntoView({ behavior: "smooth" });
                     }}
-                    className="text-xs font-mono uppercase tracking-wider text-rose-200/80 hover:text-white underline underline-offset-4 cursor-pointer transition-colors"
+                    className="text-xs font-serif italic text-rose-200/80 hover:text-white transition-colors cursor-pointer"
                   >
-                    View Atmosphere
+                    View Atmosphere →
                   </button>
 
                   <Link
                     href={`/create?template=${worldKey}`}
-                    className="px-4 py-1.5 rounded-full text-xs font-mono tracking-wider uppercase text-white bg-white/10 hover:bg-white/20 border border-white/20 hover:border-white/40 transition-all shadow-sm"
+                    className="text-xs font-serif italic text-rose-300/70 hover:text-white transition-colors underline-offset-4 hover:underline"
                   >
-                    Customize {profile.name}
+                    Customize {profile.name} →
                   </Link>
                 </div>
               </div>
