@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef, useCallback, Suspense } from "react";
 import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
+import { motion, AnimatePresence } from "motion/react";
 import { ExperienceRenderer } from "@/templates/ExperienceRenderer";
 import {
   MidnightRoseDraftConfig,
@@ -34,6 +35,7 @@ import { ContentReadinessBar } from "@/components/studio/ContentReadinessBar";
 import { ModuleManager } from "@/modules/editor/ModuleManager";
 import { MultimediaStorySection } from "@/components/studio/MultimediaStorySection";
 import { PreviewAndSendSection } from "@/components/studio/PreviewAndSendSection";
+import { MobileWorkspaceSwitcher } from "@/components/studio/MobileWorkspaceSwitcher";
 import { FeatureDefinition } from "@/features/types";
 
 const STAGE_ORDER: StudioStageId[] = [
@@ -222,6 +224,79 @@ function EditExperienceContent() {
   const searchParams = useSearchParams();
 
   const inspectorRef = useRef<HTMLDivElement>(null);
+  const previewScrollRef = useRef<HTMLDivElement>(null);
+  const savedInspectorScrollTop = useRef<number>(0);
+  const savedPreviewScrollTop = useRef<number>(0);
+  const [isInputFocused, setIsInputFocused] = useState(false);
+
+  // Monitor virtual keyboard / active typing focus on mobile
+  useEffect(() => {
+    const handleFocusIn = (e: FocusEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (
+        target &&
+        (target.tagName === "INPUT" ||
+          target.tagName === "TEXTAREA" ||
+          target.isContentEditable)
+      ) {
+        setIsInputFocused(true);
+      }
+    };
+    const handleFocusOut = () => {
+      setIsInputFocused(false);
+    };
+    window.addEventListener("focusin", handleFocusIn);
+    window.addEventListener("focusout", handleFocusOut);
+    return () => {
+      window.removeEventListener("focusin", handleFocusIn);
+      window.removeEventListener("focusout", handleFocusOut);
+    };
+  }, []);
+
+  // Seamless scroll preservation when switching between Editor and Preview on mobile
+  const handleMobileTabChange = useCallback((nextTab: "form" | "preview") => {
+    if (nextTab === mobileTab) return;
+
+    if (mobileTab === "form") {
+      if (inspectorRef.current) {
+        savedInspectorScrollTop.current = inspectorRef.current.scrollTop;
+      }
+    } else {
+      if (previewScrollRef.current) {
+        savedPreviewScrollTop.current = previewScrollRef.current.scrollTop;
+      }
+    }
+
+    setMobileTab(nextTab);
+
+    // Restore scroll position after layout repaints
+    requestAnimationFrame(() => {
+      if (nextTab === "form") {
+        if (inspectorRef.current && savedInspectorScrollTop.current > 0) {
+          inspectorRef.current.scrollTop = savedInspectorScrollTop.current;
+        }
+      } else {
+        if (previewScrollRef.current && savedPreviewScrollTop.current > 0) {
+          previewScrollRef.current.scrollTop = savedPreviewScrollTop.current;
+        }
+      }
+    });
+  }, [mobileTab]);
+
+  const handleToggleAdvancedStory = useCallback(() => {
+    setShowAdvancedStory((prev) => {
+      const next = !prev;
+      if (next) {
+        setTimeout(() => {
+          const input = document.getElementById("greeting");
+          if (input) {
+            input.scrollIntoView({ behavior: "smooth", block: "nearest" });
+          }
+        }, 100);
+      }
+      return next;
+    });
+  }, []);
 
   const scrollToSection = useCallback((sectionId: StudioStageId) => {
     setActiveSection(sectionId);
@@ -741,7 +816,7 @@ function EditExperienceContent() {
         mobileTab={mobileTab}
         onChangeWorldClick={() => setWorldModalOpen(true)}
         onPublishClick={handlePublish}
-        onMobileTabChange={setMobileTab}
+        onMobileTabChange={handleMobileTabChange}
         isFocusMode={isFocusMode}
         onToggleFocusMode={() => setIsFocusMode((prev) => !prev)}
         previewDeviceMode={previewDeviceMode}
@@ -760,15 +835,24 @@ function EditExperienceContent() {
       <div className="flex-1 min-h-0 flex flex-col lg:flex-row overflow-hidden relative">
         {/* LEFT COLUMN: Persistent Live Visual Canvas (Never scrolls away!) */}
         <div
-          className={`flex-1 min-w-0 bg-[#07060A] flex flex-col items-center justify-center p-4 lg:p-6 relative select-none overflow-hidden h-full ${
+          id="studio-preview-canvas"
+          data-testid="studio-preview-canvas"
+          className={`flex-1 min-w-0 bg-[#07060A] flex flex-col items-center justify-center p-3 sm:p-4 lg:p-6 relative select-none overflow-hidden h-full ${
             mobileTab === "form" ? "hidden lg:flex" : "flex"
           }`}
         >
-          {/* World-specific ambient lighting */}
-          <div
-            className="pointer-events-none absolute inset-0 transition-opacity duration-700 opacity-80"
-            style={{ background: ambience.bgGradient }}
-          />
+          {/* World-specific ambient lighting with seamless crossfade */}
+          <AnimatePresence mode="popLayout">
+            <motion.div
+              key={`ambience-${templateMeta.id}`}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.85 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.7, ease: "easeInOut" }}
+              className="pointer-events-none absolute inset-0"
+              style={{ background: ambience.bgGradient }}
+            />
+          </AnimatePresence>
 
           {/* Canonical Global Atmosphere in serene studio mode */}
           <ValentinoAtmosphere
@@ -803,7 +887,7 @@ function EditExperienceContent() {
             }`}
           >
             <div className="w-full rounded-[38px] p-2.5 sm:p-3 bg-gradient-to-b from-white/[0.12] via-white/[0.04] to-black/95 shadow-[0_30px_90px_rgba(0,0,0,0.9)] border border-white/[0.1] relative">
-              <div className="rounded-[30px] overflow-hidden bg-[#0A090C] border border-black/80 flex flex-col h-[65vh] min-h-[480px] max-h-[740px] shadow-inner relative">
+              <div className="rounded-[30px] overflow-hidden bg-[#0A090C] border border-black/80 flex flex-col h-[70vh] sm:h-[65vh] min-h-[460px] max-h-[740px] shadow-inner relative">
                 {/* Minimal Device Top Bar */}
                 <div className="h-5 w-full bg-black/60 flex items-center justify-between px-5 pt-0.5 select-none z-30 shrink-0">
                   <span className="text-[10px] text-white/50 font-ui font-medium">9:41</span>
@@ -814,15 +898,26 @@ function EditExperienceContent() {
                   </div>
                 </div>
 
-                {/* Screen Content: Real ExperienceRenderer */}
-                <div className="flex-1 overflow-y-auto">
-                  <ExperienceRenderer
-                    templateId={templateMeta.id}
-                    templateVersion={templateMeta.version}
-                    mode="preview"
-                    rawConfig={config}
-                    publicId={publicId}
-                  />
+                {/* Screen Content: Real ExperienceRenderer with cinematic crossfade */}
+                <div ref={previewScrollRef} className="flex-1 overflow-y-auto relative">
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={`renderer-${templateMeta.id}`}
+                      initial={{ opacity: 0.85 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0.85 }}
+                      transition={{ duration: 0.35, ease: "easeOut" }}
+                      className="min-h-full"
+                    >
+                      <ExperienceRenderer
+                        templateId={templateMeta.id}
+                        templateVersion={templateMeta.version}
+                        mode="preview"
+                        rawConfig={config}
+                        publicId={publicId}
+                      />
+                    </motion.div>
+                  </AnimatePresence>
                 </div>
               </div>
             </div>
@@ -853,7 +948,7 @@ function EditExperienceContent() {
             />
 
             {/* Workbench Body */}
-            <div className="p-5 sm:p-7 space-y-9 flex-1">
+            <div className="p-5 sm:p-7 space-y-9 flex-1 pb-32 sm:pb-24">
               {/* Advisory Content Readiness Bar */}
               <ContentReadinessBar
                 partnerName={config.partnerName}
@@ -906,7 +1001,7 @@ function EditExperienceContent() {
                       type="button"
                       data-testid="section-change-world-trigger"
                       onClick={() => setWorldModalOpen(true)}
-                      className="text-[11px] font-mono text-white/50 hover:text-white underline cursor-pointer"
+                      className="min-h-[36px] py-1 px-2.5 text-[11px] font-mono text-white/50 hover:text-white underline cursor-pointer flex items-center"
                     >
                       All Worlds ⇄
                     </button>
@@ -1180,15 +1275,21 @@ function EditExperienceContent() {
                   <div className="pt-1">
                     <button
                       type="button"
-                      onClick={() => setShowAdvancedStory(!showAdvancedStory)}
-                      className="text-xs font-serif italic text-white/60 hover:text-white flex items-center gap-1.5 transition-colors cursor-pointer"
+                      id="accordion-toggle-salutation"
+                      aria-expanded={showAdvancedStory}
+                      aria-controls="accordion-content-salutation"
+                      onClick={handleToggleAdvancedStory}
+                      className="min-h-[44px] py-2 px-1 text-xs font-serif italic text-white/60 hover:text-white flex items-center gap-2 transition-colors cursor-pointer select-none"
                     >
-                      <span>{showAdvancedStory ? "▾" : "▸"}</span>
+                      <span className="text-[10px] w-3">{showAdvancedStory ? "▾" : "▸"}</span>
                       <span>Customize Salutation & Sign-Off</span>
                     </button>
 
                     {showAdvancedStory && (
-                      <div className={`space-y-3 pt-3 pl-3 border-l ${accents.border} mt-2 animate-fadeIn`}>
+                      <div
+                        id="accordion-content-salutation"
+                        className={`space-y-3 pt-3 pl-3 border-l ${accents.border} mt-1 animate-fadeIn transition-all duration-300`}
+                      >
                         <div className="space-y-1">
                           <label
                             htmlFor="greeting"
@@ -1244,15 +1345,18 @@ function EditExperienceContent() {
                   <div className="pt-2 border-t border-white/[0.04]">
                     <button
                       type="button"
+                      id="accordion-toggle-multimedia"
+                      aria-expanded={showMultimediaSection}
+                      aria-controls="accordion-content-multimedia"
                       onClick={() => setShowMultimediaSection(!showMultimediaSection)}
-                      className="text-xs font-serif italic text-white/60 hover:text-white flex items-center gap-1.5 transition-colors cursor-pointer"
+                      className="min-h-[44px] py-2 px-1 text-xs font-serif italic text-white/60 hover:text-white flex items-center gap-2 transition-colors cursor-pointer select-none"
                     >
-                      <span>{showMultimediaSection ? "▾" : "▸"}</span>
+                      <span className="text-[10px] w-3">{showMultimediaSection ? "▾" : "▸"}</span>
                       <span>Multimedia, Memories & Audio</span>
                     </button>
 
                     {showMultimediaSection && (
-                      <div className="pt-3 animate-fadeIn">
+                      <div id="accordion-content-multimedia" className="pt-3 animate-fadeIn">
                         <MultimediaStorySection
                           publicId={publicId}
                           modules={config.modules}
@@ -1365,7 +1469,7 @@ function EditExperienceContent() {
                               decor: { ...normalizeValentineDecor(prev.decor), paper: paper.id },
                             }))
                           }
-                          className={`px-3 py-1.5 rounded-lg border text-xs flex items-center gap-2 transition-all cursor-pointer font-serif ${
+                          className={`min-h-[38px] px-3 py-1.5 rounded-lg border text-xs flex items-center gap-2 transition-all cursor-pointer font-serif ${
                             isSelected
                               ? `${accents.border} bg-white/[0.06] text-white font-medium shadow-sm`
                               : "border-transparent bg-transparent text-white/50 hover:text-white hover:bg-white/[0.02]"
@@ -1406,7 +1510,7 @@ function EditExperienceContent() {
                               decor: { ...normalizeValentineDecor(prev.decor), ribbon: ribbon.id },
                             }))
                           }
-                          className={`px-3 py-1.5 rounded-lg border text-xs flex items-center gap-2 transition-all cursor-pointer font-serif ${
+                          className={`min-h-[38px] px-3 py-1.5 rounded-lg border text-xs flex items-center gap-2 transition-all cursor-pointer font-serif ${
                             isSelected
                               ? `${accents.border} bg-white/[0.06] text-white font-medium shadow-sm`
                               : "border-transparent bg-transparent text-white/50 hover:text-white hover:bg-white/[0.02]"
@@ -1451,7 +1555,7 @@ function EditExperienceContent() {
                               },
                             }))
                           }
-                          className={`px-3 py-1.5 rounded-lg border text-xs flex items-center gap-2 transition-all cursor-pointer font-serif ${
+                          className={`min-h-[38px] px-3 py-1.5 rounded-lg border text-xs flex items-center gap-2 transition-all cursor-pointer font-serif ${
                             isSelected
                               ? `${accents.border} bg-white/[0.06] text-white font-medium shadow-sm`
                               : "border-transparent bg-transparent text-white/50 hover:text-white hover:bg-white/[0.02]"
@@ -1510,7 +1614,7 @@ function EditExperienceContent() {
                               };
                             })
                           }
-                          className={`relative py-2 px-3 rounded-lg text-xs flex flex-col items-center gap-1.5 transition-all cursor-pointer shrink-0 font-serif border ${
+                          className={`min-h-[44px] relative py-2 px-3 rounded-lg text-xs flex flex-col items-center gap-1.5 transition-all cursor-pointer shrink-0 font-serif border ${
                             isSelected
                               ? `bg-white/[0.07] ${accents.border} text-white shadow-sm`
                               : "bg-white/[0.02] border-transparent text-white/60 hover:text-white hover:bg-white/[0.04]"
@@ -1568,7 +1672,7 @@ function EditExperienceContent() {
                               };
                             })
                           }
-                          className={`relative py-2 px-3 rounded-lg text-xs flex flex-col items-center gap-1.5 transition-all cursor-pointer shrink-0 font-serif border ${
+                          className={`min-h-[44px] relative py-2 px-3 rounded-lg text-xs flex flex-col items-center gap-1.5 transition-all cursor-pointer shrink-0 font-serif border ${
                             isSelected
                               ? `bg-white/[0.07] ${accents.border} text-white shadow-sm`
                               : "bg-white/[0.02] border-transparent text-white/60 hover:text-white hover:bg-white/[0.04]"
@@ -1614,7 +1718,7 @@ function EditExperienceContent() {
                               accentTheme: theme as AccentTheme,
                             }))
                           }
-                          className={`px-3 py-1.5 rounded-lg text-xs font-serif border flex items-center gap-2 transition-all cursor-pointer ${
+                          className={`min-h-[38px] px-3 py-1.5 rounded-lg text-xs font-serif border flex items-center gap-2 transition-all cursor-pointer ${
                             isSelected
                               ? `${accents.border} bg-white/[0.06] text-white font-medium shadow-sm`
                               : "border-transparent bg-transparent text-white/50 hover:text-white hover:bg-white/[0.02]"
@@ -1677,8 +1781,8 @@ function EditExperienceContent() {
                       type="button"
                       variant="secondary"
                       size="md"
-                      onClick={() => setMobileTab("preview")}
-                      className="w-full text-xs rounded-full font-serif"
+                      onClick={() => handleMobileTabChange("preview")}
+                      className="w-full min-h-[44px] text-xs rounded-full font-serif"
                     >
                       Open Live Canvas Preview →
                     </Button>
@@ -1717,7 +1821,7 @@ function EditExperienceContent() {
                     variant="outline"
                     size="md"
                     onClick={() => performSave()}
-                    className="flex-1 text-xs border-white/15 text-[#FAF8F5] rounded-full font-serif cursor-pointer hover:bg-white/[0.05]"
+                    className="flex-1 min-h-[44px] text-xs border-white/15 text-[#FAF8F5] rounded-full font-serif cursor-pointer hover:bg-white/[0.05]"
                   >
                     Save Draft
                   </Button>
@@ -1728,7 +1832,7 @@ function EditExperienceContent() {
                     size="md"
                     disabled={saveStatus === "saving" || isPublishing}
                     onClick={handlePublish}
-                    className="flex-1 text-xs rounded-full font-serif shadow-lg shadow-rose-950/50 cursor-pointer"
+                    className="flex-1 min-h-[44px] text-xs rounded-full font-serif shadow-lg shadow-rose-950/50 cursor-pointer"
                   >
                     {isPublishing ? "Publishing…" : "Publish Valentine 💌"}
                   </Button>
@@ -1737,12 +1841,12 @@ function EditExperienceContent() {
             </div>
 
             {/* Persistent Global Continue Action Footer */}
-            <div className="sticky bottom-0 z-30 px-5 sm:px-7 py-3 bg-[#0E0C12]/95 backdrop-blur-md border-t border-white/[0.06] flex items-center justify-between gap-4 mt-auto">
+            <div className="sticky bottom-0 z-30 px-5 sm:px-7 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] bg-[#0E0C12]/95 backdrop-blur-md border-t border-white/[0.06] flex items-center justify-between gap-4 mt-auto">
               <button
                 type="button"
                 disabled={currentStageIndex === 0}
                 onClick={goToPreviousStage}
-                className={`text-xs font-serif italic text-white/50 hover:text-white transition-colors cursor-pointer ${
+                className={`min-h-[44px] px-3 py-2 text-xs font-serif italic text-white/50 hover:text-white transition-colors cursor-pointer flex items-center ${
                   currentStageIndex === 0 ? "invisible" : ""
                 }`}
               >
@@ -1752,9 +1856,9 @@ function EditExperienceContent() {
                 type="button"
                 onClick={goToNextStage}
                 disabled={activeSection === "preview" && (saveStatus === "saving" || isPublishing)}
-                className={`px-5 py-2 rounded-full text-xs font-serif italic transition-all flex items-center gap-1.5 cursor-pointer border ${
+                className={`min-h-[44px] px-5 py-2.5 rounded-full text-xs font-serif italic transition-all flex items-center justify-center gap-1.5 cursor-pointer border select-none ${
                   activeSection === "preview"
-                    ? "bg-rose-600/80 hover:bg-rose-500 text-white border-rose-400/40 shadow-md shadow-rose-950/40"
+                    ? "bg-rose-600/90 hover:bg-rose-500 text-white font-medium border-rose-400/50 shadow-lg shadow-rose-950/60 ring-1 ring-rose-400/30"
                     : "bg-white/[0.06] hover:bg-white/[0.1] text-white border-white/10"
                 }`}
               >
@@ -1765,6 +1869,13 @@ function EditExperienceContent() {
           </div>
         )}
       </div>
+
+      {/* Floating Mobile Workspace Switcher (Thumb Zone Dock) */}
+      <MobileWorkspaceSwitcher
+        activeTab={mobileTab}
+        onTabChange={handleMobileTabChange}
+        isInputFocused={isInputFocused}
+      />
 
       {/* Feature Discovery Drawer */}
       <FeatureDiscoveryDrawer

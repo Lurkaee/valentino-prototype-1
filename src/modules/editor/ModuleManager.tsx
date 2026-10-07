@@ -28,6 +28,66 @@ export type ActiveMoment =
   | "finale"
   | null;
 
+const MomentLibraryItem: React.FC<{
+  testId: string;
+  icon: string;
+  title: string;
+  desc: string;
+  isEnabled: boolean;
+  onClick: () => void;
+}> = ({ testId, icon, title, desc, isEnabled, onClick }) => (
+  <button
+    type="button"
+    data-testid={testId}
+    onClick={onClick}
+    className={`p-3.5 sm:p-3 rounded-xl border text-left flex items-center justify-between gap-3 sm:flex-col sm:items-stretch sm:justify-between transition-all cursor-pointer group min-h-[58px] ${
+      isEnabled
+        ? "border-l-2 border-l-rose-400 border-t-white/[0.06] border-r-white/[0.06] border-b-white/[0.06] bg-rose-500/[0.08] sm:border-rose-400/40 sm:bg-rose-950/40 text-white shadow-xs"
+        : "border border-white/[0.08] bg-white/[0.03] text-white/70 hover:bg-white/[0.06] hover:border-white/[0.15]"
+    }`}
+  >
+    <div className="flex items-center gap-3 min-w-0 sm:mb-2 sm:justify-between">
+      <div className="flex items-center gap-2.5 min-w-0">
+        <span className="text-xl sm:text-lg select-none w-8 h-8 rounded-lg bg-white/[0.04] border border-white/[0.06] flex items-center justify-center shrink-0">
+          {icon}
+        </span>
+        <div className="min-w-0 sm:hidden">
+          <span className={`text-xs font-serif block truncate ${isEnabled ? "font-semibold text-rose-100" : "font-medium text-white"}`}>
+            {title}
+          </span>
+          <span className="text-[11px] text-white/50 font-ui truncate block font-light">
+            {desc}
+          </span>
+        </div>
+      </div>
+      <span
+        className={`hidden sm:inline-block text-[10px] font-ui px-1.5 py-0.5 rounded-md ${
+          isEnabled
+            ? "bg-rose-500/20 text-rose-300 font-medium"
+            : "bg-white/[0.06] text-white/50"
+        }`}
+      >
+        {isEnabled ? "✓ Active" : "+ Add"}
+      </span>
+    </div>
+    <div className="hidden sm:block">
+      <span className="text-xs font-display font-medium block text-white">{title}</span>
+      <span className="text-[10px] text-white/50 font-ui truncate block">{desc}</span>
+    </div>
+    <div className="sm:hidden shrink-0">
+      <span
+        className={`text-xs font-ui px-3 py-1.5 rounded-full min-h-[32px] flex items-center justify-center ${
+          isEnabled
+            ? "bg-rose-500/20 text-rose-300 font-medium border border-rose-500/30"
+            : "bg-white/[0.08] text-white/70 group-hover:text-white group-hover:bg-white/15"
+        }`}
+      >
+        {isEnabled ? "✓ Added" : "+ Add"}
+      </span>
+    </div>
+  </button>
+);
+
 export const ModuleManager: React.FC<ModuleManagerProps> = ({
   modules = {},
   hasHeroMedia = false,
@@ -49,6 +109,24 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isLibraryOpen]);
+
+  // Lock background inspector scrolling while moment library sheet is open
+  useEffect(() => {
+    if (!isLibraryOpen) return;
+    const inspector = document.getElementById("studio-inspector-pane");
+    const prevScroll = inspector?.scrollTop || 0;
+    const prevOverflow = inspector?.style.overflowY;
+    if (inspector) {
+      inspector.style.overflowY = "hidden";
+    }
+
+    return () => {
+      if (inspector) {
+        if (prevOverflow !== undefined) inspector.style.overflowY = prevOverflow;
+        inspector.scrollTop = prevScroll;
+      }
+    };
   }, [isLibraryOpen]);
 
   useEffect(() => {
@@ -183,12 +261,12 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
           <p className="text-xs font-serif italic text-white/40">
             No moments yet
           </p>
-          <div className="pt-1">
+          <div className="pt-2">
             <button
               type="button"
               data-testid="add-moment-trigger"
               onClick={() => setIsLibraryOpen(true)}
-              className="text-xs font-serif italic text-white/80 hover:text-white flex items-center gap-1.5 transition-colors cursor-pointer py-1"
+              className="min-h-[44px] px-4 py-2.5 rounded-xl border border-dashed border-white/15 hover:border-white/30 text-xs font-serif italic text-white/80 hover:text-white flex items-center gap-2 transition-colors cursor-pointer w-full justify-center select-none"
             >
               <span>+ Add a moment</span>
             </button>
@@ -212,7 +290,7 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
             {activeMomentList.map((m) => (
               <div
                 key={m.key}
-                className="py-2 px-1 flex items-center justify-between gap-3 text-xs group hover:bg-white/[0.02] transition-colors"
+                className="py-2.5 px-1 flex items-center justify-between gap-3 text-xs group hover:bg-white/[0.02] transition-colors"
               >
                 <div className="flex items-center gap-2.5 min-w-0">
                   <span className="text-base select-none">{m.icon}</span>
@@ -221,18 +299,18 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
                     <span className="text-[10px] text-white/40 truncate block">{m.desc}</span>
                   </div>
                 </div>
-                <div className="flex items-center gap-3 shrink-0">
+                <div className="flex items-center gap-2 shrink-0">
                   <button
                     type="button"
                     onClick={() => setActiveMoment(activeMoment === m.key ? null : (m.key as ActiveMoment))}
-                    className="text-xs font-mono uppercase tracking-wider text-white/70 hover:text-white cursor-pointer transition-colors"
+                    className="min-h-[40px] px-3 py-1.5 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-xs font-mono uppercase tracking-wider text-white/80 hover:text-white cursor-pointer transition-colors flex items-center justify-center"
                   >
                     {activeMoment === m.key ? "Editing ▾" : "Edit ✎"}
                   </button>
                   <button
                     type="button"
                     onClick={() => toggleModule(m.key, {})}
-                    className="text-xs text-white/40 hover:text-rose-400 p-1 cursor-pointer transition-colors"
+                    className="w-10 h-10 min-w-[40px] min-h-[40px] rounded-lg hover:bg-rose-500/15 text-white/40 hover:text-rose-400 flex items-center justify-center cursor-pointer transition-colors text-sm"
                     title="Remove moment"
                   >
                     ✕
@@ -242,12 +320,12 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
             ))}
           </div>
 
-          <div className="pt-1">
+          <div className="pt-2">
             <button
               type="button"
               data-testid="add-moment-trigger"
               onClick={() => setIsLibraryOpen(true)}
-              className="text-xs font-serif italic text-white/80 hover:text-white flex items-center gap-1.5 transition-colors cursor-pointer py-1"
+              className="min-h-[44px] px-4 py-2.5 rounded-xl border border-dashed border-white/15 hover:border-white/30 text-xs font-serif italic text-white/80 hover:text-white flex items-center gap-2 transition-colors cursor-pointer w-full justify-center select-none"
             >
               <span>+ Add a moment</span>
             </button>
@@ -255,24 +333,34 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
         </div>
       )}
 
-      {/* On-Demand Available Moment Library Overlay / Drawer */}
+      {/* On-Demand Available Moment Library Overlay / Drawer / Mobile Bottom Sheet */}
       {isLibraryOpen && (
         <div
           data-testid="moment-library-overlay"
-          className="fixed inset-0 z-50 flex justify-end bg-black/80 backdrop-blur-sm animate-fadeIn"
+          className="fixed inset-0 z-50 flex flex-col justify-end sm:flex-row sm:justify-end bg-black/60 backdrop-blur-xs sm:backdrop-blur-sm animate-fadeIn"
           role="dialog"
           aria-modal="true"
+          aria-labelledby="moment-library-title"
           onClick={(e) => {
             if (e.target === e.currentTarget) setIsLibraryOpen(false);
           }}
         >
-          <div className="w-full sm:max-w-xl md:max-w-2xl h-full bg-[#0E0C12] border-l border-white/10 shadow-2xl flex flex-col text-white overflow-hidden animate-slideLeft">
-            {/* Drawer Header */}
-            <div className="px-5 sm:px-7 py-5 border-b border-white/10 flex items-center justify-between shrink-0 bg-[#131118]">
-              <div className="space-y-1 min-w-0">
+          <div className="w-full sm:max-w-xl md:max-w-2xl h-[80vh] max-h-[82vh] sm:h-full sm:max-h-none bg-[#0E0C12] rounded-t-[26px] sm:rounded-none border-t sm:border-t-0 sm:border-l border-white/10 shadow-2xl flex flex-col text-white overflow-hidden animate-sheetSlideUp sm:animate-slideLeft">
+            {/* Visual drag handle for mobile */}
+            <div
+              className="w-10 h-1.5 rounded-full bg-white/25 mx-auto mt-2.5 mb-1 sm:hidden shrink-0"
+              aria-hidden="true"
+            />
+
+            {/* Drawer / Bottom Sheet Header */}
+            <div className="px-5 sm:px-7 py-3.5 sm:py-5 border-b border-white/10 flex items-center justify-between shrink-0 bg-[#131118]">
+              <div className="space-y-0.5 sm:space-y-1 min-w-0">
                 <div className="flex items-center gap-2">
                   <span className="text-base select-none">✨</span>
-                  <h2 className="text-base sm:text-lg font-serif font-medium text-white tracking-wide">
+                  <h2
+                    id="moment-library-title"
+                    className="text-base sm:text-lg font-serif font-medium text-white tracking-wide"
+                  >
                     Add a Moment
                   </h2>
                 </div>
@@ -284,7 +372,7 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
                 type="button"
                 data-testid="close-moment-library"
                 onClick={() => setIsLibraryOpen(false)}
-                className="w-9 h-9 rounded-full bg-white/[0.05] hover:bg-white/[0.12] border border-white/10 flex items-center justify-center text-white/70 hover:text-white transition-colors text-sm shrink-0 cursor-pointer"
+                className="w-10 h-10 min-w-[44px] min-h-[44px] rounded-full bg-white/[0.05] hover:bg-white/[0.12] border border-white/10 flex items-center justify-center text-white/70 hover:text-white transition-colors text-sm shrink-0 cursor-pointer"
                 aria-label="Close moment library"
               >
                 ✕
@@ -292,12 +380,15 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
             </div>
 
             {/* Scrollable Content Body */}
-            <div className="flex-1 overflow-y-auto px-5 sm:px-7 py-6 space-y-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="flex-1 overflow-y-auto px-4 sm:px-7 py-4 sm:py-6 space-y-4 sm:space-y-6">
+              <div className="flex flex-col gap-2.5 sm:grid sm:grid-cols-2 sm:gap-3">
           {/* 1. Timeline */}
-          <button
-            type="button"
-            data-testid="toggle-module-timeline"
+          <MomentLibraryItem
+            testId="toggle-module-timeline"
+            icon="⏳"
+            title="Our Story"
+            desc="Chronological journey"
+            isEnabled={timelineEnabled}
             onClick={() => {
               if (!timelineEnabled) {
                 toggleModule("timeline", {
@@ -323,34 +414,15 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
                 setActiveMoment(activeMoment === "timeline" ? null : "timeline");
               }
             }}
-            className={`p-3 rounded-xl border text-left flex flex-col justify-between transition-all cursor-pointer group ${
-              timelineEnabled
-                ? "border-rose-400/40 bg-rose-950/40 text-white shadow-xs"
-                : "border-white/[0.08] bg-white/[0.03] text-white/70 hover:bg-white/[0.06] hover:border-white/[0.15]"
-            }`}
-          >
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-lg select-none">⏳</span>
-              <span
-                className={`text-[10px] font-ui px-1.5 py-0.5 rounded-md ${
-                  timelineEnabled
-                    ? "bg-rose-500/20 text-rose-300 font-medium"
-                    : "bg-white/[0.06] text-white/50"
-                }`}
-              >
-                {timelineEnabled ? "✓ Active" : "+ Add"}
-              </span>
-            </div>
-            <div>
-              <span className="text-xs font-display font-medium block text-white">Our Story</span>
-              <span className="text-[10px] text-white/50 font-ui truncate block">Chronological journey</span>
-            </div>
-          </button>
+          />
 
           {/* 2. Love Quiz */}
-          <button
-            type="button"
-            data-testid="toggle-module-quiz"
+          <MomentLibraryItem
+            testId="toggle-module-quiz"
+            icon="💘"
+            title="Love Quiz"
+            desc="Playful trivia"
+            isEnabled={quizEnabled}
             onClick={() => {
               if (!quizEnabled) {
                 toggleModule("quiz", {
@@ -384,34 +456,15 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
                 setActiveMoment(activeMoment === "quiz" ? null : "quiz");
               }
             }}
-            className={`p-3 rounded-xl border text-left flex flex-col justify-between transition-all cursor-pointer group ${
-              quizEnabled
-                ? "border-rose-400/40 bg-rose-950/40 text-white shadow-xs"
-                : "border-white/[0.08] bg-white/[0.03] text-white/70 hover:bg-white/[0.06] hover:border-white/[0.15]"
-            }`}
-          >
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-lg select-none">💘</span>
-              <span
-                className={`text-[10px] font-ui px-1.5 py-0.5 rounded-md ${
-                  quizEnabled
-                    ? "bg-rose-500/20 text-rose-300 font-medium"
-                    : "bg-white/[0.06] text-white/50"
-                }`}
-              >
-                {quizEnabled ? "✓ Active" : "+ Add"}
-              </span>
-            </div>
-            <div>
-              <span className="text-xs font-display font-medium block text-white">Love Quiz</span>
-              <span className="text-[10px] text-white/50 font-ui truncate block">Playful trivia</span>
-            </div>
-          </button>
+          />
 
           {/* 3. Secret Note */}
-          <button
-            type="button"
-            data-testid="toggle-module-secret"
+          <MomentLibraryItem
+            testId="toggle-module-secret"
+            icon="🔐"
+            title="Secret Note"
+            desc="Private confession"
+            isEnabled={secretEnabled}
             onClick={() => {
               if (!secretEnabled) {
                 toggleModule("secret", {
@@ -424,34 +477,15 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
                 setActiveMoment(activeMoment === "secret" ? null : "secret");
               }
             }}
-            className={`p-3 rounded-xl border text-left flex flex-col justify-between transition-all cursor-pointer group ${
-              secretEnabled
-                ? "border-rose-400/40 bg-rose-950/40 text-white shadow-xs"
-                : "border-white/[0.08] bg-white/[0.03] text-white/70 hover:bg-white/[0.06] hover:border-white/[0.15]"
-            }`}
-          >
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-lg select-none">🔐</span>
-              <span
-                className={`text-[10px] font-ui px-1.5 py-0.5 rounded-md ${
-                  secretEnabled
-                    ? "bg-rose-500/20 text-rose-300 font-medium"
-                    : "bg-white/[0.06] text-white/50"
-                }`}
-              >
-                {secretEnabled ? "✓ Active" : "+ Add"}
-              </span>
-            </div>
-            <div>
-              <span className="text-xs font-display font-medium block text-white">Secret Note</span>
-              <span className="text-[10px] text-white/50 font-ui truncate block">Private confession</span>
-            </div>
-          </button>
+          />
 
           {/* 4. Open When Letters */}
-          <button
-            type="button"
-            data-testid="toggle-module-openWhen"
+          <MomentLibraryItem
+            testId="toggle-module-openWhen"
+            icon="💌"
+            title="Open When"
+            desc="Future envelopes"
+            isEnabled={openWhenEnabled}
             onClick={() => {
               if (!openWhenEnabled) {
                 toggleModule("openWhen", {
@@ -478,33 +512,15 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
                 setActiveMoment(activeMoment === "openWhen" ? null : "openWhen");
               }
             }}
-            className={`p-3 rounded-xl border text-left flex flex-col justify-between transition-all cursor-pointer group ${
-              openWhenEnabled
-                ? "border-rose-400/40 bg-rose-950/40 text-white shadow-xs"
-                : "border-white/[0.08] bg-white/[0.03] text-white/70 hover:bg-white/[0.06] hover:border-white/[0.15]"
-            }`}
-          >
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-lg select-none">💌</span>
-              <span
-                className={`text-[10px] font-ui px-1.5 py-0.5 rounded-md ${
-                  openWhenEnabled
-                    ? "bg-rose-500/20 text-rose-300 font-medium"
-                    : "bg-white/[0.06] text-white/50"
-                }`}
-              >
-                {openWhenEnabled ? "✓ Active" : "+ Add"}
-              </span>
-            </div>
-            <div>
-              <span className="text-xs font-display font-medium block text-white">Open When</span>
-              <span className="text-[10px] text-white/50 font-ui truncate block">Future envelopes</span>
-            </div>
-          </button>
+          />
+
           {/* 5. Reasons I Love You */}
-          <button
-            type="button"
-            data-testid="toggle-module-reasons"
+          <MomentLibraryItem
+            testId="toggle-module-reasons"
+            icon="💖"
+            title="Reasons"
+            desc="Why I love you"
+            isEnabled={reasonsEnabled}
             onClick={() => {
               if (!reasonsEnabled) {
                 toggleModule("reasons", {
@@ -533,34 +549,15 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
                 setActiveMoment(activeMoment === "reasons" ? null : "reasons");
               }
             }}
-            className={`p-3 rounded-xl border text-left flex flex-col justify-between transition-all cursor-pointer group ${
-              reasonsEnabled
-                ? "border-rose-400/40 bg-rose-950/40 text-white shadow-xs"
-                : "border-white/[0.08] bg-white/[0.03] text-white/70 hover:bg-white/[0.06] hover:border-white/[0.15]"
-            }`}
-          >
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-lg select-none">💖</span>
-              <span
-                className={`text-[10px] font-ui px-1.5 py-0.5 rounded-md ${
-                  reasonsEnabled
-                    ? "bg-rose-500/20 text-rose-300 font-medium"
-                    : "bg-white/[0.06] text-white/50"
-                }`}
-              >
-                {reasonsEnabled ? "✓ Active" : "+ Add"}
-              </span>
-            </div>
-            <div>
-              <span className="text-xs font-display font-medium block text-white">Reasons</span>
-              <span className="text-[10px] text-white/50 font-ui truncate block">Why I love you</span>
-            </div>
-          </button>
+          />
 
           {/* 6. Compliment Machine */}
-          <button
-            type="button"
-            data-testid="toggle-module-compliments"
+          <MomentLibraryItem
+            testId="toggle-module-compliments"
+            icon="✨"
+            title="Compliments"
+            desc="Instant sweetness"
+            isEnabled={complimentsEnabled}
             onClick={() => {
               if (!complimentsEnabled) {
                 const initialCompliments = [
@@ -580,34 +577,15 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
                 setActiveMoment(activeMoment === "compliments" ? null : "compliments");
               }
             }}
-            className={`p-3 rounded-xl border text-left flex flex-col justify-between transition-all cursor-pointer group ${
-              complimentsEnabled
-                ? "border-rose-400/40 bg-rose-950/40 text-white shadow-xs"
-                : "border-white/[0.08] bg-white/[0.03] text-white/70 hover:bg-white/[0.06] hover:border-white/[0.15]"
-            }`}
-          >
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-lg select-none">✨</span>
-              <span
-                className={`text-[10px] font-ui px-1.5 py-0.5 rounded-md ${
-                  complimentsEnabled
-                    ? "bg-rose-500/20 text-rose-300 font-medium"
-                    : "bg-white/[0.06] text-white/50"
-                }`}
-              >
-                {complimentsEnabled ? "✓ Active" : "+ Add"}
-              </span>
-            </div>
-            <div>
-              <span className="text-xs font-display font-medium block text-white">Compliments</span>
-              <span className="text-[10px] text-white/50 font-ui truncate block">Instant sweetness</span>
-            </div>
-          </button>
+          />
 
           {/* 7. Fortune Cookie */}
-          <button
-            type="button"
-            data-testid="toggle-module-fortuneCookie"
+          <MomentLibraryItem
+            testId="toggle-module-fortuneCookie"
+            icon="🥠"
+            title="Fortune Cookie"
+            desc="Playful fortunes"
+            isEnabled={fortuneCookieEnabled}
             onClick={() => {
               if (!fortuneCookieEnabled) {
                 toggleModule("fortuneCookie", {
@@ -623,34 +601,15 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
                 setActiveMoment(activeMoment === "fortuneCookie" ? null : "fortuneCookie");
               }
             }}
-            className={`p-3 rounded-xl border text-left flex flex-col justify-between transition-all cursor-pointer group ${
-              fortuneCookieEnabled
-                ? "border-rose-400/40 bg-rose-950/40 text-white shadow-xs"
-                : "border-white/[0.08] bg-white/[0.03] text-white/70 hover:bg-white/[0.06] hover:border-white/[0.15]"
-            }`}
-          >
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-lg select-none">🥠</span>
-              <span
-                className={`text-[10px] font-ui px-1.5 py-0.5 rounded-md ${
-                  fortuneCookieEnabled
-                    ? "bg-rose-500/20 text-rose-300 font-medium"
-                    : "bg-white/[0.06] text-white/50"
-                }`}
-              >
-                {fortuneCookieEnabled ? "✓ Active" : "+ Add"}
-              </span>
-            </div>
-            <div>
-              <span className="text-xs font-display font-medium block text-white">Fortune Cookie</span>
-              <span className="text-[10px] text-white/50 font-ui truncate block">Playful fortunes</span>
-            </div>
-          </button>
+          />
 
           {/* 8. Scratch Card */}
-          <button
-            type="button"
-            data-testid="toggle-module-scratchCard"
+          <MomentLibraryItem
+            testId="toggle-module-scratchCard"
+            icon="🪄"
+            title="Scratch Card"
+            desc="Tactile reveal"
+            isEnabled={scratchCardEnabled}
             onClick={() => {
               if (!scratchCardEnabled) {
                 toggleModule("scratchCard", {
@@ -664,34 +623,15 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
                 setActiveMoment(activeMoment === "scratchCard" ? null : "scratchCard");
               }
             }}
-            className={`p-3 rounded-xl border text-left flex flex-col justify-between transition-all cursor-pointer group ${
-              scratchCardEnabled
-                ? "border-rose-400/40 bg-rose-950/40 text-white shadow-xs"
-                : "border-white/[0.08] bg-white/[0.03] text-white/70 hover:bg-white/[0.06] hover:border-white/[0.15]"
-            }`}
-          >
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-lg select-none">🪄</span>
-              <span
-                className={`text-[10px] font-ui px-1.5 py-0.5 rounded-md ${
-                  scratchCardEnabled
-                    ? "bg-rose-500/20 text-rose-300 font-medium"
-                    : "bg-white/[0.06] text-white/50"
-                }`}
-              >
-                {scratchCardEnabled ? "✓ Active" : "+ Add"}
-              </span>
-            </div>
-            <div>
-              <span className="text-xs font-display font-medium block text-white">Scratch Card</span>
-              <span className="text-[10px] text-white/50 font-ui truncate block">Tactile reveal</span>
-            </div>
-          </button>
+          />
 
           {/* 9. Promise Wall */}
-          <button
-            type="button"
-            data-testid="toggle-module-promises"
+          <MomentLibraryItem
+            testId="toggle-module-promises"
+            icon="💍"
+            title="Promise Wall"
+            desc="Lifelong vows"
+            isEnabled={promisesEnabled}
             onClick={() => {
               if (!promisesEnabled) {
                 const initialPromises = [
@@ -721,34 +661,15 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
                 setActiveMoment(activeMoment === "promises" ? null : "promises");
               }
             }}
-            className={`p-3 rounded-xl border text-left flex flex-col justify-between transition-all cursor-pointer group ${
-              promisesEnabled
-                ? "border-rose-400/40 bg-rose-950/40 text-white shadow-xs"
-                : "border-white/[0.08] bg-white/[0.03] text-white/70 hover:bg-white/[0.06] hover:border-white/[0.15]"
-            }`}
-          >
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-lg select-none">💍</span>
-              <span
-                className={`text-[10px] font-ui px-1.5 py-0.5 rounded-md ${
-                  promisesEnabled
-                    ? "bg-rose-500/20 text-rose-300 font-medium"
-                    : "bg-white/[0.06] text-white/50"
-                }`}
-              >
-                {promisesEnabled ? "✓ Active" : "+ Add"}
-              </span>
-            </div>
-            <div>
-              <span className="text-xs font-display font-medium block text-white">Promise Wall</span>
-              <span className="text-[10px] text-white/50 font-ui truncate block">Lifelong vows</span>
-            </div>
-          </button>
+          />
 
           {/* 10. Future Adventures */}
-          <button
-            type="button"
-            data-testid="toggle-module-futureAdventures"
+          <MomentLibraryItem
+            testId="toggle-module-futureAdventures"
+            icon="🗺️"
+            title="Adventures"
+            desc="Bucket list"
+            isEnabled={futureAdventuresEnabled}
             onClick={() => {
               if (!futureAdventuresEnabled) {
                 const initialAdventures = [
@@ -784,34 +705,15 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
                 setActiveMoment(activeMoment === "futureAdventures" ? null : "futureAdventures");
               }
             }}
-            className={`p-3 rounded-xl border text-left flex flex-col justify-between transition-all cursor-pointer group ${
-              futureAdventuresEnabled
-                ? "border-rose-400/40 bg-rose-950/40 text-white shadow-xs"
-                : "border-white/[0.08] bg-white/[0.03] text-white/70 hover:bg-white/[0.06] hover:border-white/[0.15]"
-            }`}
-          >
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-lg select-none">🗺️</span>
-              <span
-                className={`text-[10px] font-ui px-1.5 py-0.5 rounded-md ${
-                  futureAdventuresEnabled
-                    ? "bg-rose-500/20 text-rose-300 font-medium"
-                    : "bg-white/[0.06] text-white/50"
-                }`}
-              >
-                {futureAdventuresEnabled ? "✓ Active" : "+ Add"}
-              </span>
-            </div>
-            <div>
-              <span className="text-xs font-display font-medium block text-white">Adventures</span>
-              <span className="text-[10px] text-white/50 font-ui truncate block">Bucket list</span>
-            </div>
-          </button>
+          />
 
           {/* 11. Adventure Spinner */}
-          <button
-            type="button"
-            data-testid="toggle-module-adventureSpinner"
+          <MomentLibraryItem
+            testId="toggle-module-adventureSpinner"
+            icon="🎡"
+            title="Date Spinner"
+            desc="Spin to decide"
+            isEnabled={adventureSpinnerEnabled}
             onClick={() => {
               if (!adventureSpinnerEnabled) {
                 toggleModule("adventureSpinner", {
@@ -829,34 +731,15 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
                 setActiveMoment(activeMoment === "adventureSpinner" ? null : "adventureSpinner");
               }
             }}
-            className={`p-3 rounded-xl border text-left flex flex-col justify-between transition-all cursor-pointer group ${
-              adventureSpinnerEnabled
-                ? "border-rose-400/40 bg-rose-950/40 text-white shadow-xs"
-                : "border-white/[0.08] bg-white/[0.03] text-white/70 hover:bg-white/[0.06] hover:border-white/[0.15]"
-            }`}
-          >
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-lg select-none">🎡</span>
-              <span
-                className={`text-[10px] font-ui px-1.5 py-0.5 rounded-md ${
-                  adventureSpinnerEnabled
-                    ? "bg-rose-500/20 text-rose-300 font-medium"
-                    : "bg-white/[0.06] text-white/50"
-                }`}
-              >
-                {adventureSpinnerEnabled ? "✓ Active" : "+ Add"}
-              </span>
-            </div>
-            <div>
-              <span className="text-xs font-display font-medium block text-white">Date Spinner</span>
-              <span className="text-[10px] text-white/50 font-ui truncate block">Spin to decide</span>
-            </div>
-          </button>
+          />
 
           {/* 12. Emotional Finale */}
-          <button
-            type="button"
-            data-testid="toggle-module-finale"
+          <MomentLibraryItem
+            testId="toggle-module-finale"
+            icon="🌹"
+            title="Finale"
+            desc="Grand declaration"
+            isEnabled={finaleEnabled}
             onClick={() => {
               if (!finaleEnabled) {
                 toggleModule("finale", {
@@ -874,29 +757,7 @@ export const ModuleManager: React.FC<ModuleManagerProps> = ({
                 setActiveMoment(activeMoment === "finale" ? null : "finale");
               }
             }}
-            className={`p-3 rounded-xl border text-left flex flex-col justify-between transition-all cursor-pointer group ${
-              finaleEnabled
-                ? "border-rose-400/40 bg-rose-950/40 text-white shadow-xs"
-                : "border-white/[0.08] bg-white/[0.03] text-white/70 hover:bg-white/[0.06] hover:border-white/[0.15]"
-            }`}
-          >
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-lg select-none">🌹</span>
-              <span
-                className={`text-[10px] font-ui px-1.5 py-0.5 rounded-md ${
-                  finaleEnabled
-                    ? "bg-rose-500/20 text-rose-300 font-medium"
-                    : "bg-white/[0.06] text-white/50"
-                }`}
-              >
-                {finaleEnabled ? "✓ Active" : "+ Add"}
-              </span>
-            </div>
-            <div>
-              <span className="text-xs font-display font-medium block text-white">Finale</span>
-              <span className="text-[10px] text-white/50 font-ui truncate block">Grand declaration</span>
-            </div>
-          </button>
+          />
               </div>
             </div>
 

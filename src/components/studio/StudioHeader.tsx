@@ -163,35 +163,7 @@ export const StudioHeader: React.FC<StudioHeaderProps> = ({
             )}
           </div>
 
-          {/* Mobile View Toggle */}
-          <div className="flex md:hidden rounded-lg bg-white/[0.06] p-0.5 border border-white/[0.1] text-xs shrink-0">
-            <button
-              type="button"
-              data-testid="mobile-tab-edit"
-              onClick={() => onMobileTabChange("form")}
-              className={`px-2.5 py-0.5 rounded-md transition-all font-ui text-[11px] ${
-                mobileTab === "form"
-                  ? "bg-white text-black font-medium shadow-xs"
-                  : "text-white/70 hover:text-white"
-              }`}
-            >
-              Edit
-            </button>
-            <button
-              type="button"
-              data-testid="mobile-tab-preview"
-              onClick={() => onMobileTabChange("preview")}
-              className={`px-2.5 py-0.5 rounded-md transition-all font-ui text-[11px] ${
-                mobileTab === "preview"
-                  ? "bg-white text-black font-medium shadow-xs"
-                  : "text-white/70 hover:text-white"
-              }`}
-            >
-              Preview
-            </button>
-          </div>
-
-          {/* Publish Action (Desktop / Tablet) */}
+          {/* Publish Action */}
           <Button
             type="button"
             data-testid="header-publish-button"
@@ -199,7 +171,7 @@ export const StudioHeader: React.FC<StudioHeaderProps> = ({
             size="sm"
             disabled={saveStatus === "saving" || isPublishing}
             onClick={onPublishClick}
-            className="inline-flex text-xs px-2.5 sm:px-4 rounded-full font-ui shadow-lg shadow-rose-950/40 shrink-0"
+            className="inline-flex text-xs px-3 sm:px-4 py-1.5 min-h-[36px] rounded-full font-ui shadow-lg shadow-rose-950/40 shrink-0"
           >
             <span className="hidden sm:inline">{isPublishing ? "Publishing…" : "Publish Valentine 💌"}</span>
             <span className="sm:hidden">{isPublishing ? "…" : "Publish 💌"}</span>

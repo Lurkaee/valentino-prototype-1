@@ -6,6 +6,7 @@ import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 export interface Envelope3DProps {
   isSealed: boolean;
   onUnseal: () => void;
+  onReseal?: () => void;
   sealEmblem?: React.ReactNode;
   sealGradientClass?: string;
   sealBorderClass?: string;
@@ -37,6 +38,7 @@ export interface Envelope3DProps {
 export function Envelope3D({
   isSealed,
   onUnseal,
+  onReseal,
   sealEmblem = "💌",
   sealGradientClass = "from-rose-600 via-rose-700 to-[#7A1428]",
   sealBorderClass = "border-rose-400/80",
@@ -70,6 +72,9 @@ export function Envelope3D({
   useEffect(() => {
     if (isSealed && !shouldReduceMotion) {
       setHasBroken(false);
+      setIsBreaking(false);
+    } else if (!isSealed) {
+      setHasBroken(true);
       setIsBreaking(false);
     }
   }, [isSealed, shouldReduceMotion]);
@@ -209,6 +214,18 @@ export function Envelope3D({
               className="w-full"
             >
               {children}
+              {onReseal && (
+                <div className="pt-4 text-center">
+                  <button
+                    type="button"
+                    onClick={onReseal}
+                    className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] tracking-wider uppercase font-sans border bg-white/[0.04] hover:bg-white/[0.1] text-white/60 hover:text-white border-white/10 transition-colors cursor-pointer"
+                  >
+                    <span>⟲</span>
+                    <span>View Wax Seal & Envelope</span>
+                  </button>
+                </div>
+              )}
             </motion.div>
           )}
         </AnimatePresence>
