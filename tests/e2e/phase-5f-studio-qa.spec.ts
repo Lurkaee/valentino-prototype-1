@@ -160,6 +160,9 @@ test.describe("Phase 5F Step 5: Creator Studio Renaissance Visual QA & UX Archit
 
     await page.goto(`${APP_URL}/edit/${publicId}`);
 
+    const savePill = page.locator('[data-testid="save-status-pill"]');
+    await expect(savePill).toHaveAttribute("data-status", "saved", { timeout: 15000 });
+
     // 1. Check zero horizontal overflow
     const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth);
     const clientWidth = await page.evaluate(() => document.documentElement.clientWidth);
@@ -192,6 +195,6 @@ test.describe("Phase 5F Step 5: Creator Studio Renaissance Visual QA & UX Archit
     // 4. Switch back to Edit tab
     const mobileEditTab = page.locator('[data-testid="mobile-tab-edit"]');
     await mobileEditTab.click();
-    await expect(page.locator('[data-testid="input-partner-name"]')).toBeVisible();
+    await expect(page.locator('#studio-inspector-pane')).toBeVisible();
   });
 });

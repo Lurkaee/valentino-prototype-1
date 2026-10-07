@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { Button } from "@/components/ui/Button";
 import { ValentinoAtmosphere } from "@/components/ui/ValentinoAtmosphere";
 import { FloatingNavbar } from "@/components/ui/FloatingNavbar";
 import { HeroEditorialStagger } from "@/components/motion/HeroEditorialStagger";
@@ -7,6 +6,7 @@ import { LoveLetter3D } from "@/components/motion/LoveLetter3D";
 import { SpatialStationeryUnfold } from "@/components/motion/SpatialStationeryUnfold";
 import { SpatialWorldsWalkthrough } from "@/components/motion/SpatialWorldsWalkthrough";
 import { SpatialDiscoveredObjects } from "@/components/motion/SpatialDiscoveredObjects";
+import { FinaleBotanicalFrame } from "@/components/motion/FinaleBotanicalFrame";
 
 /**
  * HomePage — Phase 6.4: Scroll Story & Spatial Composition
@@ -113,17 +113,42 @@ export default function HomePage() {
       {/* ========================================================================= */}
       <section
         id="create"
-        className="w-full bg-transparent text-[#240412] relative z-20 z-content py-20 sm:py-32 px-6"
+        className="w-full bg-transparent text-[#240412] relative z-20 z-content py-24 sm:py-36 px-6 overflow-hidden"
       >
-        <div className="max-w-3xl mx-auto text-center space-y-7">
-          {/* Luminous wax seal talisman artifact */}
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-[#E11D48] via-[#BE123C] to-[#6B0C23] shadow-[0_6px_20px_rgba(159,18,57,0.35)] text-white mx-auto">
-            <svg className="w-5 h-5 filter drop-shadow-sm text-rose-100" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+        {/* Asymmetric Scroll-Aware Botanical Frame at Empty Viewport Edges */}
+        <FinaleBotanicalFrame />
+
+        <div className="max-w-3xl mx-auto text-center space-y-7 relative z-20">
+          {/* Restrained Hand-Drawn Botanical Gesture (Replacing floating heart app-icon) */}
+          <div className="inline-flex items-center justify-center mx-auto opacity-80 hover:opacity-100 transition-opacity" aria-hidden="true">
+            <svg
+              viewBox="0 0 32 32"
+              fill="none"
+              className="w-7 h-7 sm:w-8 sm:h-8 text-[#881337] filter drop-shadow-[0_1px_3px_rgba(136,19,55,0.18)]"
+            >
+              {/* Four-petal star flower pressed gesture with subtle asymmetry */}
+              <g transform="translate(16, 16)" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" fill="#9F1239" fillOpacity="0.82">
+                {/* Top petal */}
+                <path d="M0 -1 C -2.2 -4.8, -1.8 -8.2, 0 -9.5 C 1.8 -8.2, 2.2 -4.8, 0 -1 Z" />
+                {/* Right petal (slightly elongated for handmade feel) */}
+                <path d="M1 0 C 4.8 -2, 8.5 -1.5, 9.8 0.2 C 8.5 2, 4.8 2.2, 1 0 Z" />
+                {/* Bottom petal */}
+                <path d="M0 1 C 2 -4.8, 1.6 8.2, 0 9.2 C -1.6 8.2, -2 4.8, 0 1 Z" />
+                {/* Left petal */}
+                <path d="M-1 0 C -4.8 2.2, -8.2 1.8, -9.5 0 C -8.2 -1.8, -4.8 -2.2, -1 0 Z" />
+                {/* Pistil stamen core */}
+                <circle cx="0" cy="0" r="1.5" fill="#FFF5F7" stroke="#701A36" strokeWidth="0.8" />
+              </g>
+              {/* Miniature ink sprig leaf hint */}
+              <path
+                d="M19 21 C 22 23, 24 22, 25 21 C 24 23.5, 21.5 24, 19 22.5"
+                fill="#881337"
+                fillOpacity="0.5"
+              />
             </svg>
           </div>
 
-          <div className="space-y-3 max-w-xl mx-auto">
+          <div className="space-y-3.5 max-w-xl mx-auto">
             <h2 className="text-3xl sm:text-5xl font-serif font-normal text-[#1A0311] leading-tight tracking-tight drop-shadow-[0_1px_12px_rgba(255,245,248,0.5)]">
               Give them a little piece of the internet they&apos;ll want to keep.
             </h2>
@@ -132,58 +157,58 @@ export default function HomePage() {
             </p>
           </div>
 
-          {/* Action CTAs: Dominant solid button + understated link */}
+          {/* Action CTAs: Intimate tactile keepsake controls */}
           <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link href="/create">
-              <Button
-                size="lg"
-                variant="primary"
-                className="px-8 py-3.5 rounded-full font-medium text-white bg-[#1A0612] hover:bg-[#2C0A1E] shadow-[0_8px_24px_-6px_rgba(40,5,20,0.45)] hover:shadow-xl hover:-translate-y-0.5 active:scale-[0.98] transition-all flex items-center gap-2.5 cursor-pointer"
+              <button
+                type="button"
+                className="group px-7 py-3.5 min-h-[48px] rounded-2xl font-serif text-base font-medium text-[#FAF5EE] bg-[#1A0512] hover:bg-[#2A091E] border border-[#3E0A28]/40 shadow-[0_4px_18px_rgba(26,5,18,0.28)] hover:shadow-[0_6px_24px_rgba(26,5,18,0.36)] active:scale-[0.98] transition-all duration-300 flex items-center gap-3 cursor-pointer select-none"
               >
-                <span>Begin Their World</span>
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <line x1="5" y1="12" x2="19" y2="12" />
-                  <polyline points="12 5 19 12 12 19" />
-                </svg>
-              </Button>
+                <span className="tracking-wide">Begin Their World</span>
+                <span className="inline-block transition-transform duration-300 group-hover:translate-x-1 text-[#F3A5BC] font-sans font-normal text-sm">
+                  →
+                </span>
+              </button>
             </Link>
 
             <Link href="/templates">
               <button
                 type="button"
-                className="px-6 py-3.5 rounded-full text-sm font-semibold text-[#1A0311] hover:text-[#881337] bg-white/95 hover:bg-white shadow-[0_2px_12px_rgba(0,0,0,0.08)] border border-rose-900/15 transition-all cursor-pointer flex items-center gap-1.5"
+                className="group px-6 py-3.5 min-h-[48px] rounded-2xl font-serif text-sm font-medium text-[#220414] bg-[#FAF6F0]/90 hover:bg-[#FFFDF9] border border-rose-950/12 shadow-[0_2px_10px_rgba(70,15,35,0.05)] hover:shadow-[0_4px_16px_rgba(70,15,35,0.08)] active:scale-[0.98] transition-all duration-300 flex items-center gap-2 cursor-pointer select-none"
               >
-                <span>Explore Showroom</span>
-                <span className="text-rose-800">→</span>
+                <span className="tracking-wide">Explore Showroom</span>
+                <span className="text-[#881337] transition-transform duration-300 group-hover:translate-x-1 font-sans text-xs">
+                  →
+                </span>
               </button>
             </Link>
           </div>
         </div>
 
-        {/* Elegant Editorial Footer */}
-        <footer className="w-full max-w-5xl mx-auto mt-24 pt-8 border-t border-rose-900/15 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-sans relative z-10">
-          <div className="flex items-center gap-2">
-            <span className="text-[#1A0311] font-serif font-semibold">Valentino</span>
-            <span className="text-rose-400">·</span>
-            <span className="text-[#36091E] font-medium">Interactive Romantic Storytelling Platform</span>
-          </div>
-          <div className="flex items-center gap-6 font-semibold text-[#45102A]">
-            <Link href="/templates" className="hover:text-[#1A0311] transition-colors">
-              World Showroom
-            </Link>
-            <Link href="/create" className="hover:text-[#1A0311] transition-colors">
-              Experience Studio
-            </Link>
+        {/* ========================================================================= */}
+        {/* 06 — BACK OF THE KEEPSAKE: THE MAKER COLOPHON                              */}
+        {/* A quiet, sacred maker signature at the absolute end of the experience      */}
+        {/* ========================================================================= */}
+        <div className="mt-28 sm:mt-36 pt-12 flex flex-col items-center justify-center text-center space-y-2.5 relative z-20 select-none">
+          {/* Subtle deckled separation rule */}
+          <div className="w-10 h-px bg-rose-950/15 mb-2" aria-hidden="true" />
+
+          <p className="text-xs sm:text-[13px] font-serif text-[#48142A]/80 tracking-wide">
+            <span>Designed with love by </span>
             <a
-              href="https://github.com/Lurkaee/valentino-prototype-1"
+              href="https://github.com/Algoryxz"
               target="_blank"
-              rel="noreferrer"
-              className="hover:text-[#1A0311] transition-colors"
+              rel="noopener noreferrer"
+              className="font-medium text-[#1E0412] underline decoration-rose-900/35 underline-offset-4 hover:decoration-rose-900 hover:text-[#881337] transition-all duration-300"
             >
-              GitHub
+              Algoryxz
             </a>
-          </div>
-        </footer>
+          </p>
+
+          <p className="text-[10px] sm:text-[11px] font-sans tracking-[0.18em] uppercase text-[#701A36]/50 font-normal">
+            Made for little things worth keeping.
+          </p>
+        </div>
       </section>
     </main>
   );
