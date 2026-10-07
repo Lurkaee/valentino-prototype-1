@@ -3,6 +3,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { AmbientBotanicalFrame } from "@/components/motion/AmbientBotanicalFrame";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -64,6 +65,22 @@ export function SpatialDiscoveredObjects() {
       ref={containerRef}
       className="relative w-full bg-transparent text-[#FAF8F5] py-24 sm:py-36 px-6 overflow-hidden"
     >
+      {/* Peripheral Botanical Edge Presence (Faint branch on left, suspended leaves on right) */}
+      <AmbientBotanicalFrame variant="dusk" density="subtle" intensity={0.72} />
+
+      {/* Subtle suspended botanical / vellum fragments between objects */}
+      <div className="absolute inset-0 pointer-events-none select-none overflow-hidden z-0" aria-hidden="true">
+        <svg viewBox="0 0 1200 600" fill="none" className="w-full h-full opacity-30">
+          {/* Subtle leaf fragment 1 */}
+          <path d="M280 180 C 290 170, 305 175, 295 190 C 285 195, 275 190, 280 180 Z" fill="#9F1239" fillOpacity="0.35" />
+          {/* Subtle leaf fragment 2 */}
+          <path d="M880 320 C 895 310, 910 320, 900 335 C 890 340, 875 330, 880 320 Z" fill="#D97706" fillOpacity="0.3" />
+          {/* Delicate vellum speck */}
+          <circle cx="580" cy="140" r="1.5" fill="#FAF5EE" fillOpacity="0.4" />
+          <circle cx="640" cy="420" r="1.2" fill="#FAF5EE" fillOpacity="0.35" />
+        </svg>
+      </div>
+
       {/* Editorial Header floating lightly in space */}
       <div className="text-center max-w-2xl mx-auto mb-16 sm:mb-24 space-y-3 relative z-10">
         <span className="inline-block text-[11px] font-mono tracking-widest uppercase text-[#7A1D45] font-semibold drop-shadow-[0_1px_8px_rgba(255,245,248,0.7)]">
@@ -102,10 +119,13 @@ export function SpatialDiscoveredObjects() {
                 <span>OPEN WHEN</span>
               </div>
 
-              {/* Envelope Centerpiece */}
+              {/* Envelope Centerpiece (Handcrafted Parchment Fold Mark) */}
               <div className="my-auto space-y-2">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#E11D48] via-[#BE123C] to-[#881337] border border-amber-200/80 shadow-[0_4px_16px_rgba(225,29,72,0.4)] mx-auto flex items-center justify-center text-amber-100 text-sm font-serif">
-                  ✉
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#9F1239] via-[#881337] to-[#4C0519] border border-rose-300/40 shadow-[0_4px_16px_rgba(159,18,57,0.35)] mx-auto flex items-center justify-center text-rose-100" aria-hidden="true">
+                  <svg viewBox="0 0 20 16" fill="none" className="w-4 h-3.5 text-rose-200 opacity-90">
+                    <rect x="1" y="1" width="18" height="14" rx="2" stroke="currentColor" strokeWidth="1.2" />
+                    <path d="M1 2.5 L10 9.5 L19 2.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
                 </div>
                 <h3 className="font-serif text-xl sm:text-2xl text-white drop-shadow-[0_1px_8px_rgba(10,2,7,0.8)]">
                   Open when you miss me
@@ -154,10 +174,14 @@ export function SpatialDiscoveredObjects() {
                 <span>QUESTION LOCK</span>
               </div>
 
-              {/* Inner secret whisper */}
+              {/* Inner secret whisper (Handcrafted antique skeleton key silhouette) */}
               <div className="my-auto space-y-2">
-                <div className="w-9 h-9 rounded-full bg-rose-100 text-[#9F1239] flex items-center justify-center mx-auto text-sm">
-                  🗝️
+                <div className="w-9 h-9 rounded-full bg-rose-100/90 text-[#881337] flex items-center justify-center mx-auto shadow-sm" aria-hidden="true">
+                  <svg viewBox="0 0 20 20" fill="none" className="w-4 h-4 text-[#881337] opacity-85">
+                    <circle cx="8" cy="8" r="4.5" stroke="currentColor" strokeWidth="1.2" />
+                    <circle cx="8" cy="8" r="2" fill="currentColor" fillOpacity="0.4" />
+                    <path d="M11.5 11.5 L17 17 M14.5 14.5 L16.5 12.5 M16 16 L18 14" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
                 </div>
                 <h3 className="font-serif text-xl sm:text-2xl text-[#1A0311] font-normal">
                   A secret whisper
@@ -209,10 +233,13 @@ export function SpatialDiscoveredObjects() {
                 <span>GOLD FOIL</span>
               </div>
 
-              {/* Keepsake Centerpiece */}
+              {/* Keepsake Centerpiece (Artisanal gold starburst mark) */}
               <div className="my-auto space-y-2">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 border border-amber-200/80 shadow-[0_4px_16px_rgba(217,119,6,0.5)] mx-auto flex items-center justify-center text-amber-950 font-serif text-sm">
-                  ✦
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#D97706] via-[#B45309] to-[#78350F] border border-amber-300/50 shadow-[0_4px_16px_rgba(217,119,6,0.4)] mx-auto flex items-center justify-center text-amber-100" aria-hidden="true">
+                  <svg viewBox="0 0 20 20" fill="none" className="w-4 h-4 text-amber-200 opacity-90">
+                    <path d="M10 2 L12 8 L18 10 L12 12 L10 18 L8 12 L2 10 L8 8 Z" fill="currentColor" fillOpacity="0.5" stroke="currentColor" strokeWidth="1" strokeLinejoin="round" />
+                    <circle cx="10" cy="10" r="1.5" fill="#FEF3C7" />
+                  </svg>
                 </div>
                 <h3 className="font-serif text-xl sm:text-2xl text-amber-100 drop-shadow-[0_1px_8px_rgba(30,10,0,0.8)]">
                   Delight & discovery

@@ -12,6 +12,16 @@ import { AtmosphericCanvas } from "@/worlds/AtmosphericCanvas";
 import { ValentinoAtmosphere } from "@/components/ui/ValentinoAtmosphere";
 import { useDeviceTier } from "@/worlds/useDeviceTier";
 import { WorldTheme } from "@/worlds/types";
+import { AmbientBotanicalFrame, type BotanicalTone } from "@/components/motion/AmbientBotanicalFrame";
+
+const SHOWROOM_BOTANICAL_TONE: Record<WorldTheme, BotanicalTone> = {
+  "cloud-nine": "light",
+  "midnight-rose": "dusk",
+  "kage": "dark",
+  "apricot-film": "warm",
+  "wildflower-paper": "meadow",
+  "ocean-letter": "ocean",
+};
 
 // Lazy-load Kage WebGL component to isolate Three.js runtime until explicitly requested
 const KageComponentLazy = dynamic(
@@ -326,6 +336,15 @@ export default function TemplatesPage() {
           tier={tier}
           isReducedMotion={Boolean(isReducedMotion || shouldReduceMotion)}
           className="opacity-60"
+        />
+      </div>
+
+      {/* Sparse Atelier Botanical Edge Atmosphere (Restrained, subtle periphery) */}
+      <div className="fixed inset-0 pointer-events-none z-atmosphere overflow-hidden" aria-hidden="true">
+        <AmbientBotanicalFrame
+          variant={SHOWROOM_BOTANICAL_TONE[activeWorldId] || "dusk"}
+          density="sparse"
+          intensity={0.5}
         />
       </div>
 

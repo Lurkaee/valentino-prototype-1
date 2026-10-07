@@ -4,6 +4,7 @@ import React, { useRef, useEffect } from "react";
 import Link from "next/link";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { AmbientBotanicalFrame } from "@/components/motion/AmbientBotanicalFrame";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -190,6 +191,9 @@ export function SpatialStationeryUnfold() {
       data-testid="little-things-scene"
       className="relative w-full min-h-[100dvh] flex flex-col items-center justify-center bg-transparent text-[#240412] px-4 sm:px-6 py-6 sm:py-10 overflow-hidden"
     >
+      {/* Peripheral Botanical Edge Presence (Asymmetrical, living margins outside content) */}
+      <AmbientBotanicalFrame variant="dusk" density="subtle" intensity={0.9} />
+
       <div ref={stageRef} className="w-full max-w-4xl mx-auto flex flex-col items-center text-center relative z-10">
         {/* Subtle Spatial Narrative Eyebrow & Headline with subtle atmospheric text protection */}
         <div className="mb-3 sm:mb-5 space-y-1 sm:space-y-2 max-w-xl mx-auto relative">
@@ -238,24 +242,57 @@ export function SpatialStationeryUnfold() {
               </p>
             </div>
 
-            {/* 3. Embedded Emotional Timeline Ribbon (Paper becomes timeline) */}
+            {/* 3. Embedded Emotional Timeline Ribbon (Paper becomes timeline with handmade material marks) */}
             <div
               ref={timelineMilestonesRef}
               className="mt-2 pt-2.5 sm:pt-3 border-t border-rose-950/[0.08] flex items-center justify-around text-left gap-1 sm:gap-2 text-[10px] will-change-transform select-none"
             >
-              <div className="flex flex-col">
-                <span className="text-[8px] sm:text-[9px] uppercase tracking-wider text-[#7A1D45] font-sans font-semibold">10.14</span>
-                <span className="font-serif italic text-[#1E0412] font-semibold text-[10px] sm:text-[11px]">First Coffee</span>
+              <div className="flex items-center gap-1.5">
+                {/* Milestone 1: Tiny pressed leaf mark */}
+                <svg viewBox="0 0 10 14" fill="none" className="w-2.5 h-3 text-[#881337] shrink-0 opacity-80" aria-hidden="true">
+                  <path d="M5 13 C 5 10, 4 7, 2 5 C 4 3, 7 4, 8 7 C 9 10, 7 12, 5 13 Z" fill="currentColor" fillOpacity="0.45" stroke="currentColor" strokeWidth="0.75" />
+                  <path d="M5 12 C 5 9, 5 6, 4 5" stroke="currentColor" strokeWidth="0.5" strokeLinecap="round" />
+                </svg>
+                <div className="flex flex-col">
+                  <span className="text-[8px] sm:text-[9px] uppercase tracking-wider text-[#7A1D45] font-sans font-semibold">10.14</span>
+                  <span className="font-serif italic text-[#1E0412] font-semibold text-[10px] sm:text-[11px]">First Coffee</span>
+                </div>
               </div>
-              <div className="w-1.5 h-1.5 rounded-full bg-rose-500/80" />
-              <div className="flex flex-col">
-                <span className="text-[8px] sm:text-[9px] uppercase tracking-wider text-[#7A1D45] font-sans font-semibold">12.24</span>
-                <span className="font-serif italic text-[#1E0412] font-semibold text-[10px] sm:text-[11px]">Midnight Rain</span>
+
+              {/* Material seed separator */}
+              <div className="w-1 h-1 rounded-full bg-[#881337]/50" />
+
+              <div className="flex items-center gap-1.5">
+                {/* Milestone 2: Tiny pressed bud mark */}
+                <svg viewBox="0 0 10 14" fill="none" className="w-2.5 h-3 text-[#881337] shrink-0 opacity-80" aria-hidden="true">
+                  <path d="M5 13 C 5 9, 6 7, 5 5" stroke="currentColor" strokeWidth="0.8" strokeLinecap="round" />
+                  <path d="M5 7 C 3 5, 4 3, 5 2 C 6 3, 7 5, 5 7 Z" fill="currentColor" fillOpacity="0.5" stroke="currentColor" strokeWidth="0.6" />
+                  <circle cx="5" cy="2" r="1.2" fill="#BE123C" fillOpacity="0.75" />
+                </svg>
+                <div className="flex flex-col">
+                  <span className="text-[8px] sm:text-[9px] uppercase tracking-wider text-[#7A1D45] font-sans font-semibold">12.24</span>
+                  <span className="font-serif italic text-[#1E0412] font-semibold text-[10px] sm:text-[11px]">Midnight Rain</span>
+                </div>
               </div>
-              <div className="w-1.5 h-1.5 rounded-full bg-rose-500/80" />
-              <div className="flex flex-col">
-                <span className="text-[8px] sm:text-[9px] uppercase tracking-wider text-[#7A1D45] font-sans font-semibold">02.14</span>
-                <span className="font-serif italic text-[#1E0412] font-semibold text-[10px] sm:text-[11px]">The Vow</span>
+
+              {/* Material seed separator */}
+              <div className="w-1 h-1 rounded-full bg-[#881337]/50" />
+
+              <div className="flex items-center gap-1.5">
+                {/* Milestone 3: Tiny imperfect dried 4-petal flower mark */}
+                <svg viewBox="0 0 12 12" fill="none" className="w-2.5 h-2.5 text-[#881337] shrink-0 opacity-85" aria-hidden="true">
+                  <g transform="translate(6, 6) scale(0.65)" stroke="currentColor" strokeWidth="0.9" fill="#9F1239" fillOpacity="0.6">
+                    <path d="M0 -1 C -1.8 -4, -1.2 -6.5, 0 -7.5 C 1.2 -6.5, 1.8 -4, 0 -1 Z" />
+                    <path d="M1 0 C 4 -1.5, 6.5 -1, 7.5 0 C 6.5 1.2, 4 1.8, 1 0 Z" />
+                    <path d="M0 1 C 1.5 4, 1 6.5, 0 7.5 C -1.2 6.5, -1.5 4, 0 1 Z" />
+                    <path d="M-1 0 C -4 1.5, -6.5 1, -7.5 0 C -6.5 -1.2, -4 -1.8, -1 0 Z" />
+                    <circle cx="0" cy="0" r="1.3" fill="#FFF5F7" stroke="#701A36" strokeWidth="0.6" />
+                  </g>
+                </svg>
+                <div className="flex flex-col">
+                  <span className="text-[8px] sm:text-[9px] uppercase tracking-wider text-[#7A1D45] font-sans font-semibold">02.14</span>
+                  <span className="font-serif italic text-[#1E0412] font-semibold text-[10px] sm:text-[11px]">The Vow</span>
+                </div>
               </div>
             </div>
           </div>
@@ -269,26 +306,63 @@ export function SpatialStationeryUnfold() {
             }}
           />
 
-          {/* Floating Artisanal Pressed Botanical Bloom (Left foreground) */}
+          {/* Floating Artisanal Pressed Botanical Bloom (Left foreground) — Refined toward dried herbarium specimen */}
           <div
             ref={bloomRef}
-            className="absolute top-2 left-2 sm:left-4 w-14 h-14 sm:w-16 sm:h-16 pointer-events-none select-none z-20 will-change-transform"
+            className="absolute top-2 left-2 sm:left-4 w-13 h-13 sm:w-15 sm:h-15 pointer-events-none select-none z-20 will-change-transform"
           >
-            <div className="w-full h-full relative drop-shadow-[0_8px_18px_rgba(225,29,72,0.32)]">
-              <svg viewBox="0 0 64 64" fill="none" className="w-full h-full">
-                {/* Botanical Petals */}
-                <ellipse cx="32" cy="18" rx="9" ry="14" fill="#BE123C" fillOpacity="0.88" transform="rotate(-15 32 18)" />
-                <ellipse cx="44" cy="24" rx="9" ry="13" fill="#E11D48" fillOpacity="0.92" transform="rotate(40 44 24)" />
-                <ellipse cx="44" cy="40" rx="9" ry="14" fill="#BE123C" fillOpacity="0.88" transform="rotate(95 44 40)" />
-                <ellipse cx="32" cy="46" rx="9" ry="13" fill="#E11D48" fillOpacity="0.92" transform="rotate(165 32 46)" />
-                <ellipse cx="20" cy="38" rx="9" ry="14" fill="#9F1239" fillOpacity="0.88" transform="rotate(-130 20 38)" />
-                <ellipse cx="20" cy="24" rx="9" ry="13" fill="#E11D48" fillOpacity="0.92" transform="rotate(-65 20 24)" />
-                {/* Velvet Core */}
-                <circle cx="32" cy="32" r="10" fill="#881337" fillOpacity="0.95" />
-                <circle cx="32" cy="32" r="6" fill="#F43F5E" fillOpacity="0.9" />
-                <circle cx="32" cy="32" r="2.5" fill="#FFE4E6" />
-                {/* Stem hint */}
-                <path d="M22 42 Q 18 52 14 56" stroke="#4C1D95" strokeOpacity="0.4" strokeWidth="1.5" strokeLinecap="round" />
+            <div className="w-full h-full relative drop-shadow-[0_4px_14px_rgba(70,15,35,0.18)]">
+              <svg viewBox="0 0 64 64" fill="none" className="w-full h-full transform -rotate-12">
+                {/* Translucent crinkled dried-bloom petals */}
+                <path
+                  d="M32 30 C 26 18, 30 10, 36 12 C 40 14, 39 24, 32 30 Z"
+                  fill="#9F1239"
+                  fillOpacity="0.55"
+                  stroke="#881337"
+                  strokeWidth="0.7"
+                  strokeOpacity="0.4"
+                />
+                <path
+                  d="M34 32 C 44 26, 52 28, 51 35 C 50 40, 40 37, 34 32 Z"
+                  fill="#881337"
+                  fillOpacity="0.6"
+                  stroke="#701A36"
+                  strokeWidth="0.7"
+                  strokeOpacity="0.4"
+                />
+                <path
+                  d="M33 34 C 40 44, 38 52, 32 51 C 27 50, 29 40, 33 34 Z"
+                  fill="#9F1239"
+                  fillOpacity="0.5"
+                  stroke="#881337"
+                  strokeWidth="0.7"
+                  strokeOpacity="0.4"
+                />
+                <path
+                  d="M30 33 C 20 40, 14 36, 15 30 C 16 25, 25 28, 30 33 Z"
+                  fill="#881337"
+                  fillOpacity="0.58"
+                  stroke="#701A36"
+                  strokeWidth="0.7"
+                  strokeOpacity="0.4"
+                />
+                {/* Overlapping soft fold petal */}
+                <path
+                  d="M31 31 C 24 22, 28 16, 33 18 C 36 20, 35 27, 31 31 Z"
+                  fill="#BE123C"
+                  fillOpacity="0.4"
+                />
+                {/* Delicate dried veins */}
+                <path d="M32 30 C 33 22, 35 15, 36 12" stroke="#4C0519" strokeWidth="0.5" strokeOpacity="0.3" strokeLinecap="round" />
+                <path d="M34 32 C 41 29, 47 31, 51 35" stroke="#4C0519" strokeWidth="0.5" strokeOpacity="0.3" strokeLinecap="round" />
+                <path d="M33 34 C 33 41, 32 47, 32 51" stroke="#4C0519" strokeWidth="0.5" strokeOpacity="0.3" strokeLinecap="round" />
+                <path d="M30 33 C 23 35, 18 32, 15 30" stroke="#4C0519" strokeWidth="0.5" strokeOpacity="0.3" strokeLinecap="round" />
+                {/* Antique dried stamen core */}
+                <circle cx="32" cy="32" r="5" fill="#581C87" fillOpacity="0.25" />
+                <circle cx="32" cy="32" r="3" fill="#881337" fillOpacity="0.8" />
+                <circle cx="32" cy="32" r="1.2" fill="#FEF3C7" fillOpacity="0.9" />
+                {/* Fine dried stem fragment */}
+                <path d="M24 39 C 20 47, 16 52, 12 56" stroke="#881337" strokeOpacity="0.35" strokeWidth="1" strokeLinecap="round" />
               </svg>
             </div>
           </div>
@@ -299,37 +373,61 @@ export function SpatialStationeryUnfold() {
             className="absolute bottom-20 inset-x-2 sm:inset-x-6 h-3.5 sm:h-4 bg-gradient-to-r from-[#881337] via-[#E11D48] to-[#881337] shadow-[0_4px_14px_rgba(159,18,57,0.35)] z-15 pointer-events-none rounded-full will-change-transform"
           />
 
-          {/* Hand-Stamped Pressed-Botanical Floral Mark (Replacing the circular "V" wax seal) */}
+          {/* Tiny Pressed Botanical Sprig (Directly on paper, no container, no square, no badge, slightly overlapping corner) */}
           <div
             ref={sealRef}
-            className="absolute bottom-11 right-6 sm:right-9 z-30 pointer-events-none select-none will-change-transform"
+            className="absolute bottom-9 right-4 sm:right-6 sm:bottom-10 z-30 pointer-events-none select-none will-change-transform"
             aria-hidden="true"
           >
-            <div className="relative w-10 h-10 sm:w-11 sm:h-11 flex items-center justify-center filter drop-shadow-[0_2px_6px_rgba(136,19,55,0.22)]">
-              <svg viewBox="0 0 40 40" fill="none" className="w-full h-full transform -rotate-6">
-                {/* Hand-carved organic pressed ink border */}
+            <div className="relative w-[22px] h-[22px] sm:w-[28px] sm:h-[28px] flex items-center justify-center filter drop-shadow-[0_1px_3px_rgba(136,19,55,0.18)]">
+              {/* Pure botanical sprig paths: fine curved stem, 2-3 uneven leaves, tiny imperfect blossom, tilted, muted antique ink */}
+              <svg viewBox="0 0 32 32" fill="none" className="w-full h-full transform -rotate-12">
+                {/* Curved stem */}
                 <path
-                  d="M8 14C8 10 10 8 14 8H26C30 8 32 10 32 14V26C32 30 30 32 26 32H14C10 32 8 30 8 26V14Z"
-                  fill="#9F1239"
-                  fillOpacity="0.08"
+                  d="M6 28 C 11 21, 15 15, 20 6"
                   stroke="#881337"
-                  strokeWidth="1.2"
-                  strokeDasharray="1 2"
+                  strokeOpacity="0.5"
+                  strokeWidth="1.1"
                   strokeLinecap="round"
-                  className="opacity-75"
                 />
-                {/* Four-petal botanical flower insignia */}
-                <g transform="translate(20, 20)" stroke="#881337" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" fill="#9F1239" fillOpacity="0.88">
-                  {/* Top Petal */}
-                  <path d="M0 -1 C -3 -5.5, -2.5 -9.5, 0 -11 C 2.5 -9.5, 3 -5.5, 0 -1 Z" />
-                  {/* Right Petal */}
-                  <path d="M1 0 C 5.5 -3, 9.5 -2.5, 11 0 C 9.5 2.5, 5.5 3, 1 0 Z" />
-                  {/* Bottom Petal */}
-                  <path d="M0 1 C 3 5.5, 2.5 9.5, 0 11 C -2.5 9.5, -3 5.5, 0 1 Z" />
-                  {/* Left Petal */}
-                  <path d="M-1 0 C -5.5 3, -9.5 2.5, -11 0 C -9.5 -2.5, -5.5 -3, -1 0 Z" />
-                  {/* Center stamen pistil */}
-                  <circle cx="0" cy="0" r="1.8" fill="#FFF5F7" stroke="#701A36" strokeWidth="0.8" />
+                {/* Leaf 1 (lower left) */}
+                <path
+                  d="M10 22 C 6 18, 7 13, 12 17 C 12 20, 11 22, 10 22 Z"
+                  fill="#881337"
+                  fillOpacity="0.28"
+                  stroke="#881337"
+                  strokeOpacity="0.45"
+                  strokeWidth="0.65"
+                />
+                {/* Leaf 2 (mid right) */}
+                <path
+                  d="M14 15 C 18 11, 22 14, 17 18 C 15 17, 14 16, 14 15 Z"
+                  fill="#881337"
+                  fillOpacity="0.24"
+                  stroke="#881337"
+                  strokeOpacity="0.4"
+                  strokeWidth="0.65"
+                />
+                {/* Tiny imperfect blossom / bud at stem tip */}
+                <g transform="translate(20, 6) rotate(15)">
+                  <path
+                    d="M0 0 C -2 -3, -1.5 -5, 0 -6 C 1.5 -5, 2 -3, 0 0 Z"
+                    fill="#BE123C"
+                    fillOpacity="0.4"
+                    stroke="#881337"
+                    strokeOpacity="0.55"
+                    strokeWidth="0.65"
+                  />
+                  <path
+                    d="M0 -1 C 2.5 -2.5, 4.5 -1, 3.5 0.5 C 2 1.5, 0 0, 0 -1 Z"
+                    fill="#9F1239"
+                    fillOpacity="0.32"
+                    stroke="#881337"
+                    strokeOpacity="0.45"
+                    strokeWidth="0.55"
+                  />
+                  {/* Imperfect stamen center */}
+                  <circle cx="0.2" cy="-1.5" r="0.9" fill="#881337" fillOpacity="0.6" />
                 </g>
               </svg>
             </div>
