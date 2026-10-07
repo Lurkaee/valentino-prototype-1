@@ -41,6 +41,24 @@ export const FeatureDiscoveryDrawer: React.FC<FeatureDiscoveryDrawerProps> = ({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isOpen, onClose]);
 
+  // Lock background inspector scrolling while drawer/sheet is open
+  useEffect(() => {
+    if (!isOpen) return;
+    const inspector = document.getElementById("studio-inspector-pane");
+    const prevScroll = inspector?.scrollTop || 0;
+    const prevOverflow = inspector?.style.overflowY;
+    if (inspector) {
+      inspector.style.overflowY = "hidden";
+    }
+
+    return () => {
+      if (inspector) {
+        if (prevOverflow !== undefined) inspector.style.overflowY = prevOverflow;
+        inspector.scrollTop = prevScroll;
+      }
+    };
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
   const allAvailable = getAvailableFeatures();
@@ -67,7 +85,7 @@ export const FeatureDiscoveryDrawer: React.FC<FeatureDiscoveryDrawerProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex justify-end bg-black/75 backdrop-blur-sm transition-opacity duration-300 animate-fadeIn"
+      className="fixed inset-0 z-50 flex flex-col justify-end sm:flex-row sm:justify-end bg-black/60 backdrop-blur-xs sm:backdrop-blur-sm transition-opacity duration-300 animate-fadeIn"
       role="dialog"
       aria-modal="true"
       aria-labelledby="feature-discovery-title"
@@ -76,10 +94,16 @@ export const FeatureDiscoveryDrawer: React.FC<FeatureDiscoveryDrawerProps> = ({
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="w-full sm:max-w-xl md:max-w-2xl h-full bg-[#0E0C12] border-l border-white/10 shadow-2xl flex flex-col text-white overflow-hidden animate-slideLeft">
+      <div className="w-full sm:max-w-xl md:max-w-2xl h-[80vh] max-h-[82vh] sm:h-full sm:max-h-none bg-[#0E0C12] rounded-t-[26px] sm:rounded-none border-t sm:border-t-0 sm:border-l border-white/10 shadow-2xl flex flex-col text-white overflow-hidden animate-sheetSlideUp sm:animate-slideLeft">
+        {/* Mobile Visual Drag Handle */}
+        <div
+          className="w-10 h-1.5 rounded-full bg-white/25 mx-auto mt-2.5 mb-1 sm:hidden shrink-0"
+          aria-hidden="true"
+        />
+
         {/* Header */}
-        <div className="px-5 sm:px-7 py-5 border-b border-white/10 flex items-center justify-between shrink-0 bg-[#131118]">
-          <div className="space-y-1 min-w-0">
+        <div className="px-5 sm:px-7 py-3.5 sm:py-5 border-b border-white/10 flex items-center justify-between shrink-0 bg-[#131118]">
+          <div className="space-y-0.5 sm:space-y-1 min-w-0">
             <div className="flex items-center gap-2">
               <span className="text-base select-none">✨</span>
               <h2
@@ -99,7 +123,7 @@ export const FeatureDiscoveryDrawer: React.FC<FeatureDiscoveryDrawerProps> = ({
             data-testid="close-feature-drawer"
             aria-label="Close feature discovery drawer"
             onClick={onClose}
-            className="w-9 h-9 rounded-full bg-white/[0.05] hover:bg-white/[0.12] border border-white/10 flex items-center justify-center text-white/70 hover:text-white transition-colors text-sm shrink-0"
+            className="w-10 h-10 min-w-[44px] min-h-[44px] rounded-full bg-white/[0.05] hover:bg-white/[0.12] border border-white/10 flex items-center justify-center text-white/70 hover:text-white transition-colors text-sm shrink-0 cursor-pointer"
           >
             ✕
           </button>
