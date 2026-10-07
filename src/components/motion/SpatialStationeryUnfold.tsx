@@ -127,11 +127,11 @@ export function SpatialStationeryUnfold() {
         ease: "power2.inOut",
       })
       .to(sealRef.current, {
-        scale: 1.25,
-        y: -30,
+        scale: 1.12,
+        y: -18,
         opacity: 0.95,
         duration: 0.7,
-        ease: "back.out(1.5)",
+        ease: "back.out(1.4)",
       }, "-=0.6")
 
       // -------------------------------------------------------------
@@ -205,7 +205,7 @@ export function SpatialStationeryUnfold() {
         </div>
 
         {/* Spatial 3D Assembly Stage (Open air, no boxy card border!) */}
-        <div className="relative w-full max-w-sm sm:max-w-lg h-[340px] sm:h-[380px] flex items-center justify-center my-2 [perspective:1000px]">
+        <div className="relative w-full max-w-sm sm:max-w-lg h-[360px] sm:h-[400px] flex items-center justify-center my-2 [perspective:1000px]">
           {/* Envelope Body (Shadowed vellum vessel in space) */}
           <div
             ref={envelopeBackRef}
@@ -215,42 +215,46 @@ export function SpatialStationeryUnfold() {
                 "radial-gradient(ellipse at 50% 30%, rgba(254, 243, 199, 0.28) 0%, transparent 80%)",
             }}
           >
-            {/* Atelier Deckled Heading */}
-            <div className="flex items-center justify-between text-[10px] font-mono text-[#6B2B47] font-semibold tracking-wider">
+            {/* 1. Small Atelier Metadata */}
+            <div className="flex items-center justify-between text-[9px] sm:text-[10px] font-sans tracking-[0.22em] text-[#843657]/80 font-medium uppercase select-none">
               <span>VALENTINO ATELIER</span>
-              <span>KEEPSAKE NO. 0214</span>
+              <span className="font-mono tracking-wider text-[8px] sm:text-[9px] text-[#A25072]/70">№ 0214</span>
             </div>
 
-            {/* Inner handwritten letter fragment */}
+            {/* 2. Inner handwritten letter fragment (Large intimate quotation + handwritten sign-off) */}
             <div
               ref={letterRef}
-              className="my-auto px-4 py-3 sm:px-5 sm:py-4 bg-[#FAF6F0]/95 backdrop-blur-sm rounded-2xl border border-rose-950/[0.08] shadow-sm text-left max-w-sm mx-auto will-change-transform"
+              className="my-auto px-5 py-4 sm:px-6 sm:py-5 bg-[#FAF6F0]/98 backdrop-blur-sm rounded-2xl border border-rose-950/[0.07] shadow-[0_4px_24px_-4px_rgba(70,15,35,0.08)] text-left max-w-md mx-auto will-change-transform"
             >
-              <p className="text-xs sm:text-sm font-serif italic text-[#1E0412] leading-relaxed">
-                “I kept the ticket from that rainy afternoon. Some moments don&apos;t ask for grand announcements — they just quietly stay forever.”
+              <p className="text-sm sm:text-base md:text-[17px] font-serif text-[#1C0412] leading-[1.65] tracking-tight">
+                <span className="font-normal">“I kept the ticket from that rainy afternoon.</span>{" "}
+                <span className="italic font-normal text-[#2A051A]">Some moments don&apos;t ask for grand announcements</span>{" "}
+                <span className="font-normal">— they just quietly stay forever.”</span>
               </p>
-              <p className="text-[10px] font-mono text-[#6B2044] font-medium mt-2 text-right">
-                — for you, always
+              <p className="mt-3 text-right">
+                <span className="font-serif italic text-xs sm:text-[13px] text-[#7A1D45] tracking-wide inline-block transform -rotate-1 select-none font-normal">
+                  — for you, always
+                </span>
               </p>
             </div>
 
-            {/* Embedded Emotional Timeline Ribbon (Paper becomes timeline) */}
+            {/* 3. Embedded Emotional Timeline Ribbon (Paper becomes timeline) */}
             <div
               ref={timelineMilestonesRef}
-              className="mt-2 pt-2 sm:pt-3 border-t border-rose-950/[0.1] flex items-center justify-around text-left gap-1 sm:gap-2 text-[10px] font-mono will-change-transform"
+              className="mt-2 pt-2.5 sm:pt-3 border-t border-rose-950/[0.08] flex items-center justify-around text-left gap-1 sm:gap-2 text-[10px] will-change-transform select-none"
             >
               <div className="flex flex-col">
-                <span className="text-[8px] sm:text-[9px] uppercase tracking-wider text-[#7A1D45] font-bold">10.14</span>
+                <span className="text-[8px] sm:text-[9px] uppercase tracking-wider text-[#7A1D45] font-sans font-semibold">10.14</span>
                 <span className="font-serif italic text-[#1E0412] font-semibold text-[10px] sm:text-[11px]">First Coffee</span>
               </div>
-              <div className="w-1.5 h-1.5 rounded-full bg-rose-500/90" />
+              <div className="w-1.5 h-1.5 rounded-full bg-rose-500/80" />
               <div className="flex flex-col">
-                <span className="text-[8px] sm:text-[9px] uppercase tracking-wider text-[#7A1D45] font-bold">12.24</span>
+                <span className="text-[8px] sm:text-[9px] uppercase tracking-wider text-[#7A1D45] font-sans font-semibold">12.24</span>
                 <span className="font-serif italic text-[#1E0412] font-semibold text-[10px] sm:text-[11px]">Midnight Rain</span>
               </div>
-              <div className="w-1.5 h-1.5 rounded-full bg-rose-500/90" />
+              <div className="w-1.5 h-1.5 rounded-full bg-rose-500/80" />
               <div className="flex flex-col">
-                <span className="text-[8px] sm:text-[9px] uppercase tracking-wider text-[#7A1D45] font-bold">02.14</span>
+                <span className="text-[8px] sm:text-[9px] uppercase tracking-wider text-[#7A1D45] font-sans font-semibold">02.14</span>
                 <span className="font-serif italic text-[#1E0412] font-semibold text-[10px] sm:text-[11px]">The Vow</span>
               </div>
             </div>
@@ -295,14 +299,40 @@ export function SpatialStationeryUnfold() {
             className="absolute bottom-20 inset-x-2 sm:inset-x-6 h-3.5 sm:h-4 bg-gradient-to-r from-[#881337] via-[#E11D48] to-[#881337] shadow-[0_4px_14px_rgba(159,18,57,0.35)] z-15 pointer-events-none rounded-full will-change-transform"
           />
 
-          {/* Floating Tactile Wax Seal Talisman */}
+          {/* Hand-Stamped Pressed-Botanical Floral Mark (Replacing the circular "V" wax seal) */}
           <div
             ref={sealRef}
-            className="absolute bottom-12 right-6 sm:right-10 z-30 w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-[#E11D48] via-[#BE123C] to-[#881337] border-2 border-amber-200/90 shadow-[0_8px_24px_rgba(159,18,57,0.45)] flex items-center justify-center text-white will-change-transform"
+            className="absolute bottom-11 right-6 sm:right-9 z-30 pointer-events-none select-none will-change-transform"
+            aria-hidden="true"
           >
-            <span className="font-serif text-base sm:text-lg font-bold tracking-widest text-amber-100 select-none filter drop-shadow">
-              V
-            </span>
+            <div className="relative w-10 h-10 sm:w-11 sm:h-11 flex items-center justify-center filter drop-shadow-[0_2px_6px_rgba(136,19,55,0.22)]">
+              <svg viewBox="0 0 40 40" fill="none" className="w-full h-full transform -rotate-6">
+                {/* Hand-carved organic pressed ink border */}
+                <path
+                  d="M8 14C8 10 10 8 14 8H26C30 8 32 10 32 14V26C32 30 30 32 26 32H14C10 32 8 30 8 26V14Z"
+                  fill="#9F1239"
+                  fillOpacity="0.08"
+                  stroke="#881337"
+                  strokeWidth="1.2"
+                  strokeDasharray="1 2"
+                  strokeLinecap="round"
+                  className="opacity-75"
+                />
+                {/* Four-petal botanical flower insignia */}
+                <g transform="translate(20, 20)" stroke="#881337" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" fill="#9F1239" fillOpacity="0.88">
+                  {/* Top Petal */}
+                  <path d="M0 -1 C -3 -5.5, -2.5 -9.5, 0 -11 C 2.5 -9.5, 3 -5.5, 0 -1 Z" />
+                  {/* Right Petal */}
+                  <path d="M1 0 C 5.5 -3, 9.5 -2.5, 11 0 C 9.5 2.5, 5.5 3, 1 0 Z" />
+                  {/* Bottom Petal */}
+                  <path d="M0 1 C 3 5.5, 2.5 9.5, 0 11 C -2.5 9.5, -3 5.5, 0 1 Z" />
+                  {/* Left Petal */}
+                  <path d="M-1 0 C -5.5 3, -9.5 2.5, -11 0 C -9.5 -2.5, -5.5 -3, -1 0 Z" />
+                  {/* Center stamen pistil */}
+                  <circle cx="0" cy="0" r="1.8" fill="#FFF5F7" stroke="#701A36" strokeWidth="0.8" />
+                </g>
+              </svg>
+            </div>
           </div>
         </div>
 

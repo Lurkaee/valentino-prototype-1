@@ -3,7 +3,11 @@ import path from "path";
 import fs from "fs";
 
 const APP_URL = process.env.APP_URL || "http://localhost:3000";
-const QA_DIR = "C:/Users/AYUSH/.gemini/antigravity-ide/brain/8ae042ef-4859-4868-a996-26a0d835f39d/visual_qa";
+const QA_DIR =
+  process.env.QA_DIR ||
+  (process.platform === "win32" && fs.existsSync("C:/Users/AYUSH")
+    ? "C:/Users/AYUSH/.gemini/antigravity-ide/brain/8ae042ef-4859-4868-a996-26a0d835f39d/visual_qa"
+    : path.join(process.cwd(), "test-results", "visual_qa"));
 
 test.describe("Phase 6 UI/UX Renaissance Comprehensive Visual QA", () => {
   test.beforeAll(async () => {
