@@ -37,6 +37,153 @@ const KageComponentLazy = dynamic(
   }
 );
 
+function WorldArtifactMark({
+  worldId,
+  className = "w-6 h-6",
+}: {
+  worldId: WorldTheme;
+  className?: string;
+}) {
+  switch (worldId) {
+    case "cloud-nine":
+      return (
+        <svg viewBox="0 0 24 16" fill="none" className={className} aria-hidden="true">
+          <path
+            d="M4 14 C 2 14, 0 12, 0 9.5 C 0 7.2, 1.8 5.5, 4 5.5 C 4.5 3, 6.8 1, 9.5 1 C 12.5 1, 14.8 3.2, 15 6 C 16.5 6, 18 7.2, 18 9 C 18 10.5, 17 12, 15.5 12.5 C 15 13.5, 14 14, 13 14 Z"
+            fill="currentColor"
+            fillOpacity="0.35"
+            stroke="currentColor"
+            strokeWidth="1.2"
+            strokeLinecap="round"
+          />
+        </svg>
+      );
+    case "midnight-rose":
+      return (
+        <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+          <circle
+            cx="12"
+            cy="12"
+            r="9"
+            fill="currentColor"
+            fillOpacity="0.22"
+            stroke="currentColor"
+            strokeWidth="1.1"
+            strokeDasharray="1.5 2"
+          />
+          <path
+            d="M12 6 C 14 6, 16 8, 15 10 C 14 12, 12 13, 12 15"
+            stroke="currentColor"
+            strokeWidth="1.2"
+            strokeLinecap="round"
+            strokeOpacity="0.85"
+          />
+          <path
+            d="M12 8 C 10 9, 9 11, 11 12 C 12 13, 13 13, 14 14"
+            stroke="currentColor"
+            strokeWidth="1.2"
+            strokeLinecap="round"
+            strokeOpacity="0.75"
+          />
+          <circle cx="12" cy="10.5" r="1.5" fill="currentColor" />
+        </svg>
+      );
+    case "kage":
+      return (
+        <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+          <path
+            d="M4 6 H20 M6 6 V19 M18 6 V19 M3 9 H21"
+            stroke="currentColor"
+            strokeWidth="1.3"
+            strokeLinecap="round"
+          />
+          <path
+            d="M10 6 V13 H14 V6"
+            stroke="currentColor"
+            strokeWidth="1"
+            strokeLinecap="round"
+            strokeOpacity="0.6"
+          />
+        </svg>
+      );
+    case "apricot-film":
+      return (
+        <svg viewBox="0 0 24 18" fill="none" className={className} aria-hidden="true">
+          <rect x="2" y="1" width="20" height="16" rx="2" stroke="currentColor" strokeWidth="1.2" />
+          <line
+            x1="6"
+            y1="1"
+            x2="6"
+            y2="17"
+            stroke="currentColor"
+            strokeWidth="0.8"
+            strokeDasharray="2 2"
+          />
+          <line
+            x1="18"
+            y1="1"
+            x2="18"
+            y2="17"
+            stroke="currentColor"
+            strokeWidth="0.8"
+            strokeDasharray="2 2"
+          />
+          <rect
+            x="8.5"
+            y="4"
+            width="7"
+            height="10"
+            rx="1"
+            fill="currentColor"
+            fillOpacity="0.25"
+            stroke="currentColor"
+            strokeWidth="0.8"
+          />
+        </svg>
+      );
+    case "wildflower-paper":
+      return (
+        <svg viewBox="0 0 16 22" fill="none" className={className} aria-hidden="true">
+          <path d="M8 21 C 8 15, 9 9, 8 1" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+          <path
+            d="M8 15 C 4 13, 3 9, 7 8 C 8 10, 8 13, 8 15 Z"
+            fill="currentColor"
+            fillOpacity="0.38"
+            stroke="currentColor"
+            strokeWidth="0.8"
+          />
+          <path
+            d="M8 10 C 12 8, 13 4, 9 3 C 8 5, 8 8, 8 10 Z"
+            fill="currentColor"
+            fillOpacity="0.38"
+            stroke="currentColor"
+            strokeWidth="0.8"
+          />
+        </svg>
+      );
+    case "ocean-letter":
+      return (
+        <svg viewBox="0 0 24 14" fill="none" className={className} aria-hidden="true">
+          <path
+            d="M1 7 C 4 4, 8 4, 11 7 C 14 10, 18 10, 23 7"
+            stroke="currentColor"
+            strokeWidth="1.2"
+            strokeLinecap="round"
+          />
+          <path
+            d="M2 11 C 5 9, 8 9, 11 11 C 14 13, 18 13, 22 11"
+            stroke="currentColor"
+            strokeWidth="0.8"
+            strokeOpacity="0.6"
+            strokeLinecap="round"
+          />
+        </svg>
+      );
+    default:
+      return null;
+  }
+}
+
 interface WorldProfile {
   id: WorldTheme;
   name: string;
@@ -55,7 +202,6 @@ interface WorldProfile {
   previewQuote: string;
   sampleSender: string;
   sampleRecipient: string;
-  artifactIcon: string;
   artifactLabel: string;
   swatches?: { id: string; name: string; color: string; buttonLabel: string }[];
 }
@@ -78,7 +224,6 @@ const WORLD_PROFILES: Record<WorldTheme, WorldProfile> = {
     previewQuote: "“Every moment with you feels like floating high above the clouds, gentle and weightless.”",
     sampleSender: "Forever in the Clouds",
     sampleRecipient: "Dearest Angel",
-    artifactIcon: "☁️",
     artifactLabel: "Cloud Postcard",
     swatches: [
       { id: "blush-sky", name: "Blush Sky", color: "#f472b6", buttonLabel: "Blush" },
@@ -103,7 +248,6 @@ const WORLD_PROFILES: Record<WorldTheme, WorldProfile> = {
     previewQuote: "“In a world of noise, you are my quiet starlight. Every single day with you feels like midnight poetry.”",
     sampleSender: "Yours Always",
     sampleRecipient: "Dearest Maya",
-    artifactIcon: "💌",
     artifactLabel: "Wax Sealed Parcel",
     swatches: [
       { id: "crimson-rose", name: "Crimson Velvet", color: "#e11d48", buttonLabel: "Crimson" },
@@ -129,7 +273,6 @@ const WORLD_PROFILES: Record<WorldTheme, WorldProfile> = {
     previewQuote: "“In the quiet shade of the sacred cedar, my thoughts find their home with you.”",
     sampleSender: "With all my heart",
     sampleRecipient: "Aoi",
-    artifactIcon: "⛩️",
     artifactLabel: "Washi Ink Scroll",
     swatches: [
       { id: "kyoto-crimson", name: "Kyoto Crimson", color: "#e0231c", buttonLabel: "Crimson" },
@@ -154,7 +297,6 @@ const WORLD_PROFILES: Record<WorldTheme, WorldProfile> = {
     previewQuote: "“Every frame with you is steeped in golden afternoon warmth that never fades.”",
     sampleSender: "Forever in Golden Hour",
     sampleRecipient: "Dearest Memory",
-    artifactIcon: "🎞️",
     artifactLabel: "16mm Film Frame",
     swatches: [
       { id: "apricot-amber", name: "Apricot Amber", color: "#e76f51", buttonLabel: "Amber" },
@@ -179,7 +321,6 @@ const WORLD_PROFILES: Record<WorldTheme, WorldProfile> = {
     previewQuote: "“Our love is like pressed wildflowers inside an artisan journal — quiet, enduring, and honest.”",
     sampleSender: "Grown in Love",
     sampleRecipient: "Gentlest Blossom",
-    artifactIcon: "🌿",
     artifactLabel: "Botanical Tag",
     swatches: [
       { id: "sage-botanical", name: "Pressed Sage", color: "#a3b899", buttonLabel: "Sage" },
@@ -204,7 +345,6 @@ const WORLD_PROFILES: Record<WorldTheme, WorldProfile> = {
     previewQuote: "“Our devotion is as vast, calm, and enduring as the twilight sea.”",
     sampleSender: "With Every Tide",
     sampleRecipient: "Steady Anchor",
-    artifactIcon: "🌊",
     artifactLabel: "Sea Glass Parchment",
     swatches: [
       { id: "fog-blue", name: "Fog Blue", color: "#7dd3fc", buttonLabel: "Blue" },
@@ -405,7 +545,7 @@ export default function TemplatesPage() {
             />
             {surpriseMatch && (
               <p className="mt-2 text-xs font-mono text-rose-200 animate-fade-in bg-rose-950/60 border border-rose-400/30 px-3.5 py-1 rounded-full shadow-md">
-                Matched with {WORLD_PROFILES[surpriseMatch as WorldTheme]?.name} ✨
+                Matched with {WORLD_PROFILES[surpriseMatch as WorldTheme]?.name} ✦
               </p>
             )}
           </div>
@@ -456,8 +596,8 @@ export default function TemplatesPage() {
                     />
                   )}
 
-                  <span className="text-2xl select-none mb-1.5 transition-transform group-hover:scale-110 duration-300">
-                    {profile.artifactIcon}
+                  <span className="w-7 h-7 flex items-center justify-center select-none mb-1.5 transition-transform group-hover:scale-110 duration-300 text-rose-200">
+                    <WorldArtifactMark worldId={worldKey} className="w-5 h-5 text-current" />
                   </span>
                   <span
                     className={`text-xs font-serif font-medium tracking-wide transition-colors ${
@@ -690,7 +830,7 @@ export default function TemplatesPage() {
                           className="w-20 h-20 rounded-full bg-gradient-to-br from-pink-200 via-rose-100 to-pink-300 border-2 border-pink-300/90 flex items-center justify-center shadow-[0_8px_20px_rgba(244,114,182,0.4)] hover:scale-105 active:scale-95 transition-transform cursor-pointer"
                           aria-label="Open cloud envelope"
                         >
-                          <span className="text-4xl select-none drop-shadow-sm">☁️</span>
+                          <WorldArtifactMark worldId="cloud-nine" className="w-10 h-8 text-pink-700 drop-shadow-sm" />
                         </button>
                         <span className="mt-3 text-xs uppercase tracking-wider text-pink-800 font-medium font-mono">
                           Tap cloud to unfold letter
@@ -744,7 +884,7 @@ export default function TemplatesPage() {
                           className={`w-20 h-20 rounded-full ${midnightThemeMeta.sealBg} border-2 ${midnightThemeMeta.sealBorder} flex items-center justify-center shadow-[0_8px_25px_rgba(225,29,72,0.6)] cursor-pointer hover:scale-105 active:scale-95 transition-transform duration-300`}
                           aria-label="Break seal"
                         >
-                          <span className="text-4xl select-none drop-shadow-md">💌</span>
+                          <WorldArtifactMark worldId="midnight-rose" className="w-10 h-10 text-rose-100 drop-shadow-md" />
                         </button>
                         <span className="mt-3 text-xs uppercase tracking-wider text-rose-200/90 font-medium font-mono">
                           Tap wax seal to break & unfold
@@ -838,7 +978,7 @@ export default function TemplatesPage() {
                               className="w-18 h-18 rounded-full bg-gradient-to-br from-emerald-900 via-teal-950 to-black border-2 border-emerald-400/60 flex items-center justify-center shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:scale-105 active:scale-95 transition-transform cursor-pointer"
                               aria-label="Launch 3D WebGL preview"
                             >
-                              <span className="text-3xl select-none">⛩️</span>
+                              <WorldArtifactMark worldId="kage" className="w-8 h-8 text-emerald-300 drop-shadow-sm" />
                             </button>
                             <button
                               type="button"
@@ -944,7 +1084,7 @@ export default function TemplatesPage() {
                           300GSM COTTON PRESS
                         </span>
                       </div>
-                      <span className="text-base select-none">🌿</span>
+                      <WorldArtifactMark worldId="wildflower-paper" className="w-4 h-5 text-amber-800" />
                     </div>
 
                     <div className="space-y-0.5">
@@ -1009,7 +1149,7 @@ export default function TemplatesPage() {
                         <span className="text-[9px] font-mono uppercase tracking-[0.2em] text-sky-300">
                           FROSTED SEA GLASS
                         </span>
-                        <span className="text-base select-none">🌊</span>
+                        <WorldArtifactMark worldId="ocean-letter" className="w-5 h-3.5 text-sky-300" />
                       </div>
 
                       <div className="space-y-0.5">
@@ -1095,8 +1235,8 @@ export default function TemplatesPage() {
                 className="group py-4 sm:py-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 transition-colors hover:pl-2"
               >
                 <div className="flex items-center gap-3.5">
-                  <span className="text-xl select-none transition-transform group-hover:scale-110 duration-300">
-                    {profile.artifactIcon}
+                  <span className="w-6 h-6 flex items-center justify-center select-none transition-transform group-hover:scale-110 duration-300 text-rose-300/80">
+                    <WorldArtifactMark worldId={worldKey} className="w-5 h-5 text-current" />
                   </span>
                   <div>
                     <h3 className="text-xl font-serif font-normal text-white flex items-baseline gap-2">
@@ -1220,7 +1360,9 @@ export default function TemplatesPage() {
             {/* Center Stage: The World's Voice Living in Deep Space */}
             <main className="relative z-10 w-full max-w-4xl mx-auto px-6 sm:px-12 my-auto text-center space-y-8 animate-fade-in">
               <div className="space-y-3">
-                <span className="text-4xl select-none block mb-2">{currentProfile.artifactIcon}</span>
+                <div className="w-12 h-12 mx-auto mb-2 flex items-center justify-center text-rose-200/90">
+                  <WorldArtifactMark worldId={currentProfile.id} className="w-10 h-10" />
+                </div>
                 <h3 className="text-4xl sm:text-6xl md:text-7xl font-serif font-normal text-white tracking-tight drop-shadow-[0_4px_24px_rgba(0,0,0,0.8)]">
                   {currentProfile.name}
                 </h3>
