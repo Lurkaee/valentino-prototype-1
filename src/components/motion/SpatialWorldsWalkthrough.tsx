@@ -10,6 +10,16 @@ if (typeof window !== "undefined") {
 }
 
 import { AtmosphericButton } from "@/components/ui/AtmosphericButton";
+import { AmbientBotanicalFrame, type BotanicalTone } from "@/components/motion/AmbientBotanicalFrame";
+
+const WORLD_BOTANICAL_TONE: Record<string, BotanicalTone> = {
+  "cloud-nine": "light",
+  "midnight-rose": "dusk",
+  "kage": "dark",
+  "apricot-film": "warm",
+  "wildflower-paper": "meadow",
+  "ocean-letter": "ocean",
+};
 
 interface WorldWalkthroughItem {
   id: string;
@@ -47,7 +57,9 @@ const WORLDS: WorldWalkthroughItem[] = [
             <span>NO. 09</span>
           </div>
           <div className="my-auto text-center space-y-1">
-            <span className="text-xl">☁️</span>
+            <svg viewBox="0 0 24 16" fill="none" className="w-6 h-4 mx-auto text-pink-400 opacity-80" aria-hidden="true">
+              <path d="M4 14 C 2 14, 0 12, 0 9.5 C 0 7.2, 1.8 5.5, 4 5.5 C 4.5 3, 6.8 1, 9.5 1 C 12.5 1, 14.8 3.2, 15 6 C 16.5 6, 18 7.2, 18 9 C 18 10.5, 17 12, 15.5 12.5 C 15 13.5, 14 14, 13 14 Z" fill="currentColor" fillOpacity="0.35" stroke="currentColor" strokeWidth="1" strokeLinecap="round" />
+            </svg>
             <p className="text-xs font-serif italic text-purple-950 font-medium">
               “Every sunrise is lighter with you.”
             </p>
@@ -71,15 +83,20 @@ const WORLDS: WorldWalkthroughItem[] = [
       <div className="relative w-48 h-48 sm:w-56 sm:h-56 flex items-center justify-center">
         {/* Candlelit crimson ambient aura */}
         <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-rose-700/40 via-red-900/30 to-amber-600/20 blur-2xl" />
-        {/* Floating Crimson Velvet Dispatch with Wax Seal */}
+        {/* Floating Crimson Velvet Dispatch with Organic Wax Stamp */}
         <div className="relative w-36 h-44 sm:w-40 sm:h-48 rounded-2xl bg-gradient-to-b from-[#2A0516] to-[#14020A] border border-rose-500/30 shadow-[0_24px_60px_-10px_rgba(225,29,72,0.4)] flex flex-col justify-between p-4 rotate-[2deg] hover:rotate-0 transition-transform duration-500">
           <div className="flex items-center justify-between text-[9px] font-mono text-rose-200 font-semibold tracking-wider">
             <span>CANDLELIT VELVET</span>
             <span>NO. 01</span>
           </div>
           <div className="my-auto text-center space-y-2">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#E11D48] via-[#BE123C] to-[#881337] border border-amber-200/80 shadow-[0_4px_16px_rgba(225,29,72,0.5)] mx-auto flex items-center justify-center text-white">
-              <span className="font-serif text-sm font-bold text-amber-100">V</span>
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#9F1239] via-[#881337] to-[#4C0519] border border-rose-400/40 shadow-[0_4px_16px_rgba(159,18,57,0.4)] mx-auto flex items-center justify-center text-rose-100" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5 text-rose-200 opacity-90">
+                <path d="M12 4 C 14 4, 17 7, 16 10 C 15 13, 12 14, 12 16" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeOpacity="0.7" />
+                <path d="M12 7 C 9 8, 8 11, 10 13 C 11.5 14.5, 13 14, 14 15" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeOpacity="0.6" />
+                <circle cx="12" cy="9" r="4.5" stroke="currentColor" strokeWidth="1" strokeDasharray="1 2" strokeOpacity="0.8" />
+                <circle cx="12" cy="9" r="1.5" fill="currentColor" fillOpacity="0.85" />
+              </svg>
             </div>
             <p className="text-xs font-serif italic text-rose-100 font-medium">
               “Written by candlelight.”
@@ -143,7 +160,12 @@ const WORLDS: WorldWalkthroughItem[] = [
             <span>FRAME 24</span>
           </div>
           <div className="my-auto p-3 rounded-lg bg-black/40 border border-amber-500/20 text-center">
-            <span className="text-xl">🎞️</span>
+            <svg viewBox="0 0 24 18" fill="none" className="w-6 h-4 mx-auto text-amber-300 opacity-80" aria-hidden="true">
+              <rect x="2" y="1" width="20" height="16" rx="2" stroke="currentColor" strokeWidth="1.2" />
+              <line x1="6" y1="1" x2="6" y2="17" stroke="currentColor" strokeWidth="0.8" strokeDasharray="2 2" />
+              <line x1="18" y1="1" x2="18" y2="17" stroke="currentColor" strokeWidth="0.8" strokeDasharray="2 2" />
+              <rect x="8.5" y="4" width="7" height="10" rx="1" fill="currentColor" fillOpacity="0.25" stroke="currentColor" strokeWidth="0.8" />
+            </svg>
             <p className="text-[11px] font-serif italic text-amber-100 mt-1 font-medium">
               “Sunlight caught in your hair.”
             </p>
@@ -174,7 +196,11 @@ const WORLDS: WorldWalkthroughItem[] = [
             <span>PETAL NO. 05</span>
           </div>
           <div className="my-auto text-center space-y-1">
-            <span className="text-xl">🌿</span>
+            <svg viewBox="0 0 16 22" fill="none" className="w-4 h-5 mx-auto text-amber-800 opacity-80" aria-hidden="true">
+              <path d="M8 21 C 8 15, 9 9, 8 1" stroke="currentColor" strokeWidth="1" strokeLinecap="round" />
+              <path d="M8 15 C 4 13, 3 9, 7 8 C 8 10, 8 13, 8 15 Z" fill="currentColor" fillOpacity="0.4" stroke="currentColor" strokeWidth="0.75" />
+              <path d="M8 10 C 12 8, 13 4, 9 3 C 8 5, 8 8, 8 10 Z" fill="currentColor" fillOpacity="0.4" stroke="currentColor" strokeWidth="0.75" />
+            </svg>
             <p className="text-xs font-serif italic text-stone-900 font-medium">
               “Pressed by hand, kept forever.”
             </p>
@@ -205,7 +231,10 @@ const WORLDS: WorldWalkthroughItem[] = [
             <span>VESSEL NO. 06</span>
           </div>
           <div className="my-auto text-center space-y-1">
-            <span className="text-xl">🌊</span>
+            <svg viewBox="0 0 24 14" fill="none" className="w-6 h-3.5 mx-auto text-blue-300 opacity-80" aria-hidden="true">
+              <path d="M1 8 C 4 5, 8 5, 11 8 C 14 11, 18 11, 23 8" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+              <path d="M2 12 C 5 10, 8 10, 11 12 C 14 14, 18 14, 22 12" stroke="currentColor" strokeWidth="0.8" strokeOpacity="0.6" strokeLinecap="round" />
+            </svg>
             <p className="text-xs font-serif italic text-blue-100 font-medium">
               “Across every shore, to you.”
             </p>
@@ -283,6 +312,13 @@ export function SpatialWorldsWalkthrough() {
             key={world.id}
             className="world-vista-scene relative w-full min-h-[85vh] sm:min-h-[92vh] flex flex-col items-center justify-center px-6 py-16 text-center overflow-hidden"
           >
+            {/* World-Aware Peripheral Botanical Edge Atmosphere */}
+            <AmbientBotanicalFrame
+              variant={WORLD_BOTANICAL_TONE[world.id] || "dusk"}
+              density="subtle"
+              intensity={0.75}
+            />
+
             {/* Dynamic ambient bloom for this world */}
             <div
               className={`absolute w-[450px] sm:w-[650px] h-[350px] sm:h-[450px] rounded-full bg-gradient-to-tr ${world.glowGradient} blur-3xl pointer-events-none -z-10`}
