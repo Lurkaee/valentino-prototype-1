@@ -10,16 +10,10 @@ if (typeof window !== "undefined") {
 }
 
 /**
- * SpatialDiscoveredObjects (Phase 6.8.3 Spatial Composition Break):
- * Eliminates all card/panel wrappers. The physical keepsakes exist independently
- * on an intimate tabletop environment:
- * 1. Physical Folded Velvet Envelope with molten wax seal (hit target is the envelope itself)
- * 2. Origami Folded Whisper Note with crisp crease folds (hit target is the paper note)
- * 3. Heavy Hammered Aged Brass Talisman with irregular oxidation and contact shadow (hit target is the coin)
- *
- * Interaction feedback is physical: lift, rotation, shadow shift, unsealing, unfolding.
- * Titles and descriptions are detached editorial marginalia positioned nearby on the tabletop.
- * Zero emblems. Zero Roman numerals. Zero "v" monograms. Zero rectangular wrapper panels.
+ * SpatialDiscoveredObjects (Phase 6.8.5 Physical Imperfection):
+ * Museum-style curator marginalia: tiny, sparse, detached penciled notes.
+ * Objects carry physical weight, asymmetric lift, natural tilt, and tactile contact shadows.
+ * Zero UI categories, zero explanation blocks, zero synthetic marks.
  */
 export function SpatialDiscoveredObjects() {
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -67,16 +61,16 @@ export function SpatialDiscoveredObjects() {
       ref={containerRef}
       className="relative w-full bg-transparent text-[#FAF8F5] py-24 sm:py-36 px-6 overflow-hidden select-none"
     >
-      {/* Peripheral Botanical Edge Atmosphere */}
-      <AmbientBotanicalFrame variant="dusk" density="subtle" intensity={0.72} />
+      {/* Peripheral Botanical Edge Atmosphere (Restrained) */}
+      <AmbientBotanicalFrame variant="dusk" density="subtle" intensity={0.45} />
 
       {/* Subtle suspended botanical / paper fibers drifting over tabletop */}
       <div className="absolute inset-0 pointer-events-none select-none overflow-hidden z-0" aria-hidden="true">
-        <svg viewBox="0 0 1200 600" fill="none" className="w-full h-full opacity-30">
-          <path d="M280 180 C 290 170, 305 175, 295 190 C 285 195, 275 190, 280 180 Z" fill="#9F1239" fillOpacity="0.35" />
-          <path d="M880 320 C 895 310, 910 320, 900 335 C 890 340, 875 330, 880 320 Z" fill="#D97706" fillOpacity="0.3" />
-          <circle cx="580" cy="140" r="1.5" fill="#FAF5EE" fillOpacity="0.4" />
-          <circle cx="640" cy="420" r="1.2" fill="#FAF5EE" fillOpacity="0.35" />
+        <svg viewBox="0 0 1200 600" fill="none" className="w-full h-full opacity-25">
+          <path d="M280 180 C 290 170, 305 175, 295 190 C 285 195, 275 190, 280 180 Z" fill="#9F1239" fillOpacity="0.3" />
+          <path d="M880 320 C 895 310, 910 320, 900 335 C 890 340, 875 330, 880 320 Z" fill="#D97706" fillOpacity="0.25" />
+          <circle cx="580" cy="140" r="1.5" fill="#FAF5EE" fillOpacity="0.35" />
+          <circle cx="640" cy="420" r="1.2" fill="#FAF5EE" fillOpacity="0.3" />
         </svg>
       </div>
 
@@ -87,9 +81,6 @@ export function SpatialDiscoveredObjects() {
         </h2>
         <p className="text-sm sm:text-base text-[#36091E] font-normal leading-relaxed drop-shadow-[0_1px_6px_rgba(255,245,248,0.5)]">
           Love lives in folded notes, private questions, and unhurried mornings.
-        </p>
-        <p className="text-xs sm:text-sm text-[#831843] font-serif italic pt-1 drop-shadow-[0_1px_4px_rgba(255,245,248,0.5)] font-medium">
-          Touch any keepsake to reveal what it carries.
         </p>
       </div>
 
@@ -155,12 +146,12 @@ export function SpatialDiscoveredObjects() {
             aria-label="Folded envelope with wax seal"
             aria-expanded={openEnvelope}
           >
-            {/* THE PHYSICAL OBJECT ITSELF: Hand-folded Envelope resting on desk */}
+            {/* THE PHYSICAL OBJECT ITSELF: Hand-folded Envelope resting on desk with physical weight */}
             <div
               className={`relative w-64 sm:w-72 h-44 sm:h-48 bg-gradient-to-br from-[#260515] via-[#17020C] to-[#0A0105] border border-rose-400/25 transition-all duration-500 overflow-visible ${
                 openEnvelope
                   ? "rotate-0 -translate-y-3 shadow-[0_32px_60px_-10px_rgba(225,29,72,0.45),0_12px_28px_rgba(0,0,0,0.85)]"
-                  : "rotate-[-3.5deg] group-hover:rotate-0 group-hover:-translate-y-2 shadow-[0_20px_45px_-10px_rgba(225,29,72,0.3),0_6px_18px_rgba(0,0,0,0.7)]"
+                  : "rotate-[-3.5deg] group-hover:rotate-0 group-hover:-translate-y-2 shadow-[0_20px_45px_-10px_rgba(225,29,72,0.3),4px_8px_20px_rgba(0,0,0,0.7)]"
               }`}
             >
               {/* Pointed Envelope Flap Fold */}
@@ -170,7 +161,7 @@ export function SpatialDiscoveredObjects() {
                 }`}
               />
 
-              {/* Hand-Poured Organic Wax Seal (NO MONOGRAMS, pure molten ripples) */}
+              {/* Hand-Poured Organic Wax Seal (Molten ripples, no monogram) */}
               <div className="absolute top-18 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30">
                 <div className="relative w-11 h-11 rounded-full bg-gradient-to-br from-[#E11D48] via-[#9F1239] to-[#4C0519] border border-amber-300/40 shadow-[0_4px_16px_rgba(159,18,57,0.8)] flex items-center justify-center group-hover:scale-105 transition-transform">
                   {/* Organic wax drip contour */}
@@ -198,14 +189,11 @@ export function SpatialDiscoveredObjects() {
             </div>
           </button>
 
-          {/* DETACHED EDITORIAL MARGINALIA */}
-          <div className="mt-4 space-y-0.5 text-center md:text-left max-w-xs">
-            <span className="text-[10px] font-mono tracking-widest uppercase text-[#7A1D45] font-semibold block">
-              № 01 · Open When Letter
+          {/* MUSEUM-STYLE CURATOR MARGINALIA: Tiny, sparse, detached penciled note */}
+          <div className="mt-3 text-center md:text-left select-none">
+            <span className="font-serif italic text-xs text-[#36091E]/75">
+              sealed for hard days
             </span>
-            <p className="text-xs text-[#36091E] font-normal leading-relaxed">
-              Kept for future days when words are needed most.
-            </p>
           </div>
         </div>
 
@@ -247,30 +235,20 @@ export function SpatialDiscoveredObjects() {
                   </p>
                 </div>
               ) : (
-                <div className="h-full flex flex-col justify-between relative z-10 pt-2">
-                  <div className="h-4" />
-                  <div className="text-center">
-                    <span className="font-serif text-base sm:text-lg text-[#1A0311] font-normal leading-snug block">
-                      A secret whisper
-                    </span>
-                    <span className="text-[10px] font-serif italic text-[#831843]/80 mt-1 block">
-                      touch fold to uncover
-                    </span>
-                  </div>
-                  <div className="h-2" />
+                <div className="h-full flex flex-col justify-center items-center text-center relative z-10">
+                  <span className="font-serif text-base sm:text-lg text-[#1A0311] font-normal leading-snug">
+                    A secret whisper
+                  </span>
                 </div>
               )}
             </div>
           </button>
 
-          {/* DETACHED EDITORIAL MARGINALIA */}
-          <div className="mt-4 space-y-0.5 text-center md:text-left max-w-xs">
-            <span className="text-[10px] font-mono tracking-widest uppercase text-[#7A1D45] font-semibold block">
-              № 02 · Whisper Fold
+          {/* MUSEUM-STYLE CURATOR MARGINALIA: Tiny, sparse, detached penciled note */}
+          <div className="mt-3 text-center md:text-left select-none">
+            <span className="font-serif italic text-xs text-[#36091E]/75">
+              guarded by a fold
             </span>
-            <p className="text-xs text-[#36091E] font-normal leading-relaxed">
-              Guarded by a private fold until you decide to open it.
-            </p>
           </div>
         </div>
 
@@ -285,7 +263,7 @@ export function SpatialDiscoveredObjects() {
             aria-label="Heavy aged hammered brass talisman"
             aria-expanded={openKeepsake}
           >
-            {/* THE PHYSICAL OBJECT ITSELF: Heavy hammered brass coin resting directly on tabletop */}
+            {/* THE PHYSICAL OBJECT ITSELF: Heavy hammered brass coin resting directly on tabletop with contact shadow */}
             <div className="relative flex flex-col items-center justify-center p-3">
               {/* Believable Deep Contact Shadow onto Desk */}
               <div
@@ -315,27 +293,15 @@ export function SpatialDiscoveredObjects() {
                     “Every morning with you is my favorite thing on earth.”
                   </p>
                 </div>
-              ) : (
-                <div className="mt-3 text-center">
-                  <span className="font-serif text-sm text-[#2A0802] font-normal drop-shadow-xs block">
-                    Delight & discovery
-                  </span>
-                  <span className="text-[10px] font-serif italic text-[#831843]/80 block">
-                    touch brass to turn
-                  </span>
-                </div>
-              )}
+              ) : null}
             </div>
           </button>
 
-          {/* DETACHED EDITORIAL MARGINALIA */}
-          <div className="mt-2 space-y-0.5 text-center md:text-left max-w-xs">
-            <span className="text-[10px] font-mono tracking-widest uppercase text-[#7A1D45] font-semibold block">
-              № 03 · Brass Token
+          {/* MUSEUM-STYLE CURATOR MARGINALIA: Tiny, sparse, detached penciled note */}
+          <div className="mt-2 text-center md:text-left select-none">
+            <span className="font-serif italic text-xs text-[#36091E]/75">
+              turned in the palm
             </span>
-            <p className="text-xs text-[#36091E] font-normal leading-relaxed">
-              Cast to be turned in the palm on unhurried mornings.
-            </p>
           </div>
         </div>
       </div>
