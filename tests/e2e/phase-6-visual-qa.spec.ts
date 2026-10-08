@@ -6,7 +6,7 @@ const APP_URL = process.env.APP_URL || "http://localhost:3000";
 const QA_DIR =
   process.env.QA_DIR ||
   (process.platform === "win32" && fs.existsSync("C:/Users/AYUSH")
-    ? "C:/Users/AYUSH/.gemini/antigravity-ide/brain/5783fe02-51c9-441b-aadf-c7fc044b4814/screenshots"
+    ? "C:/Users/AYUSH/.gemini/antigravity-ide/brain/9d610088-6efa-4241-82b7-70b0cc3a4a13/screenshots"
     : path.join(process.cwd(), "test-results", "visual_qa"));
 
 test.describe("Phase 6 UI/UX Renaissance Comprehensive Visual QA", () => {
@@ -29,8 +29,9 @@ test.describe("Phase 6 UI/UX Renaissance Comprehensive Visual QA", () => {
   for (const vp of viewports) {
     test(`Capture Homepage & Showroom at ${vp.name}`, async ({ page }) => {
       await page.setViewportSize({ width: vp.width, height: vp.height });
-      await page.goto(`${APP_URL}/`, { waitUntil: "networkidle" });
-      await page.waitForTimeout(600);
+      await page.goto(`${APP_URL}/`, { waitUntil: "load" });
+      await page.waitForSelector("header, nav, #personalize", { state: "attached" });
+      await page.waitForTimeout(1500);
 
       // Verify no horizontal overflow
       const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth);
@@ -43,23 +44,22 @@ test.describe("Phase 6 UI/UX Renaissance Comprehensive Visual QA", () => {
         fullPage: false,
       });
 
-      // Homepage Mid-Scroll (Personalize / Little Things assembly scene)
-      const midEl = page.locator("#personalize");
-      if (await midEl.isVisible()) {
-        await midEl.scrollIntoViewIfNeeded();
-        await page.evaluate(() => window.scrollBy(0, 350));
-        await page.waitForTimeout(600);
+      // Homepage Stationery (SpatialStationeryUnfold - Made from little things)
+      const stationeryEl = page.locator("#personalize");
+      if (await stationeryEl.isVisible()) {
+        await stationeryEl.scrollIntoViewIfNeeded();
+        await page.waitForTimeout(800);
         await page.screenshot({
-          path: path.join(QA_DIR, `02_homepage_mid_scroll_${vp.name}.png`),
+          path: path.join(QA_DIR, `02_homepage_stationery_${vp.name}.png`),
           fullPage: false,
         });
       }
 
-      // Homepage Worlds Section
+      // Homepage Living Worlds Section (SpatialWorldsWalkthrough)
       const worldsEl = page.locator("#worlds-section");
       if (await worldsEl.isVisible()) {
         await worldsEl.scrollIntoViewIfNeeded();
-        await page.waitForTimeout(400);
+        await page.waitForTimeout(600);
         await page.screenshot({
           path: path.join(QA_DIR, `02b_homepage_worlds_${vp.name}.png`),
           fullPage: false,
@@ -70,7 +70,7 @@ test.describe("Phase 6 UI/UX Renaissance Comprehensive Visual QA", () => {
       const momentsEl = page.locator("#moments");
       if (await momentsEl.isVisible()) {
         await momentsEl.scrollIntoViewIfNeeded();
-        await page.waitForTimeout(400);
+        await page.waitForTimeout(600);
         await page.screenshot({
           path: path.join(QA_DIR, `02b2_homepage_moments_${vp.name}.png`),
           fullPage: false,
@@ -81,20 +81,31 @@ test.describe("Phase 6 UI/UX Renaissance Comprehensive Visual QA", () => {
       const finaleEl = page.locator("#create");
       if (await finaleEl.isVisible()) {
         await finaleEl.scrollIntoViewIfNeeded();
-        await page.waitForTimeout(400);
+        await page.waitForTimeout(600);
         await page.screenshot({
           path: path.join(QA_DIR, `02c_homepage_finale_${vp.name}.png`),
           fullPage: false,
         });
       }
 
-      // World Showroom on Templates page
-      await page.goto(`${APP_URL}/templates`, { waitUntil: "networkidle" });
-      await page.waitForTimeout(600);
+      // World Showroom on Templates page (Cloud Nine / Midnight Rose)
+      await page.goto(`${APP_URL}/templates`, { waitUntil: "load" });
+      await page.waitForTimeout(1500);
       await page.screenshot({
         path: path.join(QA_DIR, `03_world_showroom_${vp.name}.png`),
         fullPage: false,
       });
+
+      // Switch to Kage world for contrasting material inspection
+      const kageRadio = page.locator('button[aria-label="Select Kage atmosphere"]');
+      if (await kageRadio.isVisible()) {
+        await kageRadio.click();
+        await page.waitForTimeout(800);
+        await page.screenshot({
+          path: path.join(QA_DIR, `03b_world_showroom_kage_${vp.name}.png`),
+          fullPage: false,
+        });
+      }
     });
   }
 
