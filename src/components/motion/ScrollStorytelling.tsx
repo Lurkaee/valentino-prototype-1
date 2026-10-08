@@ -128,7 +128,7 @@ export function ScrollStorytelling({ className = "" }: { className?: string }) {
           size="sm"
           className="mb-4 tracking-widest uppercase text-[11px] bg-rose-100/90 border-rose-300 text-[#881337] shadow-2xs font-medium font-sans"
         >
-          ✦ Relationship Storytelling ✦
+          Relationship Storytelling
         </Badge>
         <h2 className="text-3xl sm:text-5xl font-serif font-medium text-[#240412] tracking-tight mb-4 leading-tight">
           Build a story that unfolds like a memory.

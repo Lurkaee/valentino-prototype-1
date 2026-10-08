@@ -221,7 +221,7 @@ export function ValentineComposition({
             <div className="relative p-6 sm:p-7 space-y-4">
               <div className="flex items-center justify-between text-[10px] opacity-70 uppercase tracking-widest font-sans border-b border-black/10 pb-2">
                 <span>{greeting || "To My Favorite Person"}</span>
-                <span className="font-semibold text-rose-500">✦ sealed with love ✦</span>
+                <span className="font-medium text-rose-800">sealed with love</span>
               </div>
               <h2 className="font-serif text-xl sm:text-2xl font-medium tracking-tight">
                 {partnerName || "Dearest"}
@@ -241,10 +241,7 @@ export function ValentineComposition({
               <div className="relative pt-4 px-5 pb-3 bg-gradient-to-b from-white/70 to-transparent border-b border-rose-900/10 shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
                 <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-[#D4AF37]/60 to-transparent" />
                 <div className="flex items-center justify-between text-[10px] opacity-70 uppercase tracking-widest font-sans mb-1">
-                  <span className="flex items-center gap-1.5">
-                    <span className="text-rose-400">✦</span>
-                    <span>{partnerName ? `For ${partnerName}` : "Personalized Valentine"}</span>
-                  </span>
+                  <span>{partnerName ? `For ${partnerName}` : "Personalized Valentine"}</span>
                   <span>No. 0214</span>
                 </div>
 

@@ -81,21 +81,18 @@ export function SpatialDiscoveredObjects() {
 
       {/* Editorial Header floating lightly in space */}
       <div className="text-center max-w-2xl mx-auto mb-16 sm:mb-24 space-y-3 relative z-10">
-        <span className="inline-block text-[11px] font-mono tracking-widest uppercase text-[#7A1D45] font-semibold drop-shadow-[0_1px_8px_rgba(255,245,248,0.7)]">
-          Interactive Devotion
-        </span>
         <h2 className="text-3xl sm:text-5xl font-serif font-normal text-[#1A0311] tracking-tight leading-tight drop-shadow-[0_1px_14px_rgba(255,245,248,0.6)]">
-          Add little secrets waiting to be discovered.
+          Little secrets waiting between the hours.
         </h2>
         <p className="text-sm sm:text-base text-[#36091E] font-normal leading-relaxed drop-shadow-[0_1px_6px_rgba(255,245,248,0.5)]">
-          Love isn&apos;t just what you say all at once. It is the sealed envelopes opened on quiet mornings, the private memories tucked behind questions, and the surprises waiting for the days ahead.
+          Love isn&apos;t spoken all at once. It lives in folded notes, private questions, and the surprises kept for future mornings.
         </p>
         <p className="text-xs sm:text-sm text-[#831843] font-serif italic pt-1 drop-shadow-[0_1px_4px_rgba(255,245,248,0.5)] font-medium">
-          Touch a keepsake to unfold what is hidden inside.
+          Touch an object to unfold what is hidden inside.
         </p>
       </div>
 
-      {/* Spatial Tabletop Constellation of Keepsakes (REAL PHYSICAL OBJECTS, ZERO CARDS) */}
+      {/* Spatial Tabletop Constellation of Keepsakes (AUTHENTIC PHYSICAL OBJECTS) */}
       <div className="max-w-5xl mx-auto relative z-10 min-h-[580px] md:min-h-[660px] lg:min-h-[700px] flex flex-col md:block items-center justify-center gap-12 md:gap-0 [perspective:1200px]">
         {/* ============================================================== */}
         {/* FOUND FRAGMENT A: Vintage ticket stub tucked under envelope     */}
@@ -139,17 +136,13 @@ export function SpatialDiscoveredObjects() {
         </div>
 
         {/* ============================================================== */}
-        {/* FOUND FRAGMENT D: Gold leaf foil scrap lying between keepsakes  */}
+        {/* FOUND FRAGMENT D: Torn scrap of raw gold foil on desk          */}
         {/* ============================================================== */}
         <div
           className="hidden md:block absolute top-[28%] right-[33%] lg:right-[35%] z-15 pointer-events-none select-none transform rotate-[22deg] opacity-90 will-change-transform drop-shadow-[0_4px_12px_rgba(217,119,6,0.35)]"
           aria-hidden="true"
         >
-          <div className="w-16 py-1 px-1.5 bg-gradient-to-tr from-amber-300 via-amber-200 to-yellow-100 rounded-xs border border-amber-400/40 text-center shadow-xs">
-            <span className="block text-[6px] font-mono tracking-widest text-amber-900 font-semibold uppercase">
-              GOLD LEAF · 24K
-            </span>
-          </div>
+          <div className="w-14 h-6 bg-gradient-to-tr from-amber-400 via-amber-200 to-yellow-100 rounded-xs border border-amber-400/40 shadow-xs [clip-path:polygon(0_0,95%_10%,85%_100%,5%_88%)]" />
         </div>
 
         {/* ============================================================== */}
@@ -170,21 +163,17 @@ export function SpatialDiscoveredObjects() {
               {/* Hand-Poured Wax Seal Medallion Over Flap */}
               <div className="absolute top-15 left-1/2 -translate-x-1/2 -translate-y-1/2 z-25">
                 <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#E11D48] via-[#9F1239] to-[#4C0519] border border-amber-300/50 shadow-[0_4px_16px_rgba(159,18,57,0.7)] flex items-center justify-center text-rose-100 group-hover:scale-105 transition-transform">
-                  <svg viewBox="0 0 16 16" fill="none" className="w-4 h-4 text-amber-200">
-                    <circle cx="8" cy="8" r="5.5" stroke="currentColor" strokeWidth="0.8" strokeDasharray="1 1.5" />
-                    <circle cx="8" cy="8" r="1.5" fill="currentColor" />
-                  </svg>
+                  <div className="w-5 h-5 rounded-full border border-amber-200/40 flex items-center justify-center">
+                    <span className="font-serif italic text-xs text-amber-200/90 leading-none">v</span>
+                  </div>
                 </div>
               </div>
 
-              {/* Envelope Header Marginalia */}
-              <div className="flex items-center justify-between text-[8.5px] font-mono tracking-widest text-rose-200/80 relative z-20">
-                <span>№ 01 · DISPATCH</span>
-                <span>SEALED FOLD</span>
-              </div>
+              {/* Clean breathing room, zero fake technical metadata */}
+              <div className="h-6" />
 
               {/* Central Letter Prompt */}
-              <div className="my-auto space-y-1.5 text-center relative z-20 pt-6">
+              <div className="my-auto space-y-1.5 text-center relative z-20 pt-4">
                 <h3 className="font-serif text-xl sm:text-2xl text-white drop-shadow-[0_1px_8px_rgba(10,2,7,0.9)] font-normal leading-snug">
                   Open when you miss me
                 </h3>
@@ -226,7 +215,7 @@ export function SpatialDiscoveredObjects() {
             className="w-full group cursor-pointer focus:outline-none"
             aria-expanded={openWhisper}
           >
-            {/* PHYSICAL OBJECT: Folded Parchment Note with Creased Flaps & Brass Key */}
+            {/* PHYSICAL OBJECT: Folded Parchment Note with Creased Flaps */}
             <div className="relative w-full h-54 sm:h-58 bg-[#FFFDF9] text-[#3B0E23] p-5 shadow-[0_20px_45px_-10px_rgba(70,15,35,0.22),0_4px_12px_rgba(0,0,0,0.06)] border border-rose-950/[0.12] flex flex-col justify-between rotate-[2.5deg] group-hover:rotate-0 transition-transform duration-500 will-change-transform overflow-hidden">
               {/* Diagonal Fold Crease Texture Lines */}
               <div className="absolute inset-0 pointer-events-none opacity-20">
@@ -239,19 +228,15 @@ export function SpatialDiscoveredObjects() {
               {/* Folded Corner Tab */}
               <div className="absolute top-0 right-0 w-8 h-8 bg-gradient-to-bl from-rose-100 to-[#F5EBE1] border-b border-l border-rose-950/20 shadow-sm" />
 
-              <div className="flex items-center justify-between text-[8.5px] font-mono tracking-widest text-[#831843]/80 relative z-10">
-                <span>№ 02 · VELLUM FOLD</span>
-                <span>SECRET NOTE</span>
-              </div>
+              {/* Subtle top breathing space, zero fake metadata */}
+              <div className="h-4" />
 
-              {/* Skeleton Key Emboss & Inscription */}
+              {/* Understated Embossed Motif & Inscription */}
               <div className="my-auto space-y-2 text-center relative z-10">
                 <div className="w-8 h-8 mx-auto flex items-center justify-center text-[#881337]" aria-hidden="true">
-                  <svg viewBox="0 0 20 20" fill="none" className="w-5 h-5 text-[#881337]">
-                    <circle cx="8" cy="8" r="4.5" stroke="currentColor" strokeWidth="1.2" />
-                    <circle cx="8" cy="8" r="2" fill="currentColor" fillOpacity="0.35" />
-                    <path d="M11.5 11.5 L17 17 M14.5 14.5 L16.5 12.5 M16 16 L18 14" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
+                  <div className="w-5 h-5 rounded-full border border-[#881337]/40 flex items-center justify-center">
+                    <div className="w-1.5 h-1.5 rounded-full bg-[#881337]/60" />
+                  </div>
                 </div>
                 <h3 className="font-serif text-xl sm:text-2xl text-[#1A0311] font-normal leading-snug">
                   A secret whisper
@@ -285,7 +270,7 @@ export function SpatialDiscoveredObjects() {
         </div>
 
         {/* ============================================================== */}
-        {/* OBJECT 03: HEAVY GOLD LEAF PRESSED MEDALLION (Right, -1.5°)    */}
+        {/* OBJECT 03: HEAVY HAMMERED AGED BRASS MEDALLION (Right, -1.5°)  */}
         {/* ============================================================== */}
         <div className="spatial-discovered-artifact w-full max-w-xs md:max-w-[280px] lg:max-w-[300px] md:absolute md:top-8 md:right-2 lg:right-6 z-20 flex flex-col items-center md:items-start text-center md:text-left">
           <button
@@ -294,40 +279,38 @@ export function SpatialDiscoveredObjects() {
             className="w-full group cursor-pointer focus:outline-none"
             aria-expanded={openKeepsake}
           >
-            {/* PHYSICAL OBJECT: Embossed Brass & Gold Leaf Medallion Keepsake */}
-            <div className="relative w-full h-54 sm:h-58 bg-gradient-to-b from-[#1C0816] via-[#12020E] to-[#0A0108] border border-amber-400/35 p-5 shadow-[0_24px_50px_-10px_rgba(217,119,6,0.35),0_6px_20px_rgba(0,0,0,0.6)] flex flex-col justify-between rotate-[-1.5deg] group-hover:rotate-0 transition-transform duration-500 will-change-transform overflow-visible">
-              {/* Milled Gold Foil Rim Highlight */}
-              <div className="absolute inset-1 border border-amber-300/20 pointer-events-none" />
+            {/* PHYSICAL OBJECT: Heavy Aged Brass Keepsake with Imperfect Hammered Surface */}
+            <div className="relative w-full h-54 sm:h-58 bg-gradient-to-b from-[#1A0A06] via-[#100502] to-[#080201] border border-amber-900/40 p-5 shadow-[0_28px_60px_-10px_rgba(0,0,0,0.85),0_8px_24px_rgba(180,83,9,0.25)] flex flex-col justify-between rotate-[-1.5deg] group-hover:rotate-0 transition-transform duration-500 will-change-transform overflow-visible">
+              {/* Subtle top space, zero fake metadata */}
+              <div className="h-4" />
 
-              <div className="flex items-center justify-between text-[8.5px] font-mono tracking-widest text-amber-300/80">
-                <span>№ 03 · GOLD LEAF</span>
-                <span>KEEPSAKE TALISMAN</span>
-              </div>
-
-              {/* Embossed Relief Starburst Crest */}
-              <div className="my-auto space-y-1.5 text-center">
-                <div className="w-10 h-10 mx-auto rounded-full bg-gradient-to-br from-amber-300 via-amber-500 to-amber-700 p-0.5 shadow-md flex items-center justify-center group-hover:scale-105 transition-transform">
-                  <div className="w-full h-full rounded-full bg-[#1C0816] flex items-center justify-center">
-                    <svg viewBox="0 0 20 20" fill="none" className="w-5 h-5 text-amber-300">
-                      <path d="M10 2 L12 8 L18 10 L12 12 L10 18 L8 12 L2 10 L8 8 Z" fill="currentColor" fillOpacity="0.6" stroke="currentColor" strokeWidth="0.8" strokeLinejoin="round" />
-                      <circle cx="10" cy="10" r="1.5" fill="#FEF3C7" />
-                    </svg>
+              {/* HEAVY HAMMERED AGED BRASS TALISMAN (ZERO STARBURSTS, ZERO ICONS) */}
+              <div className="my-auto space-y-2 text-center">
+                <div className="relative w-14 h-14 mx-auto rounded-full bg-gradient-to-br from-[#D97706] via-[#B45309] to-[#451A03] p-1 shadow-[0_12px_28px_rgba(0,0,0,0.85),inset_0_2px_4px_rgba(254,243,199,0.4),inset_0_-2px_4px_rgba(0,0,0,0.8)] flex items-center justify-center group-hover:scale-105 transition-transform">
+                  {/* Subtle imperfect hammered facets & deep cast rim */}
+                  <div className="w-full h-full rounded-full bg-gradient-to-tr from-[#78350F] via-[#B45309] to-[#92400E] border border-amber-400/30 flex items-center justify-center shadow-inner relative overflow-hidden">
+                    {/* Hammered surface texture light play */}
+                    <div className="absolute inset-0 opacity-25 mix-blend-overlay bg-[radial-gradient(#FEF3C7_1px,transparent_1px)] [background-size:6px_6px]" />
+                    {/* Hand-stamped roman numeral mark pressed deeply into brass */}
+                    <span className="font-serif text-sm tracking-wider font-semibold text-[#FEF3C7]/90 drop-shadow-[0_1px_1px_rgba(0,0,0,0.9)] select-none">
+                      VII
+                    </span>
                   </div>
                 </div>
-                <h3 className="font-serif text-xl sm:text-2xl text-amber-100 drop-shadow-[0_1px_8px_rgba(30,10,0,0.9)] font-normal leading-snug">
+                <h3 className="font-serif text-xl sm:text-2xl text-amber-100/95 drop-shadow-[0_1px_8px_rgba(30,10,0,0.9)] font-normal leading-snug">
                   Delight & discovery
                 </h3>
               </div>
 
               {/* Reveal peek or touch hint */}
-              <div className="pt-2 border-t border-amber-400/20 text-[11px] font-serif italic text-amber-200 font-medium text-center">
+              <div className="pt-2 border-t border-amber-900/30 text-[11px] font-serif italic text-amber-200/90 font-medium text-center">
                 {openKeepsake ? (
                   <span className="text-amber-100 font-medium animate-fade-in">
                     “Every morning with you is my favorite thing on earth.”
                   </span>
                 ) : (
-                  <span className="text-amber-200/80 group-hover:text-amber-100 transition-colors">
-                    touch token to reveal
+                  <span className="text-amber-300/70 group-hover:text-amber-100 transition-colors">
+                    touch brass token to reveal
                   </span>
                 )}
               </div>
@@ -340,7 +323,7 @@ export function SpatialDiscoveredObjects() {
               Playful Keepsakes
             </span>
             <p className="text-xs text-[#36091E] font-normal leading-relaxed">
-              Tactile scratch cards that reveal sweet compliments, a jar of reasons, or an intimate relationship quiz.
+              Tactile scratch tokens that reveal sweet compliments, a jar of reasons, or an intimate relationship quiz.
             </p>
           </div>
         </div>

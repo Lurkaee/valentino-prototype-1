@@ -45,7 +45,7 @@ const WORLDS: WorldWalkthroughItem[] = [
     accentColor: "#38bdf8",
     titleClass: "text-[#1A0311] drop-shadow-[0_1px_12px_rgba(255,250,240,0.6)]",
     taglineClass: "text-[#36091E] font-normal drop-shadow-[0_1px_6px_rgba(255,250,240,0.6)]",
-    badgeClass: "text-[#0369A1] font-semibold tracking-widest drop-shadow-[0_1px_4px_rgba(255,255,255,0.7)]",
+    badgeClass: "text-[#0369A1] font-semibold tracking-widest",
     layoutVariant: "sky-flight",
     renderArtifact: () => (
       <div className="relative w-64 h-64 sm:w-72 sm:h-72 flex items-center justify-center select-none">
@@ -108,18 +108,14 @@ const WORLDS: WorldWalkthroughItem[] = [
           </div>
 
           {/* Inscribed Aerogramme Content */}
-          <div className="pt-5 px-4 pb-3 flex flex-col justify-between h-full text-left relative z-10">
+          <div className="pt-6 px-4 pb-3 flex flex-col justify-between h-full text-left relative z-10">
             <div>
-              <span className="inline-block text-[8px] font-mono tracking-widest text-[#0369A1] uppercase font-semibold">
-                PAR AVION · AIRMAIL
-              </span>
               <p className="font-serif italic text-xs text-[#0F172A] mt-2 font-medium leading-relaxed">
                 “Every sunrise is lighter with you.”
               </p>
             </div>
-            <div className="flex items-center justify-between text-[9px] font-mono text-sky-800/80 pt-1 border-t border-sky-100">
-              <span>DAWN FLIGHT № 09</span>
-              <span className="font-serif italic text-[#0369A1]">yours in the clouds</span>
+            <div className="text-[9px] font-serif italic text-[#0369A1] text-right pt-1 border-t border-sky-100">
+              yours in the clouds
             </div>
           </div>
         </div>
@@ -172,19 +168,10 @@ const WORLDS: WorldWalkthroughItem[] = [
               <div className="absolute -bottom-1 -right-1 w-3 h-3 rounded-full bg-[#881337] opacity-90" />
               <div className="absolute -top-0.5 -left-1 w-2.5 h-2.5 rounded-full bg-[#9F1239] opacity-80" />
               {/* Embossed Rose Monogram Mark */}
-              <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6 text-amber-200/90 drop-shadow-sm" aria-hidden="true">
-                <circle cx="12" cy="12" r="8" stroke="currentColor" strokeWidth="1" strokeDasharray="1.5 2" />
-                <path d="M12 6 C 14 6, 16 8, 15 10 C 14 12, 12 13, 12 15" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
-                <path d="M12 8 C 10 9, 9 11, 11 12 C 12 13, 13 13, 14 14" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
-                <circle cx="12" cy="10" r="1.5" fill="currentColor" />
-              </svg>
+              <div className="w-5 h-5 rounded-full border border-amber-200/40 flex items-center justify-center">
+                <span className="font-serif italic text-xs text-amber-200/90 leading-none">v</span>
+              </div>
             </div>
-          </div>
-
-          {/* Gold Foil Margin Script */}
-          <div className="absolute bottom-3 inset-x-4 flex items-center justify-between text-[8px] font-mono tracking-widest text-amber-300/80">
-            <span>SEALED BY CANDLELIGHT</span>
-            <span>№ 01 · MIDNIGHT</span>
           </div>
 
           {/* Intimate Letter Quote */}
@@ -202,23 +189,23 @@ const WORLDS: WorldWalkthroughItem[] = [
     name: "Kage",
     jpName: "影",
     tagline: "For the love of quiet shadows and unspoken truths.",
-    glowGradient: "from-amber-600/18 via-emerald-950/25 to-stone-950/30",
-    accentColor: "#10b981",
-    titleClass: "text-[#F0FDF4] drop-shadow-[0_2px_16px_rgba(2,15,10,0.95)]",
-    taglineClass: "text-[#A7F3D0] drop-shadow-[0_1px_8px_rgba(2,15,10,0.9)]",
-    badgeClass: "text-emerald-300 font-semibold drop-shadow-[0_1px_6px_rgba(2,15,10,0.9)]",
+    glowGradient: "from-amber-700/20 via-stone-900/40 to-[#0A0A0B]",
+    accentColor: "#C2410C",
+    titleClass: "text-[#F5F2EB] drop-shadow-[0_2px_16px_rgba(0,0,0,0.95)]",
+    taglineClass: "text-[#D6D0C4] drop-shadow-[0_1px_8px_rgba(0,0,0,0.9)]",
+    badgeClass: "text-amber-200/80 font-medium",
     layoutVariant: "vertical-scroll",
     renderArtifact: () => (
       <div className="relative w-56 h-72 sm:w-64 sm:h-80 flex items-center justify-center select-none">
-        {/* Kyoto Cedar Temple Mist Aura */}
-        <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-amber-600/15 via-emerald-900/20 to-stone-900/40 blur-3xl pointer-events-none" />
+        {/* Kyoto Quiet Room Chiaroscuro */}
+        <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-amber-700/15 via-stone-900/35 to-black/60 blur-3xl pointer-events-none" />
 
         {/* Environmental Prop: Stone Lantern Amber Glow */}
-        <div className="absolute bottom-2 -right-4 w-16 h-16 rounded-full bg-amber-500/15 blur-xl pointer-events-none" />
+        <div className="absolute bottom-2 -right-4 w-16 h-16 rounded-full bg-amber-500/20 blur-xl pointer-events-none" />
 
-        {/* Environmental Prop: Cedar Pine Needles Silhouette casting shadow from upper left */}
-        <div className="absolute -top-4 -left-6 w-20 h-20 opacity-30 pointer-events-none z-20">
-          <svg viewBox="0 0 60 60" fill="none" className="w-full h-full text-emerald-900">
+        {/* Environmental Prop: Cedar Pine Needles Silhouette casting charcoal shadow from upper left */}
+        <div className="absolute -top-4 -left-6 w-20 h-20 opacity-40 pointer-events-none z-20">
+          <svg viewBox="0 0 60 60" fill="none" className="w-full h-full text-stone-900">
             <path d="M4 8 L24 20 M8 4 L26 22 M16 4 L28 24 M2 16 L22 24" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
             <path d="M22 22 C 34 30, 42 42, 54 50" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
           </svg>
@@ -226,41 +213,40 @@ const WORLDS: WorldWalkthroughItem[] = [
 
         {/* PHYSICAL ARTIFACT: Hanging Japanese Washi Hanging Scroll (Kakejiku) */}
         <div className="relative w-44 sm:w-50 h-64 sm:h-72 flex flex-col items-center transform rotate-[-1deg] hover:rotate-0 transition-transform duration-500">
-          {/* Top Natural Cedar Dowel Rod & Hanging Cord */}
-          <div className="w-12 h-0.5 bg-amber-700/60 mb-1 rounded-full" />
-          <div className="w-full h-3 bg-gradient-to-r from-[#1E140C] via-[#3B2818] to-[#1E140C] rounded-sm shadow-md border-b border-amber-900/40" />
+          {/* Top Natural Cedar Dowel Rod & Silk Hanging Cord */}
+          <div className="w-12 h-0.5 bg-amber-800/70 mb-1 rounded-full" />
+          <div className="w-full h-3 bg-gradient-to-r from-[#2A180E] via-[#3E2516] to-[#2A180E] rounded-sm shadow-md border-b border-amber-950/60" />
 
-          {/* Textured Fibrous Washi Paper Scroll Body */}
-          <div className="w-[92%] flex-1 bg-[#091510] border-x border-stone-700/40 shadow-[0_20px_50px_-10px_rgba(16,185,129,0.25)] p-4 flex flex-col justify-between text-center relative overflow-hidden">
-            {/* Raw Washi Paper Fiber Texture Hint */}
-            <div className="absolute inset-0 opacity-15 pointer-events-none bg-[radial-gradient(#10b981_1px,transparent_1px)] [background-size:12px_12px]" />
+          {/* Textured Fibrous Washi Paper Scroll Body on Deep Charcoal Brocade */}
+          <div className="w-[92%] flex-1 bg-[#121214] border-x border-stone-800/80 shadow-[0_24px_55px_-10px_rgba(0,0,0,0.85)] p-3.5 flex flex-col justify-between text-center relative overflow-hidden">
+            {/* Center Washi Sheet (Honshi) */}
+            <div className="relative flex-1 bg-[#EFE8DC] border border-amber-900/15 shadow-inner p-3 flex flex-col justify-between overflow-hidden">
+              {/* Subtle handmade washi paper fiber grain */}
+              <div className="absolute inset-0 opacity-20 pointer-events-none bg-[radial-gradient(#78350F_1px,transparent_1px)] [background-size:8px_8px]" />
 
-            <div className="flex items-center justify-between text-[8px] font-mono text-emerald-300/80 font-semibold tracking-wider relative z-10">
-              <span>KYOTO SANCTUARY</span>
-              <span>影 · 03</span>
-            </div>
+              {/* Sumi Ink Calligraphy */}
+              <div className="my-auto space-y-1.5 relative z-10">
+                <span className="text-4xl font-serif text-[#1C1917] font-light tracking-widest block drop-shadow-xs select-none">
+                  静寂
+                </span>
+                <p className="text-[11px] font-serif italic text-stone-700 leading-relaxed font-medium">
+                  “Some words live quietly in the shadows.”
+                </p>
+              </div>
 
-            {/* Sumi Ink Calligraphy */}
-            <div className="my-auto space-y-2 relative z-10">
-              <span className="text-4xl font-serif text-emerald-100 font-light tracking-widest block drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
-                静寂
-              </span>
-              <p className="text-[11px] font-serif italic text-emerald-200/90 leading-relaxed font-normal">
-                “Some words live quietly in the shadows.”
-              </p>
-            </div>
-
-            {/* Red Vermilion Hanko Artist Seal (印) */}
-            <div className="flex items-center justify-between pt-2 border-t border-emerald-900/40 relative z-10">
-              <span className="text-[7.5px] font-mono text-stone-400">CEDAR & MIST</span>
-              <div className="w-5 h-5 rounded-xs border border-red-500/80 bg-red-950/70 text-red-400 flex items-center justify-center text-[8px] font-serif font-bold shadow-sm">
-                印
+              {/* Hand-Carved Vermilion Cinnabar Hanko Seal (NO BOXED CHARACTERS) */}
+              <div className="flex justify-end pt-2 relative z-10">
+                <div className="w-5 h-5 rounded-xs bg-[#991B1B] text-[#FEF2F2] border border-[#DC2626]/60 flex items-center justify-center shadow-xs">
+                  <div className="w-3 h-3 border border-white/60 flex items-center justify-center">
+                    <div className="w-1 h-1 bg-white/80" />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Bottom Weight Cedar Dowel Rod */}
-          <div className="w-full h-3 bg-gradient-to-r from-[#1E140C] via-[#3B2818] to-[#1E140C] rounded-sm shadow-md border-t border-amber-900/40" />
+          {/* Bottom Weighted Cedar Dowel Rod */}
+          <div className="w-full h-3 bg-gradient-to-r from-[#2A180E] via-[#3E2516] to-[#2A180E] rounded-sm shadow-md border-t border-amber-950/60" />
         </div>
       </div>
     ),
@@ -276,52 +262,66 @@ const WORLDS: WorldWalkthroughItem[] = [
     badgeClass: "text-amber-200 font-semibold drop-shadow-[0_1px_6px_rgba(30,12,2,0.85)]",
     layoutVariant: "cinema-reel",
     renderArtifact: () => (
-      <div className="relative w-64 h-56 sm:w-72 sm:h-64 flex items-center justify-center select-none">
-        {/* Golden Hour Projector Lens Flare */}
-        <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-amber-500/35 via-orange-600/20 to-rose-400/20 blur-3xl pointer-events-none" />
+      <div className="relative w-72 h-64 sm:w-80 sm:h-72 flex items-center justify-center select-none overflow-visible">
+        {/* Dark Room Ambient Chiaroscuro */}
+        <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-amber-600/25 via-stone-900/40 to-black/70 blur-3xl pointer-events-none" />
 
-        {/* Diagonal Light Leak Beam & Projector Dust Motes */}
-        <div className="absolute -top-4 -right-6 w-32 h-44 bg-gradient-to-b from-amber-300/30 via-orange-400/10 to-transparent rotate-[-30deg] blur-lg pointer-events-none" />
-        <div className="absolute top-2 right-4 w-1.5 h-1.5 rounded-full bg-amber-200/80 blur-[0.5px] pointer-events-none animate-pulse" />
-        <div className="absolute top-8 right-12 w-1 h-1 rounded-full bg-amber-100/70 blur-[0.3px] pointer-events-none" />
+        {/* Vintage Physical Film Reel Silhouette Sitting Deep in the Background */}
+        <div className="absolute top-2 -right-8 w-44 h-44 rounded-full border border-amber-900/25 opacity-25 blur-[1px] pointer-events-none flex items-center justify-center">
+          <div className="w-20 h-20 rounded-full border border-amber-900/30" />
+          <div className="absolute w-full h-px bg-amber-900/20" />
+          <div className="absolute h-full w-px bg-amber-900/20" />
+        </div>
 
-        {/* PHYSICAL ARTIFACT: 16mm Archival Film Strip (Continuous Sprocket Holes) */}
-        <div className="relative w-56 sm:w-64 bg-[#140A04] shadow-[0_24px_60px_-10px_rgba(245,158,11,0.35),0_4px_16px_rgba(0,0,0,0.8)] border border-amber-600/40 transform rotate-[3deg] hover:rotate-0 transition-transform duration-500 p-2.5">
-          {/* Top Sprocket Perforations Strip */}
-          <div className="flex items-center justify-between px-1 mb-2">
-            {[...Array(6)].map((_, i) => (
-              <div key={i} className="w-2.5 h-1.5 bg-black rounded-xs border border-amber-950/80 shadow-inner" />
-            ))}
-          </div>
+        {/* Diagonal Incandescent Projector Beam Cutting Across Viewport */}
+        <div
+          className="absolute inset-y-0 -inset-x-8 bg-gradient-to-r from-amber-400/20 via-amber-200/15 to-transparent blur-md pointer-events-none"
+          style={{
+            clipPath: "polygon(0 25%, 100% 0%, 100% 75%, 0 95%)",
+          }}
+        />
 
-          {/* Film Cell Exposure Frame */}
-          <div className="relative bg-[#261206] border border-amber-500/30 p-3 text-center overflow-hidden">
-            <div className="flex items-center justify-between text-[7.5px] font-mono text-amber-400/80 mb-1.5">
-              <span>KODAK 5207</span>
-              <span>16MM · FRAME 24</span>
+        {/* Floating Projector Dust Motes in the Light Cone */}
+        <div className="absolute top-12 left-1/3 w-1.5 h-1.5 rounded-full bg-amber-200/80 blur-[0.4px] pointer-events-none animate-pulse" />
+        <div className="absolute top-24 left-1/2 w-1 h-1 rounded-full bg-amber-100/70 blur-[0.3px] pointer-events-none" />
+        <div className="absolute bottom-16 right-1/3 w-1.5 h-1.5 rounded-full bg-amber-300/60 blur-[0.5px] pointer-events-none" />
+
+        {/* PHYSICAL ARTIFACT: Loose 16mm Celluloid Film Strip traveling diagonally through the beam */}
+        <div className="relative z-20 w-68 sm:w-76 transform rotate-[-11deg] hover:rotate-[-8deg] transition-transform duration-700 will-change-transform drop-shadow-[0_24px_50px_rgba(0,0,0,0.9)]">
+          {/* Translucent Celluloid Acetate Base */}
+          <div className="w-full bg-gradient-to-r from-amber-950/85 via-amber-900/75 to-amber-950/85 backdrop-blur-[2px] border-y border-amber-500/30 py-2.5 px-1.5 flex flex-col gap-2">
+            {/* Top 16mm Rectangular Sprocket Perforations */}
+            <div className="flex items-center justify-between px-2">
+              {[...Array(8)].map((_, i) => (
+                <div key={i} className="w-2.5 h-1.5 bg-black/90 rounded-xs border border-amber-600/40 shadow-inner" />
+              ))}
             </div>
 
-            {/* Cinematic Still & Subtitle */}
-            <div className="py-2.5 px-2 bg-black/60 rounded border border-amber-500/20 text-center">
-              <svg viewBox="0 0 24 18" fill="none" className="w-5 h-4 mx-auto text-amber-300/90 mb-1" aria-hidden="true">
-                <rect x="2" y="1" width="20" height="16" rx="1.5" stroke="currentColor" strokeWidth="1.2" />
-                <rect x="8" y="4" width="8" height="10" rx="1" fill="currentColor" fillOpacity="0.25" stroke="currentColor" strokeWidth="0.8" />
-              </svg>
-              <p className="text-xs font-serif italic text-amber-100 font-medium leading-relaxed">
-                “Sunlight caught in your hair, golden and still.”
-              </p>
+            {/* Celluloid Memory Frames Traveling Across */}
+            <div className="grid grid-cols-12 gap-2 items-center">
+              {/* Frame 1: Underexposed entry frame cutting off at left */}
+              <div className="col-span-3 h-20 bg-amber-950/60 border border-amber-700/20 rounded-xs opacity-50 overflow-hidden" />
+
+              {/* Frame 2: HERO FRAME catching the incandescent projector beam */}
+              <div className="col-span-6 h-22 sm:h-24 bg-gradient-to-br from-[#1C0D05] via-[#2D1609] to-[#140803] border border-amber-400/50 rounded-xs shadow-[0_0_20px_rgba(251,191,36,0.35)] p-2.5 flex items-center justify-center text-center relative overflow-hidden">
+                {/* Incandescent beam glare over celluloid */}
+                <div className="absolute inset-0 bg-gradient-to-tr from-amber-300/15 via-transparent to-amber-100/25 pointer-events-none" />
+
+                <p className="font-serif italic text-xs sm:text-[13px] text-amber-100 font-medium leading-relaxed drop-shadow-[0_1px_6px_rgba(0,0,0,0.8)] relative z-10">
+                  “Sunlight in your hair, golden and still.”
+                </p>
+              </div>
+
+              {/* Frame 3: Motion exit frame cutting off at right */}
+              <div className="col-span-3 h-20 bg-amber-950/60 border border-amber-700/20 rounded-xs opacity-50 overflow-hidden" />
             </div>
 
-            <div className="text-[7px] font-mono text-amber-500/70 mt-1.5 text-right tracking-widest">
-              OCTOBER AFTERNOON · 24FPS
+            {/* Bottom 16mm Rectangular Sprocket Perforations */}
+            <div className="flex items-center justify-between px-2">
+              {[...Array(8)].map((_, i) => (
+                <div key={i} className="w-2.5 h-1.5 bg-black/90 rounded-xs border border-amber-600/40 shadow-inner" />
+              ))}
             </div>
-          </div>
-
-          {/* Bottom Sprocket Perforations Strip */}
-          <div className="flex items-center justify-between px-1 mt-2">
-            {[...Array(6)].map((_, i) => (
-              <div key={i} className="w-2.5 h-1.5 bg-black rounded-xs border border-amber-950/80 shadow-inner" />
-            ))}
           </div>
         </div>
       </div>
@@ -335,7 +335,7 @@ const WORLDS: WorldWalkthroughItem[] = [
     accentColor: "#eab308",
     titleClass: "text-[#1A0311] drop-shadow-[0_1px_12px_rgba(255,248,240,0.6)]",
     taglineClass: "text-[#361A09] font-normal drop-shadow-[0_1px_6px_rgba(255,248,240,0.6)]",
-    badgeClass: "text-[#78350F] font-semibold tracking-widest drop-shadow-[0_1px_4px_rgba(255,248,240,0.5)]",
+    badgeClass: "text-[#78350F] font-semibold tracking-widest",
     layoutVariant: "herbarium-desk",
     renderArtifact: () => (
       <div className="relative w-64 h-64 sm:w-72 sm:h-72 flex items-center justify-center select-none">
@@ -370,10 +370,8 @@ const WORLDS: WorldWalkthroughItem[] = [
             </svg>
           </div>
 
-          <div className="flex items-center justify-between text-[8px] font-mono text-stone-600 font-semibold tracking-wider">
-            <span>HERBARIUM SPECIMEN</span>
-            <span>PETAL NO. 05</span>
-          </div>
+          {/* Clean space, zero fake technical metadata */}
+          <div className="h-4" />
 
           {/* Hand-Pressed Botanical Drawing & Quote */}
           <div className="my-auto text-center space-y-1.5 pt-2">
@@ -382,10 +380,8 @@ const WORLDS: WorldWalkthroughItem[] = [
             </p>
           </div>
 
-          {/* Handwritten Accession Record */}
-          <div className="pt-2 border-t border-stone-200 text-[8px] font-mono text-stone-500 flex items-center justify-between">
-            <span>DECKLED COTTON · 280GSM</span>
-            <span className="font-serif italic text-stone-700">honestly grown</span>
+          <div className="pt-2 border-t border-stone-200 text-right">
+            <span className="font-serif italic text-[9px] text-stone-600">honestly grown</span>
           </div>
         </div>
       </div>
@@ -402,7 +398,7 @@ const WORLDS: WorldWalkthroughItem[] = [
     badgeClass: "text-sky-200 font-semibold drop-shadow-[0_1px_6px_rgba(2,10,25,0.9)]",
     layoutVariant: "shoreline-drift",
     renderArtifact: () => (
-      <div className="relative w-64 h-64 sm:w-72 sm:h-72 flex items-center justify-center select-none">
+      <div className="relative w-72 h-64 sm:w-80 sm:h-72 flex items-center justify-center select-none overflow-visible">
         {/* Coastal Fog & Sea Starlight Phosphorescence */}
         <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-sky-600/30 via-cyan-800/25 to-indigo-950/40 blur-3xl pointer-events-none" />
 
@@ -413,43 +409,39 @@ const WORLDS: WorldWalkthroughItem[] = [
           </svg>
         </div>
 
-        {/* PHYSICAL ARTIFACT: Weathered Shoreline Message & Sea Glass Talisman */}
-        <div className="relative w-56 h-44 sm:w-64 sm:h-48 bg-[#071524] shadow-[0_24px_60px_-10px_rgba(56,189,248,0.35),0_6px_20px_rgba(0,0,0,0.8)] border border-sky-400/35 transform rotate-[2.5deg] hover:rotate-0 transition-transform duration-500 p-4 flex flex-col justify-between overflow-visible">
-          {/* Watermark Tidal Contours & Salt-Spray Edge Marks */}
+        {/* PHYSICAL ENVIRONMENT: Wet Dark Slate Stone Slab Base */}
+        <div className="relative w-64 h-52 sm:w-72 sm:h-56 bg-[#07131F] border border-cyan-950/60 shadow-[0_30px_70px_rgba(0,0,0,0.95)] p-4 flex items-center justify-center">
+          {/* Water sheen & tidal contours on stone */}
           <div className="absolute inset-0 pointer-events-none opacity-20">
             <svg viewBox="0 0 240 180" fill="none" className="w-full h-full">
               <path d="M0 60 Q 60 40, 120 60 T 240 60" stroke="#38BDF8" strokeWidth="0.8" />
               <path d="M0 120 Q 60 100, 120 120 T 240 120" stroke="#38BDF8" strokeWidth="0.8" />
-              {/* Salt spray crystalline crust dots at edge */}
-              <circle cx="8" cy="12" r="1.5" fill="#E0F2FE" />
-              <circle cx="16" cy="8" r="1" fill="#E0F2FE" />
-              <circle cx="230" cy="168" r="1.5" fill="#E0F2FE" />
-              <circle cx="224" cy="172" r="1" fill="#E0F2FE" />
             </svg>
           </div>
 
-          {/* Frosted Sea-Glass Fragment Resting Directly on the Parchment */}
-          <div className="absolute -top-3 right-6 z-20 pointer-events-none">
-            <div className="w-10 h-7 rounded-full bg-cyan-300/30 backdrop-blur-md border border-cyan-200/50 shadow-[0_4px_12px_rgba(56,189,248,0.4)] transform rotate-12 flex items-center justify-center">
-              <div className="w-4 h-2 rounded-full bg-white/40 blur-[0.5px]" />
+          {/* WEATHERED SHORELINE PARCHMENT SHEET Resting Angled on Stone */}
+          <div className="relative w-52 h-38 sm:w-58 sm:h-42 bg-[#E9EEF0] shadow-md border border-cyan-900/20 rotate-[-2.5deg] p-3.5 flex flex-col justify-between">
+            {/* Salt-crust edge texture hint */}
+            <div className="h-2" />
+
+            {/* Inscribed Maritime Devotion */}
+            <div className="my-auto text-center space-y-1 px-1">
+              <p className="font-serif italic text-xs text-sky-950 font-medium leading-relaxed drop-shadow-xs">
+                “Our devotion is as vast and enduring as the evening tides.”
+              </p>
+            </div>
+
+            <div className="text-right text-[8.5px] font-serif italic text-sky-800">
+              unbroken across the sea
             </div>
           </div>
 
-          <div className="flex items-center justify-between text-[8px] font-mono text-sky-300/80 font-semibold tracking-wider relative z-10">
-            <span>SHORELINE ARCHIVE</span>
-            <span>TIDE № 06</span>
-          </div>
-
-          {/* Inscribed Maritime Devotion */}
-          <div className="my-auto text-center space-y-1 relative z-10 px-2">
-            <p className="font-serif italic text-xs text-sky-100 font-medium leading-relaxed drop-shadow-sm">
-              “Our devotion is as vast and enduring as the evening tides.”
-            </p>
-          </div>
-
-          <div className="pt-2 border-t border-sky-900/50 flex items-center justify-between text-[8px] font-mono text-sky-400/70 relative z-10">
-            <span>SALT-WASHED FIBERS</span>
-            <span className="font-serif italic text-sky-200">unbroken across the sea</span>
+          {/* THE HERO: Tactile Frosted Sea-Glass Talisman Casting Cyan Caustics */}
+          <div className="absolute -top-3 right-6 z-30 pointer-events-none">
+            <div className="relative w-20 h-13 sm:w-22 sm:h-14 rounded-[45%_55%_60%_40%/50%_45%_55%_50%] bg-gradient-to-br from-cyan-200/40 via-cyan-400/30 to-teal-500/25 backdrop-blur-md border border-cyan-100/60 shadow-[0_8px_32px_rgba(34,211,238,0.55),0_2px_8px_rgba(6,182,212,0.7)] transform rotate-12 flex items-center justify-center">
+              {/* Internal frosted refraction highlight */}
+              <div className="w-8 h-3.5 rounded-full bg-white/50 blur-[1px] transform -rotate-6" />
+            </div>
           </div>
         </div>
       </div>
@@ -501,20 +493,17 @@ export function SpatialWorldsWalkthrough() {
     >
       {/* Editorial Section Anchor Header */}
       <div className="text-center max-w-2xl mx-auto px-6 mb-16 sm:mb-24 space-y-3 relative z-10">
-        <span className="inline-block text-[11px] font-mono tracking-widest uppercase text-[#7A1D45] font-semibold drop-shadow-[0_1px_8px_rgba(255,245,248,0.7)]">
-          The World Collection
-        </span>
         <h2 className="text-3xl sm:text-5xl lg:text-6xl font-serif font-normal text-[#1A0311] tracking-tight leading-tight drop-shadow-[0_1px_12px_rgba(255,245,248,0.5)]">
-          Step into their atmosphere.
+          Six atmospheres, each with its own light, silence, and memory.
         </h2>
         <p className="text-sm sm:text-base text-[#36091E] max-w-lg mx-auto font-normal leading-relaxed drop-shadow-[0_1px_6px_rgba(255,245,248,0.6)]">
-          Six distinct digital sanctuaries — each with its own physical object, light, and emotional climate.
+          Written on folded airmail, caught in celluloid, or kept in stone.
         </p>
       </div>
 
-      {/* Sequential Full-Viewport Asymmetric Living Environments (NO IDENTICAL CENTERED STACKS) */}
+      {/* Sequential Full-Viewport Asymmetric Living Environments */}
       <div className="flex flex-col w-full relative z-10">
-        {WORLDS.map((world, idx) => (
+        {WORLDS.map((world) => (
           <div
             key={world.id}
             className="world-vista-scene relative w-full min-h-[85vh] sm:min-h-[92vh] flex items-center justify-center px-6 sm:px-12 py-16 overflow-hidden"
@@ -537,9 +526,6 @@ export function SpatialWorldsWalkthrough() {
               {world.layoutVariant === "sky-flight" && (
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
                   <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left space-y-5 order-2 lg:order-1">
-                    <div className={`world-vista-reveal text-[10px] font-mono tracking-widest uppercase ${world.badgeClass}`}>
-                      <span>0{idx + 1} OF 06 · SANCTUARY VISTA</span>
-                    </div>
                     <h3 className={`world-vista-reveal text-4xl sm:text-5xl lg:text-6xl font-serif font-normal tracking-tight ${world.titleClass}`}>
                       {world.name}
                     </h3>
@@ -560,9 +546,6 @@ export function SpatialWorldsWalkthrough() {
               {world.layoutVariant === "candlelit-alcove" && (
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
                   <div className="lg:col-span-6 flex flex-col items-center lg:items-start text-center lg:text-left space-y-5 order-2 lg:order-1 lg:pl-6">
-                    <div className={`world-vista-reveal text-[10px] font-mono tracking-widest uppercase ${world.badgeClass}`}>
-                      <span>0{idx + 1} OF 06 · SANCTUARY VISTA</span>
-                    </div>
                     <h3 className={`world-vista-reveal text-4xl sm:text-5xl lg:text-6xl font-serif font-normal tracking-tight ${world.titleClass}`}>
                       {world.name}
                     </h3>
@@ -586,9 +569,6 @@ export function SpatialWorldsWalkthrough() {
                     {world.renderArtifact()}
                   </div>
                   <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left space-y-5 order-2 lg:pl-4">
-                    <div className={`world-vista-reveal text-[10px] font-mono tracking-widest uppercase ${world.badgeClass}`}>
-                      <span>0{idx + 1} OF 06 · SANCTUARY VISTA</span>
-                    </div>
                     <h3 className={`world-vista-reveal text-4xl sm:text-5xl lg:text-6xl font-serif font-normal tracking-tight ${world.titleClass}`}>
                       {world.name} <span className="text-3xl sm:text-4xl opacity-80 font-serif font-light">({world.jpName})</span>
                     </h3>
@@ -606,9 +586,6 @@ export function SpatialWorldsWalkthrough() {
               {world.layoutVariant === "cinema-reel" && (
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
                   <div className="lg:col-span-6 flex flex-col items-center lg:items-start text-center lg:text-left space-y-5 order-2 lg:order-1 lg:pl-6">
-                    <div className={`world-vista-reveal text-[10px] font-mono tracking-widest uppercase ${world.badgeClass}`}>
-                      <span>0{idx + 1} OF 06 · SANCTUARY VISTA</span>
-                    </div>
                     <h3 className={`world-vista-reveal text-4xl sm:text-5xl lg:text-6xl font-serif font-normal tracking-tight ${world.titleClass}`}>
                       {world.name}
                     </h3>
@@ -632,9 +609,6 @@ export function SpatialWorldsWalkthrough() {
                     {world.renderArtifact()}
                   </div>
                   <div className="lg:col-span-7 flex flex-col items-center lg:items-start text-center lg:text-left space-y-5 order-2 lg:pl-6">
-                    <div className={`world-vista-reveal text-[10px] font-mono tracking-widest uppercase ${world.badgeClass}`}>
-                      <span>0{idx + 1} OF 06 · SANCTUARY VISTA</span>
-                    </div>
                     <h3 className={`world-vista-reveal text-4xl sm:text-5xl lg:text-6xl font-serif font-normal tracking-tight ${world.titleClass}`}>
                       {world.name}
                     </h3>
@@ -652,9 +626,6 @@ export function SpatialWorldsWalkthrough() {
               {world.layoutVariant === "shoreline-drift" && (
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
                   <div className="lg:col-span-6 flex flex-col items-center lg:items-start text-center lg:text-left space-y-5 order-2 lg:order-1 lg:pl-8">
-                    <div className={`world-vista-reveal text-[10px] font-mono tracking-widest uppercase ${world.badgeClass}`}>
-                      <span>0{idx + 1} OF 06 · SANCTUARY VISTA</span>
-                    </div>
                     <h3 className={`world-vista-reveal text-4xl sm:text-5xl lg:text-6xl font-serif font-normal tracking-tight ${world.titleClass}`}>
                       {world.name}
                     </h3>

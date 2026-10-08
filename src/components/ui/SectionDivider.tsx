@@ -112,11 +112,11 @@ export function SectionDivider({ variant, className = "" }: SectionDividerProps)
             <path d="M0,32 C320,64 640,8 960,48 C1200,80 1360,16 1440,32 L1440,64 L0,64 Z" />
           </svg>
 
-          {/* Drifting warm evening sparkles */}
+          {/* Drifting warm evening ambient dust motes */}
           {!shouldReduceMotion && (
             <motion.div
               animate={{
-                opacity: [0.3, 0.7, 0.3],
+                opacity: [0.2, 0.6, 0.2],
                 y: [0, -6, 0],
               }}
               transition={{
@@ -124,13 +124,13 @@ export function SectionDivider({ variant, className = "" }: SectionDividerProps)
                 repeat: Infinity,
                 ease: "easeInOut",
               }}
-              className="absolute inset-0 flex items-center justify-around px-8 opacity-40 text-rose-300/80 text-xs"
+              className="absolute inset-0 flex items-center justify-around px-8 pointer-events-none"
             >
-              <span>✦</span>
-              <span className="text-[9px] mb-4">✧</span>
-              <span className="text-sm mt-2">✦</span>
-              <span className="text-[10px]">✧</span>
-              <span>✦</span>
+              <div className="w-1 h-1 rounded-full bg-rose-200/50 blur-[0.5px]" />
+              <div className="w-0.5 h-0.5 rounded-full bg-rose-100/40 mb-4" />
+              <div className="w-1.5 h-1.5 rounded-full bg-rose-300/40 blur-[1px] mt-2" />
+              <div className="w-0.5 h-0.5 rounded-full bg-rose-200/50" />
+              <div className="w-1 h-1 rounded-full bg-rose-100/40 blur-[0.5px]" />
             </motion.div>
           )}
         </div>
