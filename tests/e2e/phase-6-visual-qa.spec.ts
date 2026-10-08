@@ -28,6 +28,7 @@ test.describe("Phase 6 UI/UX Renaissance Comprehensive Visual QA", () => {
   // 1. Homepage & Showroom across all required viewports
   for (const vp of viewports) {
     test(`Capture Homepage & Showroom at ${vp.name}`, async ({ page }) => {
+      test.setTimeout(120000);
       await page.setViewportSize({ width: vp.width, height: vp.height });
       await page.goto(`${APP_URL}/`, { waitUntil: "load" });
       await page.waitForSelector("header, nav, #personalize", { state: "attached" });
@@ -64,12 +65,28 @@ test.describe("Phase 6 UI/UX Renaissance Comprehensive Visual QA", () => {
           path: path.join(QA_DIR, `02b_homepage_worlds_${vp.name}.png`),
           fullPage: false,
         });
+
+        // Capture individual world scenes for precise visual audit
+        const scenes = page.locator(".world-vista-scene");
+        const sceneCount = await scenes.count();
+        const worldNames = ["cloud_nine", "midnight_rose", "kage", "apricot_film", "wildflower_paper", "ocean_letter"];
+        for (let i = 0; i < sceneCount; i++) {
+          const scene = scenes.nth(i);
+          await scene.scrollIntoViewIfNeeded();
+          await page.waitForTimeout(400);
+          const name = worldNames[i] || `world_${i}`;
+          await page.screenshot({
+            path: path.join(QA_DIR, `02b_world_${name}_${vp.name}.png`),
+            fullPage: false,
+          });
+        }
       }
 
       // Homepage Discovered Moments Section (SpatialDiscoveredObjects)
       const momentsEl = page.locator("#moments");
       if (await momentsEl.isVisible()) {
         await momentsEl.scrollIntoViewIfNeeded();
+        await page.evaluate(() => window.scrollBy(0, -70));
         await page.waitForTimeout(600);
         await page.screenshot({
           path: path.join(QA_DIR, `02b2_homepage_moments_${vp.name}.png`),
