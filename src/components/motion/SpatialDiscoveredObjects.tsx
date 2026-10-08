@@ -102,10 +102,9 @@ export function SpatialDiscoveredObjects() {
           className="hidden md:block absolute top-6 left-[22%] lg:left-[24%] z-10 pointer-events-none select-none transform -rotate-12 opacity-95 will-change-transform drop-shadow-[0_8px_16px_rgba(20,5,10,0.3)]"
           aria-hidden="true"
         >
-          <div className="w-28 py-1.5 px-2 bg-[#FAF3E8] rounded-xs border border-amber-900/20 text-left shadow-sm">
-            <span className="block text-[6.5px] font-mono tracking-widest text-[#7A1D45] uppercase font-semibold">TICKET · 10.14</span>
-            <span className="font-serif italic text-[10px] text-[#1C0412] leading-none">Rainy Tuesday</span>
-            <span className="block text-[6px] font-mono tracking-widest text-[#843657]/70 mt-0.5">ADMIT ONE · № 0214</span>
+          <div className="w-24 sm:w-26 py-1 px-2.5 bg-[#FAF3E8] rounded-xs border border-amber-900/20 text-left shadow-xs">
+            <span className="font-serif italic text-[11px] text-[#1C0412] leading-none block">Rainy Tuesday</span>
+            <span className="block text-[7.5px] font-mono tracking-wider text-[#843657]/80 mt-0.5">First Coffee</span>
           </div>
         </div>
 
@@ -116,11 +115,10 @@ export function SpatialDiscoveredObjects() {
           className="hidden md:block absolute bottom-4 left-[20%] lg:left-[23%] z-10 pointer-events-none select-none transform rotate-6 opacity-90 will-change-transform drop-shadow-[0_6px_16px_rgba(40,10,20,0.18)]"
           aria-hidden="true"
         >
-          <div className="w-32 py-1.5 px-2.5 bg-[#FFFDF9] rounded-xs border border-rose-950/[0.12] text-left">
+          <div className="w-28 py-1.5 px-2.5 bg-[#FFFDF9] rounded-xs border border-rose-950/[0.12] text-left">
             <span className="block font-serif italic text-[11px] text-[#2A051A] leading-tight">
               “11:42 pm — remember this”
             </span>
-            <span className="block text-[6px] font-mono text-stone-500 mt-0.5 tracking-wider">OCTOBER 14</span>
           </div>
         </div>
 
