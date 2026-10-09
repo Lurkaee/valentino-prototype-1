@@ -27,119 +27,125 @@ interface WorldAtmosphereConfig {
   bloomSize: string;
   hazeGradient: string;
   vaporColor: string;
-  particleType: "hearts" | "stars" | "fireflies" | "petals" | "sparks" | "bubbles";
+  particleType: "motes" | "embers" | "fibers" | "grain" | "petals";
   particleColor: string;
   particleShadow: string;
 }
 
 const WORLD_CONFIGS: Record<string, WorldAtmosphereConfig> = {
   "cloud-nine": {
+    // Morning light after sunrise: warm ivory cotton, pearl, pale cerulean hint, subtle dawn peach
     baseGradient:
-      "radial-gradient(ellipse 120% 85% at 50% -10%, #FFF5F7 0%, #FFE8F0 30%, #FED9E7 55%, #F7C3D8 75%, #F0AAC7 90%, #E28FB3 100%)",
+      "radial-gradient(ellipse 125% 90% at 50% -5%, #FFFDF9 0%, #FAF5EE 24%, #F4EFE6 48%, #EAF1FA 72%, #DCE8F7 88%, #F7EBE3 100%)",
     photoSkySrc: "/clouds/sunset-sky.jpg",
-    photoSkyOpacity: 0.45,
+    photoSkyOpacity: 0.38,
     photoSkyBlend: "mix-blend-soft-light",
     bloomGradient:
-      "radial-gradient(circle at 50% 35%, rgba(255, 242, 225, 0.95) 0%, rgba(254, 220, 210, 0.65) 40%, rgba(253, 195, 218, 0.25) 70%, transparent 100%)",
+      "radial-gradient(circle at 50% 32%, rgba(255, 250, 238, 0.95) 0%, rgba(254, 238, 218, 0.6) 35%, rgba(224, 238, 252, 0.35) 65%, transparent 100%)",
     bloomPosition: "top-[-10%] left-1/2 -translate-x-1/2",
     bloomSize: "w-[850px] sm:w-[1300px] h-[600px]",
     hazeGradient:
-      "radial-gradient(circle, rgba(235, 218, 252, 0.8) 0%, rgba(246, 205, 230, 0.35) 50%, transparent 80%)",
+      "radial-gradient(circle, rgba(235, 244, 255, 0.75) 0%, rgba(254, 238, 226, 0.35) 50%, transparent 80%)",
     vaporColor:
-      "radial-gradient(ellipse at 50% 50%, rgba(255, 255, 255, 0.92) 0%, rgba(255, 238, 246, 0.65) 45%, rgba(254, 215, 232, 0.25) 70%, transparent 85%)",
-    particleType: "hearts",
-    particleColor: "text-rose-400/80",
-    particleShadow: "drop-shadow-[0_2px_6px_rgba(244,63,94,0.3)]",
+      "radial-gradient(ellipse at 50% 50%, rgba(255, 255, 255, 0.95) 0%, rgba(248, 246, 242, 0.7) 45%, rgba(228, 240, 252, 0.25) 75%, transparent 85%)",
+    particleType: "motes",
+    particleColor: "text-amber-200/60",
+    particleShadow: "drop-shadow-[0_0_6px_rgba(254,243,199,0.4)]",
   },
   "midnight-rose": {
+    // Candlelit private chamber: velvet, aged paper, wax, warm flame point, deep wine-dark shadow
     baseGradient:
-      "radial-gradient(ellipse 120% 85% at 50% -10%, #1A0512 0%, #13040E 35%, #0B0208 70%, #050104 100%)",
+      "radial-gradient(ellipse 125% 90% at 50% -5%, #18030E 0%, #10020A 35%, #0A0106 70%, #030002 100%)",
     photoSkySrc: "/clouds/sunset-sky.jpg",
-    photoSkyOpacity: 0.18,
+    photoSkyOpacity: 0.16,
     photoSkyBlend: "mix-blend-overlay",
     bloomGradient:
-      "radial-gradient(circle at 50% 30%, rgba(244, 63, 94, 0.35) 0%, rgba(159, 18, 57, 0.2) 45%, transparent 75%)",
+      "radial-gradient(circle at 50% 28%, rgba(245, 158, 11, 0.32) 0%, rgba(190, 18, 60, 0.22) 32%, rgba(136, 19, 55, 0.14) 58%, transparent 75%)",
     bloomPosition: "top-[-5%] left-1/2 -translate-x-1/2",
     bloomSize: "w-[800px] sm:w-[1200px] h-[580px]",
     hazeGradient:
-      "radial-gradient(circle, rgba(225, 29, 72, 0.25) 0%, rgba(136, 19, 55, 0.15) 50%, transparent 80%)",
+      "radial-gradient(circle, rgba(159, 18, 57, 0.2) 0%, rgba(217, 119, 6, 0.1) 45%, transparent 75%)",
     vaporColor:
-      "radial-gradient(ellipse at 50% 50%, rgba(244, 63, 94, 0.15) 0%, rgba(30, 5, 20, 0.4) 50%, transparent 80%)",
-    particleType: "sparks",
-    particleColor: "text-rose-300/60",
-    particleShadow: "drop-shadow-[0_0_8px_rgba(244,63,94,0.5)]",
+      "radial-gradient(ellipse at 50% 50%, rgba(190, 18, 60, 0.12) 0%, rgba(20, 2, 12, 0.4) 50%, transparent 80%)",
+    particleType: "embers",
+    particleColor: "text-amber-300/50",
+    particleShadow: "drop-shadow-[0_0_6px_rgba(245,158,11,0.45)]",
   },
   kage: {
+    // Kyoto sanctuary: Japanese washi, stone, cedar, mist, deep shadow, single warm lantern glow
     baseGradient:
-      "radial-gradient(ellipse 120% 85% at 50% -10%, #0D1C17 0%, #07120E 35%, #040907 70%, #020504 100%)",
+      "radial-gradient(ellipse 125% 90% at 50% -5%, #0B1411 0%, #070D0B 35%, #040807 70%, #020403 100%)",
     photoSkySrc: "/clouds/sunset-sky.jpg",
-    photoSkyOpacity: 0.14,
+    photoSkyOpacity: 0.12,
     photoSkyBlend: "mix-blend-soft-light",
     bloomGradient:
-      "radial-gradient(circle at 50% 30%, rgba(16, 185, 129, 0.25) 0%, rgba(5, 150, 105, 0.15) 45%, transparent 75%)",
+      "radial-gradient(circle at 50% 28%, rgba(217, 119, 6, 0.26) 0%, rgba(16, 185, 129, 0.12) 35%, rgba(4, 120, 87, 0.08) 60%, transparent 75%)",
     bloomPosition: "top-[-5%] left-1/2 -translate-x-1/2",
     bloomSize: "w-[800px] sm:w-[1100px] h-[540px]",
     hazeGradient:
-      "radial-gradient(circle, rgba(16, 185, 129, 0.2) 0%, rgba(6, 78, 59, 0.15) 50%, transparent 80%)",
+      "radial-gradient(circle, rgba(16, 185, 129, 0.16) 0%, rgba(6, 78, 59, 0.12) 50%, transparent 80%)",
     vaporColor:
-      "radial-gradient(ellipse at 50% 50%, rgba(52, 211, 153, 0.12) 0%, rgba(6, 30, 22, 0.4) 50%, transparent 80%)",
-    particleType: "fireflies",
-    particleColor: "text-emerald-300/70",
-    particleShadow: "drop-shadow-[0_0_8px_rgba(16,185,129,0.5)]",
+      "radial-gradient(ellipse at 50% 50%, rgba(52, 211, 153, 0.1) 0%, rgba(4, 20, 16, 0.4) 50%, transparent 80%)",
+    particleType: "fibers",
+    particleColor: "text-emerald-200/50",
+    particleShadow: "drop-shadow-[0_0_6px_rgba(16,185,129,0.35)]",
   },
   "apricot-film": {
+    // Archival 16mm film: low golden sun, tobacco amber, light leaks, dust grain flecks
     baseGradient:
-      "radial-gradient(ellipse 120% 85% at 50% -10%, #2A170C 0%, #1C0F07 35%, #100804 70%, #080402 100%)",
+      "radial-gradient(ellipse 125% 90% at 50% -5%, #231207 0%, #160B04 35%, #0E0702 70%, #050201 100%)",
     photoSkySrc: "/clouds/sunset-sky.jpg",
-    photoSkyOpacity: 0.22,
+    photoSkyOpacity: 0.2,
     photoSkyBlend: "mix-blend-color-dodge",
     bloomGradient:
-      "radial-gradient(circle at 50% 30%, rgba(245, 158, 11, 0.35) 0%, rgba(234, 88, 12, 0.2) 45%, transparent 75%)",
+      "radial-gradient(circle at 45% 26%, rgba(251, 146, 60, 0.36) 0%, rgba(217, 119, 6, 0.22) 35%, rgba(244, 63, 94, 0.1) 65%, transparent 80%)",
     bloomPosition: "top-[-8%] left-1/2 -translate-x-1/2",
     bloomSize: "w-[850px] sm:w-[1200px] h-[560px]",
     hazeGradient:
-      "radial-gradient(circle, rgba(251, 146, 60, 0.25) 0%, rgba(194, 65, 12, 0.15) 50%, transparent 80%)",
+      "radial-gradient(circle, rgba(251, 146, 60, 0.2) 0%, rgba(194, 65, 12, 0.12) 50%, transparent 80%)",
     vaporColor:
-      "radial-gradient(ellipse at 50% 50%, rgba(253, 186, 116, 0.15) 0%, rgba(30, 15, 6, 0.4) 50%, transparent 80%)",
-    particleType: "sparks",
-    particleColor: "text-amber-300/75",
-    particleShadow: "drop-shadow-[0_0_8px_rgba(245,158,11,0.5)]",
+      "radial-gradient(ellipse at 50% 50%, rgba(253, 186, 116, 0.12) 0%, rgba(25, 10, 4, 0.4) 50%, transparent 80%)",
+    particleType: "grain",
+    particleColor: "text-amber-200/55",
+    particleShadow: "drop-shadow-[0_0_6px_rgba(245,158,11,0.4)]",
   },
   "wildflower-paper": {
+    // Handmade herbarium page: deckled cotton, visible fibers, sage, lavender, buttercup yellow
     baseGradient:
-      "radial-gradient(ellipse 120% 85% at 50% -10%, #152219 0%, #0E1812 35%, #080F0B 70%, #040806 100%)",
+      "radial-gradient(ellipse 125% 90% at 50% -5%, #141B16 0%, #0D130F 35%, #080D0A 70%, #030504 100%)",
     photoSkySrc: "/clouds/sunset-sky.jpg",
-    photoSkyOpacity: 0.16,
+    photoSkyOpacity: 0.15,
     photoSkyBlend: "mix-blend-soft-light",
     bloomGradient:
-      "radial-gradient(circle at 50% 30%, rgba(216, 180, 254, 0.25) 0%, rgba(167, 139, 250, 0.15) 45%, transparent 75%)",
+      "radial-gradient(circle at 50% 30%, rgba(254, 240, 138, 0.24) 0%, rgba(196, 181, 253, 0.16) 35%, rgba(110, 231, 183, 0.08) 60%, transparent 75%)",
     bloomPosition: "top-[-5%] left-1/2 -translate-x-1/2",
     bloomSize: "w-[800px] sm:w-[1100px] h-[540px]",
     hazeGradient:
-      "radial-gradient(circle, rgba(196, 181, 253, 0.2) 0%, rgba(109, 40, 217, 0.1) 50%, transparent 80%)",
+      "radial-gradient(circle, rgba(196, 181, 253, 0.16) 0%, rgba(109, 40, 217, 0.08) 50%, transparent 80%)",
     vaporColor:
-      "radial-gradient(ellipse at 50% 50%, rgba(233, 213, 255, 0.12) 0%, rgba(15, 25, 18, 0.4) 50%, transparent 80%)",
+      "radial-gradient(ellipse at 50% 50%, rgba(233, 213, 255, 0.1) 0%, rgba(12, 20, 15, 0.4) 50%, transparent 80%)",
     particleType: "petals",
-    particleColor: "text-purple-300/70",
-    particleShadow: "drop-shadow-[0_0_6px_rgba(192,132,252,0.4)]",
+    particleColor: "text-yellow-100/50",
+    particleShadow: "drop-shadow-[0_0_6px_rgba(254,240,138,0.35)]",
   },
   "ocean-letter": {
+    // Shoreline letter: coastal diffuse light, sea mist, slate blue, frosted sea glass, salt-washed paper
     baseGradient:
-      "radial-gradient(ellipse 120% 85% at 50% -10%, #0A1C2C 0%, #061320 35%, #030B14 70%, #02060B 100%)",
+      "radial-gradient(ellipse 125% 90% at 50% -5%, #091724 0%, #050E17 35%, #03080F 70%, #010306 100%)",
     photoSkySrc: "/clouds/sunset-sky.jpg",
-    photoSkyOpacity: 0.18,
+    photoSkyOpacity: 0.16,
     photoSkyBlend: "mix-blend-screen",
     bloomGradient:
-      "radial-gradient(circle at 50% 30%, rgba(56, 189, 248, 0.3) 0%, rgba(2, 132, 199, 0.15) 45%, transparent 75%)",
+      "radial-gradient(circle at 50% 30%, rgba(125, 211, 252, 0.26) 0%, rgba(56, 189, 248, 0.14) 35%, rgba(14, 116, 144, 0.08) 60%, transparent 75%)",
     bloomPosition: "top-[-6%] left-1/2 -translate-x-1/2",
     bloomSize: "w-[850px] sm:w-[1250px] h-[580px]",
     hazeGradient:
-      "radial-gradient(circle, rgba(56, 189, 248, 0.22) 0%, rgba(3, 105, 161, 0.12) 50%, transparent 80%)",
+      "radial-gradient(circle, rgba(56, 189, 248, 0.18) 0%, rgba(3, 105, 161, 0.1) 50%, transparent 80%)",
     vaporColor:
-      "radial-gradient(ellipse at 50% 50%, rgba(186, 230, 253, 0.14) 0%, rgba(5, 20, 35, 0.4) 50%, transparent 80%)",
-    particleType: "bubbles",
-    particleColor: "text-cyan-300/70",
-    particleShadow: "drop-shadow-[0_0_8px_rgba(56,189,248,0.5)]",
+      "radial-gradient(ellipse at 50% 50%, rgba(186, 230, 253, 0.12) 0%, rgba(4, 15, 28, 0.4) 50%, transparent 80%)",
+    particleType: "motes",
+    particleColor: "text-sky-200/50",
+    particleShadow: "drop-shadow-[0_0_6px_rgba(56,189,248,0.4)]",
   },
 };
 
@@ -262,15 +268,15 @@ export function ValentinoAtmosphere({
     [0.45 * opacityMultiplier, 0.35 * opacityMultiplier, 0.22 * opacityMultiplier, 0.28 * opacityMultiplier, 0.42 * opacityMultiplier]
   );
 
-  // Ambient floating particles
+  // Ambient floating material fragments (delicate, sparse, irregular, slow)
   const particles = useMemo(
     () => [
-      { x: "8%", y: "18%", size: 12, opacity: 0.45, delay: 0, duration: 8.5 },
-      { x: "86%", y: "15%", size: 14, opacity: 0.4, delay: 1.2, duration: 9.5 },
-      { x: "14%", y: "45%", size: 11, opacity: 0.35, delay: 2.2, duration: 7.5 },
-      { x: "84%", y: "52%", size: 13, opacity: 0.38, delay: 1.8, duration: 8.2 },
-      { x: "28%", y: "74%", size: 10, opacity: 0.3, delay: 3.1, duration: 10.0 },
-      { x: "72%", y: "82%", size: 12, opacity: 0.34, delay: 2.7, duration: 9.0 },
+      { x: "12%", y: "18%", size: 3, opacity: 0.28, delay: 0, duration: 14, type: "mote" },
+      { x: "84%", y: "24%", size: 4, opacity: 0.22, delay: 2.1, duration: 16, type: "fiber" },
+      { x: "18%", y: "48%", size: 5, opacity: 0.2, delay: 3.4, duration: 15, type: "petal" },
+      { x: "78%", y: "56%", size: 3, opacity: 0.25, delay: 1.5, duration: 17, type: "mote" },
+      { x: "26%", y: "76%", size: 4, opacity: 0.18, delay: 4.2, duration: 18, type: "fiber" },
+      { x: "82%", y: "84%", size: 3, opacity: 0.22, delay: 2.8, duration: 16, type: "mote" },
     ],
     []
   );
@@ -301,12 +307,12 @@ export function ValentinoAtmosphere({
             }}
           />
 
-          {/* Layer 0B: Softer Cloud / Warm Deckled Paper Atmosphere */}
+          {/* Layer 0B: Softer Cloud / Warm Deckled Paper Atmosphere (Morning daylight & ivory fibers) */}
           <motion.div
             className="absolute inset-0 will-change-transform"
             style={{
               background:
-                "radial-gradient(ellipse 120% 85% at 50% 20%, #FFFDF9 0%, #FAF2EB 30%, #F8E2EC 60%, #F2C2D7 85%, #E29BBF 100%)",
+                "radial-gradient(ellipse 120% 85% at 50% 20%, #FFFDF9 0%, #FAF6EE 28%, #F6EDE2 55%, #EBF1F8 80%, #E2E8F0 100%)",
               opacity: shouldReduceMotion ? 0 : paperAtmosphereOpacity,
             }}
           />
@@ -520,20 +526,43 @@ export function ValentinoAtmosphere({
               }}
               className="absolute will-change-transform"
             >
-              {activeWorldConfig.particleType === "hearts" ? (
+              {p.type === "fiber" ? (
+                // Slender natural paper fiber fleck
                 <svg
-                  width={p.size}
-                  height={p.size}
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
+                  width={p.size * 2.5}
+                  height={p.size * 2.5}
+                  viewBox="0 0 16 16"
+                  fill="none"
                   className={`${activeWorldConfig.particleColor} ${activeWorldConfig.particleShadow}`}
                 >
-                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                  <path
+                    d="M3 13 C 5 9, 9 6, 13 3"
+                    stroke="currentColor"
+                    strokeWidth="0.9"
+                    strokeLinecap="round"
+                    strokeOpacity="0.75"
+                  />
+                </svg>
+              ) : p.type === "petal" ? (
+                // Faint pressed petal fragment
+                <svg
+                  width={p.size * 2.2}
+                  height={p.size * 2.2}
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  className={`${activeWorldConfig.particleColor} ${activeWorldConfig.particleShadow}`}
+                >
+                  <path
+                    d="M4 12 C 3 7, 7 3, 12 4 C 13 9, 9 13, 4 12 Z"
+                    fill="currentColor"
+                    fillOpacity="0.38"
+                  />
                 </svg>
               ) : (
+                // Luminous dust mote / ambient air speck
                 <div
-                  style={{ width: p.size - 4, height: p.size - 4 }}
-                  className={`rounded-full bg-current ${activeWorldConfig.particleColor} ${activeWorldConfig.particleShadow}`}
+                  style={{ width: p.size, height: p.size }}
+                  className={`rounded-full bg-current ${activeWorldConfig.particleColor} ${activeWorldConfig.particleShadow} filter blur-[0.4px]`}
                 />
               )}
             </motion.div>

@@ -148,7 +148,7 @@ export function BuildYourValentine({ className = "" }: { className?: string }) {
             size="sm"
             className="mb-4 bg-rose-100/90 text-[#881337] border-rose-300 font-sans tracking-widest uppercase font-medium"
           >
-            ✦ World Personalization ✦
+            World Personalization
           </Badge>
           <h2 className="text-3xl sm:text-5xl font-serif font-medium text-[#240412] tracking-tight mb-4 leading-tight">
             Design the little world they will enter.

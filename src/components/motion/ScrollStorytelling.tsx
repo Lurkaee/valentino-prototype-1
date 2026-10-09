@@ -122,13 +122,13 @@ export function ScrollStorytelling({ className = "" }: { className?: string }) {
       className={`w-full max-w-6xl mx-auto px-6 py-20 sm:py-28 relative z-10 ${className}`}
     >
       {/* Header with Warm Candlelit Eyebrow */}
-      <div className="text-center max-w-2xl mx-auto mb-14 sm:mb-18">
+      <div className="text-center max-w-2xl mx-auto mb-14 sm:mb-[4.5rem]">
         <Badge
           variant="rose"
           size="sm"
           className="mb-4 tracking-widest uppercase text-[11px] bg-rose-100/90 border-rose-300 text-[#881337] shadow-2xs font-medium font-sans"
         >
-          ✦ Relationship Storytelling ✦
+          Relationship Storytelling
         </Badge>
         <h2 className="text-3xl sm:text-5xl font-serif font-medium text-[#240412] tracking-tight mb-4 leading-tight">
           Build a story that unfolds like a memory.
@@ -239,7 +239,7 @@ export function ScrollStorytelling({ className = "" }: { className?: string }) {
                   </div>
 
                   <div className="space-y-3 py-3">
-                    <div className="w-13 h-13 rounded-2xl bg-gradient-to-br from-rose-600 to-pink-700 border border-rose-300/40 shadow-lg shadow-rose-950/60 flex items-center justify-center text-2xl">
+                    <div className="w-[3.25rem] h-[3.25rem] rounded-2xl bg-gradient-to-br from-rose-600 to-pink-700 border border-rose-300/40 shadow-lg shadow-rose-950/60 flex items-center justify-center text-2xl">
                       {currentScene.icon}
                     </div>
                     <h4 className="text-2xl font-serif font-medium text-white">

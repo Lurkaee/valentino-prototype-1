@@ -75,10 +75,8 @@ export function HeroEditorialStagger({
     >
       {/* 1. Subtle Environmental Micro-Copy */}
       <motion.div variants={itemVariants} className="mb-4 sm:mb-5">
-        <span className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/75 border border-rose-950/15 text-[#5A142D] text-[11px] uppercase tracking-[0.24em] font-semibold backdrop-blur-sm shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
-          <span className="text-[9px] text-rose-500">✦</span>
+        <span className="inline-flex items-center px-4 py-1 rounded-full bg-white/75 border border-rose-950/15 text-[#5A142D] text-[11px] uppercase tracking-[0.26em] font-semibold backdrop-blur-sm shadow-[0_2px_8px_rgba(0,0,0,0.02)]">
           <span>{eyebrow}</span>
-          <span className="text-[9px] text-rose-500">✦</span>
           <span className="sr-only">The Romantic Experience Platform</span>
         </span>
       </motion.div>

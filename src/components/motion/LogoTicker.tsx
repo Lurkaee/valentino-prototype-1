@@ -39,7 +39,7 @@ export function LogoTicker({
         <div className="flex flex-wrap items-center justify-center gap-6 text-xs tracking-[0.22em] uppercase font-sans text-ivory-300/70">
           {items.map((item, idx) => (
             <span key={idx} className="flex items-center gap-3">
-              <span className="text-rose-400/80 select-none text-[10px]">♡ ✦ ♡</span>
+              <span className="text-rose-400/50 select-none text-[8px]">·</span>
               <span>{item}</span>
             </span>
           ))}
@@ -81,11 +81,7 @@ export function LogoTicker({
               className="flex items-center gap-8 shrink-0 text-xs sm:text-[13px] tracking-[0.22em] uppercase font-sans font-medium text-[#FAF8F5]/65 hover:text-white transition-colors"
             >
               <span>{item}</span>
-              <span className="text-rose-400/70 text-[10px] select-none flex items-center gap-1">
-                <span>♡</span>
-                <span className="text-[8px]">✦</span>
-                <span>♡</span>
-              </span>
+              <span className="text-rose-400/40 text-[10px] select-none">·</span>
             </div>
           ))}
         </motion.div>

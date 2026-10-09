@@ -21,237 +21,15 @@ const WORLD_BOTANICAL_TONE: Record<string, BotanicalTone> = {
   "ocean-letter": "ocean",
 };
 
-interface WorldWalkthroughItem {
-  id: string;
-  name: string;
-  jpName?: string;
-  tagline: string;
-  glowGradient: string;
-  accentColor: string;
-  titleClass: string;
-  taglineClass: string;
-  badgeClass: string;
-  buttonClass?: string;
-  renderArtifact: () => React.ReactNode;
-}
-
-const WORLDS: WorldWalkthroughItem[] = [
-  {
-    id: "cloud-nine",
-    name: "Cloud Nine",
-    tagline: "For the person who makes everything lighter.",
-    glowGradient: "from-pink-400/25 via-purple-900/20 to-transparent",
-    accentColor: "#f472b6",
-    titleClass: "text-[#1A0311] drop-shadow-[0_1px_12px_rgba(255,245,248,0.5)]",
-    taglineClass: "text-[#36091E] font-normal drop-shadow-[0_1px_6px_rgba(255,245,248,0.6)]",
-    badgeClass: "text-[#7A1D45] font-semibold tracking-widest drop-shadow-[0_1px_4px_rgba(255,245,248,0.5)]",
-    buttonClass: "bg-pink-500/25 hover:bg-pink-500/40 text-white border border-pink-200/60 shadow-[0_4px_20px_rgba(244,114,182,0.4)] backdrop-blur-md",
-    renderArtifact: () => (
-      <div className="relative w-48 h-48 sm:w-56 sm:h-56 flex items-center justify-center">
-        {/* Soft morning cloud halo */}
-        <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-pink-300/30 via-rose-200/20 to-amber-100/20 blur-2xl" />
-        {/* Floating Folded Vellum Love Letter */}
-        <div className="relative w-36 h-44 sm:w-40 sm:h-48 rounded-2xl bg-[#FFFDF9]/95 backdrop-blur-md border border-pink-200/40 shadow-[0_20px_50px_-10px_rgba(244,114,182,0.3)] flex flex-col justify-between p-4 rotate-[-3deg] hover:rotate-0 transition-transform duration-500">
-          <div className="flex items-center justify-between text-[9px] font-mono text-pink-600 font-semibold tracking-wider">
-            <span>DAWN FLIGHT</span>
-            <span>NO. 09</span>
-          </div>
-          <div className="my-auto text-center space-y-1">
-            <svg viewBox="0 0 24 16" fill="none" className="w-6 h-4 mx-auto text-pink-400 opacity-80" aria-hidden="true">
-              <path d="M4 14 C 2 14, 0 12, 0 9.5 C 0 7.2, 1.8 5.5, 4 5.5 C 4.5 3, 6.8 1, 9.5 1 C 12.5 1, 14.8 3.2, 15 6 C 16.5 6, 18 7.2, 18 9 C 18 10.5, 17 12, 15.5 12.5 C 15 13.5, 14 14, 13 14 Z" fill="currentColor" fillOpacity="0.35" stroke="currentColor" strokeWidth="1" strokeLinecap="round" />
-            </svg>
-            <p className="text-xs font-serif italic text-purple-950 font-medium">
-              “Every sunrise is lighter with you.”
-            </p>
-          </div>
-          <div className="h-1 w-full bg-gradient-to-r from-pink-400 to-purple-400 rounded-full opacity-70" />
-        </div>
-      </div>
-    ),
-  },
-  {
-    id: "midnight-rose",
-    name: "Midnight Rose",
-    tagline: "For the love that feels like midnight.",
-    glowGradient: "from-rose-600/30 via-rose-950/35 to-transparent",
-    accentColor: "#e11d48",
-    titleClass: "text-[#FFFBF5] drop-shadow-[0_2px_16px_rgba(10,0,5,0.9)]",
-    taglineClass: "text-[#FECDD3] drop-shadow-[0_1px_8px_rgba(10,0,5,0.85)]",
-    badgeClass: "text-rose-200 font-semibold drop-shadow-[0_1px_6px_rgba(10,0,5,0.85)]",
-    buttonClass: "bg-rose-500/35 hover:bg-rose-500/50 text-white border border-rose-300/60 shadow-[0_4px_20px_rgba(225,29,72,0.35)] backdrop-blur-md",
-    renderArtifact: () => (
-      <div className="relative w-48 h-48 sm:w-56 sm:h-56 flex items-center justify-center">
-        {/* Candlelit crimson ambient aura */}
-        <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-rose-700/40 via-red-900/30 to-amber-600/20 blur-2xl" />
-        {/* Floating Crimson Velvet Dispatch with Organic Wax Stamp */}
-        <div className="relative w-36 h-44 sm:w-40 sm:h-48 rounded-2xl bg-gradient-to-b from-[#2A0516] to-[#14020A] border border-rose-500/30 shadow-[0_24px_60px_-10px_rgba(225,29,72,0.4)] flex flex-col justify-between p-4 rotate-[2deg] hover:rotate-0 transition-transform duration-500">
-          <div className="flex items-center justify-between text-[9px] font-mono text-rose-200 font-semibold tracking-wider">
-            <span>CANDLELIT VELVET</span>
-            <span>NO. 01</span>
-          </div>
-          <div className="my-auto text-center space-y-2">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#9F1239] via-[#881337] to-[#4C0519] border border-rose-400/40 shadow-[0_4px_16px_rgba(159,18,57,0.4)] mx-auto flex items-center justify-center text-rose-100" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5 text-rose-200 opacity-90">
-                <path d="M12 4 C 14 4, 17 7, 16 10 C 15 13, 12 14, 12 16" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeOpacity="0.7" />
-                <path d="M12 7 C 9 8, 8 11, 10 13 C 11.5 14.5, 13 14, 14 15" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeOpacity="0.6" />
-                <circle cx="12" cy="9" r="4.5" stroke="currentColor" strokeWidth="1" strokeDasharray="1 2" strokeOpacity="0.8" />
-                <circle cx="12" cy="9" r="1.5" fill="currentColor" fillOpacity="0.85" />
-              </svg>
-            </div>
-            <p className="text-xs font-serif italic text-rose-100 font-medium">
-              “Written by candlelight.”
-            </p>
-          </div>
-          <div className="h-1 w-full bg-gradient-to-r from-rose-600 to-amber-500 rounded-full opacity-70" />
-        </div>
-      </div>
-    ),
-  },
-  {
-    id: "kage",
-    name: "Kage",
-    jpName: "影",
-    tagline: "For the love of quiet shadows and unspoken truths.",
-    glowGradient: "from-emerald-700/25 via-teal-950/30 to-transparent",
-    accentColor: "#10b981",
-    titleClass: "text-[#F0FDF4] drop-shadow-[0_2px_16px_rgba(2,15,10,0.95)]",
-    taglineClass: "text-[#A7F3D0] drop-shadow-[0_1px_8px_rgba(2,15,10,0.9)]",
-    badgeClass: "text-emerald-300 font-semibold drop-shadow-[0_1px_6px_rgba(2,15,10,0.9)]",
-    buttonClass: "bg-emerald-500/30 hover:bg-emerald-500/45 text-white border border-emerald-300/60 shadow-[0_4px_20px_rgba(16,185,129,0.35)] backdrop-blur-md",
-    renderArtifact: () => (
-      <div className="relative w-48 h-48 sm:w-56 sm:h-56 flex items-center justify-center">
-        {/* Kyoto Temple Mist Aura */}
-        <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-emerald-800/30 via-teal-900/25 to-stone-900/30 blur-2xl" />
-        {/* Floating Washi Scroll Fragment */}
-        <div className="relative w-36 h-44 sm:w-40 sm:h-48 rounded-2xl bg-[#091512] border border-emerald-500/25 shadow-[0_24px_60px_-10px_rgba(16,185,129,0.25)] flex flex-col justify-between p-4 rotate-[-2deg] hover:rotate-0 transition-transform duration-500">
-          <div className="flex items-center justify-between text-[9px] font-mono text-emerald-300 font-semibold tracking-wider">
-            <span>KYOTO SANCTUARY</span>
-            <span>影 · 03</span>
-          </div>
-          <div className="my-auto text-center space-y-1">
-            <span className="text-2xl font-serif text-emerald-100 font-medium">静寂</span>
-            <p className="text-[11px] font-serif italic text-emerald-200 font-medium">
-              “Some words live in the shadows.”
-            </p>
-          </div>
-          <div className="h-1 w-full bg-gradient-to-r from-emerald-500 to-teal-400 rounded-full opacity-60" />
-        </div>
-      </div>
-    ),
-  },
-  {
-    id: "apricot-film",
-    name: "Apricot Film",
-    tagline: "For memories that feel like a sun-drenched afternoon.",
-    glowGradient: "from-amber-600/30 via-orange-950/25 to-transparent",
-    accentColor: "#f59e0b",
-    titleClass: "text-[#FFFBEB] drop-shadow-[0_2px_16px_rgba(30,12,2,0.9)]",
-    taglineClass: "text-[#FDE68A] drop-shadow-[0_1px_8px_rgba(30,12,2,0.85)]",
-    badgeClass: "text-amber-200 font-semibold drop-shadow-[0_1px_6px_rgba(30,12,2,0.85)]",
-    buttonClass: "bg-amber-500/30 hover:bg-amber-500/45 text-white border border-amber-300/60 shadow-[0_4px_20px_rgba(245,158,11,0.35)] backdrop-blur-md",
-    renderArtifact: () => (
-      <div className="relative w-48 h-48 sm:w-56 sm:h-56 flex items-center justify-center">
-        {/* Golden Hour Light Flare */}
-        <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-amber-500/35 via-orange-600/20 to-rose-400/20 blur-2xl" />
-        {/* Floating Archival 16mm Photo Slide */}
-        <div className="relative w-38 h-44 sm:w-42 sm:h-48 rounded-2xl bg-[#1C0F06] border border-amber-500/30 shadow-[0_24px_60px_-10px_rgba(245,158,11,0.3)] flex flex-col justify-between p-3.5 rotate-[3deg] hover:rotate-0 transition-transform duration-500">
-          <div className="flex items-center justify-between text-[9px] font-mono text-amber-300 font-semibold tracking-wider">
-            <span>KODAK 16MM</span>
-            <span>FRAME 24</span>
-          </div>
-          <div className="my-auto p-3 rounded-lg bg-black/40 border border-amber-500/20 text-center">
-            <svg viewBox="0 0 24 18" fill="none" className="w-6 h-4 mx-auto text-amber-300 opacity-80" aria-hidden="true">
-              <rect x="2" y="1" width="20" height="16" rx="2" stroke="currentColor" strokeWidth="1.2" />
-              <line x1="6" y1="1" x2="6" y2="17" stroke="currentColor" strokeWidth="0.8" strokeDasharray="2 2" />
-              <line x1="18" y1="1" x2="18" y2="17" stroke="currentColor" strokeWidth="0.8" strokeDasharray="2 2" />
-              <rect x="8.5" y="4" width="7" height="10" rx="1" fill="currentColor" fillOpacity="0.25" stroke="currentColor" strokeWidth="0.8" />
-            </svg>
-            <p className="text-[11px] font-serif italic text-amber-100 mt-1 font-medium">
-              “Sunlight caught in your hair.”
-            </p>
-          </div>
-          <div className="h-1 w-full bg-gradient-to-r from-amber-400 to-orange-400 rounded-full opacity-70" />
-        </div>
-      </div>
-    ),
-  },
-  {
-    id: "wildflower-paper",
-    name: "Wildflower Paper",
-    tagline: "For the love built by hand, petal by petal.",
-    glowGradient: "from-yellow-600/20 via-rose-950/20 to-transparent",
-    accentColor: "#eab308",
-    titleClass: "text-[#1A0311] drop-shadow-[0_1px_12px_rgba(255,248,240,0.5)]",
-    taglineClass: "text-[#361A09] font-normal drop-shadow-[0_1px_6px_rgba(255,248,240,0.6)]",
-    badgeClass: "text-[#78350F] font-semibold tracking-widest drop-shadow-[0_1px_4px_rgba(255,248,240,0.5)]",
-    buttonClass: "bg-amber-600/30 hover:bg-amber-600/45 text-white border border-amber-200/60 shadow-[0_4px_20px_rgba(234,179,8,0.35)] backdrop-blur-md",
-    renderArtifact: () => (
-      <div className="relative w-48 h-48 sm:w-56 sm:h-56 flex items-center justify-center">
-        {/* Meadow herb warmth */}
-        <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-amber-300/25 via-stone-400/15 to-emerald-200/15 blur-2xl" />
-        {/* Floating Cotton Deckled Envelope */}
-        <div className="relative w-36 h-44 sm:w-40 sm:h-48 rounded-2xl bg-[#FAF6EE]/95 border border-stone-300/60 shadow-[0_20px_50px_-10px_rgba(180,120,50,0.2)] flex flex-col justify-between p-4 rotate-[-2.5deg] hover:rotate-0 transition-transform duration-500 text-stone-800">
-          <div className="flex items-center justify-between text-[9px] font-mono text-stone-700 font-semibold tracking-wider">
-            <span>DECKLED COTTON</span>
-            <span>PETAL NO. 05</span>
-          </div>
-          <div className="my-auto text-center space-y-1">
-            <svg viewBox="0 0 16 22" fill="none" className="w-4 h-5 mx-auto text-amber-800 opacity-80" aria-hidden="true">
-              <path d="M8 21 C 8 15, 9 9, 8 1" stroke="currentColor" strokeWidth="1" strokeLinecap="round" />
-              <path d="M8 15 C 4 13, 3 9, 7 8 C 8 10, 8 13, 8 15 Z" fill="currentColor" fillOpacity="0.4" stroke="currentColor" strokeWidth="0.75" />
-              <path d="M8 10 C 12 8, 13 4, 9 3 C 8 5, 8 8, 8 10 Z" fill="currentColor" fillOpacity="0.4" stroke="currentColor" strokeWidth="0.75" />
-            </svg>
-            <p className="text-xs font-serif italic text-stone-900 font-medium">
-              “Pressed by hand, kept forever.”
-            </p>
-          </div>
-          <div className="h-1 w-full bg-gradient-to-r from-amber-400 to-rose-300 rounded-full opacity-60" />
-        </div>
-      </div>
-    ),
-  },
-  {
-    id: "ocean-letter",
-    name: "Ocean Letter",
-    tagline: "For words meant to cross any distance.",
-    glowGradient: "from-blue-600/25 via-cyan-950/30 to-transparent",
-    accentColor: "#3b82f6",
-    titleClass: "text-[#F0F9FF] drop-shadow-[0_2px_18px_rgba(2,10,25,0.95)]",
-    taglineClass: "text-[#BAE6FD] drop-shadow-[0_1px_8px_rgba(2,10,25,0.9)]",
-    badgeClass: "text-sky-200 font-semibold drop-shadow-[0_1px_6px_rgba(2,10,25,0.9)]",
-    buttonClass: "bg-blue-500/30 hover:bg-blue-500/45 text-white border border-blue-300/60 shadow-[0_4px_20px_rgba(59,130,246,0.35)] backdrop-blur-md",
-    renderArtifact: () => (
-      <div className="relative w-48 h-48 sm:w-56 sm:h-56 flex items-center justify-center">
-        {/* Ocean Starlight Phosphorescence */}
-        <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-blue-700/35 via-cyan-800/25 to-indigo-950/35 blur-2xl" />
-        {/* Floating Sea Glass Vessel Talisman */}
-        <div className="relative w-36 h-44 sm:w-40 sm:h-48 rounded-2xl bg-[#06121E] border border-blue-400/30 shadow-[0_24px_60px_-10px_rgba(59,130,246,0.3)] flex flex-col justify-between p-4 rotate-[1.5deg] hover:rotate-0 transition-transform duration-500">
-          <div className="flex items-center justify-between text-[9px] font-mono text-blue-200 font-semibold tracking-wider">
-            <span>MIDNIGHT TIDE</span>
-            <span>VESSEL NO. 06</span>
-          </div>
-          <div className="my-auto text-center space-y-1">
-            <svg viewBox="0 0 24 14" fill="none" className="w-6 h-3.5 mx-auto text-blue-300 opacity-80" aria-hidden="true">
-              <path d="M1 8 C 4 5, 8 5, 11 8 C 14 11, 18 11, 23 8" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
-              <path d="M2 12 C 5 10, 8 10, 11 12 C 14 14, 18 14, 22 12" stroke="currentColor" strokeWidth="0.8" strokeOpacity="0.6" strokeLinecap="round" />
-            </svg>
-            <p className="text-xs font-serif italic text-blue-100 font-medium">
-              “Across every shore, to you.”
-            </p>
-          </div>
-          <div className="h-1 w-full bg-gradient-to-r from-blue-400 to-cyan-300 rounded-full opacity-70" />
-        </div>
-      </div>
-    ),
-  },
-];
-
 /**
- * SpatialWorldsWalkthrough (Phase 6.4):
- * Full-viewport living room vistas.
- * No tabs. No capability chips. No palette swatches. No cards.
- * Scrolling gracefully takes the user through each world's unique light,
- * dimensional artifact, and poetic invitation.
+ * SpatialWorldsWalkthrough (Phase 6.8.4 Material Restraint):
+ * Subtractive pass removing synthetic micro-labels.
+ * Every world features:
+ * - One hero physical material
+ * - One dominant light source
+ * - One secondary physical trace
+ * - Authentic environmental occlusion (candlelight falloff, tatami room shadows, shoreline fog dissolution)
+ * - Zero artificial emblems, zero redundant metadata.
  */
 export function SpatialWorldsWalkthrough() {
   const containerRef = useRef<HTMLDivElement | null>(null);
@@ -262,21 +40,24 @@ export function SpatialWorldsWalkthrough() {
     if (prefersReducedMotion) return;
 
     const ctx = gsap.context(() => {
-      // Reveal each world gently as it enters the viewport and keep stable once visible
-      const worldSections = gsap.utils.toArray<HTMLElement>(".world-vista-scene");
-      worldSections.forEach((section) => {
+      const scenes = gsap.utils.toArray<HTMLElement>(".world-vista-scene");
+      scenes.forEach((scene) => {
+        const reveals = scene.querySelectorAll(".world-vista-reveal");
         gsap.fromTo(
-          section.querySelectorAll(".world-vista-reveal"),
-          { opacity: 0, y: 25 },
+          reveals,
+          {
+            opacity: 0,
+            y: 36,
+          },
           {
             opacity: 1,
             y: 0,
-            duration: 0.9,
+            duration: 1.1,
             ease: "power2.out",
-            stagger: 0.12,
+            stagger: 0.16,
             scrollTrigger: {
-              trigger: section,
-              start: "top 80%",
+              trigger: scene,
+              start: "top 88%",
               once: true,
             },
           }
@@ -290,74 +71,462 @@ export function SpatialWorldsWalkthrough() {
   return (
     <div
       ref={containerRef}
-      className="relative w-full bg-transparent text-[#FAF8F5] overflow-hidden"
+      className="relative w-full bg-transparent text-[#FAF8F5] pt-24 sm:pt-32 pb-16 overflow-hidden"
     >
-      {/* Walkthrough Atmospheric Header (High-contrast environment-aware typography on pale cloud atmosphere) */}
-      <div className="max-w-4xl mx-auto text-center px-6 pt-20 pb-12 sm:pt-28 sm:pb-16 space-y-3 relative z-10">
-        <span className="inline-block text-[11px] font-mono tracking-widest uppercase text-[#7A1D45] font-semibold drop-shadow-[0_1px_4px_rgba(255,245,248,0.6)]">
-          The World Collection
-        </span>
+      {/* Editorial Section Anchor Header */}
+      <div className="text-center max-w-2xl mx-auto px-6 mb-16 sm:mb-24 space-y-3 relative z-10">
         <h2 className="text-3xl sm:text-5xl lg:text-6xl font-serif font-normal text-[#1A0311] tracking-tight leading-tight drop-shadow-[0_1px_12px_rgba(255,245,248,0.5)]">
-          Step into their atmosphere.
+          Six atmospheres, each with its own light, silence, and memory.
         </h2>
         <p className="text-sm sm:text-base text-[#36091E] max-w-lg mx-auto font-normal leading-relaxed drop-shadow-[0_1px_6px_rgba(255,245,248,0.6)]">
-          Six distinct digital sanctuaries — each with its own light, memory, and emotional signature.
+          Written on folded airmail, caught in celluloid, or kept in stone.
         </p>
       </div>
 
-      {/* Sequential Full-Viewport Living Environments */}
+      {/* Sequential Full-Viewport Asymmetric Living Environments */}
       <div className="flex flex-col w-full relative z-10">
-        {WORLDS.map((world, idx) => (
-          <div
-            key={world.id}
-            className="world-vista-scene relative w-full min-h-[85vh] sm:min-h-[92vh] flex flex-col items-center justify-center px-6 py-16 text-center overflow-hidden"
-          >
-            {/* World-Aware Peripheral Botanical Edge Atmosphere */}
-            <AmbientBotanicalFrame
-              variant={WORLD_BOTANICAL_TONE[world.id] || "dusk"}
-              density="subtle"
-              intensity={0.75}
-            />
+        {/* ============================================================== */}
+        {/* WORLD 1: CLOUD NINE (Sky Flight)                              */}
+        {/* Physical Imperfection: Gently curled paper corner, natural    */}
+        {/* ticket resting position, authentic weight, reduced frame.     */}
+        {/* ============================================================== */}
+        <div className="world-vista-scene relative w-full min-h-[85vh] sm:min-h-[92vh] flex items-center justify-center px-6 sm:px-12 py-16 overflow-hidden">
+          <AmbientBotanicalFrame variant="light" density="subtle" intensity={0.35} />
 
-            {/* Dynamic ambient bloom for this world */}
-            <div
-              className={`absolute w-[450px] sm:w-[650px] h-[350px] sm:h-[450px] rounded-full bg-gradient-to-tr ${world.glowGradient} blur-3xl pointer-events-none -z-10`}
-            />
+          {/* Morning sun halo & atmospheric haze */}
+          <div className="absolute w-[450px] sm:w-[600px] h-[350px] sm:h-[450px] rounded-full bg-gradient-to-tr from-amber-200/20 via-sky-300/15 to-transparent blur-3xl pointer-events-none -z-10" />
 
-            <div className="max-w-xl mx-auto flex flex-col items-center space-y-6">
-              {/* World Index Indicator */}
-              <div className={`world-vista-reveal text-[10px] font-mono tracking-widest uppercase ${world.badgeClass}`}>
-                <span>0{idx + 1} OF 06</span>
-                <span className="mx-2">·</span>
-                <span>SANCTUARY VISTA</span>
+          {/* Drifting Cumulus Cloud Shadow Silhouette */}
+          <div className="absolute -bottom-10 right-12 w-64 h-36 opacity-15 pointer-events-none blur-2xl">
+            <svg viewBox="0 0 200 120" fill="none" className="w-full h-full">
+              <path d="M20 80 Q 40 40, 80 50 Q 110 20, 150 40 Q 190 50, 180 90 Q 150 115, 90 110 Q 30 115, 20 80 Z" fill="#38BDF8" />
+            </svg>
+          </div>
+
+          <div className="w-full max-w-6xl mx-auto relative min-h-[520px] sm:min-h-[580px] flex flex-col justify-between">
+            {/* PHYSICAL ARTIFACT: Handled Airmail Aerogramme with Upward Corner Curl */}
+            <div className="self-center sm:self-end sm:mr-8 lg:mr-16 world-vista-reveal will-change-transform z-20 pt-4 sm:pt-0">
+              <div className="relative w-64 h-48 sm:w-72 sm:h-52 select-none">
+                {/* NARRATIVE CONTINUITY: Coffee ticket resting naturally with organic overlap */}
+                <div className="absolute -top-3.5 -left-4 z-30 pointer-events-none select-none transform rotate-[-6.5deg] opacity-95 drop-shadow-[2px_10px_20px_rgba(3,105,161,0.2)]">
+                  <div className="w-24 sm:w-[6.5rem] py-1 px-2.5 bg-[#FAF5EE] rounded-xs border border-sky-300/35 text-left shadow-xs">
+                    <span className="font-serif italic text-[11px] text-[#1A0311] leading-none block">Rainy Tuesday</span>
+                    <span className="block text-[7.5px] font-mono tracking-wider text-sky-800/80 mt-0.5">First Coffee</span>
+                  </div>
+                </div>
+
+                {/* The Aerogramme Sheet — Imperfectly handled with corner lift & asymmetric contact shadow */}
+                <div className="relative w-56 h-40 sm:w-64 sm:h-44 bg-[#FFFDF9] shadow-[4px_24px_50px_-8px_rgba(186,215,248,0.5),0_6px_16px_rgba(0,0,0,0.06)] transform rotate-[2.8deg] skewX-[-0.6deg] hover:rotate-0 transition-transform duration-500 overflow-visible border border-sky-200/40 rounded-[1px]">
+                  {/* Airmail Par Avion Hatched Border Trim */}
+                  <div
+                    className="absolute top-0 inset-x-0 h-1.5 opacity-75"
+                    style={{
+                      background: "repeating-linear-gradient(45deg, #0284C7, #0284C7 8px, #FFFDF9 8px, #FFFDF9 16px, #E11D48 16px, #E11D48 24px, #FFFDF9 24px, #FFFDF9 32px)",
+                    }}
+                  />
+                  <div
+                    className="absolute bottom-0 inset-x-0 h-1.5 opacity-75"
+                    style={{
+                      background: "repeating-linear-gradient(45deg, #0284C7, #0284C7 8px, #FFFDF9 8px, #FFFDF9 16px, #E11D48 16px, #E11D48 24px, #FFFDF9 24px, #FFFDF9 32px)",
+                    }}
+                  />
+
+                  {/* Physical Lifted / Curled Upper-Right Corner */}
+                  <div className="absolute -top-0.5 -right-0.5 w-5 h-5 pointer-events-none z-20">
+                    <div className="absolute top-0 right-0 w-4 h-4 bg-black/15 blur-[1.5px] rounded-bl-sm transform translate-x-0.5 translate-y-0.5" />
+                    <div
+                      className="absolute top-0 right-0 w-4 h-4 bg-gradient-to-bl from-[#ECE6D8] via-[#FAF6EE] to-[#FFFDF9] shadow-[-1px_2px_4px_rgba(0,0,0,0.12)] border-b border-l border-sky-200/50"
+                      style={{ clipPath: "polygon(0 0, 100% 100%, 0 100%)" }}
+                    />
+                  </div>
+
+                  {/* Single Authored Letter Content */}
+                  <div className="pt-6 px-4 pb-3 flex flex-col justify-center h-full text-left relative z-10">
+                    <p className="font-serif italic text-xs sm:text-[13px] text-[#0F172A] font-medium leading-relaxed">
+                      “Every sunrise is lighter with you.”
+                    </p>
+                  </div>
+                </div>
               </div>
+            </div>
 
-              {/* Dimensional Floating Artifact */}
-              <div className="world-vista-reveal will-change-transform my-2">
-                {world.renderArtifact()}
-              </div>
-
-              {/* Editorial World Title & Tagline with subtle ambient text protection */}
-              <div className="world-vista-reveal space-y-2 relative">
-                <h3 className={`text-3xl sm:text-4xl lg:text-5xl font-serif font-normal tracking-tight ${world.titleClass}`}>
-                  {world.name} {world.jpName && <span className="text-2xl sm:text-3xl opacity-85 font-serif font-light">({world.jpName})</span>}
-                </h3>
-                <p className={`text-base sm:text-lg font-serif italic font-normal max-w-md mx-auto ${world.taglineClass}`}>
-                  “{world.tagline}”
-                </p>
-              </div>
-
-              {/* Direct Poetic Invitation Link (Tactile Atmospheric Portal) */}
-              <div className="world-vista-reveal pt-2">
-                <AtmosphericButton
-                  href={`/create?template=${world.id}`}
-                  worldId={world.id}
-                  worldName={world.name}
-                />
+            {/* SPATIAL COPY: Anchored Low-Left in the expansive morning space */}
+            <div className="self-start max-w-lg space-y-4 text-left sm:pl-4 lg:pl-10 pb-4 sm:pb-8 world-vista-reveal">
+              <h3 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-normal tracking-tight text-[#1A0311] drop-shadow-[0_1px_12px_rgba(255,250,240,0.6)]">
+                Cloud Nine
+              </h3>
+              <p className="text-lg sm:text-xl font-serif italic text-[#36091E] font-normal drop-shadow-[0_1px_6px_rgba(255,250,240,0.6)]">
+                “For the person who makes everything lighter.”
+              </p>
+              <div className="pt-2">
+                <AtmosphericButton href="/create?template=cloud-nine" worldId="cloud-nine" worldName="Cloud Nine" />
               </div>
             </div>
           </div>
-        ))}
+        </div>
+
+        {/* ============================================================== */}
+        {/* WORLD 2: MIDNIGHT ROSE (Candlelit Alcove)                     */}
+        {/* Directional Chiaroscuro: Candlelight illuminates top-left,     */}
+        {/* lower-right falls into deep room shadow. Asymmetric weight.    */}
+        {/* ============================================================== */}
+        <div className="world-vista-scene relative w-full min-h-[85vh] sm:min-h-[92vh] flex items-center justify-center px-6 sm:px-12 py-16 overflow-hidden">
+          <AmbientBotanicalFrame variant="dusk" density="subtle" intensity={0.35} />
+
+          {/* Deep chiaroscuro & amber candle warmth (Restrained) */}
+          <div className="absolute w-[450px] sm:w-[600px] h-[350px] sm:h-[450px] rounded-full bg-gradient-to-tr from-amber-500/18 via-rose-950/35 to-transparent blur-3xl pointer-events-none -z-10" />
+
+          {/* Off-screen candle light source casting long diagonal shadow from upper left */}
+          <div
+            className="absolute inset-0 bg-gradient-to-br from-amber-500/12 via-rose-950/25 to-black/90 pointer-events-none"
+            aria-hidden="true"
+          />
+
+          <div className="w-full max-w-6xl mx-auto relative min-h-[520px] sm:min-h-[580px] flex flex-col justify-between">
+            {/* SPATIAL COPY: Partially recessed into shadow mid-left */}
+            <div className="self-start max-w-md space-y-4 text-left sm:pl-6 lg:pl-12 pt-6 sm:pt-10 world-vista-reveal">
+              <h3 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-normal tracking-tight text-[#FFFBF5] drop-shadow-[0_2px_16px_rgba(10,0,5,0.9)]">
+                Midnight Rose
+              </h3>
+              <p className="text-lg sm:text-xl font-serif italic text-[#FECDD3] drop-shadow-[0_1px_8px_rgba(10,0,5,0.85)]">
+                “For the love that feels like midnight.”
+              </p>
+              <div className="pt-2">
+                <AtmosphericButton href="/create?template=midnight-rose" worldId="midnight-rose" worldName="Midnight Rose" />
+              </div>
+            </div>
+
+            {/* PHYSICAL ARTIFACT: Hand-Poured Wax Sealed Velvet Envelope Low-Right */}
+            <div className="self-center sm:self-end sm:mr-8 lg:mr-20 pb-4 sm:pb-8 world-vista-reveal will-change-transform z-20">
+              <div className="relative w-64 h-48 sm:w-72 sm:h-52 select-none">
+                {/* Stray fallen rose petal with realistic contact shadow */}
+                <div className="absolute -bottom-4 -left-6 z-25 pointer-events-none transform -rotate-12 opacity-85 drop-shadow-[0_4px_12px_rgba(0,0,0,0.85)]">
+                  <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6 text-[#9F1239]">
+                    <path d="M5 16 C 3 9, 10 3, 17 4 C 20 11, 13 19, 5 16 Z" fill="currentColor" fillOpacity="0.8" />
+                  </svg>
+                </div>
+
+                {/* The Velvet Envelope — Asymmetric Candlelight Glaze with deep contact shadow on dark side */}
+                <div className="relative w-56 h-40 sm:w-64 sm:h-44 bg-gradient-to-br from-[#36071E] via-[#1B020E] to-[#080104] shadow-[12px_28px_55px_-8px_rgba(0,0,0,0.95),4px_10px_24px_rgba(159,18,57,0.22)] border-t border-l border-amber-400/25 border-r-0 border-b-0 transform rotate-[-3.8deg] hover:rotate-0 transition-transform duration-500 overflow-visible">
+                  {/* Pointed Envelope Flap with Velvet Shadow */}
+                  <div className="absolute top-0 inset-x-0 h-20 bg-gradient-to-br from-[#450926] to-[#16020C] [clip-path:polygon(0_0,100%_0,50%_100%)] shadow-[0_4px_12px_rgba(0,0,0,0.8)] border-t border-amber-300/25" />
+
+                  {/* Hand-Poured Organic Wax Seal (Molten ripples, no monogram) */}
+                  <div className="absolute top-16 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30">
+                    <div className="relative w-11 h-11 rounded-full bg-gradient-to-br from-[#E11D48] via-[#9F1239] to-[#4C0519] border border-amber-300/50 shadow-[0_6px_20px_rgba(159,18,57,0.7),inset_0_2px_4px_rgba(255,255,255,0.3)] flex items-center justify-center transform hover:scale-105 transition-transform">
+                      {/* Dripping wax edge irregularities */}
+                      <div className="absolute -bottom-1 -right-1 w-3 h-3 rounded-full bg-[#881337] opacity-90" />
+                      <div className="absolute -top-0.5 -left-1 w-2.5 h-2.5 rounded-full bg-[#9F1239] opacity-80" />
+                      {/* Molten concentric cooling ridge */}
+                      <div className="w-5 h-5 rounded-full border border-amber-200/35 bg-[#9F1239]/70 shadow-inner" />
+                    </div>
+                  </div>
+
+                  {/* Single Letter Quote */}
+                  <div className="absolute top-[5.5rem] inset-x-5 text-center">
+                    <p className="font-serif italic text-xs text-rose-100/90 font-medium leading-relaxed drop-shadow-sm">
+                      “Written in quiet starlight, meant only for you.”
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ============================================================== */}
+        {/* WORLD 3: KAGE (Vertical Tatami Room Composition)               */}
+        {/* The Quietest World: Deep shadow, no SVG clutter, breathing     */}
+        {/* room. Scroll hangs a fraction crooked in an authentic alcove.  */}
+        {/* ============================================================== */}
+        <div className="world-vista-scene relative w-full min-h-[88vh] sm:min-h-[96vh] flex items-center justify-center px-6 sm:px-12 py-16 overflow-hidden">
+          <AmbientBotanicalFrame variant="dark" density="subtle" intensity={0.35} />
+
+          {/* Kyoto Quiet Room Chiaroscuro & deep tatami shadow */}
+          <div className="absolute w-[450px] sm:w-[600px] h-[350px] sm:h-[450px] rounded-full bg-gradient-to-tr from-amber-700/15 via-stone-900/35 to-[#0A0A0B] blur-3xl pointer-events-none -z-10" />
+
+          {/* Stone lantern warm amber floor glow */}
+          <div className="absolute bottom-6 right-1/4 w-24 h-24 rounded-full bg-amber-500/12 blur-2xl pointer-events-none" />
+
+          <div className="w-full max-w-6xl mx-auto relative min-h-[580px] sm:min-h-[660px] flex flex-col lg:flex-row justify-between items-center gap-12 lg:gap-0">
+            {/* PHYSICAL ARTIFACT: Hanging Japanese Washi Scroll suspended a fraction crooked */}
+            <div className="lg:ml-12 xl:ml-20 world-vista-reveal will-change-transform z-20">
+              <div className="relative w-48 sm:w-56 h-72 sm:h-[21rem] flex flex-col items-center transform rotate-[-1.8deg] hover:rotate-0 transition-transform duration-500 select-none">
+                {/* Top Silk Hanging Cord (asymmetric tension) & Cedar Dowel Rod */}
+                <div className="w-16 h-0.5 bg-amber-800/60 mb-1 rounded-full transform rotate-[1.5deg]" />
+                <div className="w-full h-3 bg-gradient-to-r from-[#2A180E] via-[#3E2516] to-[#2A180E] rounded-sm shadow-md border-b border-amber-950/60" />
+
+                {/* Textured Washi Paper Scroll Body on Deep Charcoal Brocade */}
+                <div className="w-[92%] flex-1 bg-[#121214] border-x border-stone-800/80 shadow-[16px_32px_65px_-8px_rgba(0,0,0,0.96),-4px_12px_30px_rgba(0,0,0,0.6)] p-3.5 flex flex-col justify-between text-center relative overflow-hidden">
+                  {/* Center Washi Sheet — Drifts into ambient room shadow with subtle vertical fiber wave */}
+                  <div className="relative flex-1 [background:linear-gradient(to_bottom,rgba(15,14,13,0.45)_0%,#EDE5D8_20%,#E4DBD0_50%,#EDE5D8_80%,rgba(18,17,16,0.55)_100%)] border border-amber-900/10 shadow-inner p-3 flex flex-col justify-between overflow-hidden">
+                    {/* Washi paper fiber grain */}
+                    <div className="absolute inset-0 opacity-20 pointer-events-none bg-[radial-gradient(#78350F_1px,transparent_1px)] [background-size:8px_8px]" />
+
+                    {/* Sumi Ink Calligraphy */}
+                    <div className="my-auto space-y-1 relative z-10">
+                      <span className="text-4xl sm:text-5xl font-serif text-[#1C1917] font-light tracking-widest block drop-shadow-xs select-none">
+                        静寂
+                      </span>
+                      <p className="text-[11px] font-serif italic text-stone-700 leading-relaxed font-medium">
+                        “Some words live quietly in the shadows.”
+                      </p>
+                    </div>
+
+                    {/* AUTHENTIC CINNABAR HANKO STAMP (Organic ink bleed, manual impression) */}
+                    <div className="flex justify-end pt-1 relative z-10">
+                      <svg viewBox="0 0 28 28" className="w-5 h-5 opacity-90 filter drop-shadow-[0_1px_1px_rgba(153,27,27,0.4)]" aria-label="Vermilion Hanko imprint">
+                        <path
+                          d="M3 5 C 3 3.5, 4.5 3, 6 3 L 22 3 C 23.5 3, 25 4, 25 6 L 25 21 C 25 23.5, 23.5 25, 21 25 L 6 25 C 4 25, 3 23.5, 3 21 Z"
+                          fill="#991B1B"
+                          fillOpacity="0.92"
+                        />
+                        <path
+                          d="M7 8 L 21 8 M 14 8 L 14 20 M 9 14 L 19 14 M 9 20 L 19 20"
+                          stroke="#FEF2F2"
+                          strokeWidth="1.2"
+                          strokeLinecap="round"
+                          strokeOpacity="0.75"
+                        />
+                        <circle cx="5" cy="22" r="0.8" fill="#B91C1C" opacity="0.6" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Bottom Weighted Cedar Dowel Rod */}
+                <div className="w-full h-3 bg-gradient-to-r from-[#2A180E] via-[#3E2516] to-[#2A180E] rounded-sm shadow-md border-t border-amber-950/60" />
+              </div>
+            </div>
+
+            {/* SPATIAL COPY: Placed into the quiet negative space to the right */}
+            <div className="max-w-md space-y-4 text-center lg:text-left lg:mr-12 xl:mr-20 world-vista-reveal">
+              <h3 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-normal tracking-tight text-[#F5F2EB] drop-shadow-[0_2px_16px_rgba(0,0,0,0.95)]">
+                Kage <span className="text-3xl sm:text-4xl opacity-80 font-serif font-light">(影)</span>
+              </h3>
+              <p className="text-lg sm:text-xl font-serif italic text-[#D6D0C4] drop-shadow-[0_1px_8px_rgba(0,0,0,0.9)]">
+                “For the love of quiet shadows and unspoken truths.”
+              </p>
+              <div className="pt-2">
+                <AtmosphericButton href="/create?template=kage" worldId="kage" worldName="Kage" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ============================================================== */}
+        {/* WORLD 4: APRICOT FILM (Cinema Reel — Organic Celluloid Ribbon)  */}
+        {/* Material Tension: Ribbon bows gently at an awkward angle with   */}
+        {/* 3D perspective sag, physical weight, translucent acetate depth. */}
+        {/* ============================================================== */}
+        <div className="world-vista-scene relative w-full min-h-[88vh] sm:min-h-[96vh] flex items-center justify-center px-6 sm:px-12 py-16 overflow-hidden [perspective:1200px]">
+          <AmbientBotanicalFrame variant="warm" density="subtle" intensity={0.35} />
+
+          {/* Dark Room Ambient Warm Glow */}
+          <div className="absolute w-[450px] sm:w-[600px] h-[350px] sm:h-[450px] rounded-full bg-gradient-to-tr from-amber-500/28 via-orange-950/20 to-transparent blur-3xl pointer-events-none -z-10" />
+
+          {/* DIAGONAL INCANDESCENT PROJECTOR BEAM Cutting Across Viewport */}
+          <div
+            className="absolute inset-y-0 -inset-x-12 bg-gradient-to-r from-amber-400/20 via-amber-200/12 to-transparent blur-md pointer-events-none"
+            style={{
+              clipPath: "polygon(0 8%, 100% 0%, 100% 72%, 0 55%)",
+            }}
+          />
+
+          {/* Floating Projector Dust Motes in Light Beam */}
+          <div className="absolute top-1/5 left-1/4 w-1.5 h-1.5 rounded-full bg-amber-200/80 blur-[0.4px] pointer-events-none animate-pulse" />
+          <div className="absolute top-1/4 left-1/2 w-1 h-1 rounded-full bg-amber-100/70 blur-[0.3px] pointer-events-none" />
+          <div className="absolute top-1/3 right-1/3 w-1.5 h-1.5 rounded-full bg-amber-300/60 blur-[0.5px] pointer-events-none" />
+
+          {/* ONE LOOSE ACETATE CELLULOID FILM STRIP crossing frame at an awkward angle with tension & sag */}
+          <div
+            className="absolute inset-x-[-15%] sm:inset-x-[-5%] top-[34%] sm:top-[36%] -translate-y-1/2 z-20 pointer-events-none select-none drop-shadow-[0_28px_55px_rgba(0,0,0,0.95)]"
+            style={{
+              transform: "rotate(-7.5deg) rotateX(4.5deg) rotateY(-1.5deg) skewX(-1.2deg)",
+            }}
+          >
+            {/* The Continuous Acetate Ribbon — Physical translucency and edge reflection */}
+            <div className="w-full bg-gradient-to-r from-amber-950/85 via-amber-900/70 to-amber-950/85 backdrop-blur-[3px] border-y border-amber-500/35 py-2 px-1 flex flex-col gap-2">
+              {/* Top Continuous Sprocket Perforations */}
+              <div className="flex items-center justify-between px-2 overflow-hidden">
+                {[...Array(24)].map((_, i) => (
+                  <div key={i} className="w-3 h-2 bg-black/95 rounded-[1px] border border-amber-600/40 shadow-inner shrink-0 mx-1.5" />
+                ))}
+              </div>
+
+              {/* Continuous Celluloid Ribbon with Photographic Emulsion Exposures */}
+              <div className="flex items-center justify-center gap-3 sm:gap-6 px-4 overflow-hidden">
+                {/* Exposure 1: Soft entry frame fading out at left edge */}
+                <div className="w-32 sm:w-44 h-[5.5rem] sm:h-[6.5rem] rounded-[2px] [background:radial-gradient(ellipse_at_center,rgba(180,83,9,0.3)_0%,rgba(60,20,5,0.6)_70%,rgba(20,7,2,0.85)_100%)] opacity-35 shrink-0 blur-[0.4px]" />
+
+                {/* Exposure 2: Warm ambient sepia memory */}
+                <div className="w-36 sm:w-52 h-24 sm:h-28 rounded-[2px] [background:radial-gradient(ellipse_at_center,rgba(217,119,6,0.35)_0%,rgba(90,30,8,0.65)_70%,rgba(26,10,3,0.85)_100%)] opacity-65 shrink-0" />
+
+                {/* Exposure 3: THE HERO PHOTOGRAPHIC EXPOSURE with warm projector halation */}
+                <div className="w-56 sm:w-72 h-[7.5rem] sm:h-[8.5rem] rounded-[2px] [background:radial-gradient(ellipse_at_center,#451A03_0%,#241005_70%,#150802_100%)] shadow-[0_0_40px_rgba(251,191,36,0.4),inset_0_0_24px_rgba(254,243,199,0.12)] p-4 flex items-center justify-center text-center relative overflow-hidden shrink-0">
+                  {/* Subtle projector beam halation across frame */}
+                  <div className="absolute inset-0 bg-gradient-to-tr from-amber-300/20 via-transparent to-amber-100/25 pointer-events-none mix-blend-screen" />
+                  <p className="font-serif italic text-xs sm:text-sm text-amber-100 font-medium leading-relaxed drop-shadow-[0_1px_6px_rgba(0,0,0,0.9)] relative z-10">
+                    “Sunlight in your hair, golden and still.”
+                  </p>
+                </div>
+
+                {/* Exposure 4: Motion warm frame */}
+                <div className="w-36 sm:w-52 h-24 sm:h-28 rounded-[2px] [background:radial-gradient(ellipse_at_center,rgba(217,119,6,0.35)_0%,rgba(90,30,8,0.65)_70%,rgba(26,10,3,0.85)_100%)] opacity-65 shrink-0" />
+
+                {/* Exposure 5: Soft exit frame fading out at right edge */}
+                <div className="w-32 sm:w-44 h-[5.5rem] sm:h-[6.5rem] rounded-[2px] [background:radial-gradient(ellipse_at_center,rgba(180,83,9,0.3)_0%,rgba(60,20,5,0.6)_70%,rgba(20,7,2,0.85)_100%)] opacity-35 shrink-0 blur-[0.4px]" />
+              </div>
+
+              {/* Bottom Continuous Sprocket Perforations */}
+              <div className="flex items-center justify-between px-2 overflow-hidden">
+                {[...Array(24)].map((_, i) => (
+                  <div key={i} className="w-3 h-2 bg-black/95 rounded-[1px] border border-amber-600/40 shadow-inner shrink-0 mx-1.5" />
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* SPATIAL COPY: Occupies the light/shadow boundary below the projector beam */}
+          <div className="w-full max-w-6xl mx-auto relative z-30 min-h-[540px] sm:min-h-[600px] flex flex-col justify-end">
+            <div className="max-w-lg space-y-4 text-left sm:pl-6 lg:pl-12 pb-8 sm:pb-12 world-vista-reveal">
+              <h3 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-normal tracking-tight text-[#FFFBEB] drop-shadow-[0_2px_16px_rgba(30,12,2,0.9)]">
+                Apricot Film
+              </h3>
+              <p className="text-lg sm:text-xl font-serif italic text-[#FDE68A] drop-shadow-[0_1px_8px_rgba(30,12,2,0.85)]">
+                “For memories that feel like a sun-drenched afternoon.”
+              </p>
+              <div className="pt-2">
+                <AtmosphericButton href="/create?template=apricot-film" worldId="apricot-film" worldName="Apricot Film" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ============================================================== */}
+        {/* WORLD 5: WILDFLOWER PAPER (Herbarium Desk)                     */}
+        {/* Physical Imperfection: Deckled cotton sheet with natural lift, */}
+        {/* escaping stems casting authentic directional drop shadow.       */}
+        {/* ============================================================== */}
+        <div className="world-vista-scene relative w-full min-h-[85vh] sm:min-h-[92vh] flex items-center justify-center px-6 sm:px-12 py-16 overflow-hidden">
+          <AmbientBotanicalFrame variant="meadow" density="subtle" intensity={0.35} />
+
+          {/* Meadow daylight aura */}
+          <div className="absolute w-[450px] sm:w-[600px] h-[350px] sm:h-[450px] rounded-full bg-gradient-to-tr from-amber-300/18 via-stone-400/12 to-purple-950/12 blur-3xl pointer-events-none -z-10" />
+
+          <div className="w-full max-w-6xl mx-auto relative min-h-[520px] sm:min-h-[580px] flex flex-col lg:flex-row justify-between items-center gap-12 lg:gap-0">
+            {/* PHYSICAL ARTIFACT: Deckled Cotton Herbarium Sheet with authentic imperfect lift */}
+            <div className="lg:-ml-8 xl:-ml-12 world-vista-reveal will-change-transform z-20">
+              <div className="relative w-64 sm:w-72 h-72 sm:h-80 select-none">
+                {/* The Deckled Herbarium Sheet — Subtle corner lift & uneven shadow */}
+                <div className="relative w-56 h-64 sm:w-64 sm:h-72 bg-[#FAF7F0] shadow-[6px_22px_45px_-8px_rgba(180,120,50,0.22),2px_6px_14px_rgba(0,0,0,0.06)] border border-stone-300/80 transform rotate-[-2.8deg] skewY-[0.6deg] hover:rotate-0 transition-transform duration-500 p-4 flex flex-col justify-between rounded-[1px]">
+                  {/* Linen Thread Binding */}
+                  <div className="absolute -top-2 left-6 w-1 h-5 bg-[#A89F91] rounded-full shadow-xs z-20" />
+                  <div className="absolute top-1 left-4 w-5 h-1 bg-[#A89F91] rounded-full shadow-xs z-20" />
+
+                  {/* REAL DRIED BOTANICAL SPECIMEN: Stems escape past sheet perimeter and cast directional shadow onto desk */}
+                  <div className="absolute -top-10 -right-10 z-25 pointer-events-none">
+                    <svg viewBox="0 0 56 90" fill="none" className="w-[4.5rem] h-28 filter drop-shadow-[6px_12px_14px_rgba(60,40,15,0.25)]">
+                      <path d="M10 88 C 16 60, 22 36, 36 6" stroke="#5B684B" strokeWidth="1.6" strokeLinecap="round" />
+                      <path d="M22 52 C 34 40, 48 32, 54 22" stroke="#5B684B" strokeWidth="1.2" strokeLinecap="round" opacity="0.85" />
+                      <ellipse cx="36" cy="6" rx="5" ry="3.5" fill="#C084FC" fillOpacity="0.85" />
+                      <ellipse cx="30" cy="16" rx="4.5" ry="3" fill="#A855F7" fillOpacity="0.8" />
+                      <ellipse cx="38" cy="26" rx="4" ry="2.8" fill="#C084FC" fillOpacity="0.75" />
+                      <ellipse cx="54" cy="22" rx="4" ry="2.6" fill="#C084FC" fillOpacity="0.8" />
+                      <path d="M14 48 C 7 42, 8 34, 15 40 Z" fill="#849974" fillOpacity="0.85" />
+                      <path d="M25 62 C 33 56, 31 48, 24 54 Z" fill="#718762" fillOpacity="0.85" />
+                    </svg>
+                  </div>
+
+                  <div className="h-4" />
+
+                  {/* Single Authored Quote */}
+                  <div className="my-auto text-center space-y-1.5 pt-2">
+                    <p className="text-xs font-serif italic text-stone-900 font-medium leading-relaxed">
+                      “Pressed by hand, kept forever.”
+                    </p>
+                  </div>
+
+                  <div className="h-2" />
+                </div>
+              </div>
+            </div>
+
+            {/* SPATIAL COPY: Placed independently in the open space to the right */}
+            <div className="max-w-lg space-y-4 text-center lg:text-left lg:mr-8 xl:mr-16 world-vista-reveal">
+              <h3 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-normal tracking-tight text-[#1A0311] drop-shadow-[0_1px_12px_rgba(255,248,240,0.6)]">
+                Wildflower Paper
+              </h3>
+              <p className="text-lg sm:text-xl font-serif italic text-[#361A09] font-normal drop-shadow-[0_1px_6px_rgba(255,248,240,0.6)]">
+                “For the love built by hand, petal by petal.”
+              </p>
+              <div className="pt-2">
+                <AtmosphericButton href="/create?template=wildflower-paper" worldId="wildflower-paper" worldName="Wildflower Paper" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* ============================================================== */}
+        {/* WORLD 6: OCEAN LETTER (Shoreline Drift)                        */}
+        {/* Believable Environment: Dark wet slate stone slab, shoreline   */}
+        {/* parchment dissolving into sea fog, tactile sea-glass caustics. */}
+        {/* ============================================================== */}
+        <div className="world-vista-scene relative w-full min-h-[85vh] sm:min-h-[92vh] flex items-center justify-center px-6 sm:px-12 py-16 overflow-hidden">
+          <AmbientBotanicalFrame variant="ocean" density="subtle" intensity={0.35} />
+
+          {/* Coastal Fog & Cyan Sea Starlight */}
+          <div className="absolute w-[450px] sm:w-[600px] h-[350px] sm:h-[450px] rounded-full bg-gradient-to-tr from-sky-500/18 via-slate-900/25 to-transparent blur-3xl pointer-events-none -z-10" />
+
+          <div className="w-full max-w-6xl mx-auto relative min-h-[520px] sm:min-h-[580px] flex flex-col justify-between">
+            {/* SPATIAL COPY: Placed high/mid in the open space, away from object */}
+            <div className="self-start max-w-lg space-y-4 text-left sm:pl-6 lg:pl-12 pt-6 sm:pt-10 world-vista-reveal">
+              <h3 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-normal tracking-tight text-[#F0F9FF] drop-shadow-[0_2px_18px_rgba(2,10,25,0.95)]">
+                Ocean Letter
+              </h3>
+              <p className="text-lg sm:text-xl font-serif italic text-[#BAE6FD] drop-shadow-[0_1px_8px_rgba(2,10,25,0.9)]">
+                “For words meant to cross any distance.”
+              </p>
+              <div className="pt-2">
+                <AtmosphericButton href="/create?template=ocean-letter" worldId="ocean-letter" worldName="Ocean Letter" />
+              </div>
+            </div>
+
+            {/* PHYSICAL ENVIRONMENT: Wet Slate Shoreline Ledge + Weathered Parchment + Frosted Sea Glass */}
+            <div className="self-center sm:self-end sm:mr-8 lg:mr-20 pb-4 sm:pb-8 world-vista-reveal will-change-transform z-20">
+              <div className="relative w-72 h-56 sm:w-[21rem] sm:h-64 select-none">
+                {/* Natural Wet Shoreline Slate Rock Ledge (Environmental Surface, not a UI card) */}
+                <div className="relative w-72 h-52 sm:w-80 sm:h-56 bg-gradient-to-br from-[#0D1C2A] via-[#06111C] to-[#02060C] shadow-[0_36px_80px_rgba(0,0,0,0.98)] overflow-visible [clip-path:polygon(2%_4%,98%_1%,100%_95%,1%_98%)] [background-image:linear-gradient(135deg,rgba(255,255,255,0.04)_0%,transparent_35%,rgba(56,189,248,0.03)_50%,transparent_65%)]">
+                  {/* Subtle tidal moisture sheen across rock surface */}
+                  <div className="absolute inset-0 opacity-20 pointer-events-none bg-gradient-to-tr from-cyan-400/10 via-transparent to-sky-200/10" />
+                </div>
+
+                {/* Weathered Shoreline Parchment laid naturally across the wet rock ledge */}
+                <div
+                  className="absolute top-7 left-6 sm:top-8 sm:left-8 w-56 h-36 sm:w-[15.5rem] sm:h-40 bg-gradient-to-b from-[#E9EEF0] via-[#DEE7E9] to-[#C8D6D9]/50 shadow-[4px_12px_28px_rgba(0,0,0,0.65)] rotate-[-3.2deg] p-3.5 flex flex-col justify-between z-20"
+                  style={{
+                    maskImage: "linear-gradient(to bottom, black 55%, rgba(0,0,0,0.4) 85%, transparent 100%)",
+                    WebkitMaskImage: "linear-gradient(to bottom, black 55%, rgba(0,0,0,0.4) 85%, transparent 100%)",
+                  }}
+                >
+                  <div className="h-1" />
+                  <p className="font-serif italic text-xs sm:text-[13px] text-sky-950 font-medium text-center leading-relaxed drop-shadow-xs px-1">
+                    “Our devotion is as vast and enduring as the evening tides.”
+                  </p>
+                  <div className="h-1" />
+                </div>
+
+                {/* THE HERO: Tactile Frosted Sea-Glass Pebble Resting Directly on Shoreline Rock */}
+                <div className="absolute top-2 right-2 sm:right-6 z-30 pointer-events-none">
+                  <div className="relative w-[5.5rem] h-14 sm:w-24 sm:h-[3.75rem] rounded-[45%_55%_60%_40%/50%_45%_55%_50%] bg-gradient-to-br from-cyan-200/40 via-cyan-400/30 to-teal-500/25 backdrop-blur-md border border-cyan-100/60 shadow-[0_10px_35px_rgba(34,211,238,0.55),4px_12px_24px_rgba(0,0,0,0.9)] transform rotate-12 flex items-center justify-center">
+                    {/* Internal frosted refraction highlight */}
+                    <div className="w-8 h-3.5 rounded-full bg-white/50 blur-[1px] transform -rotate-6" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Understated Showroom Full Catalog Link */}
@@ -366,7 +535,7 @@ export function SpatialWorldsWalkthrough() {
           href="/templates"
           className="group inline-flex items-center gap-2.5 px-6 py-2.5 rounded-full text-xs sm:text-sm font-mono uppercase tracking-widest bg-rose-950/40 hover:bg-rose-900/60 border border-rose-400/40 text-rose-100 hover:text-white font-medium shadow-[0_4px_16px_rgba(0,0,0,0.4)] backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5"
         >
-          <span>Explore all six atmospheres with interactive plasma spark</span>
+          <span>Explore all six atmospheres</span>
           <span className="inline-block transition-transform duration-300 group-hover:translate-x-1.5">
             →
           </span>
