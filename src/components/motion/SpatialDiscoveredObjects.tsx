@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
+import Image from "next/image";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { AmbientBotanicalFrame } from "@/components/motion/AmbientBotanicalFrame";
@@ -10,15 +11,19 @@ if (typeof window !== "undefined") {
 }
 
 /**
- * SpatialDiscoveredObjects (Phase 6.8.5 Physical Imperfection):
- * Museum-style curator marginalia: tiny, sparse, detached penciled notes.
- * Objects carry physical weight, asymmetric lift, natural tilt, and tactile contact shadows.
- * Zero UI categories, zero explanation blocks, zero synthetic marks.
+ * SpatialDiscoveredObjects (Phase 7 Spatial Composition Reset):
+ * Coherent editorial still life of three physical keepsakes sharing one surface:
+ * 1. Deep Burgundy Velvet Envelope with molten wax seal (authentic physical asset, directional light & shadow).
+ * 2. Folded Cream Vellum Whisper Note (authentic origami fold geometry, zero dashed X wireframe lines).
+ * 3. Heavy Hammered Antique Brass Keepsake (authentic aged patina, metallic luster, zero poker-chip dots).
+ *
+ * Viewport Protection: Centered balanced arrangement preventing edge clipping at all desktop and mobile viewports.
+ * Full interactive states preserved: reveal text, accessible buttons, aria-expanded.
  */
 export function SpatialDiscoveredObjects() {
   const containerRef = useRef<HTMLDivElement | null>(null);
 
-  // Interaction states for each spatial keepsake
+  // Interactive reveal states for each keepsake
   const [openEnvelope, setOpenEnvelope] = useState(false);
   const [openWhisper, setOpenWhisper] = useState(false);
   const [openKeepsake, setOpenKeepsake] = useState(false);
@@ -34,16 +39,16 @@ export function SpatialDiscoveredObjects() {
         items,
         {
           opacity: 0,
-          y: 40,
-          scale: 0.94,
+          y: 35,
+          scale: 0.95,
         },
         {
           opacity: 1,
           y: 0,
           scale: 1,
-          duration: 1.1,
+          duration: 1,
           ease: "power2.out",
-          stagger: 0.2,
+          stagger: 0.18,
           scrollTrigger: {
             trigger: containerRef.current,
             start: "top 75%",
@@ -59,129 +64,81 @@ export function SpatialDiscoveredObjects() {
   return (
     <div
       ref={containerRef}
-      className="relative w-full bg-transparent text-[#FAF8F5] py-24 sm:py-36 px-6 overflow-hidden select-none"
+      className="relative w-full bg-transparent text-[#FAF8F5] py-10 sm:py-16 px-4 sm:px-6 overflow-hidden select-none"
     >
-      {/* Peripheral Botanical Edge Atmosphere (Restrained) */}
-      <AmbientBotanicalFrame variant="dusk" density="subtle" intensity={0.45} />
+      {/* Peripheral Botanical Edge Atmosphere */}
+      <AmbientBotanicalFrame variant="dusk" density="subtle" intensity={0.35} />
 
-      {/* Subtle suspended botanical / paper fibers drifting over tabletop */}
+      {/* Floating subtle ambient particles */}
       <div className="absolute inset-0 pointer-events-none select-none overflow-hidden z-0" aria-hidden="true">
-        <svg viewBox="0 0 1200 600" fill="none" className="w-full h-full opacity-25">
-          <path d="M280 180 C 290 170, 305 175, 295 190 C 285 195, 275 190, 280 180 Z" fill="#9F1239" fillOpacity="0.3" />
-          <path d="M880 320 C 895 310, 910 320, 900 335 C 890 340, 875 330, 880 320 Z" fill="#D97706" fillOpacity="0.25" />
-          <circle cx="580" cy="140" r="1.5" fill="#FAF5EE" fillOpacity="0.35" />
-          <circle cx="640" cy="420" r="1.2" fill="#FAF5EE" fillOpacity="0.3" />
+        <svg viewBox="0 0 1200 600" fill="none" className="w-full h-full opacity-20">
+          <circle cx="300" cy="180" r="1.5" fill="#FAF5EE" fillOpacity="0.4" />
+          <circle cx="850" cy="380" r="1.2" fill="#FAF5EE" fillOpacity="0.3" />
         </svg>
       </div>
 
-      {/* Editorial Header floating lightly in space */}
-      <div className="text-center max-w-2xl mx-auto mb-16 sm:mb-24 space-y-3 relative z-10">
+      {/* Editorial Header */}
+      <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12 space-y-2 relative z-10">
+        <p className="text-[10px] sm:text-[11px] font-mono tracking-widest uppercase text-[#7A1D45] font-semibold drop-shadow-[0_1px_4px_rgba(255,245,248,0.4)]">
+          The Hidden Trove
+        </p>
         <h2 className="text-3xl sm:text-5xl font-serif font-normal text-[#1A0311] tracking-tight leading-tight drop-shadow-[0_1px_14px_rgba(255,245,248,0.6)]">
           Little secrets waiting between the hours.
         </h2>
-        <p className="text-sm sm:text-base text-[#36091E] font-normal leading-relaxed drop-shadow-[0_1px_6px_rgba(255,245,248,0.5)]">
+        <p className="text-xs sm:text-base text-[#36091E] font-normal leading-relaxed drop-shadow-[0_1px_6px_rgba(255,245,248,0.5)]">
           Love lives in folded notes, private questions, and unhurried mornings.
         </p>
       </div>
 
-      {/* Spatial Tabletop Constellation of Keepsakes (STANDALONE PHYSICAL OBJECTS) */}
-      <div className="max-w-5xl mx-auto relative z-10 min-h-[580px] md:min-h-[640px] lg:min-h-[680px] flex flex-col md:block items-center justify-center gap-16 md:gap-0 [perspective:1200px]">
-        {/* ============================================================== */}
-        {/* FOUND FRAGMENT A: Vintage coffee ticket stub on tabletop        */}
-        {/* ============================================================== */}
-        <div
-          className="hidden md:block absolute top-6 left-[22%] lg:left-[24%] z-10 pointer-events-none select-none transform -rotate-12 opacity-95 will-change-transform drop-shadow-[0_8px_16px_rgba(20,5,10,0.3)]"
-          aria-hidden="true"
-        >
-          <div className="w-24 sm:w-[6.5rem] py-1 px-2.5 bg-[#FAF3E8] rounded-xs border border-amber-900/20 text-left shadow-xs">
-            <span className="font-serif italic text-[11px] text-[#1C0412] leading-none block">Rainy Tuesday</span>
-            <span className="block text-[7.5px] font-mono tracking-wider text-[#843657]/80 mt-0.5">First Coffee</span>
-          </div>
-        </div>
+      {/* ========================================================================= */}
+      {/* SHARED TABLETOP SURFACE: Asymmetric editorial constellation of keepsakes */}
+      {/* ========================================================================= */}
+      <div className="max-w-4xl mx-auto relative z-10 min-h-[420px] sm:min-h-[450px] flex flex-col md:block items-center justify-center gap-4 sm:gap-6 md:gap-0 [perspective:1200px]">
+        {/* Soft Desk Ambient Depth Shadow / Woodgrain Tabletop Silhouette */}
+        <div className="absolute inset-x-2 sm:inset-x-4 top-1/6 bottom-1/8 bg-gradient-to-tr from-[#2C0718]/[0.08] via-transparent to-[#451A03]/[0.05] rounded-3xl blur-2xl pointer-events-none -z-10" />
 
         {/* ============================================================== */}
-        {/* FOUND FRAGMENT B: Torn deckled date note                       */}
+        {/* OBJECT 01: REAL VELVET WAX-SEALED ENVELOPE (Upper-Left)        */}
         {/* ============================================================== */}
-        <div
-          className="hidden md:block absolute bottom-4 left-[20%] lg:left-[23%] z-10 pointer-events-none select-none transform rotate-6 opacity-90 will-change-transform drop-shadow-[0_6px_16px_rgba(40,10,20,0.18)]"
-          aria-hidden="true"
-        >
-          <div className="w-28 py-1.5 px-2.5 bg-[#FFFDF9] rounded-xs border border-rose-950/[0.12] text-left">
-            <span className="block font-serif italic text-[11px] text-[#2A051A] leading-tight">
-              “11:42 pm — remember this”
-            </span>
-          </div>
-        </div>
-
-        {/* ============================================================== */}
-        {/* FOUND FRAGMENT C: Stray pressed rose petal                     */}
-        {/* ============================================================== */}
-        <div
-          className="hidden md:block absolute top-[52%] right-[28%] z-10 pointer-events-none select-none transform rotate-45 opacity-80"
-          aria-hidden="true"
-        >
-          <svg viewBox="0 0 20 20" fill="none" className="w-5 h-5 text-[#9F1239] drop-shadow-sm">
-            <path d="M4 14 C 2 8, 8 3, 14 4 C 16 10, 10 16, 4 14 Z" fill="currentColor" fillOpacity="0.5" />
-          </svg>
-        </div>
-
-        {/* ============================================================== */}
-        {/* FOUND FRAGMENT D: Torn scrap of raw gold foil on desk          */}
-        {/* ============================================================== */}
-        <div
-          className="hidden md:block absolute top-[22%] right-[32%] lg:right-[34%] z-10 pointer-events-none select-none transform rotate-[22deg] opacity-90 will-change-transform drop-shadow-[0_4px_12px_rgba(217,119,6,0.35)]"
-          aria-hidden="true"
-        >
-          <div className="w-14 h-6 bg-gradient-to-tr from-amber-400 via-amber-200 to-yellow-100 rounded-xs border border-amber-400/40 shadow-xs [clip-path:polygon(0_0,95%_10%,85%_100%,5%_88%)]" />
-        </div>
-
-        {/* ============================================================== */}
-        {/* OBJECT 01: REAL FOLDED WAX-SEALED ENVELOPE (Standalone Object) */}
-        {/* ============================================================== */}
-        <div className="spatial-discovered-artifact w-full max-w-xs md:max-w-[280px] lg:max-w-[300px] md:absolute md:top-2 md:left-2 lg:left-6 z-20 flex flex-col items-center md:items-start">
+        <div className="spatial-discovered-artifact w-full max-w-[210px] sm:max-w-[270px] md:max-w-[280px] md:absolute md:top-4 md:left-4 lg:left-10 z-30 flex flex-col items-center md:items-start">
           <button
             type="button"
             onClick={() => setOpenEnvelope(!openEnvelope)}
-            className="group cursor-pointer focus:outline-none transition-transform duration-500 will-change-transform text-left"
-            aria-label="Folded envelope with wax seal"
+            className="group cursor-pointer focus:outline-none transition-transform duration-500 will-change-transform text-left w-full"
+            aria-label="Folded velvet envelope with wax seal"
             aria-expanded={openEnvelope}
           >
-            {/* THE PHYSICAL OBJECT ITSELF: Hand-folded Envelope resting on desk with physical weight */}
             <div
-              className={`relative w-64 sm:w-72 h-44 sm:h-48 bg-gradient-to-br from-[#260515] via-[#17020C] to-[#0A0105] border border-rose-400/25 transition-all duration-500 overflow-visible ${
+              className={`relative w-full aspect-[4/3] rounded-xs transition-all duration-500 will-change-transform ${
                 openEnvelope
-                  ? "rotate-0 -translate-y-3 shadow-[0_32px_60px_-10px_rgba(225,29,72,0.45),0_12px_28px_rgba(0,0,0,0.85)]"
-                  : "rotate-[-3.5deg] group-hover:rotate-0 group-hover:-translate-y-2 shadow-[0_20px_45px_-10px_rgba(225,29,72,0.3),4px_8px_20px_rgba(0,0,0,0.7)]"
+                  ? "rotate-0 -translate-y-2.5 drop-shadow-[0_26px_40px_rgba(60,10,25,0.45)]"
+                  : "rotate-[-2.5deg] group-hover:rotate-0 group-hover:-translate-y-1.5 drop-shadow-[0_18px_32px_rgba(60,10,25,0.32)]"
               }`}
             >
-              {/* Pointed Envelope Flap Fold */}
-              <div
-                className={`absolute top-0 inset-x-0 h-[5.5rem] bg-gradient-to-b from-[#34071D] to-[#1A030E] [clip-path:polygon(0_0,100%_0,50%_100%)] shadow-md border-t border-rose-400/30 transition-transform duration-500 origin-top ${
-                  openEnvelope ? "-scale-y-75 opacity-90" : "scale-y-100"
-                }`}
+              {/* Authentic Deep Burgundy Velvet Envelope with Wax Seal */}
+              <Image
+                src="/assets/stationery/velvet_envelope.png"
+                alt="Burgundy velvet envelope with wax seal"
+                fill
+                sizes="(max-width: 640px) 270px, 290px"
+                className="object-contain pointer-events-none select-none"
+                priority
+                unoptimized
               />
 
-              {/* Hand-Poured Organic Wax Seal (Molten ripples, no monogram) */}
-              <div className="absolute top-[4.5rem] left-1/2 -translate-x-1/2 -translate-y-1/2 z-30">
-                <div className="relative w-11 h-11 rounded-full bg-gradient-to-br from-[#E11D48] via-[#9F1239] to-[#4C0519] border border-amber-300/40 shadow-[0_4px_16px_rgba(159,18,57,0.8)] flex items-center justify-center group-hover:scale-105 transition-transform">
-                  {/* Organic wax drip contour */}
-                  <div className="absolute -bottom-1 -right-0.5 w-3 h-3 rounded-full bg-[#881337] opacity-90" />
-                  <div className="absolute -top-0.5 -left-1 w-2.5 h-2.5 rounded-full bg-[#9F1239] opacity-80" />
-                  {/* Molten concentric cooling ridge */}
-                  <div className="w-5 h-5 rounded-full border border-amber-200/35 bg-[#9F1239]/60 shadow-inner" />
-                </div>
-              </div>
-
-              {/* Revealed Folded Letter slipping out when opened */}
+              {/* Revealed Secret Letter / Cue */}
               {openEnvelope ? (
-                <div className="absolute inset-x-3 bottom-3 top-8 bg-[#FFFDF9] text-[#2C0718] p-3 shadow-lg border border-rose-200/60 flex flex-col justify-center text-center animate-fade-in z-20">
+                <div className="absolute inset-x-4 bottom-4 top-10 bg-[#FFFDF9] text-[#2C0718] p-4 rounded-xs shadow-[0_12px_28px_rgba(0,0,0,0.35)] border border-rose-300/40 flex flex-col justify-center items-center text-center animate-fade-in z-20">
                   <p className="font-serif italic text-xs sm:text-[13px] text-[#1A0311] leading-relaxed font-medium">
                     “Close your eyes. Take a breath. I am right here with you.”
                   </p>
+                  <span className="mt-2 text-[9px] font-mono tracking-widest text-[#881337]/70 uppercase">
+                    — yours, always
+                  </span>
                 </div>
               ) : (
-                <div className="absolute bottom-4 inset-x-4 text-center z-20">
-                  <span className="font-serif text-sm sm:text-base text-rose-100/90 font-normal tracking-wide drop-shadow-sm">
+                <div className="absolute bottom-4 inset-x-3 text-center z-10 pointer-events-none">
+                  <span className="font-serif italic text-xs sm:text-[13px] text-rose-100 font-medium tracking-wide drop-shadow-[0_1px_4px_rgba(0,0,0,0.9)]">
                     Open when you miss me
                   </span>
                 </div>
@@ -189,54 +146,56 @@ export function SpatialDiscoveredObjects() {
             </div>
           </button>
 
-          {/* MUSEUM-STYLE CURATOR MARGINALIA: Incidental penciled note scribbled in the margin */}
-          <div className="mt-3 -ml-1 sm:-ml-3 text-left select-none transform rotate-[-1.5deg]">
-            <span className="font-serif italic text-xs text-[#36091E]/70 tracking-wide">
+          {/* Penciled Curator Marginalia */}
+          <div className="mt-2.5 ml-2 text-left select-none transform rotate-[-1.5deg]">
+            <span className="font-serif italic text-xs text-[#36091E]/75 tracking-wide drop-shadow-xs">
               sealed for hard days
             </span>
           </div>
         </div>
 
         {/* ============================================================== */}
-        {/* OBJECT 02: ORIGAMI CREASED WHISPER NOTE (Standalone Object)    */}
+        {/* OBJECT 02: REAL FOLDED VELLUM WHISPER NOTE (Lower-Center)      */}
         {/* ============================================================== */}
-        <div className="spatial-discovered-artifact w-full max-w-xs md:max-w-[270px] lg:max-w-[290px] md:absolute md:top-36 md:left-[35%] lg:left-[37%] z-25 flex flex-col items-center md:items-start">
+        <div className="spatial-discovered-artifact w-full max-w-[200px] sm:max-w-[250px] md:max-w-[270px] md:absolute md:top-28 md:left-[36%] lg:left-[38%] z-25 flex flex-col items-center md:items-start">
           <button
             type="button"
             onClick={() => setOpenWhisper(!openWhisper)}
-            className="group cursor-pointer focus:outline-none transition-transform duration-500 will-change-transform text-left"
+            className="group cursor-pointer focus:outline-none transition-transform duration-500 will-change-transform text-left w-full"
             aria-label="Origami folded secret whisper note"
             aria-expanded={openWhisper}
           >
-            {/* THE PHYSICAL OBJECT ITSELF: Heavy textured vellum note with folded corner */}
             <div
-              className={`relative w-60 sm:w-[17rem] h-44 sm:h-48 bg-[#FFFDF9] text-[#3B0E23] p-4 border border-rose-950/[0.12] transition-all duration-500 overflow-hidden ${
+              className={`relative w-full aspect-[4/3] rounded-xs transition-all duration-500 will-change-transform ${
                 openWhisper
-                  ? "rotate-0 -translate-y-3 shadow-[0_28px_55px_-10px_rgba(70,15,35,0.3),0_6px_16px_rgba(0,0,0,0.08)]"
-                  : "rotate-[2.5deg] group-hover:rotate-0 group-hover:-translate-y-2 shadow-[0_18px_40px_-10px_rgba(70,15,35,0.18),0_4px_12px_rgba(0,0,0,0.05)]"
+                  ? "rotate-0 -translate-y-2.5 drop-shadow-[0_22px_36px_rgba(40,10,20,0.35)]"
+                  : "rotate-[2deg] group-hover:rotate-0 group-hover:-translate-y-1.5 drop-shadow-[0_16px_28px_rgba(40,10,20,0.24)]"
               }`}
             >
-              {/* Geometric Fold Crease Lines */}
-              <div className="absolute inset-0 pointer-events-none opacity-25">
-                <svg viewBox="0 0 240 180" fill="none" className="w-full h-full">
-                  <path d="M0 0 L120 90 L240 0" stroke="#7A1D45" strokeWidth="1" strokeDasharray="3 3" />
-                  <path d="M0 180 L120 90 L240 180" stroke="#7A1D45" strokeWidth="1" strokeDasharray="3 3" />
-                </svg>
-              </div>
-
-              {/* Folded Corner Tab */}
-              <div className="absolute top-0 right-0 w-8 h-8 bg-gradient-to-bl from-rose-100 to-[#F5EBE1] border-b border-l border-rose-950/20 shadow-xs" />
+              {/* Authentic Folded Origami Vellum Note (NO dashed X lines) */}
+              <Image
+                src="/assets/stationery/folded_whisper.png"
+                alt="Origami folded cream vellum note"
+                fill
+                sizes="(max-width: 640px) 260px, 280px"
+                className="object-contain pointer-events-none select-none"
+                priority
+                unoptimized
+              />
 
               {/* Content or Revealed Secret */}
               {openWhisper ? (
-                <div className="h-full flex flex-col justify-center items-center text-center px-2 animate-fade-in relative z-10">
-                  <p className="font-serif italic text-xs sm:text-[13px] text-[#9F1239] font-medium leading-relaxed">
+                <div className="absolute inset-x-4 inset-y-6 bg-[#FFFDF9]/95 text-[#2A051A] p-4 rounded-xs shadow-[0_10px_24px_rgba(0,0,0,0.2)] border border-amber-900/15 flex flex-col justify-center items-center text-center animate-fade-in z-20">
+                  <p className="font-serif italic text-xs sm:text-[13px] text-[#881337] font-medium leading-relaxed">
                     “Where did we share our very first secret?”
                   </p>
+                  <span className="mt-2 text-[9px] font-mono tracking-widest text-[#7A1D45]/70 uppercase">
+                    tap to fold
+                  </span>
                 </div>
               ) : (
-                <div className="h-full flex flex-col justify-center items-center text-center relative z-10">
-                  <span className="font-serif text-base sm:text-lg text-[#1A0311] font-normal leading-snug">
+                <div className="absolute bottom-3 inset-x-2 text-center z-10 pointer-events-none">
+                  <span className="font-serif italic text-[11px] sm:text-xs text-[#2A051A]/85 font-medium tracking-wide drop-shadow-xs">
                     A secret whisper
                   </span>
                 </div>
@@ -244,62 +203,57 @@ export function SpatialDiscoveredObjects() {
             </div>
           </button>
 
-          {/* MUSEUM-STYLE CURATOR MARGINALIA: Incidental penciled note scribbled in the margin */}
-          <div className="mt-3 ml-4 sm:ml-8 text-left select-none transform rotate-[1.8deg]">
-            <span className="font-serif italic text-xs text-[#36091E]/70 tracking-wide">
+          {/* Penciled Curator Marginalia */}
+          <div className="mt-2.5 ml-4 sm:ml-6 text-left select-none transform rotate-[1.8deg]">
+            <span className="font-serif italic text-xs text-[#36091E]/75 tracking-wide drop-shadow-xs">
               guarded by a fold
             </span>
           </div>
         </div>
 
         {/* ============================================================== */}
-        {/* OBJECT 03: HEAVY HAMMERED AGED BRASS TALISMAN (Standalone)    */}
+        {/* OBJECT 03: REAL AGED HAMMERED BRASS KEEPSAKE (Upper-Right)     */}
         {/* ============================================================== */}
-        <div className="spatial-discovered-artifact w-full max-w-xs md:max-w-[260px] lg:max-w-[280px] md:absolute md:top-4 md:right-2 lg:right-6 z-20 flex flex-col items-center md:items-start">
+        <div className="spatial-discovered-artifact w-full max-w-[200px] sm:max-w-[240px] md:absolute md:top-2 md:right-2 lg:right-6 z-20 flex flex-col items-center md:items-start">
           <button
             type="button"
             onClick={() => setOpenKeepsake(!openKeepsake)}
-            className="group cursor-pointer focus:outline-none transition-transform duration-500 will-change-transform text-left"
+            className="group cursor-pointer focus:outline-none transition-transform duration-500 will-change-transform text-center flex flex-col items-center"
             aria-label="Heavy aged hammered brass talisman"
             aria-expanded={openKeepsake}
           >
-            {/* THE PHYSICAL OBJECT ITSELF: Heavy hammered brass coin resting directly on tabletop with contact shadow */}
-            <div className="relative flex flex-col items-center justify-center p-3">
-              {/* Believable Deep Contact Shadow onto Desk */}
-              <div
-                className={`relative w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-gradient-to-br from-[#E59A24] via-[#A85007] to-[#451A03] p-1.5 transition-all duration-500 ${
-                  openKeepsake
-                    ? "-translate-y-3 rotate-6 shadow-[0_24px_50px_rgba(0,0,0,0.9),0_6px_18px_rgba(180,83,9,0.4)]"
-                    : "rotate-[-2deg] group-hover:rotate-0 group-hover:-translate-y-2 shadow-[0_16px_36px_rgba(0,0,0,0.85),0_4px_14px_rgba(180,83,9,0.3)]"
-                }`}
-              >
-                {/* Heavy Hammered Antique Brass Face (ZERO ROMAN NUMERALS, ZERO EMBLEMS) */}
-                <div className="w-full h-full rounded-full bg-gradient-to-tr from-[#6B2F0B] via-[#92400E] to-[#B45309] border border-amber-300/40 flex items-center justify-center shadow-inner relative overflow-hidden">
-                  {/* Subtle hammered facets & light refraction */}
-                  <div className="absolute inset-0 opacity-30 mix-blend-overlay bg-[radial-gradient(#FEF3C7_1.5px,transparent_1.5px)] [background-size:6px_6px]" />
-                  {/* Natural edge oxidation rim & verdigris patina hint */}
-                  <div className="absolute inset-0 rounded-full border border-amber-950/60 pointer-events-none" />
-                  <div className="absolute top-1 left-2 w-5 h-2 rounded-full bg-amber-200/40 blur-[1px] pointer-events-none" />
-
-                  {/* Pure tactile brass center with concentric hammered ring */}
-                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-amber-300/25 bg-[#78350F]/50 shadow-inner flex items-center justify-center" />
-                </div>
-              </div>
-
-              {/* Revealed Keepsake Slip resting beside the token */}
-              {openKeepsake ? (
-                <div className="mt-3 py-1.5 px-3 bg-[#FAF3E8] rounded-xs border border-amber-900/30 text-center shadow-md animate-fade-in max-w-[230px]">
-                  <p className="font-serif italic text-xs text-[#2A0802] font-medium leading-tight">
-                    “Every morning with you is my favorite thing on earth.”
-                  </p>
-                </div>
-              ) : null}
+            <div
+              className={`relative w-24 sm:w-28 md:w-32 aspect-square rounded-full transition-all duration-500 will-change-transform ${
+                openKeepsake
+                  ? "rotate-12 -translate-y-2 drop-shadow-[0_24px_42px_rgba(0,0,0,0.85)]"
+                  : "rotate-[-3deg] group-hover:rotate-0 group-hover:-translate-y-1.5 drop-shadow-[0_16px_30px_rgba(0,0,0,0.7)]"
+              }`}
+            >
+              {/* Authentic Heavy Hammered Aged Brass Talisman (NO poker chip dots) */}
+              <Image
+                src="/assets/stationery/brass_talisman.png"
+                alt="Aged hand-hammered brass talisman"
+                fill
+                sizes="128px"
+                className="object-contain pointer-events-none select-none"
+                priority
+                unoptimized
+              />
             </div>
+
+            {/* Revealed Keepsake Slip resting beside the token */}
+            {openKeepsake ? (
+              <div className="mt-3 py-2 px-3.5 bg-[#FAF3E8] rounded-xs border border-amber-900/30 text-center shadow-[0_8px_20px_rgba(0,0,0,0.18)] animate-fade-in max-w-[220px]">
+                <p className="font-serif italic text-xs text-[#2A0802] font-medium leading-relaxed">
+                  “Every morning with you is my favorite thing on earth.”
+                </p>
+              </div>
+            ) : null}
           </button>
 
-          {/* MUSEUM-STYLE CURATOR MARGINALIA: Incidental penciled note scribbled in the margin */}
-          <div className="mt-2.5 ml-2 sm:ml-5 text-left select-none transform rotate-[-0.8deg]">
-            <span className="font-serif italic text-xs text-[#36091E]/70 tracking-wide">
+          {/* Penciled Curator Marginalia */}
+          <div className="mt-2.5 ml-3 sm:ml-5 text-left select-none transform rotate-[-0.8deg]">
+            <span className="font-serif italic text-xs text-[#36091E]/75 tracking-wide drop-shadow-xs">
               turned in the palm
             </span>
           </div>
