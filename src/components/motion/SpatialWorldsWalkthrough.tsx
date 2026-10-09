@@ -2,6 +2,7 @@
 
 import React, { useRef, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -91,8 +92,6 @@ export function SpatialWorldsWalkthrough() {
         {/* ticket resting position, authentic weight, reduced frame.     */}
         {/* ============================================================== */}
         <div className="world-vista-scene relative w-full min-h-[85vh] sm:min-h-[92vh] flex items-center justify-center px-6 sm:px-12 py-16 overflow-hidden">
-          <AmbientBotanicalFrame variant="light" density="subtle" intensity={0.35} />
-
           {/* Morning sun halo & atmospheric haze */}
           <div className="absolute w-[450px] sm:w-[600px] h-[350px] sm:h-[450px] rounded-full bg-gradient-to-tr from-amber-200/20 via-sky-300/15 to-transparent blur-3xl pointer-events-none -z-10" />
 
@@ -242,22 +241,33 @@ export function SpatialWorldsWalkthrough() {
         <div className="world-vista-scene relative w-full min-h-[88vh] sm:min-h-[96vh] flex items-center justify-center px-6 sm:px-12 py-16 overflow-hidden">
           <AmbientBotanicalFrame variant="dark" density="subtle" intensity={0.35} />
 
-          {/* Kyoto Quiet Room Chiaroscuro & deep tatami shadow */}
-          <div className="absolute w-[450px] sm:w-[600px] h-[350px] sm:h-[450px] rounded-full bg-gradient-to-tr from-amber-700/15 via-stone-900/35 to-[#0A0A0B] blur-3xl pointer-events-none -z-10" />
+          {/* Kyoto Quiet Room Chiaroscuro & Deep Cedar Emerald Sanctuary Glow */}
+          <div className="absolute w-[500px] sm:w-[650px] h-[400px] sm:h-[500px] rounded-full bg-gradient-to-tr from-amber-700/15 via-emerald-950/50 to-[#0A0A0B] blur-3xl pointer-events-none -z-10" />
+
+          {/* Environmental Prop: Cedar Pine Needles Silhouette casting charcoal-emerald shadow from upper left */}
+          <div className="absolute top-4 left-6 sm:left-16 w-24 h-24 opacity-40 pointer-events-none z-20">
+            <svg viewBox="0 0 60 60" fill="none" className="w-full h-full text-emerald-950/50">
+              <path d="M4 8 L24 20 M8 4 L26 22 M16 4 L28 24 M2 16 L22 24" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+              <path d="M22 22 C 34 30, 42 42, 54 50" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+          </div>
 
           {/* Stone lantern warm amber floor glow */}
-          <div className="absolute bottom-6 right-1/4 w-24 h-24 rounded-full bg-amber-500/12 blur-2xl pointer-events-none" />
+          <div className="absolute bottom-6 right-1/4 w-24 h-24 rounded-full bg-amber-500/15 blur-2xl pointer-events-none" />
 
           <div className="w-full max-w-6xl mx-auto relative min-h-[580px] sm:min-h-[660px] flex flex-col lg:flex-row justify-between items-center gap-12 lg:gap-0">
             {/* PHYSICAL ARTIFACT: Hanging Japanese Washi Scroll suspended a fraction crooked */}
-            <div className="lg:ml-12 xl:ml-20 world-vista-reveal will-change-transform z-20">
+            <div className="lg:ml-12 xl:ml-20 world-vista-reveal will-change-transform z-20 relative">
+              {/* Quiet Deep Green Sanctuary Backglow behind the scroll */}
+              <div className="absolute -inset-14 sm:-inset-20 rounded-full bg-gradient-to-tr from-emerald-900/40 via-emerald-950/60 to-transparent blur-3xl pointer-events-none -z-10" />
+              <div className="absolute -inset-4 rounded-xl bg-emerald-950/30 blur-xl pointer-events-none -z-10" />
               <div className="relative w-48 sm:w-56 h-72 sm:h-[21rem] flex flex-col items-center transform rotate-[-1.8deg] hover:rotate-0 transition-transform duration-500 select-none">
                 {/* Top Silk Hanging Cord (asymmetric tension) & Cedar Dowel Rod */}
                 <div className="w-16 h-0.5 bg-amber-800/60 mb-1 rounded-full transform rotate-[1.5deg]" />
                 <div className="w-full h-3 bg-gradient-to-r from-[#2A180E] via-[#3E2516] to-[#2A180E] rounded-sm shadow-md border-b border-amber-950/60" />
 
                 {/* Textured Washi Paper Scroll Body on Deep Charcoal Brocade */}
-                <div className="w-[92%] flex-1 bg-[#121214] border-x border-stone-800/80 shadow-[16px_32px_65px_-8px_rgba(0,0,0,0.96),-4px_12px_30px_rgba(0,0,0,0.6)] p-3.5 flex flex-col justify-between text-center relative overflow-hidden">
+                <div className="w-[92%] flex-1 bg-[#121214] border-x border-stone-800/80 shadow-[16px_32px_65px_-8px_rgba(0,0,0,0.96),-4px_12px_30px_rgba(4,120,87,0.18)] p-3.5 flex flex-col justify-between text-center relative overflow-hidden">
                   {/* Center Washi Sheet — Drifts into ambient room shadow with subtle vertical fiber wave */}
                   <div className="relative flex-1 [background:linear-gradient(to_bottom,rgba(15,14,13,0.45)_0%,#EDE5D8_20%,#E4DBD0_50%,#EDE5D8_80%,rgba(18,17,16,0.55)_100%)] border border-amber-900/10 shadow-inner p-3 flex flex-col justify-between overflow-hidden">
                     {/* Washi paper fiber grain */}
@@ -301,10 +311,10 @@ export function SpatialWorldsWalkthrough() {
 
             {/* SPATIAL COPY: Placed into the quiet negative space to the right */}
             <div className="max-w-md space-y-4 text-center lg:text-left lg:mr-12 xl:mr-20 world-vista-reveal">
-              <h3 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-normal tracking-tight text-[#F5F2EB] drop-shadow-[0_2px_16px_rgba(0,0,0,0.95)]">
+              <h3 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-normal tracking-tight text-[#F0FDF4] drop-shadow-[0_2px_16px_rgba(2,15,10,0.95)]">
                 Kage <span className="text-3xl sm:text-4xl opacity-80 font-serif font-light">(影)</span>
               </h3>
-              <p className="text-lg sm:text-xl font-serif italic text-[#D6D0C4] drop-shadow-[0_1px_8px_rgba(0,0,0,0.9)]">
+              <p className="text-lg sm:text-xl font-serif italic text-[#D1FAE5]/90 drop-shadow-[0_1px_8px_rgba(2,15,10,0.9)]">
                 “For the love of quiet shadows and unspoken truths.”
               </p>
               <div className="pt-2">
@@ -409,8 +419,6 @@ export function SpatialWorldsWalkthrough() {
         {/* escaping stems casting authentic directional drop shadow.       */}
         {/* ============================================================== */}
         <div className="world-vista-scene relative w-full min-h-[85vh] sm:min-h-[92vh] flex items-center justify-center px-6 sm:px-12 py-16 overflow-hidden">
-          <AmbientBotanicalFrame variant="meadow" density="subtle" intensity={0.35} />
-
           {/* Meadow daylight aura */}
           <div className="absolute w-[450px] sm:w-[600px] h-[350px] sm:h-[450px] rounded-full bg-gradient-to-tr from-amber-300/18 via-stone-400/12 to-purple-950/12 blur-3xl pointer-events-none -z-10" />
 
@@ -424,18 +432,16 @@ export function SpatialWorldsWalkthrough() {
                   <div className="absolute -top-2 left-6 w-1 h-5 bg-[#A89F91] rounded-full shadow-xs z-20" />
                   <div className="absolute top-1 left-4 w-5 h-1 bg-[#A89F91] rounded-full shadow-xs z-20" />
 
-                  {/* REAL DRIED BOTANICAL SPECIMEN: Stems escape past sheet perimeter and cast directional shadow onto desk */}
-                  <div className="absolute -top-10 -right-10 z-25 pointer-events-none">
-                    <svg viewBox="0 0 56 90" fill="none" className="w-[4.5rem] h-28 filter drop-shadow-[6px_12px_14px_rgba(60,40,15,0.25)]">
-                      <path d="M10 88 C 16 60, 22 36, 36 6" stroke="#5B684B" strokeWidth="1.6" strokeLinecap="round" />
-                      <path d="M22 52 C 34 40, 48 32, 54 22" stroke="#5B684B" strokeWidth="1.2" strokeLinecap="round" opacity="0.85" />
-                      <ellipse cx="36" cy="6" rx="5" ry="3.5" fill="#C084FC" fillOpacity="0.85" />
-                      <ellipse cx="30" cy="16" rx="4.5" ry="3" fill="#A855F7" fillOpacity="0.8" />
-                      <ellipse cx="38" cy="26" rx="4" ry="2.8" fill="#C084FC" fillOpacity="0.75" />
-                      <ellipse cx="54" cy="22" rx="4" ry="2.6" fill="#C084FC" fillOpacity="0.8" />
-                      <path d="M14 48 C 7 42, 8 34, 15 40 Z" fill="#849974" fillOpacity="0.85" />
-                      <path d="M25 62 C 33 56, 31 48, 24 54 Z" fill="#718762" fillOpacity="0.85" />
-                    </svg>
+                  {/* BELIEVABLE PRESSED BOTANICAL SPECIMEN: Small, static natural herbarium specimen gently pressed onto cotton paper */}
+                  <div className="absolute -top-3 -right-2 w-16 h-24 z-20 pointer-events-none select-none opacity-85 filter drop-shadow-[1px_4px_6px_rgba(60,40,15,0.18)]">
+                    <Image
+                      src="/assets/stationery/pressed_botanical.png"
+                      alt="Pressed dried flower specimen"
+                      fill
+                      sizes="64px"
+                      className="object-contain"
+                      unoptimized
+                    />
                   </div>
 
                   <div className="h-4" />
@@ -454,10 +460,10 @@ export function SpatialWorldsWalkthrough() {
 
             {/* SPATIAL COPY: Placed independently in the open space to the right */}
             <div className="max-w-lg space-y-4 text-center lg:text-left lg:mr-8 xl:mr-16 world-vista-reveal">
-              <h3 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-normal tracking-tight text-[#1A0311] drop-shadow-[0_1px_12px_rgba(255,248,240,0.6)]">
+              <h3 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-normal tracking-tight text-[#FEF3C7] drop-shadow-[0_2px_16px_rgba(40,20,5,0.9)]">
                 Wildflower Paper
               </h3>
-              <p className="text-lg sm:text-xl font-serif italic text-[#361A09] font-normal drop-shadow-[0_1px_6px_rgba(255,248,240,0.6)]">
+              <p className="text-lg sm:text-xl font-serif italic text-[#FDE68A] font-light drop-shadow-[0_1px_8px_rgba(40,20,5,0.85)]">
                 “For the love built by hand, petal by petal.”
               </p>
               <div className="pt-2">

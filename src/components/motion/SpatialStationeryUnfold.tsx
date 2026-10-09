@@ -123,14 +123,14 @@ export function SpatialStationeryUnfold() {
       ref={containerRef}
       id="how-it-works"
       data-testid="little-things-scene"
-      className="relative w-full min-h-[100dvh] flex flex-col items-center justify-center bg-transparent text-[#240412] px-4 sm:px-6 py-14 sm:py-20 overflow-hidden"
+      className="relative w-full min-h-[100dvh] flex flex-col items-center justify-center bg-transparent text-[#240412] px-4 sm:px-6 pt-12 sm:pt-16 pb-12 sm:pb-16 overflow-hidden"
     >
       {/* Restrained peripheral botanical framing at empty margins */}
-      <AmbientBotanicalFrame variant="dusk" density="sparse" intensity={0.4} />
+      <AmbientBotanicalFrame variant="dusk" density="sparse" intensity={0.35} />
 
       <div className="w-full max-w-4xl mx-auto flex flex-col items-center text-center relative z-10">
         {/* Editorial Eyebrow & Headline */}
-        <div className="mb-8 sm:mb-10 space-y-2 max-w-xl mx-auto relative">
+        <div className="mb-4 sm:mb-6 space-y-1.5 max-w-xl mx-auto relative">
           <p className="text-[10px] sm:text-[11px] font-mono tracking-widest uppercase text-[#7A1D45] font-semibold drop-shadow-[0_1px_4px_rgba(255,245,248,0.4)]">
             The Unsealing · Physical Keepsakes
           </p>
@@ -145,12 +145,12 @@ export function SpatialStationeryUnfold() {
         {/* ============================================================== */}
         {/* THE STATIONERY STILL LIFE (ONE SINGLE AUTHENTIC PAPER SHEET)    */}
         {/* ============================================================== */}
-        <div className="relative w-full max-w-[420px] sm:max-w-[460px] md:max-w-[500px] my-4 flex justify-center [perspective:1200px]">
+        <div className="relative w-full max-w-[400px] sm:max-w-[440px] md:max-w-[480px] my-2 flex justify-center [perspective:1200px]">
           
-          {/* AUTHENTIC PRESSED BOTANICAL SPECIMEN (Real Herbarium Wild Rose & Lavender) */}
+          {/* AUTHENTIC PRESSED BOTANICAL SPECIMEN: Restrained herbarium specimen pinned naturally onto paper corner */}
           <div
             ref={botanicalRef}
-            className="absolute -top-14 -left-6 sm:-top-18 sm:-left-8 w-28 sm:w-36 h-40 sm:h-52 z-30 pointer-events-none select-none drop-shadow-[0_12px_24px_rgba(60,15,30,0.3)] will-change-transform"
+            className="absolute -top-7 -left-5 sm:-top-9 sm:-left-7 w-20 sm:w-24 h-28 sm:h-36 z-30 pointer-events-none select-none drop-shadow-[0_8px_16px_rgba(60,15,30,0.22)] will-change-transform opacity-90"
             aria-hidden="true"
           >
             <div className="relative w-full h-full">
@@ -158,7 +158,7 @@ export function SpatialStationeryUnfold() {
                 src="/assets/stationery/pressed_botanical.png"
                 alt="Authentic pressed botanical specimen"
                 fill
-                sizes="(max-width: 640px) 112px, 144px"
+                sizes="(max-width: 640px) 80px, 104px"
                 className="object-contain"
                 priority
                 unoptimized
@@ -219,21 +219,21 @@ export function SpatialStationeryUnfold() {
               </div>
 
               {/* 2. Dominant, unobstructed letterpress quotation */}
-              <div className="py-8 sm:py-12">
-                <p className="text-lg sm:text-xl md:text-[22px] font-serif text-[#1C0412] leading-[1.75] tracking-tight drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]">
+              <div className="py-5 sm:py-7">
+                <p className="text-base sm:text-lg md:text-[20px] font-serif text-[#1C0412] leading-[1.7] tracking-tight drop-shadow-[0_1px_1px_rgba(255,255,255,0.8)]">
                   <span className="font-normal">“I kept the ticket from that rainy afternoon.</span>{" "}
                   <span className="italic font-normal text-[#2A051A]">Some moments don&apos;t ask for grand announcements</span>{" "}
                   <span className="font-normal">— they just quietly stay forever.”</span>
                 </p>
-                <p className="mt-6 text-right">
-                  <span className="font-serif italic text-sm sm:text-base text-[#7A1D45] tracking-wide inline-block transform -rotate-1 select-none font-normal">
+                <p className="mt-4 sm:mt-5 text-right">
+                  <span className="font-serif italic text-xs sm:text-sm text-[#7A1D45] tracking-wide inline-block transform -rotate-1 select-none font-normal">
                     — for you, always
                   </span>
                 </p>
               </div>
 
               {/* 3. Quiet milestone inscription across bottom */}
-              <div className="pt-5 border-t border-[#7A1D45]/15 flex items-center justify-around text-left gap-2 text-[10px] sm:text-xs select-none">
+              <div className="pt-4 border-t border-[#7A1D45]/15 flex items-center justify-around text-left gap-2 text-[10px] sm:text-xs select-none">
                 <div className="flex items-center gap-2">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#881337]/60" />
                   <div className="flex flex-col">
@@ -267,21 +267,21 @@ export function SpatialStationeryUnfold() {
         </div>
 
         {/* ============================================================== */}
-        {/* EDITORIAL ACTION LINK: Completely isolated in calm space       */}
+        {/* EDITORIAL ACTION LINK: Clearly separated in calm negative space */}
         {/* ============================================================== */}
-        <div ref={ctaRef} className="mt-10 sm:mt-14 flex flex-col items-center gap-2 will-change-transform z-20">
+        <div ref={ctaRef} className="mt-6 sm:mt-8 flex flex-col items-center gap-1.5 will-change-transform z-20">
           <Link
             href="/create"
-            className="group inline-flex items-center gap-2.5 text-lg sm:text-xl font-serif font-medium text-[#1A0311] hover:text-[#9F1239] transition-colors drop-shadow-[0_1px_6px_rgba(255,245,248,0.4)]"
+            className="group inline-flex items-center gap-2.5 text-base sm:text-lg font-serif font-medium text-[#1A0311] hover:text-[#9F1239] transition-colors drop-shadow-[0_1px_4px_rgba(255,245,248,0.5)]"
           >
             <span className="underline decoration-rose-500 underline-offset-6 group-hover:decoration-rose-700 transition-all font-semibold">
               Make yours
             </span>
-            <span className="inline-block transition-transform duration-300 group-hover:translate-x-1.5 font-sans text-base">
+            <span className="inline-block transition-transform duration-300 group-hover:translate-x-1.5 font-sans text-sm">
               →
             </span>
           </Link>
-          <p className="text-xs sm:text-sm text-[#36091E]/90 font-medium drop-shadow-[0_1px_8px_rgba(255,245,248,0.75)]">
+          <p className="text-xs sm:text-[13px] text-[#36091E] font-medium drop-shadow-[0_1px_6px_rgba(255,245,248,0.7)]">
             No design experience required. Takes about five minutes.
           </p>
         </div>

@@ -15,6 +15,7 @@ const OUTPUT_DIR = "C:/Users/AYUSH/.gemini/antigravity-ide/brain/9d610088-6efa-4
 test.describe("Phase 7 Spatial Composition Reset Visual Gate", () => {
   for (const vp of VIEWPORTS) {
     test(`Visual capture at ${vp.name}`, async ({ page }) => {
+      test.setTimeout(120000);
       await page.setViewportSize({ width: vp.width, height: vp.height });
       await page.goto("/", { waitUntil: "networkidle" });
       await page.waitForTimeout(1000);
@@ -41,6 +42,38 @@ test.describe("Phase 7 Spatial Composition Reset Visual Gate", () => {
       await page.waitForTimeout(800);
       await moments.screenshot({
         path: path.join(OUTPUT_DIR, `moments_${vp.name}.png`),
+      });
+
+      // 4. World Vista: Cloud Nine
+      const cloudNine = page.locator(".world-vista-scene").filter({ hasText: "Cloud Nine" });
+      await cloudNine.scrollIntoViewIfNeeded();
+      await page.waitForTimeout(600);
+      await cloudNine.screenshot({
+        path: path.join(OUTPUT_DIR, `world_cloud_nine_${vp.name}.png`),
+      });
+
+      // 5. World Vista: Kage
+      const kage = page.locator(".world-vista-scene").filter({ hasText: "Kage" });
+      await kage.scrollIntoViewIfNeeded();
+      await page.waitForTimeout(600);
+      await kage.screenshot({
+        path: path.join(OUTPUT_DIR, `world_kage_${vp.name}.png`),
+      });
+
+      // 6. World Vista: Wildflower Paper
+      const wildflower = page.locator(".world-vista-scene").filter({ hasText: "Wildflower Paper" });
+      await wildflower.scrollIntoViewIfNeeded();
+      await page.waitForTimeout(600);
+      await wildflower.screenshot({
+        path: path.join(OUTPUT_DIR, `world_wildflower_${vp.name}.png`),
+      });
+
+      // 7. Area C: Final Resolution and CTA (#create)
+      const finale = page.locator("#create");
+      await finale.scrollIntoViewIfNeeded();
+      await page.waitForTimeout(600);
+      await finale.screenshot({
+        path: path.join(OUTPUT_DIR, `finale_${vp.name}.png`),
       });
     });
   }

@@ -77,7 +77,7 @@ export default function HomePage() {
       {/* ========================================================================= */}
       <section
         id="personalize"
-        className="w-full bg-transparent text-[#240412] relative z-20 z-content"
+        className="w-full bg-transparent text-[#240412] relative z-20 z-content scroll-mt-20 sm:scroll-mt-24"
       >
         <div id="build-your-valentine" className="w-full">
           <SpatialStationeryUnfold />
@@ -113,7 +113,7 @@ export default function HomePage() {
       {/* ========================================================================= */}
       <section
         id="create"
-        className="w-full bg-transparent text-[#240412] relative z-20 z-content py-24 sm:py-36 px-6 overflow-hidden"
+        className="w-full bg-transparent text-[#240412] relative z-20 z-content py-20 sm:py-28 px-6 overflow-hidden"
       >
         {/* Asymmetric Scroll-Aware Botanical Frame at Empty Viewport Edges */}
         <FinaleBotanicalFrame />

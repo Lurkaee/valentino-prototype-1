@@ -41,5 +41,8 @@ Thumbs.db
 .vscode/*
 !.vscode/extensions.json
 
+# scratch scripts
+scratch/
+
 # deploy tooling
 .vercel/
