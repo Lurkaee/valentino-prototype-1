@@ -354,28 +354,28 @@ export function SpatialWorldsWalkthrough() {
                 ))}
               </div>
 
-              {/* Seamless Celluloid Exposures (No internal boxed card UI) */}
-              <div className="flex items-center justify-center gap-4 sm:gap-8 px-4 overflow-hidden">
-                {/* Exposure 1: Underexposed entry frame cutting off at left */}
-                <div className="w-36 sm:w-48 h-24 sm:h-28 bg-gradient-to-r from-amber-950/90 to-amber-900/40 opacity-40 shrink-0" />
+              {/* Continuous Celluloid Ribbon with Photographic Emulsion Exposures */}
+              <div className="flex items-center justify-center gap-3 sm:gap-6 px-4 overflow-hidden">
+                {/* Exposure 1: Soft entry frame fading out at left edge */}
+                <div className="w-32 sm:w-44 h-22 sm:h-26 rounded-[2px] [background:radial-gradient(ellipse_at_center,rgba(180,83,9,0.3)_0%,rgba(60,20,5,0.6)_70%,rgba(20,7,2,0.85)_100%)] opacity-35 shrink-0 blur-[0.4px]" />
 
-                {/* Exposure 2: Soft sepia memory tone */}
-                <div className="w-40 sm:w-56 h-26 sm:h-30 bg-gradient-to-r from-amber-900/50 via-[#2D1609]/70 to-amber-900/60 opacity-70 shrink-0" />
+                {/* Exposure 2: Warm ambient sepia memory */}
+                <div className="w-36 sm:w-52 h-24 sm:h-28 rounded-[2px] [background:radial-gradient(ellipse_at_center,rgba(217,119,6,0.35)_0%,rgba(90,30,8,0.65)_70%,rgba(26,10,3,0.85)_100%)] opacity-65 shrink-0" />
 
-                {/* Exposure 3: THE HERO EXPOSURE bathed in incandescent projector glare */}
-                <div className="w-60 sm:w-76 h-32 sm:h-36 bg-gradient-to-br from-[#241005] via-[#351A0A] to-[#1A0B04] shadow-[0_0_36px_rgba(251,191,36,0.45)] p-4 flex items-center justify-center text-center relative overflow-hidden shrink-0 border-y border-amber-400/40">
-                  {/* Beam glare over celluloid */}
-                  <div className="absolute inset-0 bg-gradient-to-tr from-amber-300/25 via-transparent to-amber-100/30 pointer-events-none" />
+                {/* Exposure 3: THE HERO PHOTOGRAPHIC EXPOSURE with warm projector halation */}
+                <div className="w-56 sm:w-72 h-30 sm:h-34 rounded-[2px] [background:radial-gradient(ellipse_at_center,#451A03_0%,#241005_70%,#150802_100%)] shadow-[0_0_40px_rgba(251,191,36,0.4),inset_0_0_24px_rgba(254,243,199,0.12)] p-4 flex items-center justify-center text-center relative overflow-hidden shrink-0">
+                  {/* Subtle projector beam halation across frame */}
+                  <div className="absolute inset-0 bg-gradient-to-tr from-amber-300/20 via-transparent to-amber-100/25 pointer-events-none mix-blend-screen" />
                   <p className="font-serif italic text-xs sm:text-sm text-amber-100 font-medium leading-relaxed drop-shadow-[0_1px_6px_rgba(0,0,0,0.9)] relative z-10">
                     “Sunlight in your hair, golden and still.”
                   </p>
                 </div>
 
                 {/* Exposure 4: Motion warm frame */}
-                <div className="w-40 sm:w-56 h-26 sm:h-30 bg-gradient-to-r from-amber-900/60 via-[#2D1609]/70 to-amber-900/50 opacity-70 shrink-0" />
+                <div className="w-36 sm:w-52 h-24 sm:h-28 rounded-[2px] [background:radial-gradient(ellipse_at_center,rgba(217,119,6,0.35)_0%,rgba(90,30,8,0.65)_70%,rgba(26,10,3,0.85)_100%)] opacity-65 shrink-0" />
 
-                {/* Exposure 5: Exit tail cutting off at right */}
-                <div className="w-36 sm:w-48 h-24 sm:h-28 bg-gradient-to-r from-amber-900/40 to-amber-950/90 opacity-40 shrink-0" />
+                {/* Exposure 5: Soft exit frame fading out at right edge */}
+                <div className="w-32 sm:w-44 h-22 sm:h-26 rounded-[2px] [background:radial-gradient(ellipse_at_center,rgba(180,83,9,0.3)_0%,rgba(60,20,5,0.6)_70%,rgba(20,7,2,0.85)_100%)] opacity-35 shrink-0 blur-[0.4px]" />
               </div>
 
               {/* Bottom Continuous Sprocket Perforations */}
@@ -492,32 +492,35 @@ export function SpatialWorldsWalkthrough() {
               </div>
             </div>
 
-            {/* PHYSICAL ENVIRONMENT: Wet Slate Slab + Shoreline Parchment dissolving into fog + Sea Glass Hero */}
+            {/* PHYSICAL ENVIRONMENT: Wet Slate Shoreline Ledge + Weathered Parchment + Frosted Sea Glass */}
             <div className="self-center sm:self-end sm:mr-8 lg:mr-20 pb-4 sm:pb-8 world-vista-reveal will-change-transform z-20">
-              <div className="relative w-72 h-56 sm:w-80 sm:h-60 select-none">
-                {/* Dark Wet Slate Stone Base with subtle specular sheen and deep contact shadow */}
-                <div className="relative w-68 h-48 sm:w-76 sm:h-52 bg-gradient-to-br from-[#0B1724] via-[#06101A] to-[#02070D] border border-cyan-950/70 shadow-[0_32px_75px_rgba(0,0,0,0.98)] p-4 flex items-center justify-center [background-image:linear-gradient(135deg,rgba(255,255,255,0.04)_0%,transparent_35%,rgba(56,189,248,0.03)_50%,transparent_65%)]">
-                  {/* Weathered Shoreline Parchment softly dissolving into sea fog */}
-                  <div
-                    className="relative w-54 h-36 sm:w-60 sm:h-40 bg-gradient-to-b from-[#E9EEF0] via-[#DEE7E9] to-[#C8D6D9]/50 shadow-md border-t border-l border-cyan-900/20 border-r-0 border-b-0 rotate-[-2.5deg] p-3.5 flex flex-col justify-between"
-                    style={{
-                      maskImage: "linear-gradient(to bottom, black 55%, rgba(0,0,0,0.4) 85%, transparent 100%)",
-                      WebkitMaskImage: "linear-gradient(to bottom, black 55%, rgba(0,0,0,0.4) 85%, transparent 100%)",
-                    }}
-                  >
-                    <div className="h-1" />
-                    <p className="font-serif italic text-xs text-sky-950 font-medium text-center leading-relaxed drop-shadow-xs px-1">
-                      “Our devotion is as vast and enduring as the evening tides.”
-                    </p>
-                    <div className="h-1" />
-                  </div>
+              <div className="relative w-72 h-56 sm:w-84 sm:h-64 select-none">
+                {/* Natural Wet Shoreline Slate Rock Ledge (Environmental Surface, not a UI card) */}
+                <div className="relative w-72 h-52 sm:w-80 sm:h-56 bg-gradient-to-br from-[#0D1C2A] via-[#06111C] to-[#02060C] shadow-[0_36px_80px_rgba(0,0,0,0.98)] overflow-visible [clip-path:polygon(2%_4%,98%_1%,100%_95%,1%_98%)] [background-image:linear-gradient(135deg,rgba(255,255,255,0.04)_0%,transparent_35%,rgba(56,189,248,0.03)_50%,transparent_65%)]">
+                  {/* Subtle tidal moisture sheen across rock surface */}
+                  <div className="absolute inset-0 opacity-20 pointer-events-none bg-gradient-to-tr from-cyan-400/10 via-transparent to-sky-200/10" />
+                </div>
 
-                  {/* THE HERO: Tactile Frosted Sea-Glass Pebble Resting on Wet Slate */}
-                  <div className="absolute -top-4 right-4 z-30 pointer-events-none">
-                    <div className="relative w-22 h-14 sm:w-24 sm:h-15 rounded-[45%_55%_60%_40%/50%_45%_55%_50%] bg-gradient-to-br from-cyan-200/40 via-cyan-400/30 to-teal-500/25 backdrop-blur-md border border-cyan-100/60 shadow-[0_10px_35px_rgba(34,211,238,0.55),4px_12px_24px_rgba(0,0,0,0.9)] transform rotate-12 flex items-center justify-center">
-                      {/* Internal frosted refraction highlight */}
-                      <div className="w-8 h-3.5 rounded-full bg-white/50 blur-[1px] transform -rotate-6" />
-                    </div>
+                {/* Weathered Shoreline Parchment laid naturally across the wet rock ledge */}
+                <div
+                  className="absolute top-7 left-6 sm:top-8 sm:left-8 w-56 h-36 sm:w-62 sm:h-40 bg-gradient-to-b from-[#E9EEF0] via-[#DEE7E9] to-[#C8D6D9]/50 shadow-[4px_12px_28px_rgba(0,0,0,0.65)] rotate-[-3.2deg] p-3.5 flex flex-col justify-between z-20"
+                  style={{
+                    maskImage: "linear-gradient(to bottom, black 55%, rgba(0,0,0,0.4) 85%, transparent 100%)",
+                    WebkitMaskImage: "linear-gradient(to bottom, black 55%, rgba(0,0,0,0.4) 85%, transparent 100%)",
+                  }}
+                >
+                  <div className="h-1" />
+                  <p className="font-serif italic text-xs sm:text-[13px] text-sky-950 font-medium text-center leading-relaxed drop-shadow-xs px-1">
+                    “Our devotion is as vast and enduring as the evening tides.”
+                  </p>
+                  <div className="h-1" />
+                </div>
+
+                {/* THE HERO: Tactile Frosted Sea-Glass Pebble Resting Directly on Shoreline Rock */}
+                <div className="absolute top-2 right-2 sm:right-6 z-30 pointer-events-none">
+                  <div className="relative w-22 h-14 sm:w-24 sm:h-15 rounded-[45%_55%_60%_40%/50%_45%_55%_50%] bg-gradient-to-br from-cyan-200/40 via-cyan-400/30 to-teal-500/25 backdrop-blur-md border border-cyan-100/60 shadow-[0_10px_35px_rgba(34,211,238,0.55),4px_12px_24px_rgba(0,0,0,0.9)] transform rotate-12 flex items-center justify-center">
+                    {/* Internal frosted refraction highlight */}
+                    <div className="w-8 h-3.5 rounded-full bg-white/50 blur-[1px] transform -rotate-6" />
                   </div>
                 </div>
               </div>

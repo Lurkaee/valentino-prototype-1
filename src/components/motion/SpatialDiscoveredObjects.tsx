@@ -189,9 +189,9 @@ export function SpatialDiscoveredObjects() {
             </div>
           </button>
 
-          {/* MUSEUM-STYLE CURATOR MARGINALIA: Tiny, sparse, detached penciled note */}
-          <div className="mt-3 text-center md:text-left select-none">
-            <span className="font-serif italic text-xs text-[#36091E]/75">
+          {/* MUSEUM-STYLE CURATOR MARGINALIA: Incidental penciled note scribbled in the margin */}
+          <div className="mt-3 -ml-1 sm:-ml-3 text-left select-none transform rotate-[-1.5deg]">
+            <span className="font-serif italic text-xs text-[#36091E]/70 tracking-wide">
               sealed for hard days
             </span>
           </div>
@@ -244,9 +244,9 @@ export function SpatialDiscoveredObjects() {
             </div>
           </button>
 
-          {/* MUSEUM-STYLE CURATOR MARGINALIA: Tiny, sparse, detached penciled note */}
-          <div className="mt-3 text-center md:text-left select-none">
-            <span className="font-serif italic text-xs text-[#36091E]/75">
+          {/* MUSEUM-STYLE CURATOR MARGINALIA: Incidental penciled note scribbled in the margin */}
+          <div className="mt-3 ml-4 sm:ml-8 text-left select-none transform rotate-[1.8deg]">
+            <span className="font-serif italic text-xs text-[#36091E]/70 tracking-wide">
               guarded by a fold
             </span>
           </div>
@@ -297,9 +297,9 @@ export function SpatialDiscoveredObjects() {
             </div>
           </button>
 
-          {/* MUSEUM-STYLE CURATOR MARGINALIA: Tiny, sparse, detached penciled note */}
-          <div className="mt-2 text-center md:text-left select-none">
-            <span className="font-serif italic text-xs text-[#36091E]/75">
+          {/* MUSEUM-STYLE CURATOR MARGINALIA: Incidental penciled note scribbled in the margin */}
+          <div className="mt-2.5 ml-2 sm:ml-5 text-left select-none transform rotate-[-0.8deg]">
+            <span className="font-serif italic text-xs text-[#36091E]/70 tracking-wide">
               turned in the palm
             </span>
           </div>
