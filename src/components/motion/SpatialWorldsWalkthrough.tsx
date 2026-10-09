@@ -109,7 +109,7 @@ export function SpatialWorldsWalkthrough() {
               <div className="relative w-64 h-48 sm:w-72 sm:h-52 select-none">
                 {/* NARRATIVE CONTINUITY: Coffee ticket resting naturally with organic overlap */}
                 <div className="absolute -top-3.5 -left-4 z-30 pointer-events-none select-none transform rotate-[-6.5deg] opacity-95 drop-shadow-[2px_10px_20px_rgba(3,105,161,0.2)]">
-                  <div className="w-24 sm:w-26 py-1 px-2.5 bg-[#FAF5EE] rounded-xs border border-sky-300/35 text-left shadow-xs">
+                  <div className="w-24 sm:w-[6.5rem] py-1 px-2.5 bg-[#FAF5EE] rounded-xs border border-sky-300/35 text-left shadow-xs">
                     <span className="font-serif italic text-[11px] text-[#1A0311] leading-none block">Rainy Tuesday</span>
                     <span className="block text-[7.5px] font-mono tracking-wider text-sky-800/80 mt-0.5">First Coffee</span>
                   </div>
@@ -223,7 +223,7 @@ export function SpatialWorldsWalkthrough() {
                   </div>
 
                   {/* Single Letter Quote */}
-                  <div className="absolute top-22 inset-x-5 text-center">
+                  <div className="absolute top-[5.5rem] inset-x-5 text-center">
                     <p className="font-serif italic text-xs text-rose-100/90 font-medium leading-relaxed drop-shadow-sm">
                       “Written in quiet starlight, meant only for you.”
                     </p>
@@ -251,7 +251,7 @@ export function SpatialWorldsWalkthrough() {
           <div className="w-full max-w-6xl mx-auto relative min-h-[580px] sm:min-h-[660px] flex flex-col lg:flex-row justify-between items-center gap-12 lg:gap-0">
             {/* PHYSICAL ARTIFACT: Hanging Japanese Washi Scroll suspended a fraction crooked */}
             <div className="lg:ml-12 xl:ml-20 world-vista-reveal will-change-transform z-20">
-              <div className="relative w-48 sm:w-56 h-72 sm:h-84 flex flex-col items-center transform rotate-[-1.8deg] hover:rotate-0 transition-transform duration-500 select-none">
+              <div className="relative w-48 sm:w-56 h-72 sm:h-[21rem] flex flex-col items-center transform rotate-[-1.8deg] hover:rotate-0 transition-transform duration-500 select-none">
                 {/* Top Silk Hanging Cord (asymmetric tension) & Cedar Dowel Rod */}
                 <div className="w-16 h-0.5 bg-amber-800/60 mb-1 rounded-full transform rotate-[1.5deg]" />
                 <div className="w-full h-3 bg-gradient-to-r from-[#2A180E] via-[#3E2516] to-[#2A180E] rounded-sm shadow-md border-b border-amber-950/60" />
@@ -357,13 +357,13 @@ export function SpatialWorldsWalkthrough() {
               {/* Continuous Celluloid Ribbon with Photographic Emulsion Exposures */}
               <div className="flex items-center justify-center gap-3 sm:gap-6 px-4 overflow-hidden">
                 {/* Exposure 1: Soft entry frame fading out at left edge */}
-                <div className="w-32 sm:w-44 h-22 sm:h-26 rounded-[2px] [background:radial-gradient(ellipse_at_center,rgba(180,83,9,0.3)_0%,rgba(60,20,5,0.6)_70%,rgba(20,7,2,0.85)_100%)] opacity-35 shrink-0 blur-[0.4px]" />
+                <div className="w-32 sm:w-44 h-[5.5rem] sm:h-[6.5rem] rounded-[2px] [background:radial-gradient(ellipse_at_center,rgba(180,83,9,0.3)_0%,rgba(60,20,5,0.6)_70%,rgba(20,7,2,0.85)_100%)] opacity-35 shrink-0 blur-[0.4px]" />
 
                 {/* Exposure 2: Warm ambient sepia memory */}
                 <div className="w-36 sm:w-52 h-24 sm:h-28 rounded-[2px] [background:radial-gradient(ellipse_at_center,rgba(217,119,6,0.35)_0%,rgba(90,30,8,0.65)_70%,rgba(26,10,3,0.85)_100%)] opacity-65 shrink-0" />
 
                 {/* Exposure 3: THE HERO PHOTOGRAPHIC EXPOSURE with warm projector halation */}
-                <div className="w-56 sm:w-72 h-30 sm:h-34 rounded-[2px] [background:radial-gradient(ellipse_at_center,#451A03_0%,#241005_70%,#150802_100%)] shadow-[0_0_40px_rgba(251,191,36,0.4),inset_0_0_24px_rgba(254,243,199,0.12)] p-4 flex items-center justify-center text-center relative overflow-hidden shrink-0">
+                <div className="w-56 sm:w-72 h-[7.5rem] sm:h-[8.5rem] rounded-[2px] [background:radial-gradient(ellipse_at_center,#451A03_0%,#241005_70%,#150802_100%)] shadow-[0_0_40px_rgba(251,191,36,0.4),inset_0_0_24px_rgba(254,243,199,0.12)] p-4 flex items-center justify-center text-center relative overflow-hidden shrink-0">
                   {/* Subtle projector beam halation across frame */}
                   <div className="absolute inset-0 bg-gradient-to-tr from-amber-300/20 via-transparent to-amber-100/25 pointer-events-none mix-blend-screen" />
                   <p className="font-serif italic text-xs sm:text-sm text-amber-100 font-medium leading-relaxed drop-shadow-[0_1px_6px_rgba(0,0,0,0.9)] relative z-10">
@@ -375,7 +375,7 @@ export function SpatialWorldsWalkthrough() {
                 <div className="w-36 sm:w-52 h-24 sm:h-28 rounded-[2px] [background:radial-gradient(ellipse_at_center,rgba(217,119,6,0.35)_0%,rgba(90,30,8,0.65)_70%,rgba(26,10,3,0.85)_100%)] opacity-65 shrink-0" />
 
                 {/* Exposure 5: Soft exit frame fading out at right edge */}
-                <div className="w-32 sm:w-44 h-22 sm:h-26 rounded-[2px] [background:radial-gradient(ellipse_at_center,rgba(180,83,9,0.3)_0%,rgba(60,20,5,0.6)_70%,rgba(20,7,2,0.85)_100%)] opacity-35 shrink-0 blur-[0.4px]" />
+                <div className="w-32 sm:w-44 h-[5.5rem] sm:h-[6.5rem] rounded-[2px] [background:radial-gradient(ellipse_at_center,rgba(180,83,9,0.3)_0%,rgba(60,20,5,0.6)_70%,rgba(20,7,2,0.85)_100%)] opacity-35 shrink-0 blur-[0.4px]" />
               </div>
 
               {/* Bottom Continuous Sprocket Perforations */}
@@ -426,7 +426,7 @@ export function SpatialWorldsWalkthrough() {
 
                   {/* REAL DRIED BOTANICAL SPECIMEN: Stems escape past sheet perimeter and cast directional shadow onto desk */}
                   <div className="absolute -top-10 -right-10 z-25 pointer-events-none">
-                    <svg viewBox="0 0 56 90" fill="none" className="w-18 h-28 filter drop-shadow-[6px_12px_14px_rgba(60,40,15,0.25)]">
+                    <svg viewBox="0 0 56 90" fill="none" className="w-[4.5rem] h-28 filter drop-shadow-[6px_12px_14px_rgba(60,40,15,0.25)]">
                       <path d="M10 88 C 16 60, 22 36, 36 6" stroke="#5B684B" strokeWidth="1.6" strokeLinecap="round" />
                       <path d="M22 52 C 34 40, 48 32, 54 22" stroke="#5B684B" strokeWidth="1.2" strokeLinecap="round" opacity="0.85" />
                       <ellipse cx="36" cy="6" rx="5" ry="3.5" fill="#C084FC" fillOpacity="0.85" />
@@ -494,7 +494,7 @@ export function SpatialWorldsWalkthrough() {
 
             {/* PHYSICAL ENVIRONMENT: Wet Slate Shoreline Ledge + Weathered Parchment + Frosted Sea Glass */}
             <div className="self-center sm:self-end sm:mr-8 lg:mr-20 pb-4 sm:pb-8 world-vista-reveal will-change-transform z-20">
-              <div className="relative w-72 h-56 sm:w-84 sm:h-64 select-none">
+              <div className="relative w-72 h-56 sm:w-[21rem] sm:h-64 select-none">
                 {/* Natural Wet Shoreline Slate Rock Ledge (Environmental Surface, not a UI card) */}
                 <div className="relative w-72 h-52 sm:w-80 sm:h-56 bg-gradient-to-br from-[#0D1C2A] via-[#06111C] to-[#02060C] shadow-[0_36px_80px_rgba(0,0,0,0.98)] overflow-visible [clip-path:polygon(2%_4%,98%_1%,100%_95%,1%_98%)] [background-image:linear-gradient(135deg,rgba(255,255,255,0.04)_0%,transparent_35%,rgba(56,189,248,0.03)_50%,transparent_65%)]">
                   {/* Subtle tidal moisture sheen across rock surface */}
@@ -503,7 +503,7 @@ export function SpatialWorldsWalkthrough() {
 
                 {/* Weathered Shoreline Parchment laid naturally across the wet rock ledge */}
                 <div
-                  className="absolute top-7 left-6 sm:top-8 sm:left-8 w-56 h-36 sm:w-62 sm:h-40 bg-gradient-to-b from-[#E9EEF0] via-[#DEE7E9] to-[#C8D6D9]/50 shadow-[4px_12px_28px_rgba(0,0,0,0.65)] rotate-[-3.2deg] p-3.5 flex flex-col justify-between z-20"
+                  className="absolute top-7 left-6 sm:top-8 sm:left-8 w-56 h-36 sm:w-[15.5rem] sm:h-40 bg-gradient-to-b from-[#E9EEF0] via-[#DEE7E9] to-[#C8D6D9]/50 shadow-[4px_12px_28px_rgba(0,0,0,0.65)] rotate-[-3.2deg] p-3.5 flex flex-col justify-between z-20"
                   style={{
                     maskImage: "linear-gradient(to bottom, black 55%, rgba(0,0,0,0.4) 85%, transparent 100%)",
                     WebkitMaskImage: "linear-gradient(to bottom, black 55%, rgba(0,0,0,0.4) 85%, transparent 100%)",
@@ -518,7 +518,7 @@ export function SpatialWorldsWalkthrough() {
 
                 {/* THE HERO: Tactile Frosted Sea-Glass Pebble Resting Directly on Shoreline Rock */}
                 <div className="absolute top-2 right-2 sm:right-6 z-30 pointer-events-none">
-                  <div className="relative w-22 h-14 sm:w-24 sm:h-15 rounded-[45%_55%_60%_40%/50%_45%_55%_50%] bg-gradient-to-br from-cyan-200/40 via-cyan-400/30 to-teal-500/25 backdrop-blur-md border border-cyan-100/60 shadow-[0_10px_35px_rgba(34,211,238,0.55),4px_12px_24px_rgba(0,0,0,0.9)] transform rotate-12 flex items-center justify-center">
+                  <div className="relative w-[5.5rem] h-14 sm:w-24 sm:h-[3.75rem] rounded-[45%_55%_60%_40%/50%_45%_55%_50%] bg-gradient-to-br from-cyan-200/40 via-cyan-400/30 to-teal-500/25 backdrop-blur-md border border-cyan-100/60 shadow-[0_10px_35px_rgba(34,211,238,0.55),4px_12px_24px_rgba(0,0,0,0.9)] transform rotate-12 flex items-center justify-center">
                     {/* Internal frosted refraction highlight */}
                     <div className="w-8 h-3.5 rounded-full bg-white/50 blur-[1px] transform -rotate-6" />
                   </div>

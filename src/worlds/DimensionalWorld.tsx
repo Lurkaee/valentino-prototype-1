@@ -264,7 +264,7 @@ export const DimensionalWorld: React.FC<DimensionalWorldProps> = ({
                 }}
               />
               <div className="absolute top-28 -left-16 w-80 h-40 bg-emerald-950/30 rounded-full blur-3xl pointer-events-none" />
-              <div className="absolute top-52 -right-16 w-88 h-44 bg-[#0a120e]/40 rounded-full blur-3xl pointer-events-none" />
+              <div className="absolute top-52 -right-16 w-[22rem] h-44 bg-[#0a120e]/40 rounded-full blur-3xl pointer-events-none" />
             </>
           )}
 
@@ -303,7 +303,7 @@ export const DimensionalWorld: React.FC<DimensionalWorldProps> = ({
                     "radial-gradient(circle at 50% 30%, rgba(56, 189, 248, 0.22) 0%, rgba(14, 116, 144, 0.14) 50%, transparent 75%)",
                 }}
               />
-              <div className="absolute top-24 -right-12 w-88 h-44 bg-[#0a233a]/40 rounded-full blur-3xl" />
+              <div className="absolute top-24 -right-12 w-[22rem] h-44 bg-[#0a233a]/40 rounded-full blur-3xl" />
             </>
           )}
         </motion.div>

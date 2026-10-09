@@ -975,7 +975,7 @@ export default function TemplatesPage() {
                             <button
                               type="button"
                               onClick={() => setActiveKagePreview(true)}
-                              className="w-18 h-18 rounded-full bg-gradient-to-br from-emerald-900 via-teal-950 to-black border-2 border-emerald-400/60 flex items-center justify-center shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:scale-105 active:scale-95 transition-transform cursor-pointer"
+                              className="w-[4.5rem] h-[4.5rem] rounded-full bg-gradient-to-br from-emerald-900 via-teal-950 to-black border-2 border-emerald-400/60 flex items-center justify-center shadow-[0_0_20px_rgba(16,185,129,0.3)] hover:scale-105 active:scale-95 transition-transform cursor-pointer"
                               aria-label="Launch 3D WebGL preview"
                             >
                               <WorldArtifactMark worldId="kage" className="w-8 h-8 text-emerald-300 drop-shadow-sm" />
@@ -1052,7 +1052,7 @@ export default function TemplatesPage() {
                           <button
                             type="button"
                             onClick={() => setActiveApricotRevealed(true)}
-                            className="w-18 h-18 rounded-full bg-gradient-to-br from-[#e76f51] via-[#d45d3e] to-[#28140B] border-2 border-amber-400/70 flex items-center justify-center shadow-[0_6px_20px_rgba(245,158,11,0.4)] hover:scale-105 active:scale-95 transition-transform cursor-pointer"
+                            className="w-[4.5rem] h-[4.5rem] rounded-full bg-gradient-to-br from-[#e76f51] via-[#d45d3e] to-[#28140B] border-2 border-amber-400/70 flex items-center justify-center shadow-[0_6px_20px_rgba(245,158,11,0.4)] hover:scale-105 active:scale-95 transition-transform cursor-pointer"
                             aria-label="Advance film slide"
                           >
                             <svg className="w-8 h-8 text-[#FFF8F0]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1115,7 +1115,7 @@ export default function TemplatesPage() {
                         <button
                           type="button"
                           onClick={() => setActiveWildflowerRevealed(true)}
-                          className="w-18 h-18 rounded-full bg-gradient-to-br from-[#3D5A46] via-[#2A3E31] to-[#17221A] border-2 border-emerald-400/60 flex items-center justify-center shadow-[0_6px_20px_rgba(42,62,49,0.4)] hover:scale-105 active:scale-95 transition-transform cursor-pointer"
+                          className="w-[4.5rem] h-[4.5rem] rounded-full bg-gradient-to-br from-[#3D5A46] via-[#2A3E31] to-[#17221A] border-2 border-emerald-400/60 flex items-center justify-center shadow-[0_6px_20px_rgba(42,62,49,0.4)] hover:scale-105 active:scale-95 transition-transform cursor-pointer"
                           aria-label="Untie botanical twine"
                         >
                           <svg className="w-8 h-8 text-rose-200" fill="currentColor" viewBox="0 0 24 24">
@@ -1180,7 +1180,7 @@ export default function TemplatesPage() {
                           <button
                             type="button"
                             onClick={() => setActiveOceanRevealed(true)}
-                            className="w-18 h-18 rounded-full bg-gradient-to-br from-[#0c4a6e] via-[#0369a1] to-[#022c44] border-2 border-sky-400/70 flex items-center justify-center shadow-[0_6px_20px_rgba(59,130,246,0.4)] hover:scale-105 active:scale-95 transition-transform cursor-pointer"
+                            className="w-[4.5rem] h-[4.5rem] rounded-full bg-gradient-to-br from-[#0c4a6e] via-[#0369a1] to-[#022c44] border-2 border-sky-400/70 flex items-center justify-center shadow-[0_6px_20px_rgba(59,130,246,0.4)] hover:scale-105 active:scale-95 transition-transform cursor-pointer"
                             aria-label="Uncork ocean bottle"
                           >
                             <svg className="w-8 h-8 text-sky-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">

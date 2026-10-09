@@ -93,7 +93,7 @@ export function SpatialDiscoveredObjects() {
           className="hidden md:block absolute top-6 left-[22%] lg:left-[24%] z-10 pointer-events-none select-none transform -rotate-12 opacity-95 will-change-transform drop-shadow-[0_8px_16px_rgba(20,5,10,0.3)]"
           aria-hidden="true"
         >
-          <div className="w-24 sm:w-26 py-1 px-2.5 bg-[#FAF3E8] rounded-xs border border-amber-900/20 text-left shadow-xs">
+          <div className="w-24 sm:w-[6.5rem] py-1 px-2.5 bg-[#FAF3E8] rounded-xs border border-amber-900/20 text-left shadow-xs">
             <span className="font-serif italic text-[11px] text-[#1C0412] leading-none block">Rainy Tuesday</span>
             <span className="block text-[7.5px] font-mono tracking-wider text-[#843657]/80 mt-0.5">First Coffee</span>
           </div>
@@ -156,13 +156,13 @@ export function SpatialDiscoveredObjects() {
             >
               {/* Pointed Envelope Flap Fold */}
               <div
-                className={`absolute top-0 inset-x-0 h-22 bg-gradient-to-b from-[#34071D] to-[#1A030E] [clip-path:polygon(0_0,100%_0,50%_100%)] shadow-md border-t border-rose-400/30 transition-transform duration-500 origin-top ${
+                className={`absolute top-0 inset-x-0 h-[5.5rem] bg-gradient-to-b from-[#34071D] to-[#1A030E] [clip-path:polygon(0_0,100%_0,50%_100%)] shadow-md border-t border-rose-400/30 transition-transform duration-500 origin-top ${
                   openEnvelope ? "-scale-y-75 opacity-90" : "scale-y-100"
                 }`}
               />
 
               {/* Hand-Poured Organic Wax Seal (Molten ripples, no monogram) */}
-              <div className="absolute top-18 left-1/2 -translate-x-1/2 -translate-y-1/2 z-30">
+              <div className="absolute top-[4.5rem] left-1/2 -translate-x-1/2 -translate-y-1/2 z-30">
                 <div className="relative w-11 h-11 rounded-full bg-gradient-to-br from-[#E11D48] via-[#9F1239] to-[#4C0519] border border-amber-300/40 shadow-[0_4px_16px_rgba(159,18,57,0.8)] flex items-center justify-center group-hover:scale-105 transition-transform">
                   {/* Organic wax drip contour */}
                   <div className="absolute -bottom-1 -right-0.5 w-3 h-3 rounded-full bg-[#881337] opacity-90" />
@@ -210,7 +210,7 @@ export function SpatialDiscoveredObjects() {
           >
             {/* THE PHYSICAL OBJECT ITSELF: Heavy textured vellum note with folded corner */}
             <div
-              className={`relative w-60 sm:w-68 h-44 sm:h-48 bg-[#FFFDF9] text-[#3B0E23] p-4 border border-rose-950/[0.12] transition-all duration-500 overflow-hidden ${
+              className={`relative w-60 sm:w-[17rem] h-44 sm:h-48 bg-[#FFFDF9] text-[#3B0E23] p-4 border border-rose-950/[0.12] transition-all duration-500 overflow-hidden ${
                 openWhisper
                   ? "rotate-0 -translate-y-3 shadow-[0_28px_55px_-10px_rgba(70,15,35,0.3),0_6px_16px_rgba(0,0,0,0.08)]"
                   : "rotate-[2.5deg] group-hover:rotate-0 group-hover:-translate-y-2 shadow-[0_18px_40px_-10px_rgba(70,15,35,0.18),0_4px_12px_rgba(0,0,0,0.05)]"
